@@ -1,9 +1,0 @@
-name: ci-probe
-# Temporary minimal probe to verify push events trigger Actions on this fork.
-# Deleted once the desktop build runs.
-on: push
-jobs:
-  probe:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo probe-ok
