@@ -137,6 +137,17 @@ Generated at build time (gitignored): `src-tauri/resources/server.mjs`,
 - **"OpenNOW failed to start" dialog** — open `server.log` (see Data
   locations) and look at the last lines; the most common cause is antivirus
   quarantining the freshly-copied sidecar.
+- **"bundled backend executable (opennow-server) not found"** or
+  **"bundled web client (dist) not found"** — two lookup bugs in older
+  installers: they expected the `opennow-server-<triple>.exe` name even
+  though Tauri ships installed sidecars as plain `opennow-server.exe`,
+  and they tested `dist/` with `is_file()`, which is always false for a
+  directory. Fixed in current builds: reinstall from a fresh installer or
+  portable ZIP. To run the old build without reinstalling, start the
+  bundled backend by hand from the install folder and open it in a
+  browser (same app, without the Tauri shell):
+  `set NODE_ENV=production && opennow-server.exe server.mjs`, then open
+  `http://localhost:3000` (use the file's current name if you renamed it).
 - **White screen / blank window** — ensure the WebView2 Runtime is installed
   (Microsoft's "WebView2 Evergreen Runtime"); the installer normally handles
   this.

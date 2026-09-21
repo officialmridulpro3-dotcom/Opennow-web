@@ -154,18 +154,28 @@ fn start_backend(app: &tauri::AppHandle) -> Result<String, Box<dyn std::error::E
         .ok_or("could not resolve the application directory")?;
 
     let triple = env!("OPENNOW_TARGET_TRIPLE");
-    let server_exe = first_existing(&[
+    // Tauri strips the `-<triple>` suffix from `externalBin` sidecars when
+    // bundling (the suffix is only the build-time lookup convention for
+    // `src-tauri/binaries/`), so an installed app ships `opennow-server.exe`
+    // while the CI portable ZIP keeps the suffixed name — accept both.
+    let server_exe = first_existing_file(&[
+        resource_dir.join("opennow-server.exe"),
+        resource_dir.join("opennow-server"),
+        exe_dir.join("opennow-server.exe"),
+        exe_dir.join("opennow-server"),
         resource_dir.join(format!("opennow-server-{triple}.exe")),
         resource_dir.join(format!("opennow-server-{triple}")),
         exe_dir.join(format!("opennow-server-{triple}.exe")),
         exe_dir.join(format!("opennow-server-{triple}")),
     ])
-    .ok_or("bundled backend executable (opennow-server) not found")?;
+    .ok_or("bundled backend executable (opennow-server) not found — the installation may be incomplete, try reinstalling OpenNOW")?;
     let server_js =
-        first_existing(&[resource_dir.join("server.mjs"), exe_dir.join("server.mjs")])
-            .ok_or("bundled backend bundle (server.mjs) not found")?;
-    let static_dir = first_existing(&[resource_dir.join("dist"), exe_dir.join("dist")])
-        .ok_or("bundled web client (dist) not found")?;
+        first_existing_file(&[resource_dir.join("server.mjs"), exe_dir.join("server.mjs")])
+            .ok_or("bundled backend bundle (server.mjs) not found — the installation may be incomplete, try reinstalling OpenNOW")?;
+    // `dist/` is a directory, so it needs the `is_dir` predicate — `is_file`
+    // is false for directories and this lookup used to fail unconditionally.
+    let static_dir = first_existing_dir(&[resource_dir.join("dist"), exe_dir.join("dist")])
+        .ok_or("bundled web client (dist) not found — the installation may be incomplete, try reinstalling OpenNOW")?;
 
     let data_dir = app.path().app_data_dir()?;
     std::fs::create_dir_all(&data_dir)?;
@@ -207,13 +217,13 @@ fn start_backend(app: &tauri::AppHandle) -> Result<String, Box<dyn std::error::E
         }
         if backend_exited(app) {
             return Err(
-                "the bundled backend exited during startup (see server.log in the OpenNOW app data folder)"
+                "the bundled backend exited during startup.\n\nDetails: server.log inside the OpenNOW app data folder."
                     .into(),
             );
         }
         if Instant::now() > deadline {
             return Err(
-                "timed out waiting for the bundled backend (see server.log in the OpenNOW app data folder)"
+                "timed out waiting for the bundled backend.\n\nDetails: server.log inside the OpenNOW app data folder."
                     .into(),
             );
         }
@@ -247,12 +257,12 @@ fn open_main_window(
 
 /// Native error dialog for fatal startup failures (backend missing, crashed,
 /// or never became healthy). Without this the app would just silently exit.
+/// The message is shown verbatim: callers append the server.log pointer only
+/// when the backend was actually spawned (missing-file errors have no log).
 fn show_startup_error(app: &tauri::AppHandle, message: &str) {
     let _ = app
         .dialog()
-        .message(format!(
-            "{message}\n\nDetails: server.log inside the OpenNOW app data folder."
-        ))
+        .message(message.to_string())
         .title("OpenNOW failed to start")
         .kind(tauri_plugin_dialog::MessageDialogKind::Error)
         .blocking_show();
@@ -281,8 +291,12 @@ fn backend_exited(app: &tauri::AppHandle) -> bool {
         .unwrap_or(false)
 }
 
-fn first_existing(candidates: &[PathBuf]) -> Option<PathBuf> {
+fn first_existing_file(candidates: &[PathBuf]) -> Option<PathBuf> {
     candidates.iter().find(|path| path.is_file()).cloned()
+}
+
+fn first_existing_dir(candidates: &[PathBuf]) -> Option<PathBuf> {
+    candidates.iter().find(|path| path.is_dir()).cloned()
 }
 
 /// Binds :0 on loopback, reads the assigned port, and drops the listener.
