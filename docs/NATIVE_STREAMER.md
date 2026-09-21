@@ -32,19 +32,21 @@ to its stdin → gameplay in the native window → sidecar exit returns to libra
 
 - [x] **Phase 0 — Spike.** Upstream engine evaluated (protocol, Windows
   FL10 path, sidecar shape, SessionContext contract). Verdict: viable.
-- [ ] **Phase 1 — Vendor + CI sidecar build.** `third_party/opennow-streamer`
+- [x] **Phase 1 — Vendor + CI sidecar build.** `third_party/opennow-streamer`
   pinned at upstream `v1.0.1`; `nvst-sidecar` CI job builds
   `opennow-streamer.exe` on Windows and smoke-tests the `hello` handshake.
-- [ ] **Phase 2 — Session bridge.** Backend endpoint translating CloudMatch
-  allocation → engine `SessionContext`
-  (`session{sessionId,subSessionId,serverIp,mediaConnectionInfo,connectionInfo}`
-  + `settings` + `shortcuts`). Needs live-server testing.
-- [ ] **Phase 3 — Shell lifecycle + Play UI.** Spawn/pipe/supervise the sidecar
-  per stream; hide/show webview; "streaming in native window" state; error
-  surfacing from sidecar events.
+- [x] **Phase 2 — Session bridge.** The client builds the engine
+  `SessionContext` via the shared `buildNativeStreamerSessionContext`; the
+  backend (`POST /api/native/start`) validates the allocation fields and
+  forces `settings.transportMode = "nvst"` before handing it to the engine.
+- [x] **Phase 3 — Shell lifecycle + Play UI.** The backend spawns, pipes, and
+  supervises the sidecar (`src/server/nativeStream.ts`); the shell resolves
+  the bundled binary and passes `OPENNOW_NVST_SIDECAR`; StreamView shows a
+  "Play in native window" card that tears down WebRTC media so only one
+  transport burns CPU. The sidecar ships in the installer (`externalBin`)
+  and the portable ZIP.
 - [ ] **Phase 4 — Test loop.** Iterate on real hardware (no NVIDIA account/GPU
-  in CI) until playback is smooth, then package the sidecar into the
-  installer + portable ZIP.
+  in CI) until playback is smooth.
 
 ## Constraints / risks
 

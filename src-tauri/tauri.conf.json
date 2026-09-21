@@ -24,7 +24,7 @@
       "resources/server.mjs": "server.mjs",
       "../dist": "dist"
     },
-    "externalBin": ["binaries/opennow-server"],
+    "externalBin": ["binaries/opennow-server", "binaries/opennow-nvst"],
     "windows": {
       "webviewInstallMode": {
         "type": "downloadBootstrapper"

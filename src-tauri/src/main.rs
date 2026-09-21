@@ -181,6 +181,19 @@ fn start_backend(app: &tauri::AppHandle) -> Result<String, Box<dyn std::error::E
     // is false for directories and this lookup used to fail unconditionally.
     let static_dir = first_existing_dir(&[resource_dir.join("dist"), exe_dir.join("dist")])
         .ok_or("bundled web client (dist) not found — the installation may be incomplete, try reinstalling OpenNOW")?;
+    // Native (NVST) sidecar: the upstream streaming engine bundled as an
+    // `externalBin`. Same stripped/suffixed lookup as the backend, but
+    // strictly optional — WebRTC playback works fine without it.
+    let nvst_exe = first_existing_file(&[
+        resource_dir.join("opennow-nvst.exe"),
+        resource_dir.join("opennow-nvst"),
+        exe_dir.join("opennow-nvst.exe"),
+        exe_dir.join("opennow-nvst"),
+        resource_dir.join(format!("opennow-nvst-{triple}.exe")),
+        resource_dir.join(format!("opennow-nvst-{triple}")),
+        exe_dir.join(format!("opennow-nvst-{triple}.exe")),
+        exe_dir.join(format!("opennow-nvst-{triple}")),
+    ]);
 
     let data_dir = simplified(&app.path().app_data_dir()?);
     std::fs::create_dir_all(&data_dir)?;
@@ -189,12 +202,16 @@ fn start_backend(app: &tauri::AppHandle) -> Result<String, Box<dyn std::error::E
     let _ = std::fs::write(
         data_dir.join("launcher.log"),
         format!(
-            "resource_dir={}\nexe_dir={}\nserver_exe={}\nserver_js={}\nstatic_dir={}\n",
+            "resource_dir={}\nexe_dir={}\nserver_exe={}\nserver_js={}\nstatic_dir={}\nnvst_exe={}\n",
             resource_dir.display(),
             exe_dir.display(),
             server_exe.display(),
             server_js.display(),
-            static_dir.display()
+            static_dir.display(),
+            nvst_exe
+                .as_ref()
+                .map(|path| path.display().to_string())
+                .unwrap_or_else(|| "(not bundled)".to_string())
         ),
     );
     let log_file = std::fs::File::create(data_dir.join("server.log"))?;
@@ -217,6 +234,12 @@ fn start_backend(app: &tauri::AppHandle) -> Result<String, Box<dyn std::error::E
         .env("OPENNOW_DATA_DIR", &data_dir)
         .env("OPENNOW_SESSION_SECRET_FILE", data_dir.join("session-secret"))
         .env("OPENNOW_PARENT_PID", std::process::id().to_string())
+        // Empty when the engine was not bundled; the backend treats that as
+        // "native playback unavailable" and WebRTC is unaffected.
+        .env(
+            "OPENNOW_NVST_SIDECAR",
+            nvst_exe.as_deref().unwrap_or_else(|| Path::new("")),
+        )
         .stdout(Stdio::from(log_file))
         .stderr(Stdio::from(log_file_stderr))
         .spawn()?;

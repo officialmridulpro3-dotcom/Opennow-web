@@ -33,6 +33,8 @@ import {
   SAFE_FALLBACK_STREAM_PROFILE,
 } from "@shared/gfn";
 import { FALLBACK_RELAY_ICE_SERVERS, GfnWebRtcClient, probeWebRtcEnvironment } from "./platforms/gfn/webrtcClient";
+import { getNativeStatus, startNativeStream, stopNativeStream } from "./api";
+import type { NativeSidecarStatus } from "./api";
 import { clientLog } from "./api";
 import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut } from "./shortcuts";
 import { dispatchStreamShortcutAction } from "./streamShortcutActions";
@@ -272,6 +274,9 @@ export function App(): JSX.Element {
   const [antiAfkAckNonce, setAntiAfkAckNonce] = useState(0);
   const [nativeInputCaptureActive, setNativeInputCaptureActive] = useState(false);
   const [nativeInputBridgeReady, setNativeInputBridgeReady] = useState(false);
+  const [nativeSidecarStatus, setNativeSidecarStatus] = useState<NativeSidecarStatus | null>(null);
+  const [nativeStarting, setNativeStarting] = useState(false);
+  const [nativeError, setNativeError] = useState<string | null>(null);
   const [exitPrompt, setExitPrompt] = useState<ExitPromptState>({ open: false, gameTitle: t("app.labels.game") });
   const [streamingGame, setStreamingGame] = useState<GameInfo | null>(null);
   const [streamingStore, setStreamingStore] = useState<string | null>(null);
@@ -3410,9 +3415,72 @@ export function App(): JSX.Element {
   ]);
 
   // Stop stream handler
+  // Native (NVST) sidecar playback. The sidecar opens its own window and
+  // captures input itself; the WebRTC media stack is torn down first so the
+  // two transports never burn CPU at the same time. The cloud session stays
+  // alive — ending it still goes through the normal Stop flow.
+  const refreshNativeStatus = useCallback(async () => {
+    try {
+      setNativeSidecarStatus(await getNativeStatus());
+    } catch {
+      setNativeSidecarStatus(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    const active = streamStatus === "connecting" || streamStatus === "streaming";
+    if (!active) {
+      setNativeSidecarStatus(null);
+      return;
+    }
+    void refreshNativeStatus();
+    const timer = window.setInterval(() => { void refreshNativeStatus(); }, 3000);
+    return () => window.clearInterval(timer);
+  }, [streamStatus, refreshNativeStatus]);
+
+  const handleStartNative = useCallback(async () => {
+    const current = sessionRef.current;
+    if (!current || nativeStarting) return;
+    setNativeStarting(true);
+    setNativeError(null);
+    try {
+      const context = buildNativeStreamerSessionContext(current, buildCurrentStreamSettings(), nativeStreamerShortcuts);
+      setNativeSidecarStatus(await startNativeStream(current.sessionId, context));
+      // Free the CPU the browser decoder/compositor was using — the sidecar
+      // owns the seat now. Mirrors the reconnect teardown in
+      // applyClaimedSessionAndConnect.
+      nativeStreamingRef.current = true;
+      clientRef.current?.dispose();
+      clientRef.current = null;
+      await disconnectSignalingControlled();
+    } catch (error) {
+      nativeStreamingRef.current = false;
+      setNativeError(error instanceof Error ? error.message : String(error));
+    } finally {
+      setNativeStarting(false);
+    }
+  }, [buildCurrentStreamSettings, disconnectSignalingControlled, nativeStarting, nativeStreamerShortcuts]);
+
+  const handleStopNative = useCallback(async () => {
+    try {
+      setNativeSidecarStatus(await stopNativeStream());
+    } catch (error) {
+      setNativeError(error instanceof Error ? error.message : String(error));
+    } finally {
+      nativeStreamingRef.current = false;
+    }
+  }, []);
+
   const handleStopStream = useCallback(async () => {
     try {
       resolveExitPrompt(false);
+      try {
+        await stopNativeStream();
+      } catch {
+        // No native stream running (or web build) — nothing to stop.
+      }
+      nativeStreamingRef.current = false;
+      setNativeError(null);
       const status = streamStatusRef.current;
       if (status !== "idle" && status !== "streaming") {
         launchAbortRef.current = true;
@@ -3803,6 +3871,12 @@ export function App(): JSX.Element {
             nativeInputCaptureActive={nativeInputCaptureActive}
             gstreamerEnabled={settings.streamClientMode === "native"}
             nativeExternalRenderer={settings.nativeExternalRenderer}
+            nativeSupported={nativeSidecarStatus?.supported ?? false}
+            nativeRunning={nativeSidecarStatus?.running ?? false}
+            nativeStarting={nativeStarting}
+            nativeError={nativeError ?? nativeSidecarStatus?.lastError ?? null}
+            onStartNative={handleStartNative}
+            onStopNative={handleStopNative}
             shortcuts={{
               toggleStats: formatShortcutForDisplay(settings.shortcutToggleStats, isMac),
               togglePointerLock: formatShortcutForDisplay(settings.shortcutTogglePointerLock, isMac),

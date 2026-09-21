@@ -106,6 +106,13 @@ interface StreamViewProps {
   allowEscapeToExitFullscreen?: boolean;
   videoShader: VideoShaderSettings;
   onVideoShaderChange: (value: VideoShaderSettings) => void;
+  /** Native (NVST) sidecar playback; hidden when the backend has no bundled engine. */
+  nativeSupported?: boolean;
+  nativeRunning?: boolean;
+  nativeStarting?: boolean;
+  nativeError?: string | null;
+  onStartNative?: () => void;
+  onStopNative?: () => void;
 }
 
 export function StreamView({
@@ -160,6 +167,12 @@ export function StreamView({
   className,
   videoShader,
   onVideoShaderChange,
+  nativeSupported = false,
+  nativeRunning = false,
+  nativeStarting = false,
+  nativeError = null,
+  onStartNative,
+  onStopNative,
 }: StreamViewProps): JSX.Element {
   const { t } = useTranslation();
   const [showHints, setShowHints] = useState(true);
@@ -2254,6 +2267,73 @@ export function StreamView({
         >
           {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
         </button>
+      )}
+
+      {/* Native (NVST) sidecar playback — desktop app with bundled engine only */}
+      {nativeSupported && !hideStreamButtons && (
+        <div
+          style={{
+            position: "fixed",
+            right: 16,
+            bottom: 64,
+            zIndex: 30,
+            maxWidth: 300,
+            padding: "10px 12px",
+            borderRadius: 10,
+            background: "rgba(10, 14, 20, 0.88)",
+            border: "1px solid rgba(120, 200, 120, 0.35)",
+            color: "#d7e6d7",
+            fontSize: 12,
+            lineHeight: 1.45,
+          }}
+        >
+          {nativeRunning ? (
+            <>
+              <div style={{ fontWeight: 700, marginBottom: 4 }}>Native window active</div>
+              <div style={{ opacity: 0.85, marginBottom: 8 }}>
+                The game is rendering in a separate window. Use the Stop button to end the cloud session.
+              </div>
+              <button
+                type="button"
+                onClick={onStopNative}
+                disabled={!onStopNative}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: 6,
+                  border: "1px solid rgba(120, 200, 120, 0.5)",
+                  background: "rgba(60, 120, 60, 0.25)",
+                  color: "#e6f4e6",
+                  cursor: "pointer",
+                }}
+              >
+                Stop native window
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={onStartNative}
+                disabled={nativeStarting || !onStartNative}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: 6,
+                  border: "1px solid rgba(120, 200, 120, 0.5)",
+                  background: "rgba(60, 120, 60, 0.25)",
+                  color: "#e6f4e6",
+                  cursor: nativeStarting ? "wait" : "pointer",
+                  marginBottom: 4,
+                }}
+              >
+                {nativeStarting ? "Starting native window…" : "Play in native window"}
+              </button>
+              <div style={{ opacity: 0.75 }}>Experimental · lower latency on weak PCs</div>
+            </>
+          )}
+          {nativeError && (
+            <div style={{ marginTop: 6, color: "#f0a8a8", wordBreak: "break-word" }}>{nativeError}</div>
+          )}
+        </div>
       )}
 
       {/* End session button */}

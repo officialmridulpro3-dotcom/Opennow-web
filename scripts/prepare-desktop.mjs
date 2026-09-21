@@ -109,3 +109,43 @@ if (shouldStageSidecar) {
     `[desktop] skipped Node sidecar stage (${sidecarName}); run on Windows or pass --force-sidecar`,
   );
 }
+
+// ---------------------------------------------------------------------------
+// 3. NVST native-streamer sidecar (best-effort local build)
+// ---------------------------------------------------------------------------
+// CI builds the canonical sidecar from the vendored engine in the
+// `nvst-sidecar` job and stages it into src-tauri/binaries before bundling.
+// Locally, attempt the same build so `tauri build` keeps working without CI;
+// a missing Rust toolchain only disables native playback, it never breaks
+// the WebRTC app, so any failure here warns and continues.
+const nvstName = `opennow-nvst-${triple}${process.platform === "win32" ? ".exe" : ""}`;
+const nvstTarget = join(binariesDir, nvstName);
+const nvstCrateDir = join(root, "third_party", "opennow-streamer");
+
+if (existsSync(nvstTarget)) {
+  console.log(`[desktop] NVST sidecar already staged -> ${relative(root, nvstTarget)}`);
+} else if (!existsSync(join(nvstCrateDir, "Cargo.toml"))) {
+  console.log("[desktop] NVST sidecar skipped (vendored engine not present)");
+} else {
+  try {
+    console.log("[desktop] building NVST sidecar from vendored engine (best-effort)...");
+    execFileSync("cargo", ["build", "--release", "-p", "opennow-streamer"], {
+      cwd: nvstCrateDir,
+      stdio: "inherit",
+    });
+    // The crate's binary target keeps its package name; rename into the
+    // externalBin lookup slot (`opennow-nvst-<triple>[.exe]`) on stage.
+    const builtExe = join(
+      nvstCrateDir,
+      "target",
+      "release",
+      `opennow-streamer${process.platform === "win32" ? ".exe" : ""}`,
+    );
+    copyFileSync(builtExe, nvstTarget);
+    console.log(`[desktop] staged NVST sidecar     -> ${relative(root, nvstTarget)}`);
+  } catch (error) {
+    console.warn(
+      `[desktop] NVST sidecar build failed (${error instanceof Error ? error.message : String(error)}); continuing without native playback`,
+    );
+  }
+}

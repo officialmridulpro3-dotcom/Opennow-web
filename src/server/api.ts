@@ -10,6 +10,7 @@ import { resolveClientStreamingBaseUrl } from "./gfn/cloudmatchTransport";
 import { fetchSubscription } from "./gfn/subscription";
 import { getLoginProviders } from "./webAuth";
 import { getSession } from "./sessionStore";
+import { finalizeNativeContext, nativeSidecar } from "./nativeStream";
 
 function asyncRoute(handler: (request: Request, response: Response) => Promise<void>) {
   return (request: Request, response: Response, next: NextFunction) => {
@@ -255,5 +256,39 @@ export function registerApi(app: Express): void {
     });
     state.removeActiveSession(input.sessionId);
     response.status(204).end();
+  }));
+
+  // Native (NVST) sidecar control. The desktop shell bundles the upstream
+  // streaming engine and advertises it via OPENNOW_NVST_SIDECAR; web
+  // deployments answer `supported: false` and these calls no-op cleanly.
+  app.get("/api/native/status", (_request, response) => {
+    response.json(nativeSidecar.status());
+  });
+
+  app.post("/api/native/start", asyncRoute(async (request, response) => {
+    const state = getSession(request, response);
+    await state.requireAuth();
+    const input = (request.body ?? {}) as { sessionId?: string; context?: unknown };
+    if (!input.sessionId || !state.ownsActiveSession(input.sessionId)) {
+      response.status(403).json({ error: "This session does not belong to the current browser session." });
+      return;
+    }
+    try {
+      const finalized = finalizeNativeContext(input.context);
+      if (finalized.sessionId !== input.sessionId) {
+        response.status(400).json({ error: "Native context session does not match the requested session." });
+        return;
+      }
+      response.json(await nativeSidecar.start(finalized.sessionId, finalized.context));
+    } catch (error) {
+      const statusCode = (error as { statusCode?: number }).statusCode ?? 500;
+      response.status(statusCode).json({ error: (error as Error).message });
+    }
+  }));
+
+  app.post("/api/native/stop", asyncRoute(async (request, response) => {
+    const state = getSession(request, response);
+    await state.requireAuth();
+    response.json(await nativeSidecar.stop());
   }));
 }

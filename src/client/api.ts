@@ -25,6 +25,31 @@ const CLIENT_LOG_LINE_LIMIT = 2000;
 const clientLogBuffer: string[] = [];
 let clientLogFlushTimer: number | null = null;
 
+export interface NativeSidecarStatus {
+  supported: boolean;
+  running: boolean;
+  pid?: number;
+  sessionId?: string;
+  exitCode?: number | null;
+  lastError?: string;
+  capabilities?: unknown;
+}
+
+export function getNativeStatus(): Promise<NativeSidecarStatus> {
+  return api<NativeSidecarStatus>("/api/native/status");
+}
+
+export function startNativeStream(sessionId: string, context: unknown): Promise<NativeSidecarStatus> {
+  return api<NativeSidecarStatus>("/api/native/start", {
+    method: "POST",
+    body: JSON.stringify({ sessionId, context }),
+  });
+}
+
+export function stopNativeStream(): Promise<NativeSidecarStatus> {
+  return api<NativeSidecarStatus>("/api/native/stop", { method: "POST" });
+}
+
 /**
  * Forward browser-side stream diagnostics to the server console so a single
  * server log shows both sides of the signaling/ICE handshake. Fire-and-forget,

@@ -13,9 +13,27 @@ on:
 jobs:
   windows:
     name: Build Windows x64
+    needs: [nvst-sidecar]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
+      # The native streaming engine is built once in nvst-sidecar; rename it
+      # into the externalBin lookup slot so the bundler (installer) and the
+      # portable layout below pick it up as opennow-nvst. desktop:prepare sees
+      # the staged file and skips its redundant local rebuild.
+      - name: Download NVST sidecar
+        uses: actions/download-artifact@v4
+        with:
+          name: opennow-nvst-sidecar-windows-x64
+          path: nvst-sidecar
+
+      - name: Stage NVST sidecar for bundling
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -ItemType Directory -Force -Path "src-tauri/binaries" | Out-Null
+          Copy-Item "nvst-sidecar/opennow-streamer.exe" "src-tauri/binaries/opennow-nvst-x86_64-pc-windows-msvc.exe"
 
       - uses: actions/setup-node@v4
         with:
@@ -66,6 +84,7 @@ jobs:
           Copy-Item "src-tauri/target/release/opennow.exe" "$portable/OpenNOW.exe"
           Copy-Item "src-tauri/resources/server.mjs" $portable
           Copy-Item "src-tauri/binaries/opennow-server-x86_64-pc-windows-msvc.exe" $portable
+          Copy-Item "src-tauri/binaries/opennow-nvst-x86_64-pc-windows-msvc.exe" $portable
           Copy-Item -Recurse "dist" "$portable/dist"
           Compress-Archive -Path $portable -DestinationPath "portable/OpenNOW-portable-windows-x64.zip"
 
