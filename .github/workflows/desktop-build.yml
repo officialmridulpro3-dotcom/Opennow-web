@@ -75,3 +75,60 @@ jobs:
           name: OpenNOW-windows-x64-portable
           path: portable/OpenNOW-portable-windows-x64.zip
           if-no-files-found: error
+
+  # Phase 1 of docs/NATIVE_STREAMER.md: compile upstream's native NVST engine
+  # (vendored at third_party/opennow-streamer) as a standalone Windows binary
+  # and smoke-test its JSON-lines handshake. Not yet wired into the app.
+  nvst-sidecar:
+    name: Build NVST sidecar (Windows x64)
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: third_party/opennow-streamer
+
+      - name: Setup MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      # *-sys crates (ffmpeg, opus) run bindgen, which needs libclang.
+      - name: Install LLVM
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          choco install llvm -y --no-progress
+          $llvmBin = Join-Path $env:ProgramFiles "LLVM\bin"
+          if (-not (Test-Path (Join-Path $llvmBin "clang.exe")) -or -not (Test-Path (Join-Path $llvmBin "libclang.dll"))) {
+            throw "LLVM installation is missing libclang.dll"
+          }
+          $llvmBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "LIBCLANG_PATH=$llvmBin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Build opennow-nvst sidecar
+        shell: pwsh
+        env:
+          CARGO_TERM_COLOR: never
+        run: cargo build --locked --release --manifest-path third_party/opennow-streamer/Cargo.toml -p opennow-streamer
+
+      - name: Smoke test (hello handshake)
+        shell: pwsh
+        timeout-minutes: 5
+        run: |
+          $ErrorActionPreference = "Stop"
+          $exe = "third_party/opennow-streamer/target/release/opennow-streamer.exe"
+          if (-not (Test-Path $exe)) { throw "sidecar binary missing: $exe" }
+          $reply = '{"id":"smoke-1","type":"hello","protocolVersion":7}', '{"id":"smoke-2","type":"shutdown","reason":"smoke done"}' | & $exe 2>nvst-smoke-stderr.log | Out-String
+          Write-Host $reply
+          if ($LASTEXITCODE -ne 0) { throw "sidecar exited with code $LASTEXITCODE" }
+          if ($reply -notmatch '"type"\s*:\s*"ready"') { throw "sidecar did not answer hello with ready" }
+
+      - name: Upload NVST sidecar
+        uses: actions/upload-artifact@v4
+        with:
+          name: opennow-nvst-sidecar-windows-x64
+          path: third_party/opennow-streamer/target/release/opennow-streamer.exe
+          if-no-files-found: error
