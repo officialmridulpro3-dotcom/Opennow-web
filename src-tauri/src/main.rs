@@ -147,11 +147,16 @@ fn startup(app: &tauri::AppHandle) -> Result<(), Box<dyn std::error::Error>> {
 /// Spawns the bundled backend and returns the origin to load in the window.
 #[cfg(not(debug_assertions))]
 fn start_backend(app: &tauri::AppHandle) -> Result<String, Box<dyn std::error::Error>> {
-    let resource_dir = app.path().resource_dir()?;
-    let exe_dir = std::env::current_exe()?
+    // Tauri's path APIs (and `std::env::current_exe`) return `\\?\`-prefixed
+    // verbatim paths on Windows. Native APIs accept them, but Node's module
+    // loader cannot resolve the entry script through one (it dies with
+    // `EISDIR: lstat 'C:'`), so normalize every directory before use.
+    let resource_dir = simplified(&app.path().resource_dir()?);
+    let exe_dir_raw = std::env::current_exe()?
         .parent()
         .map(Path::to_path_buf)
         .ok_or("could not resolve the application directory")?;
+    let exe_dir = simplified(&exe_dir_raw);
 
     let triple = env!("OPENNOW_TARGET_TRIPLE");
     // Tauri strips the `-<triple>` suffix from `externalBin` sidecars when
@@ -177,8 +182,21 @@ fn start_backend(app: &tauri::AppHandle) -> Result<String, Box<dyn std::error::E
     let static_dir = first_existing_dir(&[resource_dir.join("dist"), exe_dir.join("dist")])
         .ok_or("bundled web client (dist) not found — the installation may be incomplete, try reinstalling OpenNOW")?;
 
-    let data_dir = app.path().app_data_dir()?;
+    let data_dir = simplified(&app.path().app_data_dir()?);
     std::fs::create_dir_all(&data_dir)?;
+    // Launcher-side breadcrumb for support: path resolution is invisible
+    // otherwise (release builds have no console). Best-effort by design.
+    let _ = std::fs::write(
+        data_dir.join("launcher.log"),
+        format!(
+            "resource_dir={}\nexe_dir={}\nserver_exe={}\nserver_js={}\nstatic_dir={}\n",
+            resource_dir.display(),
+            exe_dir.display(),
+            server_exe.display(),
+            server_js.display(),
+            static_dir.display()
+        ),
+    );
     let log_file = std::fs::File::create(data_dir.join("server.log"))?;
     let log_file_stderr = log_file.try_clone()?;
 
@@ -297,6 +315,22 @@ fn first_existing_file(candidates: &[PathBuf]) -> Option<PathBuf> {
 
 fn first_existing_dir(candidates: &[PathBuf]) -> Option<PathBuf> {
     candidates.iter().find(|path| path.is_dir()).cloned()
+}
+
+/// Strips Windows verbatim (`\\?\`) prefixes: `\\?\C:\...` becomes `C:\...`
+/// and `\\?\UNC\server\share` becomes `\\server\share`. Returns the input
+/// untouched when no prefix is present (including on other platforms).
+fn simplified(path: &Path) -> PathBuf {
+    const VERBATIM: &str = r"\\?\";
+    const UNC: &str = r"\\?\UNC\";
+    let text = path.to_string_lossy();
+    if let Some(rest) = text.strip_prefix(UNC) {
+        PathBuf::from(format!(r"\\{rest}"))
+    } else if let Some(rest) = text.strip_prefix(VERBATIM) {
+        PathBuf::from(rest)
+    } else {
+        path.to_path_buf()
+    }
 }
 
 /// Binds :0 on loopback, reads the assigned port, and drops the listener.

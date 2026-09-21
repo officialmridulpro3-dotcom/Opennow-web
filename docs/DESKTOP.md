@@ -111,6 +111,7 @@ Everything the desktop app writes lives in one folder
 | `session-secret` | persistent auto-generated cookie-encryption secret (sessions survive restarts) |
 | `gfn-cache/` | catalog/thumbnail cache (same `OPENNOW_DATA_DIR` mechanism as the server) |
 | `server.log` | backend stdout/stderr — check here first when something misbehaves |
+| `launcher.log` | paths the shell resolved (backend exe, bundle, client dir) — include with support requests |
 
 The backend listens on `127.0.0.1` only (never on other interfaces), on a
 random free port, so it never conflicts with a dev server or another
