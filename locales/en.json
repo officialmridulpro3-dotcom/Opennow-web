@@ -792,7 +792,7 @@
     "nativeStreamer": {
       "title": "Native Streamer",
       "nativeStreaming": "Native Streaming",
-      "nativeStreamingHint": "Native streaming is experimental and may have platform-specific bugs, glitches, or fallbacks to Chromium/WebRTC. Enable it only if you are comfortable testing the GStreamer-based desktop streamer for new sessions.",
+      "nativeStreamingHint": "Experimental: new sessions open the game in a separate native window with lower latency on weak PCs instead of playing inside this app. Desktop app only.",
       "enablePromptKicker": "Experimental",
       "enablePromptTitle": "Enable Native Streamer?",
       "enablePromptBody": "The native streamer is still experimental. Internal mode keeps video inside the OpenNOW window; external floating mode is available as a fallback in settings.",

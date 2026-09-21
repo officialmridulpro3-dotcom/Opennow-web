@@ -10,7 +10,7 @@ import { resolveClientStreamingBaseUrl } from "./gfn/cloudmatchTransport";
 import { fetchSubscription } from "./gfn/subscription";
 import { getLoginProviders } from "./webAuth";
 import { getSession } from "./sessionStore";
-import { finalizeNativeContext, nativeSidecar } from "./nativeStream";
+import { finalizeNativeContext, nativeSidecar, resolveLaunchTransportMode } from "./nativeStream";
 
 function asyncRoute(handler: (request: Request, response: Response) => Promise<void>) {
   return (request: Request, response: Response, next: NextFunction) => {
@@ -191,7 +191,7 @@ export function registerApi(app: Express): void {
         auth.provider.streamingServiceUrl,
       ),
       internalTitle: String(input.internalTitle || appId),
-      settings: { ...input.settings, clientMode: "web", transportMode: "webrtc" },
+      settings: { ...input.settings, ...resolveLaunchTransportMode(input.settings.transportMode) },
     });
     state.addActiveSession(session.sessionId);
     response.json(session);
@@ -234,7 +234,7 @@ export function registerApi(app: Express): void {
       ...input,
       token: auth.tokens.idToken ?? auth.tokens.accessToken,
       streamingBaseUrl: input.streamingBaseUrl ?? auth.provider.streamingServiceUrl,
-      settings: input.settings ? { ...input.settings, clientMode: "web", transportMode: "webrtc" } : undefined,
+      settings: input.settings ? { ...input.settings, ...resolveLaunchTransportMode(input.settings.transportMode) } : undefined,
     });
     state.addActiveSession(claimed.sessionId);
     response.json(claimed);

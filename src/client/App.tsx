@@ -661,6 +661,9 @@ export function App(): JSX.Element {
     setLocalSessionTimerWarning(null);
     resetStatsOverlayToPreference();
     nativeStreamingRef.current = false;
+    setNativeSidecarStatus(null);
+    setNativeError(null);
+    setNativeStarting(false);
     diagnosticsStore.set(defaultDiagnostics());
 
     if (!options?.keepStreamingContext) {
@@ -726,7 +729,7 @@ export function App(): JSX.Element {
       enableCloudGsync: settings.enableCloudGsync,
       clientMode: settings.streamClientMode,
       nativeStreamerBackend: "gstreamer",
-      transportMode: "webrtc",
+      transportMode: settings.streamClientMode === "native" ? "nvst" : "webrtc",
       nativeCloudGsyncMode: settings.nativeCloudGsyncMode,
       nativeTransitionDiagnostics: settings.nativeTransitionDiagnostics,
       appLaunchMode:
@@ -1713,6 +1716,38 @@ export function App(): JSX.Element {
     return {};
   }, []);
 
+  // Native (NVST) connect: the seat was provisioned with the classic RTSPS
+  // streamer at create time, so hand it to the sidecar instead of opening
+  // WebRTC signaling. The sidecar owns decode/render/input in its own window.
+  const startNativeFromClaim = useCallback(async (claimed: SessionInfo): Promise<void> => {
+    const existing = await getNativeStatus().catch(() => null);
+    if (existing?.running) {
+      if (existing.sessionId === claimed.sessionId) {
+        setNativeSidecarStatus(existing);
+        setStreamStatus("streaming");
+        return;
+      }
+      await stopNativeStream().catch(() => undefined);
+    }
+    setNativeStarting(true);
+    setNativeError(null);
+    try {
+      const context = buildNativeStreamerSessionContext(claimed, buildCurrentStreamSettings(), nativeStreamerShortcuts);
+      setNativeSidecarStatus(await startNativeStream(claimed.sessionId, context));
+      nativeStreamingRef.current = true;
+      setSessionStartedAtMs(Date.now());
+      setStreamStatus("streaming");
+    } catch (error) {
+      nativeStreamingRef.current = false;
+      setNativeError(error instanceof Error ? error.message : String(error));
+      // Stay on the stream view with the error on the native card (retry via
+      // "Play in native window"); Stop still ends the cloud session.
+      setStreamStatus("streaming");
+    } finally {
+      setNativeStarting(false);
+    }
+  }, [buildCurrentStreamSettings, nativeStreamerShortcuts]);
+
   const applyClaimedSessionAndConnect = useCallback(async (
     claimed: SessionInfo,
     expectedRecoveryGeneration?: number,
@@ -1785,8 +1820,12 @@ export function App(): JSX.Element {
     setQueuePosition(undefined);
     setLaunchError(null);
     setStreamStatus("connecting");
-    await window.openNow.connectSignaling(buildSignalingConnectRequest(claimed));
-  }, [buildSignalingConnectRequest, disconnectSignalingControlled, isRecoveryGenerationCurrent]);
+    if (settings.streamClientMode === "native") {
+      await startNativeFromClaim(claimed);
+    } else {
+      await window.openNow.connectSignaling(buildSignalingConnectRequest(claimed));
+    }
+  }, [buildSignalingConnectRequest, disconnectSignalingControlled, isRecoveryGenerationCurrent, settings.streamClientMode, startNativeFromClaim]);
 
   const claimAndConnectSession = useCallback(async (existingSession: ActiveSessionInfo): Promise<void> => {
     const sid = existingSession.sessionId;
@@ -2908,7 +2947,11 @@ export function App(): JSX.Element {
         status: sessionToConnect.status,
       });
 
-      await window.openNow.connectSignaling(buildSignalingConnectRequest(sessionToConnect));
+      if (settings.streamClientMode === "native") {
+        await startNativeFromClaim(sessionToConnect);
+      } else {
+        await window.openNow.connectSignaling(buildSignalingConnectRequest(sessionToConnect));
+      }
     } catch (error) {
       if (launchAbortRef.current) {
         await stopLaunchedSessionQuietly();
@@ -2947,6 +2990,8 @@ export function App(): JSX.Element {
     resolveSubscriptionInfoForLaunch,
     selectedProvider,
     settings.enablePersistingInGameSettings,
+    settings.streamClientMode,
+    startNativeFromClaim,
     streamStatus,
     t,
     variantByGameId,
@@ -3479,8 +3524,6 @@ export function App(): JSX.Element {
       } catch {
         // No native stream running (or web build) — nothing to stop.
       }
-      nativeStreamingRef.current = false;
-      setNativeError(null);
       const status = streamStatusRef.current;
       if (status !== "idle" && status !== "streaming") {
         launchAbortRef.current = true;
@@ -3871,7 +3914,7 @@ export function App(): JSX.Element {
             nativeInputCaptureActive={nativeInputCaptureActive}
             gstreamerEnabled={settings.streamClientMode === "native"}
             nativeExternalRenderer={settings.nativeExternalRenderer}
-            nativeSupported={nativeSidecarStatus?.supported ?? false}
+            nativeSupported={(nativeSidecarStatus?.supported ?? false) && ((nativeSidecarStatus?.running ?? false) || nativeStarting || (nativeError ?? nativeSidecarStatus?.lastError ?? null) != null)}
             nativeRunning={nativeSidecarStatus?.running ?? false}
             nativeStarting={nativeStarting}
             nativeError={nativeError ?? nativeSidecarStatus?.lastError ?? null}

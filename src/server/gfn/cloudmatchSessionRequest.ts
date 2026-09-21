@@ -189,6 +189,38 @@ export function webRtcSessionMetadata(width: number, height: number): Array<{ ke
   ];
 }
 
+/**
+ * Session metadata for native (NVST) sessions, matching the reference native
+ * client. The critical difference from WebRTC: NO GSStreamerType entry, which
+ * provisions the seat's classic RTSPS streamer instead of the WebRTC stack.
+ * Sending GSStreamerType=WebRTC and then opening NVST yields HTTP 501 on the
+ * RTSPS control channel — the transport is locked at allocation time.
+ */
+export function nativeSessionMetadata(width: number, height: number): Array<{ key: string; value: string }> {
+  return [
+    { key: "ClientImeSupport", value: "0" },
+    { key: "SubSessionId", value: crypto.randomUUID() },
+    {
+      key: "clientPhysicalResolution",
+      value: JSON.stringify({ horizontalPixels: width, verticalPixels: height }),
+    },
+    { key: "networkType", value: "Unknown" },
+    { key: "wssignaling", value: "1" },
+    { key: "surroundAudioInfo", value: "2" },
+  ];
+}
+
+/** Resume-claim variant: the reference client drops clientPhysicalResolution. */
+export function nativeResumeMetadata(): Array<{ key: string; value: string }> {
+  return [
+    { key: "SubSessionId", value: crypto.randomUUID() },
+    { key: "wssignaling", value: "1" },
+    { key: "networkType", value: "Unknown" },
+    { key: "ClientImeSupport", value: "0" },
+    { key: "surroundAudioInfo", value: "2" },
+  ];
+}
+
 export function buildSessionRequestBody(
   input: SessionCreateRequest,
   deviceHashId: string,
@@ -205,6 +237,9 @@ export function buildSessionRequestBody(
   const bitDepth = colorQualityBitDepth(cq);
   const chromaFormat = colorQualityChromaFormat(cq);
   const accountLinked = input.accountLinked ?? true;
+  // Native launches provision the seat's classic RTSPS streamer; WebRTC
+  // launches provision the WebRTC stack. The transport locks at allocation.
+  const nativeTransport = input.settings.transportMode === "nvst";
 
   return {
     sessionRequestData: {
@@ -243,7 +278,9 @@ export function buildSessionRequestBody(
       ],
       useOps: true,
       audioMode: 2,
-      metaData: webRtcSessionMetadata(width, height),
+      metaData: nativeTransport
+        ? nativeSessionMetadata(width, height)
+        : webRtcSessionMetadata(width, height),
       sdrHdrMode: hdrEnabled ? 1 : 0,
       clientDisplayHdrCapabilities: hdrEnabled
         ? {
@@ -255,9 +292,10 @@ export function buildSessionRequestBody(
       surroundAudioInfo: 0,
       remoteControllersBitmap: 0,
       clientTimezoneOffset: timezoneOffsetMs(),
-      enhancedStreamMode: 1,
+      enhancedStreamMode: nativeTransport ? 0 : 1,
       appLaunchMode: appLaunchModeWireValue(input.settings.appLaunchMode),
-      secureRTSPSupported: false,
+      secureRTSPSupported: nativeTransport,
+      transport: nativeTransport ? null : undefined,
       partnerCustomData: "",
       accountLinked,
       enablePersistingInGameSettings: shouldEnableInGameSettingsPersistence(input),
@@ -289,6 +327,9 @@ export function buildClaimRequestBody(
   const deviceId = getStableDeviceId();
   const subSessionId = crypto.randomUUID();
   const timezoneMs = timezoneOffsetMs();
+  // Resume claims must echo the provisioning the session was created with —
+  // a native session re-claimed with GSStreamerType=WebRTC would break.
+  const nativeTransport = settings.transportMode === "nvst";
 
   return {
     action: 2,
@@ -304,14 +345,16 @@ export function buildClaimRequestBody(
       deviceHashId: deviceId,
       internalTitle: null,
       clientPlatformName: "windows",
-      metaData: [
-        { key: "SubSessionId", value: subSessionId },
-        { key: "wssignaling", value: "1" },
-        { key: "GSStreamerType", value: "WebRTC" },
-        { key: "networkType", value: "Unknown" },
-        { key: "ClientImeSupport", value: "0" },
-        { key: "surroundAudioInfo", value: "2" },
-      ],
+      metaData: nativeTransport
+        ? nativeResumeMetadata()
+        : [
+          { key: "SubSessionId", value: subSessionId },
+          { key: "wssignaling", value: "1" },
+          { key: "GSStreamerType", value: "WebRTC" },
+          { key: "networkType", value: "Unknown" },
+          { key: "ClientImeSupport", value: "0" },
+          { key: "surroundAudioInfo", value: "2" },
+        ],
       surroundAudioInfo: 0,
       clientTimezoneOffset: timezoneMs,
       clientIdentification: "GFN-PC",
@@ -322,13 +365,13 @@ export function buildClaimRequestBody(
       // session was created with over whatever the UI toggles currently say.
       appLaunchMode: sessionAppLaunchMode ?? appLaunchModeWireValue(settings.appLaunchMode),
       sdkVersion: "1.0",
-      enhancedStreamMode: 1,
+      enhancedStreamMode: nativeTransport ? 0 : 1,
       useOps: true,
       clientDisplayHdrCapabilities: null,
       accountLinked: true,
       partnerCustomData: "",
       enablePersistingInGameSettings,
-      secureRTSPSupported: false,
+      secureRTSPSupported: nativeTransport,
       userAge: 26,
     },
     metaData: [],

@@ -837,6 +837,29 @@ export function SettingsStreamSection({
           </span>
         </div>
 
+        {/* Native streaming client (NVST sidecar, desktop only) */}
+        <div className="settings-row settings-row--column">
+          <div className="settings-row-top settings-row-top--compact">
+            <label className="settings-label settings-label--wrap">
+              <span className="settings-label-title">
+                <Monitor size={15} className="settings-label-icon" />
+                {t("settings.nativeStreamer.nativeStreaming")}
+                <span className="settings-inline-badge settings-inline-badge--beta">{t("app.labels.experimental")}</span>
+              </span>
+            </label>
+            <label className="settings-toggle">
+              <input
+                type="checkbox"
+                checked={settings.streamClientMode === "native"}
+                onChange={(e) => handleChange("streamClientMode", e.target.checked ? "native" : "web")}
+              />
+              <span className="settings-toggle-track" />
+            </label>
+          </div>
+          <span className="settings-subtle-hint">
+            {t("settings.nativeStreamer.nativeStreamingHint")}
+          </span>
+        </div>
         {/* Video filters (client-side GPU shaders) */}
         <div className="settings-row settings-row--column">
           <div className="settings-row-top settings-row-top--compact">

@@ -81,6 +81,21 @@ export function finalizeNativeContext(input: unknown): FinalizedNativeContext {
   return { sessionId, context: finalized };
 }
 
+/**
+ * Resolve the transport CloudMatch should provision. A native (NVST) request
+ * is honored only when a sidecar binary is present to play it — web
+ * deployments and sidecar-less shells always fall back to WebRTC.
+ */
+export function resolveLaunchTransportMode(requested: unknown): {
+  clientMode: "native" | "web";
+  transportMode: "nvst" | "webrtc";
+} {
+  if (requested === "nvst" && sidecarPath() !== null) {
+    return { clientMode: "native", transportMode: "nvst" };
+  }
+  return { clientMode: "web", transportMode: "webrtc" };
+}
+
 function httpError(message: string, statusCode: number): Error & { statusCode: number } {
   return Object.assign(new Error(message), { statusCode });
 }

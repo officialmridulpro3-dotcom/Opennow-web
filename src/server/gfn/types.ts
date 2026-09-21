@@ -49,6 +49,8 @@ export interface CloudMatchRequest {
     accountLinked: boolean;
     enablePersistingInGameSettings: boolean;
     userAge: number;
+    /** Explicit null in native (NVST) creates, matching the reference client. */
+    transport?: string | null;
     requestedStreamingFeatures: {
       reflex: boolean;
       bitDepth: number;

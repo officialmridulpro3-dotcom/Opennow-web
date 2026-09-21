@@ -48,6 +48,18 @@ to its stdin → gameplay in the native window → sidecar exit returns to libra
 - [ ] **Phase 4 — Test loop.** Iterate on real hardware (no NVIDIA account/GPU
   in CI) until playback is smooth.
 
+## Provisioning (HTTP 501 lesson)
+
+The seat's transport locks at CloudMatch allocation: `GSStreamerType=WebRTC`
+metaData (+ `secureRTSPSupported: false`) provisions the WebRTC stack, and the
+seat's RTSPS endpoint then answers the NVST control-channel upgrade with
+HTTP 501. Native launches therefore send the reference native client's
+provisioning — no `GSStreamerType` entry, `secureRTSPSupported: true`,
+`enhancedStreamMode: 0`, `transport: null` — selected by
+`settings.transportMode === "nvst"` and echoed on resume claims. The server
+honors `nvst` only when a sidecar binary is present
+(`resolveLaunchTransportMode`), so web deployments always stay on WebRTC.
+
 ## Constraints / risks
 
 - Upstream engine is young: pin stable tags, expect GPU/driver-specific bugs.
