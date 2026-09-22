@@ -67,6 +67,17 @@ retry instead of an infinite spinner: hello 30s, start-ack 120s (tunable via
 `OPENNOW_NVST_{HELLO,START}_TIMEOUT_MS`), client fetch 150s. `status.phase`
 (`handshake` | `starting`) drives the card's progress line while starting.
 
+## Stream provisioning (stuck-in-setup lesson)
+
+Transport provisioning alone left native seats parked in setup forever: unlike
+WebRTC (codec via SDP), the native seat configures its encoder purely from
+`requestedStreamingFeatures`, so native creates send the full reference set
+(`codec`, `maxBitrateKbps`, `vsync`, `audioChannelCount`, …) plus the reference
+client-identity fields (`sdkVersion "2.0"`, `streamerVersion "14"`,
+`clientPlatformName "Windows"`, controllers `[2]`, numeric `appId`, …). Resume
+claims echo the same values. A native-only poll backstop fails loudly if the
+seat never leaves setup once out of queue.
+
 ## Constraints / risks
 
 - Upstream engine is young: pin stable tags, expect GPU/driver-specific bugs.

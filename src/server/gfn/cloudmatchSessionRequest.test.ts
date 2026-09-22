@@ -93,3 +93,57 @@ describe("resolveLaunchTransportMode sidecar gate", () => {
     expect(resolveLaunchTransportMode(undefined)).toEqual({ clientMode: "web", transportMode: "webrtc" });
   });
 });
+
+describe("native stream provisioning identity", () => {
+  const nativeSettings = (): StreamSettings => ({ ...streamSettings("nvst"), codec: "H264" } as StreamSettings);
+  const nativeCreateInput = (): SessionCreateRequest => ({ ...createInput("nvst"), settings: nativeSettings() });
+
+  it("sends the full encoder feature set plus reference identity fields", () => {
+    const data = sessionRequestData(buildSessionRequestBody(nativeCreateInput(), "device-1", null));
+    const features = data.requestedStreamingFeatures as Record<string, unknown>;
+    expect(features.codec).toBe(1);
+    expect(features.maxBitrateKbps).toBe(20000);
+    expect(features.vsync).toBe(false);
+    expect(features.audioChannelCount).toBe(2);
+    expect(features.dynamicStreamingMode).toBe(0);
+    expect(data.sdkVersion).toBe("2.0");
+    expect(data.streamerVersion).toBe("14");
+    expect(data.clientPlatformName).toBe("Windows");
+    expect(data.availableSupportedControllers).toEqual([2]);
+    expect(data.preferredController).toBe(2);
+    expect(data.partnerCustomData).toBeNull();
+    expect(data.requestedAudioFormat).toBe(0);
+    expect(data.userAge).toBe(25);
+    expect(data.appId).toBe(12345);
+    expect(data.externalAppId).toBeNull();
+    const monitor = (data.clientRequestMonitorSettings as Array<Record<string, unknown>>)[0];
+    expect(monitor.dpi).toBe(96);
+  });
+
+  it("leaves the WebRTC create body byte-identical", () => {
+    const data = sessionRequestData(buildSessionRequestBody(createInput("webrtc"), "device-1", "nts-1"));
+    const features = data.requestedStreamingFeatures as Record<string, unknown>;
+    expect(features.codec).toBeUndefined();
+    expect(features.maxBitrateKbps).toBeUndefined();
+    expect(data.sdkVersion).toBe("1.0");
+    expect(data.streamerVersion).toBe(1);
+    expect(data.clientPlatformName).toBe("windows");
+    expect(data.appId).toBe("12345");
+    expect(data.externalAppId).toBeUndefined();
+    expect(data.preferredController).toBeUndefined();
+    expect(data.requestedAudioFormat).toBeUndefined();
+    expect(data.partnerCustomData).toBe("");
+    expect(data.userAge).toBe(26);
+  });
+
+  it("echoes the native identity on resume claims", () => {
+    const data = sessionRequestData(buildClaimRequestBody("sess-1", "12345", nativeSettings()));
+    expect(data.streamerVersion).toBe("14");
+    expect(data.sdkVersion).toBe("2.0");
+    expect(data.clientPlatformName).toBe("Windows");
+    expect(data.availableSupportedControllers).toEqual([2]);
+    expect(data.preferredController).toBe(2);
+    expect(data.partnerCustomData).toBeNull();
+    expect(data.userAge).toBe(25);
+  });
+});

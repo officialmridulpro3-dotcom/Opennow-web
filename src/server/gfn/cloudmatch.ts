@@ -100,14 +100,18 @@ export async function createSession(input: SessionCreateRequest): Promise<Sessio
     deviceId,
     input.proxyUrl,
   );
-  const networkTestSessionId = await createNetworkTestSession({
-    base,
-    token: input.token,
-    clientId,
-    deviceId,
-    settings: input.settings,
-    proxyUrl: input.proxyUrl,
-  });
+  // The reference native client sends networkTestSessionId: null (no probe
+  // session); WebRTC keeps the network probe.
+  const networkTestSessionId = input.settings.transportMode === "nvst"
+    ? null
+    : await createNetworkTestSession({
+      base,
+      token: input.token,
+      clientId,
+      deviceId,
+      settings: input.settings,
+      proxyUrl: input.proxyUrl,
+    });
   const body = buildSessionRequestBody(input, deviceId, networkTestSessionId);
   console.log(
     `[CloudMatch] createSession in-game settings persistence: user=${input.enablePersistingInGameSettings === true}, ` +

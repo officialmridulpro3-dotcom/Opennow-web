@@ -2801,6 +2801,9 @@ export function App(): JSX.Element {
       let latestSession = newSession;
       let isInQueueMode = isSessionInQueue(newSession);
       let attempt = 0;
+      // Native-only backstop (see loop below): seats that never leave setup.
+      let nativeSetupStuckPolls = 0;
+      const NATIVE_SETUP_MAX_STUCK_POLLS = 150;
 
       while (true) {
         attempt++;
@@ -2915,6 +2918,20 @@ export function App(): JSX.Element {
         console.log(
           `Poll attempt ${attempt}: status=${mergedSession.status}, seatSetupStep=${mergedSession.seatSetupStep ?? "n/a"}, queuePosition=${mergedSession.queuePosition ?? "n/a"}, serverIp=${mergedSession.serverIp}, queueMode=${isInQueueMode}, adsRequired=${isSessionAdsRequired(mergedSession.adState)}`,
         );
+
+        // Native backstop: once out of queue, the seat must leave setup within
+        // a few minutes. A provisioning the seat can't satisfy parks it in
+        // setup forever — fail loudly instead of spinning forever.
+        if (settings.streamClientMode === "native" && !isInQueueMode) {
+          nativeSetupStuckPolls += 1;
+          if (nativeSetupStuckPolls > NATIVE_SETUP_MAX_STUCK_POLLS) {
+            throw new Error(
+              `The cloud seat never became ready for native streaming (status ${mergedSession.status}). Turn Native Streaming off to play via the browser path, or try again later.`,
+            );
+          }
+        } else {
+          nativeSetupStuckPolls = 0;
+        }
 
         if (isSessionReadyForConnect(mergedSession.status)) {
           finalSession = mergedSession;

@@ -12,6 +12,7 @@ import { buildGfnCloudMatchHeaders } from "./clientHeaders";
 import { getStableDeviceId } from "./deviceId";
 import {
   appLaunchModeWireValue,
+  buildNativeRequestedStreamingFeatures,
   buildRequestedStreamingFeatures,
   shouldEnableInGameSettingsPersistence,
 } from "./cloudmatchFeatures";
@@ -243,9 +244,11 @@ export function buildSessionRequestBody(
 
   return {
     sessionRequestData: {
-      appId: input.appId,
+      appId: nativeTransport ? Number.parseInt(input.appId, 10) : input.appId,
+      externalAppId: nativeTransport ? null : undefined,
       internalTitle: input.internalTitle || null,
-      availableSupportedControllers: [],
+      availableSupportedControllers: nativeTransport ? [2] : [],
+      preferredController: nativeTransport ? 2 : undefined,
       networkTestSessionId,
       parentSessionId: null,
       clientIdentification: "GFN-PC",
@@ -253,9 +256,9 @@ export function buildSessionRequestBody(
       // The official client preserves this identity, and resume reliability depends on it.
       deviceHashId,
       clientVersion: "30.0",
-      sdkVersion: "1.0",
-      streamerVersion: 1,
-      clientPlatformName: "windows",
+      sdkVersion: nativeTransport ? "2.0" : "1.0",
+      streamerVersion: nativeTransport ? "14" : 1,
+      clientPlatformName: nativeTransport ? "Windows" : "windows",
       clientRequestMonitorSettings: [
         {
           monitorId: 0,
@@ -273,7 +276,7 @@ export function buildSessionRequestBody(
               }
             : {},
           hdr10PlusGamingData: null,
-          dpi: 0,
+          dpi: nativeTransport ? 96 : 0,
         },
       ],
       useOps: true,
@@ -296,16 +299,19 @@ export function buildSessionRequestBody(
       appLaunchMode: appLaunchModeWireValue(input.settings.appLaunchMode),
       secureRTSPSupported: nativeTransport,
       transport: nativeTransport ? null : undefined,
-      partnerCustomData: "",
+      partnerCustomData: nativeTransport ? null : "",
       accountLinked,
       enablePersistingInGameSettings: shouldEnableInGameSettingsPersistence(input),
-      userAge: 26,
-      requestedStreamingFeatures: buildRequestedStreamingFeatures(
-        input.settings,
-        bitDepth,
-        chromaFormat,
-        hdrEnabled,
-      ),
+      requestedAudioFormat: nativeTransport ? 0 : undefined,
+      userAge: nativeTransport ? 25 : 26,
+      requestedStreamingFeatures: nativeTransport
+        ? buildNativeRequestedStreamingFeatures(input.settings, bitDepth, chromaFormat)
+        : buildRequestedStreamingFeatures(
+          input.settings,
+          bitDepth,
+          chromaFormat,
+          hdrEnabled,
+        ),
     },
   };
 }
@@ -340,11 +346,12 @@ export function buildClaimRequestBody(
       remoteControllersBitmap: 0,
       sdrHdrMode: 0,
       networkTestSessionId: null,
-      availableSupportedControllers: [],
+      availableSupportedControllers: nativeTransport ? [2] : [],
+      preferredController: nativeTransport ? 2 : undefined,
       clientVersion: "30.0",
       deviceHashId: deviceId,
       internalTitle: null,
-      clientPlatformName: "windows",
+      clientPlatformName: nativeTransport ? "Windows" : "windows",
       metaData: nativeTransport
         ? nativeResumeMetadata()
         : [
@@ -360,19 +367,19 @@ export function buildClaimRequestBody(
       clientIdentification: "GFN-PC",
       parentSessionId: null,
       appId: parseInt(appId, 10),
-      streamerVersion: 1,
+      streamerVersion: nativeTransport ? "14" : 1,
       // Resume must not renegotiate session parameters: prefer the wire value the
       // session was created with over whatever the UI toggles currently say.
       appLaunchMode: sessionAppLaunchMode ?? appLaunchModeWireValue(settings.appLaunchMode),
-      sdkVersion: "1.0",
+      sdkVersion: nativeTransport ? "2.0" : "1.0",
       enhancedStreamMode: nativeTransport ? 0 : 1,
       useOps: true,
       clientDisplayHdrCapabilities: null,
       accountLinked: true,
-      partnerCustomData: "",
+      partnerCustomData: nativeTransport ? null : "",
       enablePersistingInGameSettings,
       secureRTSPSupported: nativeTransport,
-      userAge: 26,
+      userAge: nativeTransport ? 25 : 26,
     },
     metaData: [],
   };

@@ -3,7 +3,7 @@ import type { SessionErrorInfo } from "@shared/sessionError";
 
 export interface CloudMatchRequest {
   sessionRequestData: {
-    appId: string;
+    appId: string | number;
     internalTitle: string | null;
     availableSupportedControllers: number[];
     networkTestSessionId: string | null;
@@ -12,7 +12,7 @@ export interface CloudMatchRequest {
     deviceHashId: string;
     clientVersion: string;
     sdkVersion: string;
-    streamerVersion: number;
+    streamerVersion: number | string;
     clientPlatformName: string;
     clientRequestMonitorSettings: Array<{
       monitorId?: number;
@@ -45,12 +45,16 @@ export interface CloudMatchRequest {
     enhancedStreamMode: number;
     appLaunchMode: number;
     secureRTSPSupported: boolean;
-    partnerCustomData: string;
+    partnerCustomData: string | null;
     accountLinked: boolean;
     enablePersistingInGameSettings: boolean;
     userAge: number;
     /** Explicit null in native (NVST) creates, matching the reference client. */
     transport?: string | null;
+    /** Native-only identity fields, matching the reference native client. */
+    externalAppId?: unknown;
+    preferredController?: number;
+    requestedAudioFormat?: number;
     requestedStreamingFeatures: {
       reflex: boolean;
       bitDepth: number;
@@ -69,6 +73,14 @@ export interface CloudMatchRequest {
       hudStreamingMode?: number;
       sdrColorSpace?: number;
       hdrColorSpace?: number;
+      /** Native-only: the seat configures its encoder from these at allocation. */
+      codec?: number;
+      maxBitrateKbps?: number;
+      vsync?: boolean;
+      audioChannelCount?: number;
+      qosPolicy?: number;
+      touchSupport?: boolean;
+      dynamicStreamingMode?: number;
     };
   };
 }
