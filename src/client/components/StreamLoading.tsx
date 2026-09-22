@@ -30,6 +30,8 @@ export interface StreamLoadingProps {
   platformStore?: string;
   status: "queue" | "setup" | "starting" | "connecting";
   queuePosition?: number;
+  /** Small live diagnostic line under the status (poll attempt, seat status). */
+  diagnosticLine?: string | null;
   estimatedWait?: string;
   adState?: SessionAdState;
   activeAd?: SessionAdInfo;
@@ -131,6 +133,7 @@ export function StreamLoading({
   platformStore,
   status,
   queuePosition,
+  diagnosticLine,
   estimatedWait,
   adState,
   activeAd,
@@ -271,6 +274,9 @@ export function StreamLoading({
             <div className="gload-status-text">
               <p className="gload-message" role="status" aria-live="polite">{statusMessage}</p>
               {!hasError && <p className="gload-detail">{getPhaseDetail(t, status)}</p>}
+              {!hasError && diagnosticLine && (
+                <p className="gload-detail" style={{ opacity: 0.75 }}>{diagnosticLine}</p>
+              )}
               {hasError && error && (
                 <>
                   <p className="gload-error-desc">{error.description}</p>

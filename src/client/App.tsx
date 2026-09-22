@@ -281,6 +281,8 @@ export function App(): JSX.Element {
   const [streamingGame, setStreamingGame] = useState<GameInfo | null>(null);
   const [streamingStore, setStreamingStore] = useState<string | null>(null);
   const [queuePosition, setQueuePosition] = useState<number | undefined>();
+  // Live seat-poll readout for the loading screen (attempt/status/step/queue).
+  const [launchPollDiagnostic, setLaunchPollDiagnostic] = useState<string | null>(null);
   const [navbarActiveSession, setNavbarActiveSession] = useState<ActiveSessionInfo | null>(null);
   const [isResumingNavbarSession, setIsResumingNavbarSession] = useState(false);
   const [isTerminatingNavbarSession, setIsTerminatingNavbarSession] = useState(false);
@@ -2919,6 +2921,12 @@ export function App(): JSX.Element {
           `Poll attempt ${attempt}: status=${mergedSession.status}, seatSetupStep=${mergedSession.seatSetupStep ?? "n/a"}, queuePosition=${mergedSession.queuePosition ?? "n/a"}, serverIp=${mergedSession.serverIp}, queueMode=${isInQueueMode}, adsRequired=${isSessionAdsRequired(mergedSession.adState)}`,
         );
 
+        // Live readout for the loading screen so a stuck launch shows exactly
+        // what the seat is (not) doing instead of a mystery spinner.
+        setLaunchPollDiagnostic(
+          `poll #${attempt} · seat status ${mergedSession.status} · setup step ${mergedSession.seatSetupStep ?? "n/a"} · queue ${mergedSession.queuePosition ?? "n/a"}`,
+        );
+
         // Native backstop: once out of queue, the seat must leave setup within
         // a few minutes. A provisioning the seat can't satisfy parks it in
         // setup forever — fail loudly instead of spinning forever.
@@ -2931,6 +2939,16 @@ export function App(): JSX.Element {
           }
         } else {
           nativeSetupStuckPolls = 0;
+        }
+
+        // Total backstop (queue included): a native launch that never even
+        // leaves queue is equally wedged — fail with the state attached.
+        if (settings.streamClientMode === "native" && attempt > 450) {
+          throw new Error(
+            isInQueueMode
+              ? `Native launch is still waiting in queue after ~${Math.round(attempt / 30)} min (position ${mergedSession.queuePosition ?? "n/a"}). The native queue may be stalled — turn Native Streaming off to play via the browser path, or try again later.`
+              : `The cloud seat never became ready for native streaming (status ${mergedSession.status}). Turn Native Streaming off to play via the browser path, or try again later.`,
+          );
         }
 
         if (isSessionReadyForConnect(mergedSession.status)) {
@@ -4025,6 +4043,7 @@ export function App(): JSX.Element {
                 platformStore={streamingStore ?? undefined}
                 status={loadingStatus}
                 queuePosition={queuePosition}
+                diagnosticLine={launchPollDiagnostic}
                 adState={effectiveAdState}
                 activeAd={activeQueueAd}
                 activeAdMediaUrl={activeQueueAdMediaUrl}
