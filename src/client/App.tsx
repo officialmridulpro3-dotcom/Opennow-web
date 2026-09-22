@@ -2924,7 +2924,7 @@ export function App(): JSX.Element {
         // Live readout for the loading screen so a stuck launch shows exactly
         // what the seat is (not) doing instead of a mystery spinner.
         setLaunchPollDiagnostic(
-          `poll #${attempt} · seat status ${mergedSession.status} · setup step ${mergedSession.seatSetupStep ?? "n/a"} · queue ${mergedSession.queuePosition ?? "n/a"}`,
+          `poll #${attempt} · seat status ${mergedSession.status} · setup step ${mergedSession.seatSetupStep ?? "n/a"} · queue ${mergedSession.queuePosition ?? "n/a"} · endpoints ${mergedSession.rtspsEndpoints?.length ?? 0}`,
         );
 
         // Native backstop: once out of queue, the seat must leave setup within

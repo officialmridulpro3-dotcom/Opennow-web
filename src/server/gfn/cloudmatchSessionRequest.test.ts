@@ -58,8 +58,11 @@ describe("buildSessionRequestBody transport provisioning", () => {
     expect(metaKeys(body)).not.toContain("GSStreamerType");
     expect(metaKeys(body)).toContain("SubSessionId");
     expect(data.secureRTSPSupported).toBe(true);
-    expect(data.enhancedStreamMode).toBe(0);
-    expect(data.transport).toBeNull();
+    // The official client keeps identity fields identical across transports.
+    expect(data.enhancedStreamMode).toBe(1);
+    expect(data.streamerVersion).toBe(1);
+    expect(data.sdkVersion).toBe("1.0");
+    expect(data.transport).toBeUndefined();
   });
 });
 
@@ -78,7 +81,7 @@ describe("buildClaimRequestBody transport echo", () => {
     expect(metaKeys(body)).not.toContain("GSStreamerType");
     expect(metaKeys(body)).not.toContain("clientPhysicalResolution");
     expect(data.secureRTSPSupported).toBe(true);
-    expect(data.enhancedStreamMode).toBe(0);
+    expect(data.enhancedStreamMode).toBe(1);
   });
 });
 
@@ -98,7 +101,7 @@ describe("native stream provisioning identity", () => {
   const nativeSettings = (): StreamSettings => ({ ...streamSettings("nvst"), codec: "H264" } as StreamSettings);
   const nativeCreateInput = (): SessionCreateRequest => ({ ...createInput("nvst"), settings: nativeSettings() });
 
-  it("sends the full encoder feature set plus reference identity fields", () => {
+  it("sends the full encoder feature set with official-identical identity", () => {
     const data = sessionRequestData(buildSessionRequestBody(nativeCreateInput(), "device-1", null));
     const features = data.requestedStreamingFeatures as Record<string, unknown>;
     expect(features.codec).toBe(1);
@@ -106,18 +109,18 @@ describe("native stream provisioning identity", () => {
     expect(features.vsync).toBe(false);
     expect(features.audioChannelCount).toBe(2);
     expect(features.dynamicStreamingMode).toBe(0);
-    expect(data.sdkVersion).toBe("2.0");
-    expect(data.streamerVersion).toBe("14");
-    expect(data.clientPlatformName).toBe("Windows");
-    expect(data.availableSupportedControllers).toEqual([2]);
-    expect(data.preferredController).toBe(2);
-    expect(data.partnerCustomData).toBeNull();
-    expect(data.requestedAudioFormat).toBe(0);
-    expect(data.userAge).toBe(25);
-    expect(data.appId).toBe(12345);
-    expect(data.externalAppId).toBeNull();
+    expect(data.sdkVersion).toBe("1.0");
+    expect(data.streamerVersion).toBe(1);
+    expect(data.clientPlatformName).toBe("windows");
+    expect(data.availableSupportedControllers).toEqual([]);
+    expect(data.preferredController).toBeUndefined();
+    expect(data.partnerCustomData).toBe("");
+    expect(data.requestedAudioFormat).toBeUndefined();
+    expect(data.userAge).toBe(26);
+    expect(data.appId).toBe("12345");
+    expect(data.externalAppId).toBeUndefined();
     const monitor = (data.clientRequestMonitorSettings as Array<Record<string, unknown>>)[0];
-    expect(monitor.dpi).toBe(96);
+    expect(monitor.dpi).toBe(0);
   });
 
   it("leaves the WebRTC create body byte-identical", () => {
@@ -138,12 +141,12 @@ describe("native stream provisioning identity", () => {
 
   it("echoes the native identity on resume claims", () => {
     const data = sessionRequestData(buildClaimRequestBody("sess-1", "12345", nativeSettings()));
-    expect(data.streamerVersion).toBe("14");
-    expect(data.sdkVersion).toBe("2.0");
-    expect(data.clientPlatformName).toBe("Windows");
-    expect(data.availableSupportedControllers).toEqual([2]);
-    expect(data.preferredController).toBe(2);
-    expect(data.partnerCustomData).toBeNull();
-    expect(data.userAge).toBe(25);
+    expect(data.streamerVersion).toBe(1);
+    expect(data.sdkVersion).toBe("1.0");
+    expect(data.clientPlatformName).toBe("windows");
+    expect(data.availableSupportedControllers).toEqual([]);
+    expect(data.preferredController).toBeUndefined();
+    expect(data.partnerCustomData).toBe("");
+    expect(data.userAge).toBe(26);
   });
 });
