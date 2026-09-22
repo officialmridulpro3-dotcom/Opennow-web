@@ -60,6 +60,13 @@ provisioning — no `GSStreamerType` entry, `secureRTSPSupported: true`,
 honors `nvst` only when a sidecar binary is present
 (`resolveLaunchTransportMode`), so web deployments always stay on WebRTC.
 
+## Hang hardening
+
+Every sidecar wait is bounded so a silent engine surfaces as an error with a
+retry instead of an infinite spinner: hello 30s, start-ack 120s (tunable via
+`OPENNOW_NVST_{HELLO,START}_TIMEOUT_MS`), client fetch 150s. `status.phase`
+(`handshake` | `starting`) drives the card's progress line while starting.
+
 ## Constraints / risks
 
 - Upstream engine is young: pin stable tags, expect GPU/driver-specific bugs.

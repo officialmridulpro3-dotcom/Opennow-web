@@ -33,16 +33,27 @@ export interface NativeSidecarStatus {
   exitCode?: number | null;
   lastError?: string;
   capabilities?: unknown;
+  phase?: "handshake" | "starting";
 }
 
 export function getNativeStatus(): Promise<NativeSidecarStatus> {
   return api<NativeSidecarStatus>("/api/native/status");
 }
 
+const NATIVE_START_FETCH_TIMEOUT_MS = 150_000;
+
 export function startNativeStream(sessionId: string, context: unknown): Promise<NativeSidecarStatus> {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), NATIVE_START_FETCH_TIMEOUT_MS);
   return api<NativeSidecarStatus>("/api/native/start", {
     method: "POST",
     body: JSON.stringify({ sessionId, context }),
+    signal: controller.signal,
+  }).finally(() => window.clearTimeout(timer)).catch((error: unknown) => {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error("Native start timed out after 150s without an answer from the app backend.");
+    }
+    throw error;
   });
 }
 

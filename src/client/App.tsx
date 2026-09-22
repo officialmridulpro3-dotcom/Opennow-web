@@ -3917,6 +3917,7 @@ export function App(): JSX.Element {
             nativeSupported={(nativeSidecarStatus?.supported ?? false) && ((nativeSidecarStatus?.running ?? false) || nativeStarting || (nativeError ?? nativeSidecarStatus?.lastError ?? null) != null)}
             nativeRunning={nativeSidecarStatus?.running ?? false}
             nativeStarting={nativeStarting}
+            nativePhase={nativeSidecarStatus?.phase ?? null}
             nativeError={nativeError ?? nativeSidecarStatus?.lastError ?? null}
             onStartNative={handleStartNative}
             onStopNative={handleStopNative}

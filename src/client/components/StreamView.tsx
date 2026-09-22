@@ -110,6 +110,7 @@ interface StreamViewProps {
   nativeSupported?: boolean;
   nativeRunning?: boolean;
   nativeStarting?: boolean;
+  nativePhase?: "handshake" | "starting" | null;
   nativeError?: string | null;
   onStartNative?: () => void;
   onStopNative?: () => void;
@@ -170,6 +171,7 @@ export function StreamView({
   nativeSupported = false,
   nativeRunning = false,
   nativeStarting = false,
+  nativePhase = null,
   nativeError = null,
   onStartNative,
   onStopNative,
@@ -2328,6 +2330,13 @@ export function StreamView({
                 {nativeStarting ? "Starting native window…" : "Play in native window"}
               </button>
               <div style={{ opacity: 0.75 }}>Experimental · lower latency on weak PCs</div>
+              {(nativeStarting || nativePhase) && (
+                <div style={{ opacity: 0.9, marginTop: 4 }}>
+                  {nativePhase === "starting"
+                    ? "Negotiating with the game server…"
+                    : "Waiting for the sidecar to answer…"}
+                </div>
+              )}
             </>
           )}
           {nativeError && (

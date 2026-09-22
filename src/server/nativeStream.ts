@@ -31,6 +31,8 @@ export interface NativeSidecarStatus {
   exitCode?: number | null;
   lastError?: string;
   capabilities?: unknown;
+  /** Startup phase while `running` but not yet acknowledged ("handshake" | "starting"). */
+  phase?: "handshake" | "starting";
 }
 
 export interface FinalizedNativeContext {
@@ -116,6 +118,7 @@ class NativeSidecarManager {
   private stdoutBuffer = "";
   private pending: PendingStart | null = null;
   private commandId = 0;
+  private phase: "handshake" | "starting" | undefined;
 
   status(): NativeSidecarStatus {
     return {
@@ -126,6 +129,7 @@ class NativeSidecarManager {
       exitCode: this.exitCode,
       lastError: this.lastError,
       capabilities: this.capabilities,
+      phase: this.child !== null ? this.phase : undefined,
     };
   }
 
@@ -160,9 +164,12 @@ class NativeSidecarManager {
     // hello -> ready initializes the engine; start begins NVST negotiation.
     // Await the start acknowledgement so callers get a synchronous error when
     // negotiation input is rejected (missing endpoint, bad profile, ...).
+    // Both waits are bounded: a silent sidecar must surface as an error,
+    // never an infinite spinner.
+    this.phase = "handshake";
     this.send({ id: this.nextId("hello"), type: "hello", protocolVersion: ENGINE_PROTOCOL_VERSION });
     try {
-      await started;
+      await this.awaitHandshake(started, "hello");
     } catch (error) {
       await this.stop("handshake failed");
       throw error;
@@ -171,14 +178,47 @@ class NativeSidecarManager {
     const acknowledged = new Promise<void>((resolve, reject) => {
       this.pending = { sessionId, readyResolve: resolve, readyReject: reject, startResolved: true };
     });
+    this.phase = "starting";
     this.send({ id: startId, type: "start", context });
     try {
-      await acknowledged;
+      await this.awaitHandshake(acknowledged, "start");
     } catch (error) {
       await this.stop("start rejected");
       throw error;
     }
+    this.phase = undefined;
     return this.status();
+  }
+
+  /**
+   * Bound a handshake wait. Budgets are tunable via
+   * OPENNOW_NVST_{HELLO,START}_TIMEOUT_MS (milliseconds).
+   */
+  private awaitHandshake(promise: Promise<void>, kind: "hello" | "start"): Promise<void> {
+    const fallbackMs = kind === "hello" ? 30_000 : 120_000;
+    const requested = Number(
+      kind === "hello" ? process.env.OPENNOW_NVST_HELLO_TIMEOUT_MS : process.env.OPENNOW_NVST_START_TIMEOUT_MS,
+    );
+    const ms = Number.isFinite(requested) && requested > 0 ? requested : fallbackMs;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const timeout = new Promise<void>((_resolve, reject) => {
+      timer = setTimeout(() => {
+        const what = kind === "hello" ? "answer the startup handshake" : "acknowledge stream start";
+        this.lastError =
+          `Native sidecar did not ${what} within ${Math.round(ms / 1000)}s — ` +
+          `it may be stuck probing this GPU or reaching the game server. ` +
+          `Its last lines are in server.log ([NVST]).`;
+        console.log(`[NVST] ${this.lastError}`);
+        this.pending = null;
+        try {
+          this.child?.kill();
+        } catch {
+          // Already gone.
+        }
+        reject(new Error(this.lastError));
+      }, ms);
+    });
+    return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
   }
 
   async stop(reason = "stopped"): Promise<NativeSidecarStatus> {

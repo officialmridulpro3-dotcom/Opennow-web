@@ -58,3 +58,20 @@ describe("nativeSidecar status", () => {
     expect(nativeSidecar.status()).toMatchObject({ supported: false, running: false });
   });
 });
+
+describe("nativeSidecar handshake timeout", () => {
+  it("fails a silent sidecar instead of hanging forever", async () => {
+    // Plain node with piped stdio reads stdin to EOF and prints nothing:
+    // a perfect silent-sidecar simulator.
+    process.env.OPENNOW_NVST_SIDECAR = process.execPath;
+    process.env.OPENNOW_NVST_HELLO_TIMEOUT_MS = "300";
+    try {
+      const { context } = finalizeNativeContext(baseContext());
+      await expect(nativeSidecar.start("sess-1", context)).rejects.toThrow(/did not answer the startup handshake/);
+      expect(nativeSidecar.status().running).toBe(false);
+    } finally {
+      delete process.env.OPENNOW_NVST_SIDECAR;
+      delete process.env.OPENNOW_NVST_HELLO_TIMEOUT_MS;
+    }
+  }, 15_000);
+});
