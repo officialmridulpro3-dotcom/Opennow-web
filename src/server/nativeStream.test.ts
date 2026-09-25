@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { finalizeNativeContext, nativeSidecar } from "./nativeStream";
+import { buildSidecarEnv, finalizeNativeContext, nativeSidecar } from "./nativeStream";
 
 function baseContext(): Record<string, unknown> {
   return {
@@ -74,4 +74,25 @@ describe("nativeSidecar handshake timeout", () => {
       delete process.env.OPENNOW_NVST_HELLO_TIMEOUT_MS;
     }
   }, 15_000);
+});
+
+describe("buildSidecarEnv", () => {
+  it("forces the engine's own visible game window", () => {
+    const previous = process.env.OPENNOW_NATIVE_EXTERNAL_RENDERER;
+    delete process.env.OPENNOW_NATIVE_EXTERNAL_RENDERER;
+    try {
+      const env = buildSidecarEnv();
+      expect(env.OPENNOW_NATIVE_EXTERNAL_RENDERER).toBe("1");
+      // Rest of the environment passes through untouched.
+      expect(env.PATH).toBe(process.env.PATH);
+      process.env.OPENNOW_NATIVE_EXTERNAL_RENDERER = "0";
+      expect(buildSidecarEnv().OPENNOW_NATIVE_EXTERNAL_RENDERER).toBe("1");
+    } finally {
+      if (previous === undefined) {
+        delete process.env.OPENNOW_NATIVE_EXTERNAL_RENDERER;
+      } else {
+        process.env.OPENNOW_NATIVE_EXTERNAL_RENDERER = previous;
+      }
+    }
+  });
 });

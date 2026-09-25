@@ -47,6 +47,19 @@ function sidecarPath(): string | null {
 }
 
 /**
+ * Environment for the sidecar process. The engine only opens its own visible
+ * game window when OPENNOW_NATIVE_EXTERNAL_RENDERER=1 — otherwise it renders
+ * to a hidden 2x2 surface (embedded/Qt-host mode) and native launches show
+ * nothing. We have no Qt host, so external is the only working mode: force on.
+ */
+export function buildSidecarEnv(): NodeJS.ProcessEnv {
+  return {
+    ...process.env,
+    OPENNOW_NATIVE_EXTERNAL_RENDERER: "1",
+  };
+}
+
+/**
  * Validate the client-built session context and force the settings the NVST
  * engine requires. The client's shared builder already maps SessionInfo and
  * stream settings; the transport override lives here so web defaults (which
@@ -145,7 +158,7 @@ class NativeSidecarManager {
     this.capabilities = undefined;
     this.stdoutBuffer = "";
 
-    const child = spawn(exe, [], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true });
+    const child = spawn(exe, [], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true, env: buildSidecarEnv() });
     this.child = child;
     this.sessionId = sessionId;
     console.log(`[NVST] spawned sidecar pid=${child.pid} session=${sessionId}`);
