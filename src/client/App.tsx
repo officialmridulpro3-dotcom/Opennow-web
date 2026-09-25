@@ -141,6 +141,27 @@ function isNvidiaProvider(provider: LoginProvider | null | undefined): boolean {
   return (provider?.code ?? "").trim().toUpperCase() === "NVIDIA";
 }
 
+/**
+ * Append live sidecar state to the loading-screen diagnostic so a launch stuck
+ * in "starting game window" shows exactly where the engine is (or how it died)
+ * instead of a frozen line.
+ */
+function launchPollDiagnosticWithSidecar(
+  base: string | null,
+  sidecar: NativeSidecarStatus | null,
+): string | null {
+  if (!sidecar || (!sidecar.running && sidecar.exitCode == null && !sidecar.lastError)) {
+    return base;
+  }
+  const prefix = base ?? "starting native stream";
+  if (sidecar.running) {
+    return `${prefix} · engine pid ${sidecar.pid ?? "?"}${sidecar.phase ? ` (${sidecar.phase})` : " (negotiating…)"}`;
+  }
+  const exit = sidecar.exitCode != null ? ` (exit ${sidecar.exitCode})` : "";
+  const error = sidecar.lastError ? `: ${sidecar.lastError.slice(0, 160)}` : "";
+  return `${prefix} · engine stopped${exit}${error}`;
+}
+
 const SESSION_READY_POLL_INTERVAL_MS = 2000;
 const SESSION_AD_POLL_INTERVAL_MS = 30000;
 const PLAYTIME_RESYNC_INTERVAL_MS = 5 * 60 * 1000;
@@ -4064,7 +4085,7 @@ export function App(): JSX.Element {
                 platformStore={streamingStore ?? undefined}
                 status={loadingStatus}
                 queuePosition={queuePosition}
-                diagnosticLine={launchPollDiagnostic}
+                diagnosticLine={launchPollDiagnosticWithSidecar(launchPollDiagnostic, nativeSidecarStatus)}
                 adState={effectiveAdState}
                 activeAd={activeQueueAd}
                 activeAdMediaUrl={activeQueueAdMediaUrl}
