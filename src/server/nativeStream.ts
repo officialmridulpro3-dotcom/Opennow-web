@@ -55,11 +55,15 @@ function sidecarPath(): string | null {
  * game window when OPENNOW_NATIVE_EXTERNAL_RENDERER=1 — otherwise it renders
  * to a hidden 2x2 surface (embedded/Qt-host mode) and native launches show
  * nothing. We have no Qt host, so external is the only working mode: force on.
+ * Input capture is likewise engine-side: OPENNOW_NATIVE_INPUT_OWNER=native
+ * arms the sidecar's SDL + Raw Input capture (keyboard, mouse, gamepad).
+ * Without it the game window renders but ignores all input.
  */
 export function buildSidecarEnv(): NodeJS.ProcessEnv {
   return {
     ...process.env,
     OPENNOW_NATIVE_EXTERNAL_RENDERER: "1",
+    OPENNOW_NATIVE_INPUT_OWNER: "native",
   };
 }
 

@@ -147,4 +147,20 @@ describe("buildSidecarEnv", () => {
       }
     }
   });
+
+  it("hands engine-side input capture to the native window", () => {
+    const previous = process.env.OPENNOW_NATIVE_INPUT_OWNER;
+    delete process.env.OPENNOW_NATIVE_INPUT_OWNER;
+    try {
+      expect(buildSidecarEnv().OPENNOW_NATIVE_INPUT_OWNER).toBe("native");
+      process.env.OPENNOW_NATIVE_INPUT_OWNER = "browser";
+      expect(buildSidecarEnv().OPENNOW_NATIVE_INPUT_OWNER).toBe("native");
+    } finally {
+      if (previous === undefined) {
+        delete process.env.OPENNOW_NATIVE_INPUT_OWNER;
+      } else {
+        process.env.OPENNOW_NATIVE_INPUT_OWNER = previous;
+      }
+    }
+  });
 });
