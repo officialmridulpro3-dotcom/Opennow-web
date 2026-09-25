@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::io::ErrorKind;
-use std::net::{IpAddr, TcpStream};
+use std::net::{IpAddr, TcpStream, ToSocketAddrs};
 use std::sync::mpsc::{self, Sender};
 use std::sync::{Arc, Mutex};
 use std::thread::{self, JoinHandle};
@@ -634,11 +634,13 @@ pub fn prepare_owned_nvst(
         .ok_or_else(|| {
             NvstRtspError::new("invalid-media-peer", "NVST media peer port is invalid")
         })?;
-    let bundle_peer = bundle_peer_ip
-        .parse::<IpAddr>()
+    let bundle_peer = resolve_peer_ip(bundle_peer_ip)
         .map(|ip| std::net::SocketAddr::new(ip, bundle_peer_port))
-        .map_err(|_| {
-            NvstRtspError::new("invalid-media-peer", "NVST media peer is not an IP address")
+        .ok_or_else(|| {
+            NvstRtspError::new(
+                "invalid-media-peer",
+                "NVST media peer is neither an IP address nor a resolvable hostname",
+            )
         })?;
     let local_address = bundle
         .advertised_local_address_for(bundle_peer)
@@ -648,9 +650,14 @@ pub fn prepare_owned_nvst(
                 format!("Could not select the local route to the NVST media peer: {error}"),
             )
         })?;
-    let video_packet_size = nvst_video_packet_size(video_peer_ip.parse().map_err(|_| {
-        NvstRtspError::new("invalid-media-peer", "NVST video peer is not an IP address")
-    })?)
+    let video_packet_size = nvst_video_packet_size(
+        resolve_peer_ip(&video_peer_ip).ok_or_else(|| {
+            NvstRtspError::new(
+                "invalid-media-peer",
+                "NVST video peer is neither an IP address nor a resolvable hostname",
+            )
+        })?,
+    )
     .map_err(|error| NvstRtspError::new("nvst-video-mtu-invalid", error.to_string()))?;
     opennow_streamer_protocol::log::log_line(
         "INFO",
@@ -1268,6 +1275,30 @@ fn official_video_setup_control(control: &str) -> String {
     }
 }
 
+/// Resolve an NVST peer host to an IP address. CloudMatch media peers arrive
+/// as zone-LB hostnames (e.g. `80-250-98-39.cloudmatchbeta.nvidiagrid.net`);
+/// literal IPs pass through untouched. IPv4 is preferred because the NVST
+/// media path is IPv4-only on most routes.
+fn resolve_peer_ip(host: &str) -> Option<IpAddr> {
+    let host = host.trim();
+    if let Ok(ip) = host.parse::<IpAddr>() {
+        return Some(ip);
+    }
+    if host.is_empty() {
+        return None;
+    }
+    let addresses: Vec<IpAddr> = (host, 0u16)
+        .to_socket_addrs()
+        .ok()?
+        .map(|address| address.ip())
+        .collect();
+    addresses
+        .iter()
+        .copied()
+        .find(|ip| ip.is_ipv4())
+        .or_else(|| addresses.first().copied())
+}
+
 fn parse_video_peer(transport: &str) -> Option<(String, u16, u16)> {
     let mut ip = None;
     let mut port = None;
@@ -1394,6 +1425,20 @@ mod tls_tests;
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn peer_resolution_accepts_literal_ips_without_dns() {
+        assert_eq!(
+            resolve_peer_ip("80.250.98.39"),
+            Some("80.250.98.39".parse().unwrap())
+        );
+        assert_eq!(
+            resolve_peer_ip("  10.0.0.1  "),
+            Some("10.0.0.1".parse().unwrap())
+        );
+        assert_eq!(resolve_peer_ip("::1"), Some("::1".parse().unwrap()));
+        assert_eq!(resolve_peer_ip(""), None);
+    }
 
     #[test]
     fn video_setup_retains_only_bounded_advertised_port_ranges() {

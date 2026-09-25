@@ -10,7 +10,7 @@ import { resolveClientStreamingBaseUrl } from "./gfn/cloudmatchTransport";
 import { fetchSubscription } from "./gfn/subscription";
 import { getLoginProviders } from "./webAuth";
 import { getSession } from "./sessionStore";
-import { finalizeNativeContext, nativeSidecar, resolveLaunchTransportMode } from "./nativeStream";
+import { finalizeNativeContext, nativeSidecar, resolveLaunchTransportMode, resolveNativeMediaPeer } from "./nativeStream";
 
 function asyncRoute(handler: (request: Request, response: Response) => Promise<void>) {
   return (request: Request, response: Response, next: NextFunction) => {
@@ -279,7 +279,8 @@ export function registerApi(app: Express): void {
         response.status(400).json({ error: "Native context session does not match the requested session." });
         return;
       }
-      response.json(await nativeSidecar.start(finalized.sessionId, finalized.context));
+      const context = await resolveNativeMediaPeer(finalized.context);
+      response.json(await nativeSidecar.start(finalized.sessionId, context));
     } catch (error) {
       const statusCode = (error as { statusCode?: number }).statusCode ?? 500;
       response.status(statusCode).json({ error: (error as Error).message });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildSidecarEnv, finalizeNativeContext, nativeSidecar } from "./nativeStream";
+import { buildSidecarEnv, finalizeNativeContext, nativeSidecar, resolveNativeMediaPeer } from "./nativeStream";
 
 function baseContext(): Record<string, unknown> {
   return {
@@ -49,6 +49,58 @@ describe("finalizeNativeContext", () => {
     const bad = baseContext();
     (bad.session as Record<string, unknown>).rtspsEndpoints = [];
     expect(() => finalizeNativeContext(bad)).toThrowError(/RTSPS/);
+  });
+});
+
+describe("resolveNativeMediaPeer", () => {
+  function contextWithMediaIp(ip: string | undefined) {
+    const base = baseContext();
+    (base.session as Record<string, unknown>).mediaConnectionInfo =
+      ip === undefined ? undefined : { ip, port: 48322, usage: 14 };
+    return finalizeNativeContext(base).context;
+  }
+
+  it("passes literal IPs through without a DNS lookup", async () => {
+    const context = contextWithMediaIp("80.250.98.39");
+    const resolved = await resolveNativeMediaPeer(context, async () => {
+      throw new Error("must not resolve a literal IP");
+    });
+    expect(resolved).toBe(context);
+  });
+
+  it("resolves a hostname media peer to IPv4, keeping TLS hosts intact", async () => {
+    const context = contextWithMediaIp("80-250-98-39.cloudmatchbeta.nvidiagrid.net");
+    const resolved = await resolveNativeMediaPeer(context, async (host) => {
+      expect(host).toBe("80-250-98-39.cloudmatchbeta.nvidiagrid.net");
+      return "80.250.98.39";
+    });
+    expect(resolved).not.toBe(context);
+    const session = resolved.session as unknown as Record<string, unknown>;
+    expect(session.mediaConnectionInfo).toEqual({ ip: "80.250.98.39", port: 48322, usage: 14 });
+    // TLS/SNI inputs keep their hostnames — only the UDP peer IP is rewritten.
+    expect(session.serverIp).toBe("10.0.0.1");
+    const extra = session.extra as Record<string, unknown>;
+    expect(extra.rtspsEndpoints).toEqual(["rtsps://10.0.0.1:443/session"]);
+    // The input context is not mutated.
+    const original = context.session.mediaConnectionInfo as unknown as Record<string, unknown>;
+    expect(original.ip).toBe("80-250-98-39.cloudmatchbeta.nvidiagrid.net");
+  });
+
+  it("passes through when no media peer is present", async () => {
+    const context = contextWithMediaIp(undefined);
+    const resolved = await resolveNativeMediaPeer(context, async () => {
+      throw new Error("must not resolve without a media peer");
+    });
+    expect(resolved).toBe(context);
+  });
+
+  it("throws a clear error when DNS resolution fails", async () => {
+    const context = contextWithMediaIp("80-250-98-39.cloudmatchbeta.nvidiagrid.net");
+    await expect(
+      resolveNativeMediaPeer(context, async () => {
+        throw new Error("ENOTFOUND");
+      }),
+    ).rejects.toThrow(/Couldn't resolve the game server address/);
   });
 });
 

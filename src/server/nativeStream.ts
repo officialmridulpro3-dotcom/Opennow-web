@@ -15,7 +15,9 @@
  * - Only one sidecar runs at a time; starting again 409s until stopped.
  */
 import { spawn, type ChildProcess } from "node:child_process";
+import { lookup as dnsLookup } from "node:dns/promises";
 import { existsSync } from "node:fs";
+import { isIP } from "node:net";
 
 import type { NativeStreamerSessionContext } from "@shared/gfn";
 
@@ -94,6 +96,41 @@ export function finalizeNativeContext(input: unknown): FinalizedNativeContext {
     shortcuts,
   } as unknown as NativeStreamerSessionContext;
   return { sessionId, context: finalized };
+}
+
+/**
+ * CloudMatch media peers arrive as zone-LB hostnames (e.g.
+ * `80-250-98-39.cloudmatchbeta.nvidiagrid.net`), but the NVST engine opens
+ * its UDP bundle socket against a literal IP — passing the hostname through
+ * makes `start` fail with "media peer is not an IP address". Resolve once
+ * here. The rtsps:// endpoint URLs and serverIp keep their hostnames
+ * (TLS/SNI needs them) — only the media peer IP is rewritten.
+ */
+export async function resolveNativeMediaPeer(
+  context: NativeStreamerSessionContext,
+  lookup: (host: string) => Promise<string> = defaultLookupIpv4,
+): Promise<NativeStreamerSessionContext> {
+  const media = context.session.mediaConnectionInfo;
+  const host = media?.ip?.trim() ?? "";
+  if (!media || !host || isIP(host) !== 0) return context;
+  let ip: string;
+  try {
+    ip = await lookup(host);
+  } catch (error) {
+    throw httpError(
+      `Couldn't resolve the game server address "${host}" — check your connection, DNS, or VPN, then retry. (${(error as Error).message})`,
+      502,
+    );
+  }
+  console.log(`[NVST] resolved media peer ${host} -> ${ip}`);
+  return {
+    ...context,
+    session: { ...context.session, mediaConnectionInfo: { ...media, ip } },
+  };
+}
+
+async function defaultLookupIpv4(host: string): Promise<string> {
+  return (await dnsLookup(host, { family: 4 })).address;
 }
 
 /**
