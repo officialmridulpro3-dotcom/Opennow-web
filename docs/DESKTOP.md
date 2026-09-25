@@ -158,3 +158,18 @@ Generated at build time (gitignored): `src-tauri/resources/server.mjs`,
 - **Old machine notes** — on Windows 7/8.1 install WebView2 runtime 109
   manually; on very old GPUs the atmosphere shaders fall back automatically
   (the `LazyShaderAtmosphere` component already feature-detects WebGL).
+
+## Native game window keys
+
+The standalone game window owns its own input; these engine shortcuts work
+while it is focused (defaults, configurable per launch via the START
+context's `shortcuts` map):
+
+- **F11** — toggle borderless fullscreen (video follows the window size, so
+  manual windowed resizes scale the picture too).
+- **F8** — toggle mouse pointer lock (also re-syncs a stuck-hidden cursor to
+  visible so menu motion flows again; the game re-asserts its cursor state
+  on its next update).
+- **Ctrl+Shift+Q** — quit the native session from the keyboard.
+- **Ctrl+G** — overlay menu request (acknowledged; the in-window menu UI
+  arrives in the next build, stats on **Ctrl+N** with it).

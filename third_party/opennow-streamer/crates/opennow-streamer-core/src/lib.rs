@@ -1592,9 +1592,18 @@ fn forward_shortcut_action(
         ));
         return;
     }
+    if action == StreamShortcutAction::ToggleFullscreen
+        && runtime.is_some_and(MediaRuntime::is_embedded)
+    {
+        let _ = output.send(event(
+            "shortcut-action",
+            json!({"action":action.protocol_name(), "source":"keyboard"}),
+        ));
+        return;
+    }
     let control = match action {
         StreamShortcutAction::ToggleStats => None,
-        StreamShortcutAction::ToggleFullscreen => None,
+        StreamShortcutAction::ToggleFullscreen => Some(MediaRuntimeControl::Fullscreen),
         StreamShortcutAction::TogglePointerLock => Some(MediaRuntimeControl::PointerLock),
         _ => None,
     };

@@ -27,6 +27,7 @@ const MICROPHONE_HOST_POLL_INTERVAL: Duration = Duration::from_millis(20);
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MediaRuntimeControl {
     PointerLock,
+    Fullscreen,
 }
 
 #[cfg(target_os = "macos")]
@@ -739,6 +740,7 @@ impl MainThreadHost {
                 Ok(HostCommand::Control { control, reply }) => {
                     let output_control = match control {
                         MediaRuntimeControl::PointerLock => OutputControl::PointerLock,
+                        MediaRuntimeControl::Fullscreen => OutputControl::Fullscreen,
                     };
                     let result = active
                         .as_mut()

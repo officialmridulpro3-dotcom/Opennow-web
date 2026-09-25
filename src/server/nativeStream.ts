@@ -370,6 +370,23 @@ class NativeSidecarManager {
       this.pending = null;
       return;
     }
+    // Engine-initiated session controls. Ctrl+Shift+Q (stop-stream) quits the
+    // native session from the keyboard; Ctrl+G (overlay-request) and Ctrl+N
+    // (toggle-stats) are acknowledged here until the in-window overlay UI
+    // lands in the next build.
+    if (type === "overlay-request") {
+      console.log("[NVST] engine overlay-request (Ctrl+G menu arrives in the next build)");
+      return;
+    }
+    if (type === "shortcut-action" && message.action === "stop-stream") {
+      console.log("[NVST] engine shortcut stop-stream; stopping native session");
+      void this.stop("shortcut stop-stream");
+      return;
+    }
+    if (type === "shortcut-action" && message.action === "toggle-stats") {
+      console.log("[NVST] engine shortcut toggle-stats (in-window stats arrive in the next build)");
+      return;
+    }
     // Any non-error reply to the in-flight command resolves it; the engine
     // answers start with ok/status lines before streaming events follow.
     if (this.pending && (type === "ready" || type === "ok" || type === "started" || type === "status")) {

@@ -312,6 +312,9 @@ impl MacOutput {
                     .toggle_pointer_lock(&surface.sdl, &mut surface.window);
                 Ok(())
             }
+            // Standalone fullscreen is implemented for the Windows game
+            // window; the macOS host keeps owning placement.
+            OutputControl::Fullscreen => Ok(()),
         }
     }
 }

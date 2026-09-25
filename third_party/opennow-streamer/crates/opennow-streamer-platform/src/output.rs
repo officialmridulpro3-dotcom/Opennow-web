@@ -1350,6 +1350,11 @@ impl SdlInputCapture {
     ) {
         if self.relative_mouse {
             self.disable_relative_mouse(sdl, window);
+            // Treat an explicit unlock as the user taking the cursor back:
+            // absolute motion only flows while the cursor reads visible, so
+            // resync here instead of staying stuck on a stale hidden state.
+            // The next server cursor update re-asserts the game state.
+            self.cursor_state = RemoteCursorState::Visible;
             sdl.mouse().show_cursor(true);
         } else {
             self.enable_relative_mouse(sdl, window);
@@ -2313,6 +2318,7 @@ pub(crate) enum ActiveOutput {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum OutputControl {
     PointerLock,
+    Fullscreen,
 }
 
 impl ActiveOutput {
@@ -2491,6 +2497,8 @@ impl ActiveOutput {
                         .toggle_pointer_lock(&output._sdl, output.canvas.window_mut());
                     Ok(())
                 }
+                // Software presentation follows the host window; nothing to toggle.
+                OutputControl::Fullscreen => Ok(()),
             },
             #[cfg(target_os = "windows")]
             Self::Windows(output) => {
@@ -2505,6 +2513,10 @@ impl ActiveOutput {
                         surface.sync_raw_input();
                         Ok(())
                     }
+                    OutputControl::Fullscreen => {
+                        surface.toggle_fullscreen();
+                        Ok(())
+                    }
                 }
             }
             #[cfg(target_os = "linux")]
@@ -2515,6 +2527,9 @@ impl ActiveOutput {
                         .toggle_pointer_lock(&output._sdl, &mut output.window);
                     Ok(())
                 }
+                // Standalone fullscreen is implemented for the Windows game
+                // window; embedded hosts keep owning placement here.
+                OutputControl::Fullscreen => Ok(()),
             },
             #[cfg(target_os = "macos")]
             Self::Mac(output) => output.control(control),
@@ -2583,6 +2598,7 @@ struct WindowsExternalSdlSurface {
     stream_size: (u32, u32),
     visible: bool,
     embedded: bool,
+    fullscreen: bool,
     session_paused: bool,
     input_suspended: bool,
 }
@@ -2656,6 +2672,7 @@ impl WindowsExternalSdlSurface {
             stream_size: (stream.width, stream.height),
             visible: false,
             embedded: false,
+            fullscreen: false,
             session_paused: false,
             input_suspended: true,
         })
@@ -2704,12 +2721,43 @@ impl WindowsExternalSdlSurface {
         }
         eprintln!("Windows external SDL surface: showing standalone stream window");
         self.window.show();
+        // The game hides the cursor itself when it wants mouse-look; until the
+        // first server cursor update arrives the OS arrow must stay visible.
+        self.sdl.mouse().show_cursor(true);
         self.window.raise();
         if let Some(raw_input) = self.raw_input.as_ref() {
             raw_input.set_foreground_owner(self.native_surface.window_handle());
         }
         self.visible = true;
         self.sync_input_ownership();
+    }
+
+    /// Borderless-desktop fullscreen toggle (F11). The D3D present loop
+    /// resizes the swapchain to the window on the next frame, so video
+    /// follows both this toggle and manual windowed resizes.
+    fn toggle_fullscreen(&mut self) {
+        self.fullscreen = !self.fullscreen;
+        let fullscreen_type = if self.fullscreen {
+            sdl2::video::FullscreenType::Desktop
+        } else {
+            sdl2::video::FullscreenType::Off
+        };
+        if let Err(error) = self.window.set_fullscreen(fullscreen_type) {
+            eprintln!("Windows SDL fullscreen toggle failed: {error}");
+            self.fullscreen = !self.fullscreen;
+            return;
+        }
+        eprintln!(
+            "Windows SDL stream window fullscreen: {}",
+            if self.fullscreen {
+                "on (F11 exits)"
+            } else {
+                "off"
+            },
+        );
+        if self.fullscreen {
+            self.window.raise();
+        }
     }
 
     fn pump(&mut self) {
