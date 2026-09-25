@@ -2983,7 +2983,27 @@ export function App(): JSX.Element {
       });
 
       if (settings.streamClientMode === "native") {
-        await startNativeFromClaim(sessionToConnect);
+        // Native seats must be claimed (PUT resume handover) before the sidecar's
+        // NVST handshake — upstream requires the handover for status 2..5, and an
+        // unclaimed seat never completes the start, parking the launch on
+        // "Connect" with a ready-but-useless seat. claimSession also re-polls to
+        // status 2/3 and returns fresh endpoints + server IP.
+        setLaunchPollDiagnostic(`seat ready · claiming session ${sessionToConnect.sessionId}…`);
+        const claimedSession = await window.openNow.claimSession({
+          token: token || undefined,
+          streamingBaseUrl: launchStreamingBaseUrl,
+          serverIp: sessionToConnect.serverIp,
+          sessionId: sessionToConnect.sessionId,
+          ...resolveResumeIdentity(sessionToConnect.sessionId),
+          appId: String(numericAppId),
+          appLaunchMode: sessionToConnect.appLaunchMode,
+          enablePersistingInGameSettings: sessionToConnect.enablePersistingInGameSettings,
+          settings: streamSettings,
+        });
+        setSession(claimedSession);
+        sessionRef.current = claimedSession;
+        setLaunchPollDiagnostic(`seat claimed · starting game window…`);
+        await startNativeFromClaim(claimedSession);
       } else {
         await window.openNow.connectSignaling(buildSignalingConnectRequest(sessionToConnect));
       }
@@ -3022,6 +3042,7 @@ export function App(): JSX.Element {
     resetLaunchRuntime,
     resetStatsOverlayToPreference,
     resolveInstallToPlayStreamingBaseUrl,
+    resolveResumeIdentity,
     resolveSubscriptionInfoForLaunch,
     selectedProvider,
     settings.enablePersistingInGameSettings,
