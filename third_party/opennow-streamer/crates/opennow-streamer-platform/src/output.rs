@@ -2582,6 +2582,7 @@ struct WindowsExternalSdlSurface {
     raw_input: Option<WindowsRawInputController>,
     stream_size: (u32, u32),
     visible: bool,
+    embedded: bool,
     session_paused: bool,
     input_suspended: bool,
 }
@@ -2654,6 +2655,7 @@ impl WindowsExternalSdlSurface {
             raw_input,
             stream_size: (stream.width, stream.height),
             visible: false,
+            embedded: false,
             session_paused: false,
             input_suspended: true,
         })
@@ -2666,6 +2668,9 @@ impl WindowsExternalSdlSurface {
     }
 
     fn update(&mut self, surface: &RenderSurface) -> Result<(), String> {
+        // Any surface command means an embedding shell owns placement; the
+        // standalone first-frame reveal must stay out of the way.
+        self.embedded = true;
         let Some(rect) = surface.rect.filter(|_| surface.visible) else {
             self.visible = false;
             self.sync_input_ownership();
@@ -2688,6 +2693,23 @@ impl WindowsExternalSdlSurface {
         self.visible = true;
         self.sync_input_ownership();
         Ok(())
+    }
+
+    /// Standalone presentation for the desktop sidecar: without an embedding
+    /// shell no `surface` command ever arrives, so reveal the top-level SDL
+    /// window (and arm input for it) when the first frame presents.
+    fn show_standalone(&mut self) {
+        if self.embedded || self.visible {
+            return;
+        }
+        eprintln!("Windows external SDL surface: showing standalone stream window");
+        self.window.show();
+        self.window.raise();
+        if let Some(raw_input) = self.raw_input.as_ref() {
+            raw_input.set_foreground_owner(self.native_surface.window_handle());
+        }
+        self.visible = true;
+        self.sync_input_ownership();
     }
 
     fn pump(&mut self) {
@@ -2914,6 +2936,9 @@ impl WindowsOutput {
         };
         Ok(match event {
             BackendEvent::FirstFramePresented => {
+                if let Some(surface) = self.external_surface.as_mut() {
+                    surface.show_standalone();
+                }
                 OutputEvent::Presented(match (self.graphics_api, self.decoder_mode) {
                     (WindowsGraphicsApi::D3d12, WindowsDecoderMode::Hardware) => {
                         "Media Foundation hardware/D3D11-on-12/D3D12/WASAPI"
