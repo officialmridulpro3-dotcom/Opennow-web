@@ -315,6 +315,8 @@ impl MacOutput {
             // Standalone fullscreen is implemented for the Windows game
             // window; the macOS host keeps owning placement.
             OutputControl::Fullscreen => Ok(()),
+            // Standalone menu is implemented for the Windows game window.
+            OutputControl::Menu => Ok(()),
         }
     }
 }

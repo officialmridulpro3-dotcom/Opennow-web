@@ -371,11 +371,12 @@ class NativeSidecarManager {
       return;
     }
     // Engine-initiated session controls. Ctrl+Shift+Q (stop-stream) quits the
-    // native session from the keyboard; Ctrl+G (overlay-request) and Ctrl+N
-    // (toggle-stats) are acknowledged here until the in-window overlay UI
-    // lands in the next build.
+    // native session from the keyboard (also used by the engine Ctrl+G menu's
+    // End stream button); Ctrl+N (toggle-stats) is acknowledged until the
+    // in-window stats UI lands. Ctrl+G opens the engine's own stream menu in
+    // standalone sessions, so overlay-request only arrives from embedded hosts.
     if (type === "overlay-request") {
-      console.log("[NVST] engine overlay-request (Ctrl+G menu arrives in the next build)");
+      console.log("[NVST] engine overlay-request (embedded host menu request)");
       return;
     }
     if (type === "shortcut-action" && message.action === "stop-stream") {

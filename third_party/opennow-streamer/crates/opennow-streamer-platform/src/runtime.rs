@@ -28,6 +28,7 @@ const MICROPHONE_HOST_POLL_INTERVAL: Duration = Duration::from_millis(20);
 pub enum MediaRuntimeControl {
     PointerLock,
     Fullscreen,
+    Menu,
 }
 
 #[cfg(target_os = "macos")]
@@ -481,6 +482,11 @@ impl MediaRuntime {
         self.commands
             .send(HostCommand::Control { control, reply })
             .map_err(|_| "native media host is no longer running".to_owned())?;
+        // The stream menu is modal: the user may take arbitrarily long to
+        // dismiss it, so never block the session thread on its reply.
+        if matches!(control, MediaRuntimeControl::Menu) {
+            return Ok(());
+        }
         response
             .recv_timeout(HOST_CONTROL_TIMEOUT)
             .map_err(|_| "native media host did not apply the runtime control".to_owned())?
@@ -741,6 +747,7 @@ impl MainThreadHost {
                     let output_control = match control {
                         MediaRuntimeControl::PointerLock => OutputControl::PointerLock,
                         MediaRuntimeControl::Fullscreen => OutputControl::Fullscreen,
+                        MediaRuntimeControl::Menu => OutputControl::Menu,
                     };
                     let result = active
                         .as_mut()

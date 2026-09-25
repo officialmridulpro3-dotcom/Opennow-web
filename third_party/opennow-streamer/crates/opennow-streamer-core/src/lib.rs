@@ -1608,6 +1608,10 @@ fn forward_shortcut_action(
         _ => None,
     };
     if let Some(control) = control {
+        eprintln!(
+            "Native shortcut '{}' handled by the engine",
+            action.protocol_name()
+        );
         let result = runtime
             .ok_or_else(|| "native media runtime is unavailable".to_owned())
             .and_then(|runtime| runtime.control(control));
@@ -1725,7 +1729,26 @@ fn forward_nvst_session_events<R: NvstSessionResources>(
                         break;
                     };
                     if matches!(input.input, CapturedInput::Guide) {
-                        let _ = output.send(event("overlay-request", json!({"source":"gamepad"})));
+                        // Standalone sessions have no host shell to show a menu:
+                        // the engine shows its own stream menu instead.
+                        let standalone = shortcut_runtime
+                            .as_ref()
+                            .is_some_and(|runtime| !runtime.is_embedded());
+                        if standalone {
+                            let result = shortcut_runtime.as_ref().map_or_else(
+                                || Err("native media runtime is unavailable".to_owned()),
+                                |runtime| runtime.control(MediaRuntimeControl::Menu),
+                            );
+                            if let Err(message) = result {
+                                let _ = output.send(event(
+                                    "log",
+                                    json!({"level":"warn", "message":format!("Stream menu failed: {message}")}),
+                                ));
+                            }
+                        } else {
+                            let _ =
+                                output.send(event("overlay-request", json!({"source":"gamepad"})));
+                        }
                         continue;
                     }
                     if matches!(input.input, CapturedInput::Screenshot) {

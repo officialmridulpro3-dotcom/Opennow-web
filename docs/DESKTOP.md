@@ -166,10 +166,14 @@ while it is focused (defaults, configurable per launch via the START
 context's `shortcuts` map):
 
 - **F11** — toggle borderless fullscreen (video follows the window size, so
-  manual windowed resizes scale the picture too).
+  manual windowed resizes scale the picture too). **Alt+Enter** works as well
+  (handy on Fn-lock laptops where F11 needs the Fn key).
+- **Ctrl+G** — open the stream menu: End stream, Toggle fullscreen, Close.
+  The game keeps running while the menu is open; dialog clicks never reach
+  the game.
 - **F8** — toggle mouse pointer lock (also re-syncs a stuck-hidden cursor to
   visible so menu motion flows again; the game re-asserts its cursor state
   on its next update).
 - **Ctrl+Shift+Q** — quit the native session from the keyboard.
-- **Ctrl+G** — overlay menu request (acknowledged; the in-window menu UI
-  arrives in the next build, stats on **Ctrl+N** with it).
+- **Ctrl+N** — stats overlay request (acknowledged; the in-window stats UI
+  arrives in the next build).

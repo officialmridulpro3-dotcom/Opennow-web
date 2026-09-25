@@ -21,7 +21,10 @@ use sdl2::render::{Texture, WindowCanvas};
 use crate::linux_frame_pacing::{FrameSelectionPolicy, LinuxFramePacer};
 #[cfg(target_os = "linux")]
 use crate::linux_xinput::LinuxXInputController;
-use crate::media::{CapturedInput, CapturedInputQueue, MediaStreamConfig, StreamShortcutBindings};
+use crate::media::{
+    CapturedInput, CapturedInputQueue, MediaStreamConfig, StreamShortcutAction,
+    StreamShortcutBindings,
+};
 use crate::native_surface::NativeSurface;
 #[cfg(target_os = "windows")]
 use crate::windows_raw_input::WindowsRawInputController;
@@ -1213,6 +1216,19 @@ impl SdlInputCapture {
                     self.captured.push(CapturedInput::Guide);
                     return;
                 }
+                // Alt+Enter is the universal game-fullscreen chord; honor it even
+                // where the configured bindings only list F11 (Fn-lock laptops).
+                if matches!(
+                    scancode,
+                    sdl2::keyboard::Scancode::Return | sdl2::keyboard::Scancode::KpEnter
+                ) && sdl_modifiers(scancode, keymod) & 0x04 != 0
+                {
+                    self.pressed_shortcuts.insert(scancode);
+                    self.captured.push(CapturedInput::Shortcut(
+                        StreamShortcutAction::ToggleFullscreen,
+                    ));
+                    return;
+                }
                 if let Some(virtual_key) = sdl_virtual_key(scancode)
                     && let Some(action) = self
                         .shortcuts
@@ -1341,6 +1357,11 @@ impl SdlInputCapture {
             self.relative_mouse = false;
             eprintln!("External SDL mouse control mode: absolute cursor");
         }
+    }
+
+    #[cfg(target_os = "windows")]
+    pub(crate) fn push_shortcut(&mut self, action: StreamShortcutAction) {
+        self.captured.push(CapturedInput::Shortcut(action));
     }
 
     pub(crate) fn toggle_pointer_lock(
@@ -2319,6 +2340,7 @@ pub(crate) enum ActiveOutput {
 pub(crate) enum OutputControl {
     PointerLock,
     Fullscreen,
+    Menu,
 }
 
 impl ActiveOutput {
@@ -2499,6 +2521,8 @@ impl ActiveOutput {
                 }
                 // Software presentation follows the host window; nothing to toggle.
                 OutputControl::Fullscreen => Ok(()),
+                // Standalone menu is implemented for the Windows game window.
+                OutputControl::Menu => Ok(()),
             },
             #[cfg(target_os = "windows")]
             Self::Windows(output) => {
@@ -2517,6 +2541,10 @@ impl ActiveOutput {
                         surface.toggle_fullscreen();
                         Ok(())
                     }
+                    OutputControl::Menu => {
+                        surface.show_menu();
+                        Ok(())
+                    }
                 }
             }
             #[cfg(target_os = "linux")]
@@ -2530,6 +2558,8 @@ impl ActiveOutput {
                 // Standalone fullscreen is implemented for the Windows game
                 // window; embedded hosts keep owning placement here.
                 OutputControl::Fullscreen => Ok(()),
+                // Standalone menu is implemented for the Windows game window.
+                OutputControl::Menu => Ok(()),
             },
             #[cfg(target_os = "macos")]
             Self::Mac(output) => output.control(control),
@@ -2730,6 +2760,74 @@ impl WindowsExternalSdlSurface {
         }
         self.visible = true;
         self.sync_input_ownership();
+    }
+
+    /// Ctrl+G stream menu for standalone sessions (native dialog on Windows).
+    /// Input is released while the modal is open so dialog clicks never reach
+    /// the game and raw samples cannot overflow the capture queue. Video and
+    /// audio keep playing: presentation runs on the backend thread.
+    fn show_menu(&mut self) {
+        use sdl2::messagebox::{
+            ButtonData, ClickedButton, MessageBoxButtonFlag, MessageBoxFlag, show_message_box,
+        };
+
+        const END_STREAM: i32 = 1;
+        const TOGGLE_FULLSCREEN: i32 = 2;
+        const CLOSE: i32 = 3;
+
+        eprintln!("Windows SDL stream menu opened (Ctrl+G)");
+        let was_relative = self.input_capture.relative_mouse_enabled();
+        self.input_capture.release(&self.sdl, &mut self.window);
+        if let Some(raw_input) = self.raw_input.as_ref() {
+            raw_input.release_buttons();
+            raw_input.set_capture(false, false);
+        }
+        let buttons = [
+            ButtonData {
+                flags: MessageBoxButtonFlag::NOTHING,
+                button_id: END_STREAM,
+                text: "End stream",
+            },
+            ButtonData {
+                flags: MessageBoxButtonFlag::NOTHING,
+                button_id: TOGGLE_FULLSCREEN,
+                text: "Toggle fullscreen",
+            },
+            ButtonData {
+                flags: MessageBoxButtonFlag::ESCAPEKEY_DEFAULT
+                    | MessageBoxButtonFlag::RETURNKEY_DEFAULT,
+                button_id: CLOSE,
+                text: "Close",
+            },
+        ];
+        let clicked = show_message_box(
+            MessageBoxFlag::INFORMATION,
+            &buttons,
+            "OpenNOW Stream",
+            "The game keeps running while this menu is open.\n\nKeys: F11 or Alt+Enter fullscreen, F8 mouse lock, Ctrl+Shift+Q end stream.",
+            Some(&self.window),
+            None::<sdl2::messagebox::MessageBoxColorScheme>,
+        );
+        // Restore capture before acting so End stream still forwards.
+        self.sync_raw_input();
+        if was_relative {
+            self.input_capture
+                .enable_relative_mouse(&self.sdl, &mut self.window);
+        }
+        match clicked {
+            Ok(ClickedButton::CustomButton(button)) if button.button_id == END_STREAM => {
+                eprintln!("Windows SDL stream menu: end stream requested");
+                self.input_capture
+                    .push_shortcut(StreamShortcutAction::StopStream);
+            }
+            Ok(ClickedButton::CustomButton(button)) if button.button_id == TOGGLE_FULLSCREEN => {
+                self.toggle_fullscreen();
+            }
+            Ok(_) => {}
+            Err(error) => {
+                eprintln!("Windows SDL stream menu failed: {error}");
+            }
+        }
     }
 
     /// Borderless-desktop fullscreen toggle (F11). The D3D present loop
