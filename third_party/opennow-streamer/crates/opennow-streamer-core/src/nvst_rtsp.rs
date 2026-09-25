@@ -660,12 +660,12 @@ pub fn prepare_owned_nvst(
                 "SETUP did not return the NVST video peer",
             )
         })?;
-    let (bundle_peer_ip, bundle_peer_port) = context
-        .session
-        .media_connection_info
-        .as_ref()
-        .map(|media| (media.ip.as_str(), media.port))
-        .unwrap_or((&video_peer_ip, u32::from(video_peer_port)));
+    // Official GeForce NOW clients punch BOTH the bundle (ICE/STUN + NATT) leg
+    // and the video (NATT) leg against the SETUP-announced media peer
+    // (source:5004). `media_connection_info` is the usage-14 RTSP *signaling*
+    // endpoint (seat:48322, a TCP/TLS port) which is deaf to UDP hole
+    // punching, so the bundle leg follows the video peer instead.
+    let (bundle_peer_ip, bundle_peer_port) = (&video_peer_ip, u32::from(video_peer_port));
     let bundle_peer_port = u16::try_from(bundle_peer_port)
         .ok()
         .filter(|port| *port != 0)
@@ -775,10 +775,8 @@ pub fn prepare_owned_nvst(
         "timeoutMs":VIDEO_TIMEOUT_MS,
         "startupTimeoutMs":VIDEO_STARTUP_TIMEOUT_MS
     });
-    if let Some(media) = context.session.media_connection_info.as_ref() {
-        handoff["bundlePeerIp"] = json!(media.ip);
-        handoff["bundlePeerPort"] = json!(media.port);
-    }
+    handoff["bundlePeerIp"] = json!(video_peer_ip);
+    handoff["bundlePeerPort"] = json!(video_peer_port);
 
     // Only log transport shape, never SDP, runtime keys, or ICE credentials.
     opennow_streamer_protocol::log::log_line(
@@ -786,16 +784,8 @@ pub fn prepare_owned_nvst(
         "nvst-handoff",
         &format!(
             "video_local_port={mjolnir_port} bundle_local_port={client_port} video_peer_port={video_peer_port} video_peer_port_end={video_peer_port_end} bundle_peer_port={} same_peer_host={} ping_version={ping_version} ping_bytes={} legacy_ping_payload={} srtp_profile={srtp_profile} rtcp_on_sctp={rtcp_on_sctp} sockets_retained=true reachability=unverified video_startup_timeout_ms={VIDEO_STARTUP_TIMEOUT_MS} video_idle_timeout_ms={VIDEO_TIMEOUT_MS}",
-            context
-                .session
-                .media_connection_info
-                .as_ref()
-                .map_or(u32::from(video_peer_port), |media| media.port),
-            context
-                .session
-                .media_connection_info
-                .as_ref()
-                .is_none_or(|media| media.ip == video_peer_ip),
+            u32::from(video_peer_port),
+            true,
             ping_payload.len(),
             ping_payload == "PING"
         ),
