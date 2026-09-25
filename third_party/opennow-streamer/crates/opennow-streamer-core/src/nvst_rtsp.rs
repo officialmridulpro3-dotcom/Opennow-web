@@ -326,6 +326,11 @@ impl PreparedNvstRtspSession {
         )?;
         ensure_rtsp_ok("ANNOUNCE", &announce)?;
         self.announced = true;
+        opennow_streamer_protocol::log::log_line(
+            "INFO",
+            "rtsps",
+            &format!("NVST ANNOUNCE ok status={}", announce.status),
+        );
         Ok(())
     }
 
@@ -348,6 +353,17 @@ impl PreparedNvstRtspSession {
                     format!("PLAY failed: {} {}", play.status, play.status_text),
                 ));
             }
+            opennow_streamer_protocol::log::log_line(
+                "INFO",
+                "rtsps",
+                &format!("NVST PLAY sent status={}", play.status),
+            );
+        } else {
+            opennow_streamer_protocol::log::log_line(
+                "INFO",
+                "rtsps",
+                "NVST PLAY skipped (seat disabled it via general.disablePlay)",
+            );
         }
 
         let client = self
@@ -607,6 +623,20 @@ pub fn prepare_owned_nvst(
     }
     let rtcp_on_sctp = sdp_attribute(&describe.body, "general.rtcpOnSctp").as_deref() == Some("1");
     let microphone_available = negotiate_microphone(context, &describe.body);
+    // Negotiation diagnostics: attribute values and credential presence only,
+    // never ICE credentials, fingerprints, or SDP bodies.
+    opennow_streamer_protocol::log::log_line(
+        "INFO",
+        "rtsps",
+        &format!(
+            "NVST DESCRIBE ok status={} pingVersion={described_ping_version} disablePlay={disable_play} nativeRtcOnBundlePort={} rtcpOnSctp={rtcp_on_sctp} mic={microphone_available} iceUfrag={} icePassword={} dtlsFingerprint={} videoControl={video_control}",
+            describe.status,
+            native_bundle.as_deref().unwrap_or("missing"),
+            if remote_ufrag.is_some() { "present" } else { "missing" },
+            if remote_password.is_some() { "present" } else { "missing" },
+            if remote_fingerprint.is_some() { "present" } else { "missing" },
+        ),
+    );
 
     let mut setup_headers = common_headers.clone();
     setup_headers.push(("Session", rtsp_session.clone()));
@@ -615,6 +645,14 @@ pub fn prepare_owned_nvst(
     let setup = client.request("SETUP", &video_setup, &setup_headers, "")?;
     ensure_rtsp_ok("SETUP", &setup)?;
     let transport = header_value(&setup, "transport").unwrap_or_default();
+    opennow_streamer_protocol::log::log_line(
+        "INFO",
+        "rtsps",
+        &format!(
+            "NVST SETUP ok status={} url={video_setup} transportRequest=(empty) transportResponse=[{transport}]",
+            setup.status,
+        ),
+    );
     let (video_peer_ip, video_peer_port, video_peer_port_end) = parse_video_peer(transport)
         .ok_or_else(|| {
             NvstRtspError::new(
@@ -676,6 +714,14 @@ pub fn prepare_owned_nvst(
             "SETUP selected ping version 6 without an X-Nv-Ping-Payload",
         ));
     }
+    opennow_streamer_protocol::log::log_line(
+        "INFO",
+        "rtsps",
+        &format!(
+            "NVST SETUP parsed videoPeer={video_peer_ip}:{video_peer_port}-{video_peer_port_end} bundlePeer={bundle_peer_ip}:{bundle_peer_port} pingVersion={ping_version} pingPayload={}",
+            if setup_ping_payload.is_some() { "present" } else { "missing" },
+        ),
+    );
     let remote_ufrag = resolve_remote_ufrag(
         setup_ping_payload.as_deref(),
         remote_ufrag.as_deref(),
