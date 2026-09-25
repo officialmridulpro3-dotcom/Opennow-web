@@ -11,6 +11,7 @@ import { fetchSubscription } from "./gfn/subscription";
 import { getLoginProviders } from "./webAuth";
 import { getSession } from "./sessionStore";
 import { finalizeNativeContext, nativeSidecar, resolveLaunchTransportMode, resolveNativeMediaPeer } from "./nativeStream";
+import { formatUdpPreflight, runUdpPreflight } from "./udpPreflight";
 
 function asyncRoute(handler: (request: Request, response: Response) => Promise<void>) {
   return (request: Request, response: Response, next: NextFunction) => {
@@ -280,6 +281,13 @@ export function registerApi(app: Express): void {
         return;
       }
       const context = await resolveNativeMediaPeer(finalized.context);
+      // Fire-and-forget UDP preflight: proves whether plain UDP works from
+      // this machine. The verdict lands in server.log within seconds and
+      // never blocks or fails the launch.
+      void runUdpPreflight().then(
+        (preflight) => console.log(`[NVST] UDP preflight: ${formatUdpPreflight(preflight)}`),
+        (error: unknown) => console.log(`[NVST] UDP preflight error: ${(error as Error).message}`),
+      );
       response.json(await nativeSidecar.start(finalized.sessionId, context));
     } catch (error) {
       const statusCode = (error as { statusCode?: number }).statusCode ?? 500;
