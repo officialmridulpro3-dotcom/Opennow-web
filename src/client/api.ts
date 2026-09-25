@@ -34,6 +34,8 @@ export interface NativeSidecarStatus {
   lastError?: string;
   capabilities?: unknown;
   phase?: "handshake" | "starting";
+  /** True once the engine logs its first inbound video datagram or decoded frame. */
+  firstFrame?: boolean;
 }
 
 export function getNativeStatus(): Promise<NativeSidecarStatus> {

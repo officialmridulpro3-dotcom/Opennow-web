@@ -35,6 +35,8 @@ export interface NativeSidecarStatus {
   capabilities?: unknown;
   /** Startup phase while `running` but not yet acknowledged ("handshake" | "starting"). */
   phase?: "handshake" | "starting";
+  /** True once the engine logs its first inbound video datagram or decoded frame. */
+  firstFrame?: boolean;
 }
 
 export interface FinalizedNativeContext {
@@ -159,6 +161,13 @@ interface PendingStart {
   startResolved: boolean;
 }
 
+/**
+ * Sidecar stderr markers proving video is flowing. The engine logs the first
+ * raw-SRTP datagram as soon as packets arrive and the first access unit once
+ * a complete frame is assembled for the decoder (codec name varies).
+ */
+const FIRST_FRAME_MARKERS = ["inbound first datagram", "first H264 access unit", "first H265 access unit", "first AV1 access unit"];
+
 class NativeSidecarManager {
   private child: ChildProcess | null = null;
   private sessionId: string | undefined;
@@ -169,6 +178,7 @@ class NativeSidecarManager {
   private pending: PendingStart | null = null;
   private commandId = 0;
   private phase: "handshake" | "starting" | undefined;
+  private firstFrame = false;
 
   status(): NativeSidecarStatus {
     return {
@@ -180,6 +190,7 @@ class NativeSidecarManager {
       lastError: this.lastError,
       capabilities: this.capabilities,
       phase: this.child !== null ? this.phase : undefined,
+      firstFrame: this.firstFrame || undefined,
     };
   }
 
@@ -194,6 +205,7 @@ class NativeSidecarManager {
     this.lastError = undefined;
     this.capabilities = undefined;
     this.stdoutBuffer = "";
+    this.firstFrame = false;
 
     const child = spawn(exe, [], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true, env: buildSidecarEnv() });
     this.child = child;
@@ -203,7 +215,15 @@ class NativeSidecarManager {
     child.stdout?.on("data", (chunk: Buffer) => this.onStdout(chunk));
     child.stderr?.on("data", (chunk: Buffer) => {
       const text = chunk.toString("utf8").trim();
-      if (text) console.log(`[NVST:${child.pid}] ${text.slice(0, 2000)}`);
+      if (!text) return;
+      // The sidecar renders in its own OS window, so the web client never
+      // sees a video element frame. Surface the engine's first-video markers
+      // so the launch overlay can dismiss on the real first clear frame.
+      if (!this.firstFrame && FIRST_FRAME_MARKERS.some((marker) => text.includes(marker))) {
+        this.firstFrame = true;
+        console.log(`[NVST:${child.pid}] first video frame observed`);
+      }
+      console.log(`[NVST:${child.pid}] ${text.slice(0, 2000)}`);
     });
     child.on("error", (error) => this.onExit(null, `sidecar process error: ${error.message}`));
     child.on("exit", (code) => this.onExit(code, code === 0 ? undefined : `sidecar exited with code ${code}`));

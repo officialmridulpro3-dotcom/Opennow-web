@@ -407,7 +407,12 @@ export function App(): JSX.Element {
     };
   }, [streamStatus]);
 
-  const streamVideoReady = isStreamVideoReady(streamStatus, diagnosticsVideoReady, videoElementHasFrame);
+  // Native sidecar sessions render in the engine's own OS window, so the
+  // browser video element never receives a frame. Treat the engine's
+  // first-frame signal (polled via native status) as video-ready so the
+  // launch overlay dismisses on the real first clear frame.
+  const nativeFirstFrame = streamStatus === "streaming" && nativeSidecarStatus?.firstFrame === true;
+  const streamVideoReady = isStreamVideoReady(streamStatus, diagnosticsVideoReady, videoElementHasFrame) || nativeFirstFrame;
 
   useEffect(() => {
     if (streamStatus === "idle" || !streamVideoReady || streamRevealComplete) return undefined;
