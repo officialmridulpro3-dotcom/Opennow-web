@@ -160,7 +160,7 @@ impl OverlayManager {
         self.menu_hovered = false;
         self.menu.hide();
         if refocus_game {
-            if let Some(hwnd) = window_hwnd(game) {
+            if let Ok(hwnd) = window_hwnd(game) {
                 unsafe {
                     SetForegroundWindow(hwnd);
                 }
@@ -231,7 +231,7 @@ impl OverlayManager {
                 window_id,
                 win_event,
             } => {
-                self.route_window_event(game, *window_id, *win_event);
+                self.route_window_event(game, *window_id, win_event.clone());
                 // Game-window events still belong to game input (focus drives
                 // capture); overlay-window events are fully consumed.
                 (
@@ -316,10 +316,7 @@ impl OverlayManager {
     }
 
     fn position_panels(&mut self, game: &Window) {
-        let (gx, gy) = game.position();
-        let (gw, gh) = game.size();
-        let gw = gw as i32;
-        let _ = gh;
+        let (gx, gy, gw) = game_rect(game);
         self.menu.set_position(gx + gw - MENU_WIDTH - 16, gy + 16);
         self.stats.set_position(gx + 16, gy + 16);
     }
@@ -798,6 +795,24 @@ impl Drop for LayeredPanel {
             DeleteDC(self.mem_dc);
         }
     }
+}
+
+fn game_rect(game: &Window) -> (i32, i32, i32) {
+    if let Ok(hwnd) = window_hwnd(game) {
+        unsafe {
+            let mut area = RECT {
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: 0,
+            };
+            if GetWindowRect(hwnd, &mut area) != 0 {
+                return (area.left, area.top, area.right - area.left);
+            }
+        }
+    }
+    let (width, _) = game.size();
+    (0, 0, width as i32)
 }
 
 fn window_hwnd(window: &Window) -> Result<HWND, String> {
