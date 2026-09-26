@@ -131,7 +131,18 @@ jobs:
         shell: pwsh
         env:
           CARGO_TERM_COLOR: never
-        run: cargo build --locked --release --manifest-path third_party/opennow-streamer/Cargo.toml -p opennow-streamer
+        run: |
+          rustc --version | Tee-Object -FilePath nvst-build.log
+          cargo build --locked --release --manifest-path third_party/opennow-streamer/Cargo.toml -p opennow-streamer 2>&1 | Tee-Object -FilePath nvst-build.log -Append
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Upload build log (diagnostic)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nvst-build-log
+          path: nvst-build.log
+          if-no-files-found: warn
 
       - name: Smoke test (hello handshake)
         shell: pwsh
