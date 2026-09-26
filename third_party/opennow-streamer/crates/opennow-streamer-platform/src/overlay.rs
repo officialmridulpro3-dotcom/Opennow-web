@@ -230,6 +230,7 @@ impl OverlayManager {
             Event::Window {
                 window_id,
                 win_event,
+                ..
             } => {
                 self.route_window_event(game, *window_id, win_event.clone());
                 // Game-window events still belong to game input (focus drives

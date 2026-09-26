@@ -131,47 +131,7 @@ jobs:
         shell: pwsh
         env:
           CARGO_TERM_COLOR: never
-        run: |
-          rustc --version | Tee-Object -FilePath nvst-build.log
-          cargo build --locked --release --manifest-path third_party/opennow-streamer/Cargo.toml -p opennow-streamer 2>&1 | Tee-Object -FilePath nvst-build.log -Append
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-      - name: Upload build log (diagnostic)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: nvst-build-log
-          path: nvst-build.log
-          if-no-files-found: warn
-
-      - name: Report errors as annotations (diagnostic)
-        if: failure()
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Continue"
-          $lines = Get-Content nvst-build.log -ErrorAction SilentlyContinue
-          if (-not $lines) { Write-Host "::error::nvst-build.log missing or empty"; exit 0 }
-          $count = 0
-          for ($i = 0; $i -lt $lines.Count -and $count -lt 40; $i++) {
-            if ($lines[$i] -match '^error' -or $lines[$i] -match '^\s+-->' -or $lines[$i] -match '^warning: unused') {
-              $safe = $lines[$i] -replace '%', '%25' -replace '\r', '%0D' -replace '\n', '%0A'
-              Write-Host "::error::$safe"
-              $count++
-            }
-          }
-          if ($count -eq 0) {
-            $tail = ($lines | Select-Object -Last 5) -join ' | '
-            Write-Host "::error::no rustc error lines found; tail: $tail"
-          }
-
-      - name: File build log as issue (diagnostic)
-        if: failure()
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          Get-Content nvst-build.log -Tail 120 | Out-File -FilePath nvst-build-tail.txt -Encoding utf8
-          gh issue create --title "NVST build log diagnostic" --body-file nvst-build-tail.txt
+        run: cargo build --locked --release --manifest-path third_party/opennow-streamer/Cargo.toml -p opennow-streamer
 
       - name: Smoke test (hello handshake)
         shell: pwsh
