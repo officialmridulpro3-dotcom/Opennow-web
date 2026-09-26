@@ -292,7 +292,9 @@ impl OverlayManager {
                         self.stats.hide();
                     }
                 }
-                WindowEvent::Moved | WindowEvent::Resized | WindowEvent::SizeChanged => {
+                WindowEvent::Moved(_, _)
+                | WindowEvent::Resized(_, _)
+                | WindowEvent::SizeChanged(_, _) => {
                     self.position_panels(game);
                 }
                 _ => {}
