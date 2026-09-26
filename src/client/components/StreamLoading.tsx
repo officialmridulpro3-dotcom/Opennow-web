@@ -1,4 +1,4 @@
-import { Cpu, Hash, Hourglass, Monitor, Radio, Timer, Users, Wifi, X, XCircle, Zap, Check } from "lucide-react";
+import { Check, Monitor, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { JSX, Ref } from "react";
 import { AnimatePresence, m } from "motion/react";
@@ -10,19 +10,15 @@ import {
   isSessionQueuePaused,
 } from "@shared/gfn";
 import type { SessionAdInfo, SessionAdState } from "@shared/gfn";
-import { getStoreDisplayName, getStoreIconComponent } from "./GameCard";
+import { getStoreDisplayName } from "./GameCard";
 import { QueueAdPreview, type QueueAdPlaybackEvent, type QueueAdPreviewHandle } from "./QueueAdPreview";
 import { LazyShaderAtmosphere } from "./LazyShaderAtmosphere";
 import { useTranslation } from "../i18n";
 
 type TranslateFunction = typeof import("../i18n").t;
 
-const launchStages = [
-  { id: "queue", icon: Radio },
-  { id: "setup", icon: Cpu },
-  { id: "connecting", icon: Wifi },
-  { id: "ready", icon: Monitor },
-] as const;
+const launchStageIds = ["queue", "setup", "connecting", "ready"] as const;
+type LaunchStageId = (typeof launchStageIds)[number];
 
 export interface StreamLoadingProps {
   gameTitle: string;
@@ -48,14 +44,14 @@ export interface StreamLoadingProps {
   onCancel: () => void;
 }
 
-const stageLabelKey: Record<(typeof launchStages)[number]["id"], string> = {
+const stageLabelKey: Record<LaunchStageId, string> = {
   queue: "streamLoading.steps.queue",
   setup: "streamLoading.steps.setup",
   connecting: "streamLoading.steps.connect",
   ready: "streamLoading.steps.ready",
 };
 
-function safeStageLabel(t: TranslateFunction, id: (typeof launchStages)[number]["id"]): string {
+function safeStageLabel(t: TranslateFunction, id: LaunchStageId): string {
   const fallback: Record<string, string> = {
     queue: "Queue",
     setup: "Setting up",
@@ -104,10 +100,7 @@ function getPhaseDetail(t: TranslateFunction, status: StreamLoadingProps["status
   }
 }
 
-function getQueueHeroDetail(
-  t: TranslateFunction,
-  queuePosition: number | undefined,
-): string {
+function getQueueDetail(t: TranslateFunction, queuePosition: number | undefined): string {
   if (queuePosition) {
     return t("streamLoading.detail.queueMoving", { position: queuePosition });
   }
@@ -118,19 +111,6 @@ function getActiveStage(status: StreamLoadingProps["status"]): number {
   if (status === "queue") return 0;
   if (status === "setup") return 1;
   return 2;
-}
-
-function getStageHeroIcon(status: StreamLoadingProps["status"]) {
-  switch (status) {
-    case "queue":
-      return Radio;
-    case "setup":
-      return Cpu;
-    case "starting":
-      return Zap;
-    case "connecting":
-      return Wifi;
-  }
 }
 
 function formatWaitTime(totalSeconds: number): string {
@@ -148,6 +128,13 @@ function getAdSummary(t: TranslateFunction, adState?: SessionAdState): string | 
   return ads.length > 0
     ? t("streamLoading.ads.availableForProgression", { count: ads.length })
     : t("streamLoading.ads.playbackRequired");
+}
+
+interface MetaSegment {
+  key: string;
+  label: string;
+  value: string;
+  accent?: boolean;
 }
 
 export function StreamLoading({
@@ -173,7 +160,6 @@ export function StreamLoading({
   const hasError = Boolean(error);
   const statusMessage = getStatusMessage(t, status, queuePosition, adState, hasError);
   const platformName = platformStore ? getStoreDisplayName(platformStore) : "";
-  const PlatformIcon = platformStore ? getStoreIconComponent(platformStore) : null;
   const adSummary = getAdSummary(t, adState);
   const cachedAdMediaUrl = activeAdMediaUrl ?? getPreferredSessionAdMediaUrl(activeAd);
   const activeStage = getActiveStage(status);
@@ -181,25 +167,43 @@ export function StreamLoading({
   const isPaused = isSessionQueuePaused(adState);
   const hasAd = Boolean(activeAd && cachedAdMediaUrl);
   const showQueueNumber = !hasError && isQueue && typeof queuePosition === "number";
-  const StageHeroIcon = getStageHeroIcon(status);
-  const currentStageId = launchStages[Math.min(activeStage, 3)].id;
+  const currentStageId = launchStageIds[Math.min(activeStage, 3)];
   const showEq = !hasError && (status === "starting" || status === "connecting");
 
-  // Overall progress across the four launch stages (approximate, keeps the ring
+  // Overall progress across the four launch stages (approximate, keeps things
   // moving even when the queue position is unknown).
-  const stageProgress = hasError ? 0 : Math.min(1, (activeStage + 0.5) / launchStages.length);
+  const stageProgress = hasError ? 0 : Math.min(1, (activeStage + 0.5) / launchStageIds.length);
 
-  const estWaitLabel = estimatedWait
-    ?? (isQueue && !hasError ? t("streamLoading.telemetry.calculating") : "—");
-  const tileOne = showQueueNumber
-    ? { icon: Hash, label: t("streamLoading.hero.position"), value: `#${queuePosition}` }
-    : { icon: StageHeroIcon, label: t("streamLoading.hero.stage"), value: safeStageLabel(t, currentStageId) };
+  const metaSegments: MetaSegment[] = [];
+  if (showQueueNumber) {
+    metaSegments.push({
+      key: "pos",
+      label: t("streamLoading.hero.position"),
+      value: `#${queuePosition}`,
+      accent: true,
+    });
+  }
+  metaSegments.push({
+    key: "elapsed",
+    label: t("streamLoading.telemetry.elapsed"),
+    value: formatWaitTime(elapsedSeconds),
+  });
+  metaSegments.push({
+    key: "est",
+    label: t("streamLoading.hero.estWait"),
+    value: estimatedWait ?? (isQueue ? t("streamLoading.telemetry.calculating") : "—"),
+  });
 
   const posterBadge = hasError
     ? t("streamLoading.labels.launchError")
     : showQueueNumber
       ? `#${queuePosition} · ${t("streamLoading.hero.inQueue")}`
       : safeStageLabel(t, currentStageId);
+
+  const eyebrowParts = [
+    hasError ? t("streamLoading.labels.launchError") : t("streamLoading.labels.nowLoading"),
+    platformName,
+  ].filter(Boolean);
 
   useEffect(() => {
     if (hasError) return undefined;
@@ -209,11 +213,9 @@ export function StreamLoading({
     return () => window.clearInterval(timer);
   }, [hasError, startedAt]);
 
-  const TileOneIcon = tileOne.icon;
-
   return (
     <div className={`gload${hasError ? " gload--error" : ""}`}>
-      {/* Full-bleed blurred cover backdrop */}
+      {/* Full-bleed cover backdrop */}
       {gameCover ? (
         <div className="gload-bg" style={{ backgroundImage: `url(${gameCover})` }} />
       ) : (
@@ -229,9 +231,7 @@ export function StreamLoading({
       <div className="gload-topbar">
         <div className="gload-brand">
           <span className={`gload-brand-dot${hasError ? " gload-brand-dot--error" : ""}`} />
-          <span className="gload-brand-text">
-            {hasError ? t("streamLoading.labels.launchError") : t("streamLoading.labels.nowLoading")}
-          </span>
+          <span className="gload-brand-text">OpenNOW</span>
         </div>
         <button
           type="button"
@@ -243,7 +243,7 @@ export function StreamLoading({
         </button>
       </div>
 
-      {/* Main stage — big poster + info */}
+      {/* Main stage — poster + editorial status column */}
       <div className="gload-stage">
         <m.div
           className="gload-poster-wrap"
@@ -272,11 +272,6 @@ export function StreamLoading({
               <span>{posterBadge}</span>
             </div>
           </div>
-          {gameCover && !hasError && (
-            <div className="gload-poster-floor" aria-hidden="true">
-              <img src={gameCover} alt="" />
-            </div>
-          )}
         </m.div>
 
         <m.div
@@ -286,115 +281,71 @@ export function StreamLoading({
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
         >
           <span className={`gload-eyebrow${hasError ? " gload-eyebrow--error" : ""}`}>
-            {hasError ? t("streamLoading.labels.launchError") : t("streamLoading.labels.nowLoading")}
+            {!hasError && <span className="gload-eyebrow-dot" aria-hidden="true" />}
+            {eyebrowParts.join("  ·  ")}
           </span>
           <h1 className="gload-title" title={gameTitle}>{gameTitle}</h1>
 
-          {PlatformIcon && (
-            <div className="gload-tags">
-              <span className="gload-tag" title={platformName}>
-                <span className="gload-tag-icon"><PlatformIcon /></span>
-                <span>{platformName}</span>
-              </span>
-            </div>
-          )}
-
-          {/* Hero panel — giant queue number / stage orb / error */}
           {showQueueNumber ? (
-            <div className="gload-hero gload-hero--queue" role="status" aria-live="polite">
-              <div className="gload-hero-glow" aria-hidden="true" />
-              <div className="gload-hero-rings" aria-hidden="true">
-                <span className="gload-hero-ring gload-hero-ring--a" />
-                <span className="gload-hero-ring gload-hero-ring--b" />
-                <span className="gload-hero-ring gload-hero-ring--c" />
+            <div className="gload-queue" role="status" aria-live="polite">
+              <span className="gload-queue-label">{t("streamLoading.hero.placeInQueue")}</span>
+              <div className="gload-queue-numwrap">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <m.span
+                    key={queuePosition}
+                    className="gload-queue-num"
+                    initial={{ y: 60, opacity: 0, scale: 0.86, filter: "blur(10px)" }}
+                    animate={{ y: 0, opacity: 1, scale: 1, filter: "blur(0px)" }}
+                    exit={{ y: -60, opacity: 0, scale: 0.92, filter: "blur(10px)" }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  >
+                    #{queuePosition}
+                  </m.span>
+                </AnimatePresence>
               </div>
-              <div className="gload-hero-main">
-                <span className="gload-hero-eyebrow">
-                  <Users size={15} />
-                  <span>{t("streamLoading.hero.placeInQueue")}</span>
-                  <span className="gload-hero-live" aria-hidden="true" />
-                </span>
-                <div className="gload-hero-numwrap">
-                  <AnimatePresence mode="popLayout" initial={false}>
-                    <m.span
-                      key={queuePosition}
-                      className="gload-hero-num"
-                      initial={{ y: 44, opacity: 0, scale: 0.8, filter: "blur(8px)" }}
-                      animate={{ y: 0, opacity: 1, scale: 1, filter: "blur(0px)" }}
-                      exit={{ y: -44, opacity: 0, scale: 0.88, filter: "blur(8px)" }}
-                      transition={{ type: "spring", stiffness: 340, damping: 30 }}
-                    >
-                      #{queuePosition}
-                    </m.span>
-                  </AnimatePresence>
-                </div>
-                <p className="gload-hero-sub">{getQueueHeroDetail(t, queuePosition)}</p>
-              </div>
-              <div className="gload-hero-shimmer" aria-hidden="true" />
+              <p className="gload-queue-detail">{getQueueDetail(t, queuePosition)}</p>
             </div>
           ) : !hasError ? (
-            <div className="gload-hero gload-hero--stage" role="status" aria-live="polite">
-              <div className="gload-hero-glow" aria-hidden="true" />
-              <div className="gload-orb" aria-hidden="true">
-                <span className="gload-orb-ping" />
-                <span className="gload-orb-ping gload-orb-ping--late" />
-                <span className="gload-orb-core">
-                  <StageHeroIcon size={30} />
-                </span>
-              </div>
-              <div className="gload-hero-main">
-                <p className="gload-hero-title">{statusMessage}</p>
-                <p className="gload-hero-sub">{getPhaseDetail(t, status)}</p>
-                {showEq && (
-                  <div className="gload-eq" aria-hidden="true">
-                    <span /><span /><span /><span /><span /><span /><span />
-                  </div>
-                )}
-              </div>
-              <div className="gload-hero-shimmer" aria-hidden="true" />
+            <div className="gload-phase" role="status" aria-live="polite">
+              <p className="gload-phase-title">{statusMessage}</p>
+              {showEq && (
+                <div className="gload-eq" aria-hidden="true">
+                  <span /><span /><span /><span /><span /><span /><span />
+                </div>
+              )}
+              <p className="gload-phase-detail">{getPhaseDetail(t, status)}</p>
             </div>
           ) : (
-            <div className="gload-hero gload-hero--error" role="alert">
-              <div className="gload-error-emblem" aria-hidden="true">
-                <XCircle size={34} />
-              </div>
-              <div className="gload-hero-main">
-                <p className="gload-hero-title">{error?.title ?? statusMessage}</p>
-                {error && <p className="gload-error-desc">{error.description}</p>}
-                {error?.code && <span className="gload-error-code">{error.code}</span>}
-              </div>
+            <div className="gload-fail" role="alert">
+              <p className="gload-phase-title">{error?.title ?? statusMessage}</p>
+              {error && <p className="gload-error-desc">{error.description}</p>}
+              {error?.code && <span className="gload-error-code">{error.code}</span>}
             </div>
           )}
 
-          {/* Stat tiles */}
+          {/* Meta strip */}
           {!hasError && (
-            <div className="gload-tiles">
-              <div className="gload-tile gload-tile--accent">
-                <span className="gload-tile-icon"><TileOneIcon size={17} /></span>
-                <span className="gload-tile-value">{tileOne.value}</span>
-                <span className="gload-tile-label">{tileOne.label}</span>
-              </div>
-              <div className="gload-tile">
-                <span className="gload-tile-icon"><Timer size={17} /></span>
-                <span className="gload-tile-value gload-tile-value--mono">{formatWaitTime(elapsedSeconds)}</span>
-                <span className="gload-tile-label">{t("streamLoading.telemetry.elapsed")}</span>
-              </div>
-              <div className="gload-tile">
-                <span className="gload-tile-icon"><Hourglass size={17} /></span>
-                <span className="gload-tile-value">{estWaitLabel}</span>
-                <span className="gload-tile-label">{t("streamLoading.hero.estWait")}</span>
-              </div>
+            <div className="gload-meta">
+              {metaSegments.map((segment) => (
+                <span
+                  key={segment.key}
+                  className={`gload-meta-item${segment.accent ? " gload-meta-item--accent" : ""}`}
+                >
+                  <span className="gload-meta-label">{segment.label}</span>
+                  <span className="gload-meta-value">{segment.value}</span>
+                </span>
+              ))}
             </div>
           )}
           {!hasError && diagnosticLine && (
             <p className="gload-diagnostic">{diagnosticLine}</p>
           )}
 
-          {/* Progress bar */}
+          {/* Progress line */}
           {!hasError && (
             <div className="gload-progress" aria-hidden="true">
               <div className="gload-progress-head">
-                <span>{safeStageLabel(t, launchStages[Math.min(activeStage, 3)].id)}</span>
+                <span>{safeStageLabel(t, currentStageId)}</span>
                 <span>{isQueue && queuePosition ? `#${queuePosition}` : `${Math.round(stageProgress * 100)}%`}</span>
               </div>
               <div className="gload-progress-track">
@@ -408,28 +359,17 @@ export function StreamLoading({
             </div>
           )}
 
-          {/* Stage stepper */}
+          {/* Stage breadcrumb */}
           {!hasError && (
-            <div className="gload-steps" aria-label={t("streamLoading.labels.launchProgress")}>
-              {launchStages.map((stage, index) => {
-                const StageIcon = stage.icon;
-                const state = index < activeStage ? "completed" : index === activeStage ? "active" : "pending";
+            <div className="gload-crumbs" aria-label={t("streamLoading.labels.launchProgress")}>
+              {launchStageIds.map((stageId, index) => {
+                const state = index < activeStage ? "done" : index === activeStage ? "active" : "todo";
                 return (
-                  <div className={`gload-step gload-step--${state}`} key={stage.id}>
-                    <m.span
-                      className="gload-step-icon"
-                      animate={state === "active" ? { scale: [1, 1.12, 1] } : { scale: 1 }}
-                      transition={state === "active"
-                        ? { duration: 1.6, repeat: Infinity, ease: "easeInOut" }
-                        : { duration: 0.2 }}
-                    >
-                      {state === "completed" ? <Check size={16} /> : <StageIcon size={16} />}
-                    </m.span>
-                    <span className="gload-step-name">{safeStageLabel(t, stage.id)}</span>
-                    {index < launchStages.length - 1 && (
-                      <span className={`gload-step-line${index < activeStage ? " gload-step-line--done" : ""}`} />
-                    )}
-                  </div>
+                  <span className={`gload-crumb gload-crumb--${state}`} key={stageId}>
+                    {state === "done" && <Check size={12} />}
+                    {state === "active" && <span className="gload-crumb-dot" aria-hidden="true" />}
+                    <span>{safeStageLabel(t, stageId)}</span>
+                  </span>
                 );
               })}
             </div>

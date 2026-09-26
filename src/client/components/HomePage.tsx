@@ -762,6 +762,11 @@ export const HomePage = memo(function HomePage({
 
   const heroMetaParts = [formatRelative(heroLastPlayedMs), formatPlayed(heroPlaytimeSeconds)].filter(Boolean);
 
+  const heroVariant = heroGame ? (heroGame.variants[heroGame.selectedVariantIndex] ?? heroGame.variants[0]) : undefined;
+  const heroStoreRaw = heroVariant?.store ?? heroGame?.availableStores?.[0];
+  const HeroStoreIcon = heroStoreRaw ? getStoreIconComponent(heroStoreRaw) : null;
+  const heroStoreName = heroStoreRaw ? getStoreDisplayName(heroStoreRaw) : "";
+
   const renderRow = (title: string, rowGames: GameInfo[], seeAllCount?: number): JSX.Element | null => {
     if (rowGames.length === 0) return null;
     return (
@@ -830,6 +835,12 @@ export const HomePage = memo(function HomePage({
                       <span>Start</span>
                       <kbd>Enter</kbd>
                     </button>
+                    {heroStoreRaw && HeroStoreIcon && (
+                      <span className="home-hero-store" title={heroStoreName}>
+                        <span className="home-hero-store-icon"><HeroStoreIcon /></span>
+                        <span>{heroStoreName}</span>
+                      </span>
+                    )}
                     {streamMetaLabel && (
                       <span className="home-hero-stats">
                         <span className="home-hero-stats-dot" />

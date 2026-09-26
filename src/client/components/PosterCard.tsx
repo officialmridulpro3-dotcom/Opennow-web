@@ -56,7 +56,7 @@ export const PosterCard = memo(function PosterCard({
       role="button"
       tabIndex={0}
       aria-label={t("gameCard.selectGame", { title: game.title })}
-      whileHover={{ y: -6, scale: 1.025 }}
+      whileHover={{ y: -5, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 420, damping: 30 }}
     >
@@ -69,38 +69,35 @@ export const PosterCard = memo(function PosterCard({
             <span>{game.title}</span>
           </div>
         )}
-        <div className="poster-card-sheen" aria-hidden="true" />
-        {storeLabel && (
-          <div className="poster-card-top" aria-hidden="true">
-            <span className="poster-card-store-chip">
-              {StoreIcon && (
-                <span className="poster-card-store-icon"><StoreIcon /></span>
-              )}
-              <span>{storeLabel}</span>
-            </span>
-          </div>
-        )}
         <div className="poster-card-scrim" />
         <div className="poster-card-body">
           <p className="poster-card-title" title={game.title}>{game.title}</p>
-          <button
-            type="button"
-            className="poster-card-play"
-            onClick={(event) => {
-              event.stopPropagation();
-              onPlay();
-            }}
-            tabIndex={-1}
-            aria-label={t("gameCard.playGame", { title: game.title })}
-          >
-            <span className="poster-card-play-icon">
-              <Play size={14} fill="currentColor" />
+          {storeLabel && (
+            <p className="poster-card-meta">
+              {StoreIcon && (
+                <span className="poster-card-meta-icon"><StoreIcon /></span>
+              )}
+              <span>{storeLabel}</span>
+            </p>
+          )}
+          <span className="poster-card-playwrap" aria-hidden="true">
+            <span className="poster-card-playwrap-inner">
+              <button
+                type="button"
+                className="poster-card-play"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onPlay();
+                }}
+                tabIndex={-1}
+                aria-label={t("gameCard.playGame", { title: game.title })}
+              >
+                <Play size={13} fill="currentColor" />
+                <span>{t("app.actions.play")}</span>
+              </button>
             </span>
-            <span>{t("app.actions.play")}</span>
-          </button>
+          </span>
         </div>
-        <span className="poster-card-edge" aria-hidden="true" />
-        {isSelected && <span className="poster-card-selected-ring" aria-hidden="true" />}
       </div>
     </m.div>
   );
