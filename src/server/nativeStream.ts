@@ -372,9 +372,9 @@ class NativeSidecarManager {
     }
     // Engine-initiated session controls. Ctrl+Shift+Q (stop-stream) quits the
     // native session from the keyboard (also used by the engine Ctrl+G menu's
-    // End stream button); Ctrl+N (toggle-stats) is acknowledged until the
-    // in-window stats UI lands. Ctrl+G opens the engine's own stream menu in
-    // standalone sessions, so overlay-request only arrives from embedded hosts.
+    // End stream button). Ctrl+G opens the engine's own sidebar menu and Ctrl+N
+    // its statistics strip in standalone sessions, so overlay-request and
+    // toggle-stats only arrive from embedded hosts.
     if (type === "overlay-request") {
       console.log("[NVST] engine overlay-request (embedded host menu request)");
       return;
@@ -385,7 +385,7 @@ class NativeSidecarManager {
       return;
     }
     if (type === "shortcut-action" && message.action === "toggle-stats") {
-      console.log("[NVST] engine shortcut toggle-stats (in-window stats arrive in the next build)");
+      console.log("[NVST] engine shortcut toggle-stats (embedded host stats request)");
       return;
     }
     // Any non-error reply to the in-flight command resolves it; the engine

@@ -168,12 +168,15 @@ context's `shortcuts` map):
 - **F11** — toggle borderless fullscreen (video follows the window size, so
   manual windowed resizes scale the picture too). **Alt+Enter** works as well
   (handy on Fn-lock laptops where F11 needs the Fn key).
-- **Ctrl+G** — open the stream menu: End stream, Toggle fullscreen, Close.
-  The game keeps running while the menu is open; dialog clicks never reach
-  the game.
+- **Ctrl+G** — open the GFN-style sidebar menu: Resume, Fullscreen,
+  Statistics, Quit game. Navigate with the mouse or ↑↓ + Enter; Esc closes.
+  The game keeps running while the menu is open and menu input never reaches
+  the game. (If the overlay fails to initialize, a native dialog menu is used
+  as fallback.)
 - **F8** — toggle mouse pointer lock (also re-syncs a stuck-hidden cursor to
   visible so menu motion flows again; the game re-asserts its cursor state
   on its next update).
 - **Ctrl+Shift+Q** — quit the native session from the keyboard.
-- **Ctrl+N** — stats overlay request (acknowledged; the in-window stats UI
-  arrives in the next build).
+- **Ctrl+N** — toggle the live statistics strip (video format, bitrate/fps,
+  RTT/loss, frames/recoveries, decoder, window size). The strip is
+  click-through: the game keeps receiving all mouse input beneath it.

@@ -27,6 +27,8 @@ use crate::media::{
 };
 use crate::native_surface::NativeSurface;
 #[cfg(target_os = "windows")]
+use crate::overlay::{OverlayAction, OverlayManager};
+#[cfg(target_os = "windows")]
 use crate::windows_raw_input::WindowsRawInputController;
 
 #[cfg(target_os = "linux")]
@@ -2341,6 +2343,7 @@ pub(crate) enum OutputControl {
     PointerLock,
     Fullscreen,
     Menu,
+    Stats,
 }
 
 impl ActiveOutput {
@@ -2523,6 +2526,8 @@ impl ActiveOutput {
                 OutputControl::Fullscreen => Ok(()),
                 // Standalone menu is implemented for the Windows game window.
                 OutputControl::Menu => Ok(()),
+                // Standalone stats are implemented for the Windows game window.
+                OutputControl::Stats => Ok(()),
             },
             #[cfg(target_os = "windows")]
             Self::Windows(output) => {
@@ -2542,7 +2547,11 @@ impl ActiveOutput {
                         Ok(())
                     }
                     OutputControl::Menu => {
-                        surface.show_menu();
+                        surface.toggle_overlay_menu();
+                        Ok(())
+                    }
+                    OutputControl::Stats => {
+                        surface.toggle_overlay_stats();
                         Ok(())
                     }
                 }
@@ -2560,6 +2569,8 @@ impl ActiveOutput {
                 OutputControl::Fullscreen => Ok(()),
                 // Standalone menu is implemented for the Windows game window.
                 OutputControl::Menu => Ok(()),
+                // Standalone stats are implemented for the Windows game window.
+                OutputControl::Stats => Ok(()),
             },
             #[cfg(target_os = "macos")]
             Self::Mac(output) => output.control(control),
@@ -2631,6 +2642,7 @@ struct WindowsExternalSdlSurface {
     fullscreen: bool,
     session_paused: bool,
     input_suspended: bool,
+    overlay: Option<OverlayManager>,
 }
 
 #[cfg(target_os = "windows")]
@@ -2692,6 +2704,17 @@ impl WindowsExternalSdlSurface {
         );
         input_capture.enable_gamepads(&sdl);
         input_capture.set_input_paused(true, &sdl, &mut window);
+        let game_window_id = window.id();
+        let overlay = match OverlayManager::new(&video, game_window_id) {
+            Ok(overlay) => {
+                eprintln!("Windows SDL overlay ready (Ctrl+G menu, Ctrl+N stats)");
+                Some(overlay)
+            }
+            Err(error) => {
+                eprintln!("Windows SDL overlay unavailable, Ctrl+G falls back to dialog: {error}");
+                None
+            }
+        };
         Ok(Self {
             sdl,
             window,
@@ -2705,6 +2728,7 @@ impl WindowsExternalSdlSurface {
             fullscreen: false,
             session_paused: false,
             input_suspended: true,
+            overlay,
         })
     }
 
@@ -2760,6 +2784,55 @@ impl WindowsExternalSdlSurface {
         }
         self.visible = true;
         self.sync_input_ownership();
+    }
+
+    /// Ctrl+G sidebar menu when the overlay is available, native dialog otherwise.
+    fn toggle_overlay_menu(&mut self) {
+        let Some(overlay) = self.overlay.as_mut() else {
+            self.show_menu();
+            return;
+        };
+        if overlay.menu_is_open() {
+            overlay.hide_menu(&self.window, true);
+            return;
+        }
+        // Publish neutral input before the menu takes focus so the game can
+        // never retain a key held across the menu, and free the cursor.
+        self.input_capture.release(&self.sdl, &mut self.window);
+        if let Some(raw_input) = self.raw_input.as_ref() {
+            raw_input.release_buttons();
+        }
+        overlay.show_menu(&self.window);
+    }
+
+    /// Ctrl+N live statistics strip (overlay only).
+    fn toggle_overlay_stats(&mut self) {
+        match self.overlay.as_mut() {
+            Some(overlay) => overlay.toggle_stats(&self.window),
+            None => eprintln!("Windows SDL stats unavailable (overlay failed to initialize)"),
+        }
+    }
+
+    fn set_overlay_video_info(&mut self, video_desc: String, decoder_label: &'static str) {
+        if let Some(overlay) = self.overlay.as_mut() {
+            overlay.set_video_info(video_desc, decoder_label);
+        }
+    }
+
+    fn apply_overlay_action(&mut self, action: OverlayAction) {
+        match action {
+            OverlayAction::CloseMenu => {
+                if let Some(overlay) = self.overlay.as_mut() {
+                    overlay.hide_menu(&self.window, true);
+                }
+            }
+            OverlayAction::ToggleFullscreen => self.toggle_fullscreen(),
+            OverlayAction::ToggleStats => self.toggle_overlay_stats(),
+            OverlayAction::Quit => {
+                self.input_capture
+                    .push_shortcut(StreamShortcutAction::StopStream);
+            }
+        }
     }
 
     /// Ctrl+G stream menu for standalone sessions (native dialog on Windows).
@@ -2860,11 +2933,26 @@ impl WindowsExternalSdlSurface {
 
     fn pump(&mut self) {
         let stream_window_id = self.window.id();
+        if let Some(overlay) = self.overlay.as_mut() {
+            overlay.set_context(self.fullscreen);
+        }
         for event in self.event_pump.poll_iter().collect::<Vec<_>>() {
             if matches!(event, sdl2::event::Event::Quit { .. }) {
                 if let Err(error) = self.release() {
                     eprintln!("{error}");
                 }
+                continue;
+            }
+            // Route overlay-window events before game input so menu
+            // interaction never leaks into the game.
+            let (consumed, actions) = match self.overlay.as_mut() {
+                Some(overlay) => overlay.route_event(&self.window, &event),
+                None => (false, Vec::new()),
+            };
+            for action in actions {
+                self.apply_overlay_action(action);
+            }
+            if consumed {
                 continue;
             }
             let focus_lost = matches!(
@@ -2883,11 +2971,17 @@ impl WindowsExternalSdlSurface {
                 }
             }
         }
+        if let Some(overlay) = self.overlay.as_mut() {
+            overlay.tick(&self.window);
+        }
         self.sync_raw_input();
     }
 
     fn release(&mut self) -> Result<(), String> {
         self.visible = false;
+        if let Some(overlay) = self.overlay.as_mut() {
+            overlay.hide_all();
+        }
         self.sync_input_ownership();
         self.native_surface.hide_checked()
     }
@@ -2951,6 +3045,21 @@ impl WindowsOutput {
         self.decoder_mode == WindowsDecoderMode::Hardware
     }
 
+    fn backend_label(
+        graphics_api: WindowsGraphicsApi,
+        decoder_mode: WindowsDecoderMode,
+    ) -> &'static str {
+        match (graphics_api, decoder_mode) {
+            (WindowsGraphicsApi::D3d12, WindowsDecoderMode::Hardware) => {
+                "Media Foundation hardware/D3D11-on-12/D3D12/WASAPI"
+            }
+            (WindowsGraphicsApi::D3d11, WindowsDecoderMode::Hardware) => {
+                "Media Foundation hardware/D3D11/WASAPI"
+            }
+            (_, WindowsDecoderMode::Software) => "Media Foundation software/D3D11/WASAPI",
+        }
+    }
+
     fn initialize(
         bridge: Arc<WindowsBridge>,
         output: Arc<OutputBuffers>,
@@ -2964,7 +3073,7 @@ impl WindowsOutput {
         } else {
             selected_windows_graphics_api(stream.codec)
         };
-        let external_surface = if external_renderer {
+        let mut external_surface = if external_renderer {
             Some(WindowsExternalSdlSurface::initialize(
                 stream,
                 output.captured_input(),
@@ -2972,6 +3081,20 @@ impl WindowsOutput {
         } else {
             None
         };
+        if let Some(surface) = external_surface.as_mut() {
+            let codec = match stream.codec {
+                crate::media::MediaVideoCodec::H264 => "H264",
+                crate::media::MediaVideoCodec::H265 => "H265",
+                crate::media::MediaVideoCodec::Av1 => "AV1",
+            };
+            surface.set_overlay_video_info(
+                format!(
+                    "{}\u{d7}{}@{} \u{b7} {}",
+                    stream.width, stream.height, stream.fps, codec
+                ),
+                Self::backend_label(graphics_api, decoder_mode),
+            );
+        }
         let initial_surface = match external_surface.as_ref() {
             Some(surface) => surface.target()?,
             None => hidden_windows_surface(),
@@ -3085,15 +3208,7 @@ impl WindowsOutput {
                 if let Some(surface) = self.external_surface.as_mut() {
                     surface.show_standalone();
                 }
-                OutputEvent::Presented(match (self.graphics_api, self.decoder_mode) {
-                    (WindowsGraphicsApi::D3d12, WindowsDecoderMode::Hardware) => {
-                        "Media Foundation hardware/D3D11-on-12/D3D12/WASAPI"
-                    }
-                    (WindowsGraphicsApi::D3d11, WindowsDecoderMode::Hardware) => {
-                        "Media Foundation hardware/D3D11/WASAPI"
-                    }
-                    (_, WindowsDecoderMode::Software) => "Media Foundation software/D3D11/WASAPI",
-                })
+                OutputEvent::Presented(Self::backend_label(self.graphics_api, self.decoder_mode))
             }
             BackendEvent::KeyFrameRequired => {
                 self.bridge.require_keyframe();

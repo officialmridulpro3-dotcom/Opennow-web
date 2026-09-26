@@ -317,6 +317,8 @@ impl MacOutput {
             OutputControl::Fullscreen => Ok(()),
             // Standalone menu is implemented for the Windows game window.
             OutputControl::Menu => Ok(()),
+            // Standalone stats are implemented for the Windows game window.
+            OutputControl::Stats => Ok(()),
         }
     }
 }

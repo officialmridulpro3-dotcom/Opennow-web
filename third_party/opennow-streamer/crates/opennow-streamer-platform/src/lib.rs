@@ -14,6 +14,8 @@ mod media;
 mod microphone;
 mod native_surface;
 mod output;
+#[cfg(target_os = "windows")]
+mod overlay;
 mod queue;
 mod recording;
 mod replay;

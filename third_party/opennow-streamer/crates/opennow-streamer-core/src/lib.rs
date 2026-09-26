@@ -882,6 +882,8 @@ impl Engine {
                 mjolnir_control = Some(mjolnir.control());
                 self.nvst_mjolnir_transport = Some(mjolnir);
             }
+            // Hand the live feedback state to the overlay's process slot.
+            opennow_streamer_transport::publish_session_feedback(feedback.clone());
             nvst_resources = Some(ActiveNvstResources {
                 bundle: bundle_control,
                 mjolnir: mjolnir_control,
@@ -1135,6 +1137,7 @@ impl Engine {
     }
 
     fn stop(&mut self, reason: &str) {
+        opennow_streamer_transport::clear_session_feedback();
         self.clip_cancelled.store(true, Ordering::Release);
         let was_active = {
             let mut lifecycle = lock_lifecycle(&self.lifecycle);
@@ -1592,6 +1595,15 @@ fn forward_shortcut_action(
         ));
         return;
     }
+    if action == StreamShortcutAction::ToggleStats
+        && runtime.is_some_and(MediaRuntime::is_embedded)
+    {
+        let _ = output.send(event(
+            "shortcut-action",
+            json!({"action":action.protocol_name(), "source":"keyboard"}),
+        ));
+        return;
+    }
     if action == StreamShortcutAction::ToggleFullscreen
         && runtime.is_some_and(MediaRuntime::is_embedded)
     {
@@ -1602,7 +1614,7 @@ fn forward_shortcut_action(
         return;
     }
     let control = match action {
-        StreamShortcutAction::ToggleStats => None,
+        StreamShortcutAction::ToggleStats => Some(MediaRuntimeControl::Stats),
         StreamShortcutAction::ToggleFullscreen => Some(MediaRuntimeControl::Fullscreen),
         StreamShortcutAction::TogglePointerLock => Some(MediaRuntimeControl::PointerLock),
         _ => None,

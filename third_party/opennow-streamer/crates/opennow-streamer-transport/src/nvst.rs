@@ -438,6 +438,7 @@ pub struct NvstFeedbackState {
     pending_nacks: Mutex<VecDeque<PendingNackRange>>,
     completed_frames: AtomicU32,
     completed_frame_bytes: AtomicU64,
+    recovered_packets: AtomicU64,
     pending_frame_acks: Mutex<VecDeque<CompletedFrameFeedback>>,
 }
 
@@ -458,6 +459,7 @@ impl Default for NvstFeedbackState {
             pending_nacks: Mutex::new(VecDeque::new()),
             completed_frames: AtomicU32::new(0),
             completed_frame_bytes: AtomicU64::new(0),
+            recovered_packets: AtomicU64::new(0),
             pending_frame_acks: Mutex::new(VecDeque::new()),
         }
     }
@@ -838,6 +840,63 @@ impl NvstFeedbackState {
 
 /// Shared handle to the NVST feedback plane (cheap to clone, shared across threads).
 pub type SharedNvstFeedback = Arc<NvstFeedbackState>;
+
+/// Cumulative video-leg counters for the in-window stats overlay.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct OverlayVideoCounters {
+    pub packets: u32,
+    pub frames: u32,
+    pub bytes: u64,
+    pub seq_base: u32,
+    pub seq_highest: u32,
+    pub recovered: u64,
+}
+
+impl NvstFeedbackState {
+    /// Latest repair totals from the video receiver (FEC + NACK + gap fills).
+    pub fn publish_recoveries(&self, recovered: u64) {
+        self.recovered_packets.store(recovered, Ordering::Release);
+    }
+
+    /// Point-in-time video counters; overlay readers derive rates from deltas.
+    pub fn overlay_counters(&self) -> OverlayVideoCounters {
+        OverlayVideoCounters {
+            packets: self.received_packets.load(Ordering::Acquire),
+            frames: self.completed_frames.load(Ordering::Acquire),
+            bytes: self.completed_frame_bytes.load(Ordering::Acquire),
+            seq_base: self.base_sequence.load(Ordering::Acquire),
+            seq_highest: self.highest_sequence.load(Ordering::Acquire),
+            recovered: self.recovered_packets.load(Ordering::Acquire),
+        }
+    }
+}
+
+/// Process-wide handle to the live session's shared feedback state. The
+/// sidecar runs one session per process, so the overlay can read network
+/// telemetry without threading handles through the media stack.
+static SESSION_FEEDBACK: Mutex<Option<SharedNvstFeedback>> = Mutex::new(None);
+
+/// Publish the active session's feedback state for overlay readers.
+pub fn publish_session_feedback(feedback: SharedNvstFeedback) {
+    *SESSION_FEEDBACK
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner) = Some(feedback);
+}
+
+/// Drop the published session feedback (session teardown).
+pub fn clear_session_feedback() {
+    *SESSION_FEEDBACK
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner) = None;
+}
+
+/// Clone the published session feedback, if a session is active.
+pub fn session_feedback() -> Option<SharedNvstFeedback> {
+    SESSION_FEEDBACK
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
+        .clone()
+}
 
 /// Legacy `nvstVideo` configuration normalized into the bounded receive transport.
 ///
@@ -6196,6 +6255,7 @@ fn run_nvst_udp_receiver(
     let mut receiver_reports_sent = 0_u64;
     let stats_origin = Instant::now();
     let mut last_stats_log = Instant::now();
+    let mut last_overlay_publish = Instant::now();
     loop {
         loop {
             match commands.try_recv() {
@@ -6366,6 +6426,15 @@ fn run_nvst_udp_receiver(
             eprintln!(
                 "NVST rx-stats {} inbound={inbound_datagrams} pings={pings_sent} rr={receiver_reports_sent}",
                 receiver.stats_line(stats_origin),
+            );
+        }
+        if now.duration_since(last_overlay_publish) >= Duration::from_secs(1) {
+            last_overlay_publish = now;
+            receiver.config.feedback().publish_recoveries(
+                receiver
+                    .fec_repaired_packets
+                    .saturating_add(receiver.recovered_retransmissions)
+                    .saturating_add(receiver.packet_gap_recoveries),
             );
         }
         let timeout = receiver.poll_timeout(now);

@@ -29,6 +29,7 @@ pub enum MediaRuntimeControl {
     PointerLock,
     Fullscreen,
     Menu,
+    Stats,
 }
 
 #[cfg(target_os = "macos")]
@@ -748,6 +749,7 @@ impl MainThreadHost {
                         MediaRuntimeControl::PointerLock => OutputControl::PointerLock,
                         MediaRuntimeControl::Fullscreen => OutputControl::Fullscreen,
                         MediaRuntimeControl::Menu => OutputControl::Menu,
+                        MediaRuntimeControl::Stats => OutputControl::Stats,
                     };
                     let result = active
                         .as_mut()
