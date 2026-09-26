@@ -2,7 +2,7 @@ import { Play, Monitor } from "lucide-react";
 import { memo, type JSX } from "react";
 import { m } from "motion/react";
 import type { GameInfo } from "@shared/gfn";
-import { getStoreDisplayName } from "./GameCard";
+import { getStoreDisplayName, getStoreIconComponent } from "./GameCard";
 import { useTranslation } from "../i18n";
 
 export interface PosterCardProps {
@@ -23,10 +23,9 @@ function getPosterUrl(game: GameInfo): string | undefined {
   );
 }
 
-function getActiveStore(game: GameInfo): string | undefined {
+function getActiveStoreRaw(game: GameInfo): string | undefined {
   const variant = game.variants[game.selectedVariantIndex] ?? game.variants[0];
-  const store = variant?.store ?? game.availableStores?.[0];
-  return store ? getStoreDisplayName(store) : undefined;
+  return variant?.store ?? game.availableStores?.[0];
 }
 
 export const PosterCard = memo(function PosterCard({
@@ -38,7 +37,9 @@ export const PosterCard = memo(function PosterCard({
 }: PosterCardProps): JSX.Element {
   const { t } = useTranslation();
   const posterUrl = getPosterUrl(game);
-  const storeLabel = subtitle ?? getActiveStore(game);
+  const storeRaw = getActiveStoreRaw(game);
+  const storeLabel = subtitle ?? (storeRaw ? getStoreDisplayName(storeRaw) : undefined);
+  const StoreIcon = !subtitle && storeRaw ? getStoreIconComponent(storeRaw) : null;
 
   return (
     <m.div
@@ -55,8 +56,9 @@ export const PosterCard = memo(function PosterCard({
       role="button"
       tabIndex={0}
       aria-label={t("gameCard.selectGame", { title: game.title })}
-      whileHover={{ y: -4 }}
-      transition={{ type: "spring", stiffness: 420, damping: 32 }}
+      whileHover={{ y: -6, scale: 1.025 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 420, damping: 30 }}
     >
       <div className="poster-card-art">
         {posterUrl ? (
@@ -67,10 +69,20 @@ export const PosterCard = memo(function PosterCard({
             <span>{game.title}</span>
           </div>
         )}
+        <div className="poster-card-sheen" aria-hidden="true" />
+        {storeLabel && (
+          <div className="poster-card-top" aria-hidden="true">
+            <span className="poster-card-store-chip">
+              {StoreIcon && (
+                <span className="poster-card-store-icon"><StoreIcon /></span>
+              )}
+              <span>{storeLabel}</span>
+            </span>
+          </div>
+        )}
         <div className="poster-card-scrim" />
         <div className="poster-card-body">
           <p className="poster-card-title" title={game.title}>{game.title}</p>
-          {storeLabel && <p className="poster-card-store">{storeLabel}</p>}
           <button
             type="button"
             className="poster-card-play"
@@ -79,11 +91,16 @@ export const PosterCard = memo(function PosterCard({
               onPlay();
             }}
             tabIndex={-1}
+            aria-label={t("gameCard.playGame", { title: game.title })}
           >
-            <Play size={13} fill="currentColor" />
+            <span className="poster-card-play-icon">
+              <Play size={14} fill="currentColor" />
+            </span>
             <span>{t("app.actions.play")}</span>
           </button>
         </div>
+        <span className="poster-card-edge" aria-hidden="true" />
+        {isSelected && <span className="poster-card-selected-ring" aria-hidden="true" />}
       </div>
     </m.div>
   );

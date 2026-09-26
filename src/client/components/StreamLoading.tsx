@@ -1,4 +1,4 @@
-import { Cpu, Gauge, Monitor, Radio, Wifi, X, XCircle, Check } from "lucide-react";
+import { Cpu, Hash, Hourglass, Monitor, Radio, Timer, Users, Wifi, X, XCircle, Zap, Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { JSX, Ref } from "react";
 import { AnimatePresence, m } from "motion/react";
@@ -104,10 +104,33 @@ function getPhaseDetail(t: TranslateFunction, status: StreamLoadingProps["status
   }
 }
 
+function getQueueHeroDetail(
+  t: TranslateFunction,
+  queuePosition: number | undefined,
+): string {
+  if (queuePosition) {
+    return t("streamLoading.detail.queueMoving", { position: queuePosition });
+  }
+  return t("streamLoading.cozy.queue");
+}
+
 function getActiveStage(status: StreamLoadingProps["status"]): number {
   if (status === "queue") return 0;
   if (status === "setup") return 1;
   return 2;
+}
+
+function getStageHeroIcon(status: StreamLoadingProps["status"]) {
+  switch (status) {
+    case "queue":
+      return Radio;
+    case "setup":
+      return Cpu;
+    case "starting":
+      return Zap;
+    case "connecting":
+      return Wifi;
+  }
 }
 
 function formatWaitTime(totalSeconds: number): string {
@@ -157,11 +180,26 @@ export function StreamLoading({
   const isQueue = status === "queue";
   const isPaused = isSessionQueuePaused(adState);
   const hasAd = Boolean(activeAd && cachedAdMediaUrl);
+  const showQueueNumber = !hasError && isQueue && typeof queuePosition === "number";
+  const StageHeroIcon = getStageHeroIcon(status);
+  const currentStageId = launchStages[Math.min(activeStage, 3)].id;
+  const showEq = !hasError && (status === "starting" || status === "connecting");
 
   // Overall progress across the four launch stages (approximate, keeps the ring
   // moving even when the queue position is unknown).
   const stageProgress = hasError ? 0 : Math.min(1, (activeStage + 0.5) / launchStages.length);
-  const ringCircumference = 2 * Math.PI * 52;
+
+  const estWaitLabel = estimatedWait
+    ?? (isQueue && !hasError ? t("streamLoading.telemetry.calculating") : "—");
+  const tileOne = showQueueNumber
+    ? { icon: Hash, label: t("streamLoading.hero.position"), value: `#${queuePosition}` }
+    : { icon: StageHeroIcon, label: t("streamLoading.hero.stage"), value: safeStageLabel(t, currentStageId) };
+
+  const posterBadge = hasError
+    ? t("streamLoading.labels.launchError")
+    : showQueueNumber
+      ? `#${queuePosition} · ${t("streamLoading.hero.inQueue")}`
+      : safeStageLabel(t, currentStageId);
 
   useEffect(() => {
     if (hasError) return undefined;
@@ -170,6 +208,8 @@ export function StreamLoading({
     }, 1000);
     return () => window.clearInterval(timer);
   }, [hasError, startedAt]);
+
+  const TileOneIcon = tileOne.icon;
 
   return (
     <div className={`gload${hasError ? " gload--error" : ""}`}>
@@ -227,7 +267,16 @@ export function StreamLoading({
               />
             )}
             <div className="gload-poster-reflection" aria-hidden="true" />
+            <div className={`gload-poster-badge${hasError ? " gload-poster-badge--error" : ""}`}>
+              {!hasError && <span className="gload-poster-badge-dot" aria-hidden="true" />}
+              <span>{posterBadge}</span>
+            </div>
           </div>
+          {gameCover && !hasError && (
+            <div className="gload-poster-floor" aria-hidden="true">
+              <img src={gameCover} alt="" />
+            </div>
+          )}
         </m.div>
 
         <m.div
@@ -241,50 +290,105 @@ export function StreamLoading({
           </span>
           <h1 className="gload-title" title={gameTitle}>{gameTitle}</h1>
 
-          <div className="gload-tags">
-            {PlatformIcon && (
+          {PlatformIcon && (
+            <div className="gload-tags">
               <span className="gload-tag" title={platformName}>
                 <span className="gload-tag-icon"><PlatformIcon /></span>
                 <span>{platformName}</span>
               </span>
-            )}
-            <span className="gload-tag">
-              <Gauge size={14} />
-              <span>{formatWaitTime(elapsedSeconds)}</span>
-            </span>
-            {isQueue && queuePosition ? (
-              <span className="gload-tag gload-tag--accent">
-                <Radio size={14} />
-                <span>{t("streamLoading.telemetry.queuePosition")} #{queuePosition}</span>
-              </span>
-            ) : null}
-          </div>
-
-          <div className={`gload-status${hasError ? " gload-status--error" : ""}`}>
-            {hasError ? (
-              <XCircle size={20} className="gload-status-icon" />
-            ) : (
-              <m.span
-                className="gload-live-dot"
-                aria-hidden="true"
-                animate={{ opacity: [0.5, 1, 0.5], scale: [0.85, 1.15, 0.85] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-              />
-            )}
-            <div className="gload-status-text">
-              <p className="gload-message" role="status" aria-live="polite">{statusMessage}</p>
-              {!hasError && <p className="gload-detail">{getPhaseDetail(t, status)}</p>}
-              {!hasError && diagnosticLine && (
-                <p className="gload-detail" style={{ opacity: 0.75 }}>{diagnosticLine}</p>
-              )}
-              {hasError && error && (
-                <>
-                  <p className="gload-error-desc">{error.description}</p>
-                  {error.code && <span className="gload-error-code">{error.code}</span>}
-                </>
-              )}
             </div>
-          </div>
+          )}
+
+          {/* Hero panel — giant queue number / stage orb / error */}
+          {showQueueNumber ? (
+            <div className="gload-hero gload-hero--queue" role="status" aria-live="polite">
+              <div className="gload-hero-glow" aria-hidden="true" />
+              <div className="gload-hero-rings" aria-hidden="true">
+                <span className="gload-hero-ring gload-hero-ring--a" />
+                <span className="gload-hero-ring gload-hero-ring--b" />
+                <span className="gload-hero-ring gload-hero-ring--c" />
+              </div>
+              <div className="gload-hero-main">
+                <span className="gload-hero-eyebrow">
+                  <Users size={15} />
+                  <span>{t("streamLoading.hero.placeInQueue")}</span>
+                  <span className="gload-hero-live" aria-hidden="true" />
+                </span>
+                <div className="gload-hero-numwrap">
+                  <AnimatePresence mode="popLayout" initial={false}>
+                    <m.span
+                      key={queuePosition}
+                      className="gload-hero-num"
+                      initial={{ y: 44, opacity: 0, scale: 0.8, filter: "blur(8px)" }}
+                      animate={{ y: 0, opacity: 1, scale: 1, filter: "blur(0px)" }}
+                      exit={{ y: -44, opacity: 0, scale: 0.88, filter: "blur(8px)" }}
+                      transition={{ type: "spring", stiffness: 340, damping: 30 }}
+                    >
+                      #{queuePosition}
+                    </m.span>
+                  </AnimatePresence>
+                </div>
+                <p className="gload-hero-sub">{getQueueHeroDetail(t, queuePosition)}</p>
+              </div>
+              <div className="gload-hero-shimmer" aria-hidden="true" />
+            </div>
+          ) : !hasError ? (
+            <div className="gload-hero gload-hero--stage" role="status" aria-live="polite">
+              <div className="gload-hero-glow" aria-hidden="true" />
+              <div className="gload-orb" aria-hidden="true">
+                <span className="gload-orb-ping" />
+                <span className="gload-orb-ping gload-orb-ping--late" />
+                <span className="gload-orb-core">
+                  <StageHeroIcon size={30} />
+                </span>
+              </div>
+              <div className="gload-hero-main">
+                <p className="gload-hero-title">{statusMessage}</p>
+                <p className="gload-hero-sub">{getPhaseDetail(t, status)}</p>
+                {showEq && (
+                  <div className="gload-eq" aria-hidden="true">
+                    <span /><span /><span /><span /><span /><span /><span />
+                  </div>
+                )}
+              </div>
+              <div className="gload-hero-shimmer" aria-hidden="true" />
+            </div>
+          ) : (
+            <div className="gload-hero gload-hero--error" role="alert">
+              <div className="gload-error-emblem" aria-hidden="true">
+                <XCircle size={34} />
+              </div>
+              <div className="gload-hero-main">
+                <p className="gload-hero-title">{error?.title ?? statusMessage}</p>
+                {error && <p className="gload-error-desc">{error.description}</p>}
+                {error?.code && <span className="gload-error-code">{error.code}</span>}
+              </div>
+            </div>
+          )}
+
+          {/* Stat tiles */}
+          {!hasError && (
+            <div className="gload-tiles">
+              <div className="gload-tile gload-tile--accent">
+                <span className="gload-tile-icon"><TileOneIcon size={17} /></span>
+                <span className="gload-tile-value">{tileOne.value}</span>
+                <span className="gload-tile-label">{tileOne.label}</span>
+              </div>
+              <div className="gload-tile">
+                <span className="gload-tile-icon"><Timer size={17} /></span>
+                <span className="gload-tile-value gload-tile-value--mono">{formatWaitTime(elapsedSeconds)}</span>
+                <span className="gload-tile-label">{t("streamLoading.telemetry.elapsed")}</span>
+              </div>
+              <div className="gload-tile">
+                <span className="gload-tile-icon"><Hourglass size={17} /></span>
+                <span className="gload-tile-value">{estWaitLabel}</span>
+                <span className="gload-tile-label">{t("streamLoading.hero.estWait")}</span>
+              </div>
+            </div>
+          )}
+          {!hasError && diagnosticLine && (
+            <p className="gload-diagnostic">{diagnosticLine}</p>
+          )}
 
           {/* Progress bar */}
           {!hasError && (

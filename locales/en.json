@@ -334,6 +334,13 @@
     },
     "actions": {
       "cancelLoading": "Cancel loading"
+    },
+    "hero": {
+      "placeInQueue": "Your place in queue",
+      "inQueue": "In queue",
+      "position": "Position",
+      "stage": "Stage",
+      "estWait": "Est. wait"
     }
   },
   "queue": {
