@@ -27,15 +27,15 @@ use windows_sys::Win32::Foundation::{HWND, POINT, RECT, SIZE};
 use windows_sys::Win32::Graphics::Gdi::{
     AC_SRC_ALPHA, AC_SRC_OVER, ANTIALIASED_QUALITY, BI_RGB, BITMAPINFO, BITMAPINFOHEADER,
     BLENDFUNCTION, CreateCompatibleDC, CreateDIBSection, CreateFontW, CreateSolidBrush, DeleteDC,
-    DeleteObject, DIB_RGB_COLORS, DrawTextW, DT_END_ELLIPSIS, DT_LEFT, DT_RIGHT, DT_SINGLELINE,
-    DT_VCENTER, FillRect, FrameRect, FW_BOLD, FW_NORMAL, GetDC, GetStockObject, HBITMAP, HBRUSH,
-    HDC, HFONT, NULL_BRUSH, ReleaseDC, SelectObject, SetBkMode, SetTextColor, TRANSPARENT,
+    DeleteObject, DIB_RGB_COLORS, FW_BOLD, FW_NORMAL, GetStockObject, HBITMAP, HBRUSH, HDC, HFONT,
+    NULL_BRUSH, SelectObject, SetBkMode, SetTextColor, TRANSPARENT,
 };
 use windows_sys::Win32::UI::WindowsAndMessaging::{
-    GetCursorPos, GetWindowLongPtrW, GetWindowRect, GWL_EXSTYLE, HWND_TOPMOST, SetForegroundWindow,
-    SetWindowLongPtrW, SetWindowPos, ShowWindow, SW_HIDE, SW_SHOW, SW_SHOWNA, SWP_NOACTIVATE,
-    SWP_NOMOVE, SWP_NOSIZE, ULW_ALPHA, UpdateLayeredWindow, WS_EX_LAYERED, WS_EX_NOACTIVATE,
-    WS_EX_TRANSPARENT,
+    DrawTextW, DT_END_ELLIPSIS, DT_LEFT, DT_RIGHT, DT_SINGLELINE, DT_VCENTER, FillRect, FrameRect,
+    GetCursorPos, GetDC, GetWindowLongPtrW, GetWindowRect, GWL_EXSTYLE, HWND_TOPMOST, ReleaseDC,
+    SetForegroundWindow, SetWindowLongPtrW, SetWindowPos, ShowWindow, SW_HIDE, SW_SHOW, SW_SHOWNA,
+    SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, ULW_ALPHA, UpdateLayeredWindow, WS_EX_LAYERED,
+    WS_EX_NOACTIVATE, WS_EX_TRANSPARENT,
 };
 
 /// Menu selections the overlay hands back to the game surface for execution.
