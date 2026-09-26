@@ -39,18 +39,25 @@ use windows_sys::Win32::UI::WindowsAndMessaging::{
 };
 
 /// Menu selections the overlay hands back to the game surface for execution.
+/// Mirrors the web sidebar's session quick actions (fullscreen, mouse
+/// capture, recording) plus the stats strip and session quit.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum OverlayAction {
     CloseMenu,
     ToggleFullscreen,
     ToggleStats,
+    CaptureMouse,
+    ToggleRecording,
     Quit,
 }
 
-const MENU_ROWS: usize = 4;
+const MENU_ROWS: usize = 6;
 const MENU_RESUME: usize = 0;
 const MENU_FULLSCREEN: usize = 1;
 const MENU_STATISTICS: usize = 2;
+const MENU_CAPTURE_MOUSE: usize = 3;
+const MENU_RECORDING: usize = 4;
+const MENU_END_SESSION: usize = 5;
 
 const COLOR_BG: u32 = 0x001c1714;
 const COLOR_HOVER: u32 = 0x00332a23;
@@ -61,7 +68,7 @@ const COLOR_DIM: u32 = 0x00a6a09a;
 const COLOR_OFF: u32 = 0x0080726b;
 
 const MENU_WIDTH: i32 = 340;
-const MENU_HEIGHT: i32 = 316;
+const MENU_HEIGHT: i32 = 420;
 const MENU_ROWS_TOP: i32 = 72;
 const MENU_ROW_H: i32 = 52;
 const STATS_WIDTH: i32 = 360;
@@ -78,6 +85,7 @@ pub(crate) struct OverlayManager {
     menu_open: bool,
     stats_open: bool,
     stats_enabled: bool,
+    recording: bool,
     selected: usize,
     menu_hovered: bool,
     menu_focused: bool,
@@ -102,6 +110,7 @@ impl OverlayManager {
             menu_open: false,
             stats_open: false,
             stats_enabled: false,
+            recording: false,
             selected: 0,
             menu_hovered: false,
             menu_focused: false,
@@ -131,6 +140,18 @@ impl OverlayManager {
 
     pub(crate) fn menu_is_open(&self) -> bool {
         self.menu_open
+    }
+
+    /// Optimistic recording indicator for the menu row. The actual MKV worker
+    /// is toggled asynchronously through the launcher backend; there is no
+    /// engine-to-overlay channel for the true state, so the indicator keeps
+    /// the last menu toggle and only drifts if recording is toggled elsewhere
+    /// (F12) mid-session.
+    pub(crate) fn toggle_recording_state(&mut self) {
+        self.recording = !self.recording;
+        if self.menu_open {
+            self.paint_menu();
+        }
     }
 
     pub(crate) fn show_menu(&mut self, game: &Window) {
@@ -381,14 +402,17 @@ impl OverlayManager {
             MENU_RESUME => vec![OverlayAction::CloseMenu],
             MENU_FULLSCREEN => vec![OverlayAction::ToggleFullscreen],
             MENU_STATISTICS => vec![OverlayAction::ToggleStats],
-            _ => vec![OverlayAction::Quit],
+            MENU_CAPTURE_MOUSE => vec![OverlayAction::CaptureMouse],
+            MENU_RECORDING => vec![OverlayAction::ToggleRecording],
+            MENU_END_SESSION => vec![OverlayAction::Quit],
+            _ => vec![OverlayAction::CloseMenu],
         }
     }
 
     fn paint_menu(&mut self) {
         let video_desc = self.video_desc.clone();
         let selected = self.selected;
-        let states = [self.fullscreen, self.stats_enabled];
+        let states = [self.fullscreen, self.stats_enabled, self.recording];
         self.menu.paint_frame(|dc, fonts, brushes| {
             paint_menu_frame(dc, fonts, brushes, &video_desc, selected, states);
         });
@@ -476,7 +500,7 @@ fn paint_menu_frame(
     brushes: &PanelBrushes,
     video_desc: &str,
     selected: usize,
-    states: [bool; 2],
+    states: [bool; 3],
 ) {
     fill_rect(dc, rect(0, 0, MENU_WIDTH, MENU_HEIGHT), brushes.bg);
     draw_text(
@@ -495,7 +519,14 @@ fn paint_menu_frame(
         video_desc,
         DT_LEFT | DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS,
     );
-    let labels = ["Resume", "Fullscreen", "Statistics", "Quit game"];
+    let labels = [
+        "Resume",
+        "Fullscreen",
+        "Statistics",
+        "Capture mouse",
+        "Recording",
+        "End session",
+    ];
     for (index, label) in labels.iter().enumerate() {
         let y = MENU_ROWS_TOP + index as i32 * MENU_ROW_H;
         if index == selected {
@@ -513,6 +544,7 @@ fn paint_menu_frame(
         let state = match index {
             MENU_FULLSCREEN => Some(states[0]),
             MENU_STATISTICS => Some(states[1]),
+            MENU_RECORDING => Some(states[2]),
             _ => None,
         };
         if let Some(on) = state {

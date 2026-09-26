@@ -132,7 +132,21 @@ function loadCookieSession(request: Pick<IncomingMessage, "headers">): WebAuthSe
   return snapshot ? WebAuthSession.fromSnapshot(snapshot) : new WebAuthSession();
 }
 
-function persistCookieSession(response: Response, session: WebAuthSession): void {
+/**
+ * Whether the session cookies may carry the Secure flag. Secure cookies are
+ * silently dropped by browsers on plain-HTTP origins — the desktop backend
+ * always serves plain HTTP on loopback (with NODE_ENV=production), so tying
+ * the flag to NODE_ENV alone signed desktop users out on every launch. The
+ * payload stays AES-256-GCM encrypted either way; Secure is only hardening.
+ */
+function resolveCookieSecure(request: Request): boolean {
+  const override = process.env.OPENNOW_COOKIE_SECURE?.trim().toLowerCase();
+  if (override === "0" || override === "false" || override === "no") return false;
+  if (override === "1" || override === "true" || override === "yes") return true;
+  return process.env.NODE_ENV === "production" && request.protocol === "https";
+}
+
+function persistCookieSession(request: Request, response: Response, session: WebAuthSession): void {
   if (!session.isDirty()) return;
   const encrypted = encryptedCookieValue(session.toSnapshot());
   const chunks = encrypted.match(new RegExp(`.{1,${COOKIE_CHUNK_SIZE}}`, "g")) ?? [];
@@ -143,7 +157,7 @@ function persistCookieSession(response: Response, session: WebAuthSession): void
   const options = {
     httpOnly: true,
     sameSite: "strict" as const,
-    secure: process.env.NODE_ENV === "production",
+    secure: resolveCookieSecure(request),
     maxAge: COOKIE_MAX_AGE_MS,
     path: COOKIE_PATH,
   };
@@ -164,7 +178,7 @@ export const cookieSessionMiddleware: RequestHandler = (
   const session = loadCookieSession(request);
   response.locals.openNowSession = session;
   onHeaders(response, () => {
-    persistCookieSession(response, session);
+    persistCookieSession(request, response, session);
   });
   next();
 };

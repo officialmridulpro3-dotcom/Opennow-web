@@ -33,7 +33,7 @@ import {
   SAFE_FALLBACK_STREAM_PROFILE,
 } from "@shared/gfn";
 import { FALLBACK_RELAY_ICE_SERVERS, GfnWebRtcClient, probeWebRtcEnvironment } from "./platforms/gfn/webrtcClient";
-import { getNativeStatus, startNativeStream, stopNativeStream } from "./api";
+import { getCachedNativeSidecarSupport, getNativeStatus, startNativeStream, stopNativeStream } from "./api";
 import type { NativeSidecarStatus } from "./api";
 import { clientLog } from "./api";
 import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut } from "./shortcuts";
@@ -207,7 +207,7 @@ export function App(): JSX.Element {
     fps: 60,
     maxBitrateMbps: 75,
     recordingBitrateMbps: null,
-    streamClientMode: "web",
+    streamClientMode: "native",
     nativeStreamerBackend: "gstreamer",
     nativeVideoBackend: "auto",
     nativeStreamerExecutablePath: "",
@@ -258,7 +258,7 @@ export function App(): JSX.Element {
     windowHeight: 900,
     keyboardLayout: DEFAULT_KEYBOARD_LAYOUT,
     gameLanguage: "en_US",
-    enablePersistingInGameSettings: false,
+    enablePersistingInGameSettings: true,
     enableL4S: false,
     enableCloudGsync: false,
     discordRichPresence: false,
@@ -1848,7 +1848,11 @@ export function App(): JSX.Element {
     setQueuePosition(undefined);
     setLaunchError(null);
     setStreamStatus("connecting");
-    if (settings.streamClientMode === "native") {
+    // Native is the default client mode; hosts without a bundled NVST sidecar
+    // (plain web deployments) fall back to the WebRTC path. The session was
+    // already provisioned with the matching transport (the server resolves
+    // nvst to webrtc when no sidecar binary is present).
+    if (settings.streamClientMode === "native" && (await getCachedNativeSidecarSupport())) {
       await startNativeFromClaim(claimed);
     } else {
       await window.openNow.connectSignaling(buildSignalingConnectRequest(claimed));
@@ -2832,6 +2836,9 @@ export function App(): JSX.Element {
       // Native-only backstop (see loop below): seats that never leave setup.
       let nativeSetupStuckPolls = 0;
       const NATIVE_SETUP_MAX_STUCK_POLLS = 150;
+      // Same native-vs-WebRTC resolution as the connect step: sidecar-less
+      // hosts play via WebRTC even though native is the default mode.
+      const wantsNativeRuntime = settings.streamClientMode === "native" && (await getCachedNativeSidecarSupport());
 
       while (true) {
         attempt++;
@@ -2956,7 +2963,7 @@ export function App(): JSX.Element {
         // Native backstop: once out of queue, the seat must leave setup within
         // a few minutes. A provisioning the seat can't satisfy parks it in
         // setup forever — fail loudly instead of spinning forever.
-        if (settings.streamClientMode === "native" && !isInQueueMode) {
+        if (wantsNativeRuntime && !isInQueueMode) {
           nativeSetupStuckPolls += 1;
           if (nativeSetupStuckPolls > NATIVE_SETUP_MAX_STUCK_POLLS) {
             throw new Error(
@@ -2969,7 +2976,7 @@ export function App(): JSX.Element {
 
         // Total backstop (queue included): a native launch that never even
         // leaves queue is equally wedged — fail with the state attached.
-        if (settings.streamClientMode === "native" && attempt > 450) {
+        if (wantsNativeRuntime && attempt > 450) {
           throw new Error(
             isInQueueMode
               ? `Native launch is still waiting in queue after ~${Math.round(attempt / 30)} min (position ${mergedSession.queuePosition ?? "n/a"}). The native queue may be stalled — turn Native Streaming off to play via the browser path, or try again later.`

@@ -16,8 +16,9 @@
  */
 import { spawn, type ChildProcess } from "node:child_process";
 import { lookup as dnsLookup } from "node:dns/promises";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import { isIP } from "node:net";
+import { join, resolve } from "node:path";
 
 import type { NativeStreamerSessionContext } from "@shared/gfn";
 
@@ -37,6 +38,14 @@ export interface NativeSidecarStatus {
   phase?: "handshake" | "starting";
   /** True once the engine logs its first inbound video datagram or decoded frame. */
   firstFrame?: boolean;
+  /** Active engine-side MKV recording (Ctrl+G menu / F12 toggle), if any. */
+  recording?: { path: string; startedAtMs: number };
+}
+
+interface ActiveNativeRecording {
+  path: string;
+  startedAtMs: number;
+  startCommandId: string;
 }
 
 export interface FinalizedNativeContext {
@@ -183,6 +192,7 @@ class NativeSidecarManager {
   private commandId = 0;
   private phase: "handshake" | "starting" | undefined;
   private firstFrame = false;
+  private recording: ActiveNativeRecording | null = null;
 
   status(): NativeSidecarStatus {
     return {
@@ -195,6 +205,7 @@ class NativeSidecarManager {
       capabilities: this.capabilities,
       phase: this.child !== null ? this.phase : undefined,
       firstFrame: this.firstFrame || undefined,
+      recording: this.recording ? { path: this.recording.path, startedAtMs: this.recording.startedAtMs } : undefined,
     };
   }
 
@@ -300,6 +311,12 @@ class NativeSidecarManager {
     if (!child) return this.status();
     this.pending?.readyReject(new Error("Native stream stopped."));
     this.pending = null;
+    if (this.recording) {
+      // The engine finalizes the MKV worker during shutdown; drop the local
+      // handle so a later session never reports a stale recording.
+      console.log(`[NVST] recording discarded with session stop (${reason}): ${this.recording.path}`);
+      this.recording = null;
+    }
     try {
       this.send({ id: this.nextId("shutdown"), type: "shutdown", reason });
     } catch {
@@ -340,6 +357,55 @@ class NativeSidecarManager {
     this.child.stdin.write(`${JSON.stringify(message)}\n`);
   }
 
+  private toggleRecording(): void {
+    if (!this.child) {
+      console.log("[NVST] toggle-recording ignored: the sidecar is not running");
+      return;
+    }
+    if (this.recording) {
+      this.stopRecording("toggle");
+      return;
+    }
+    this.startRecording();
+  }
+
+  private startRecording(): void {
+    const sessionId = this.sessionId ?? "session";
+    const dir = resolve(process.env.OPENNOW_DATA_DIR?.trim() || ".opennow-data", "recordings");
+    try {
+      mkdirSync(dir, { recursive: true });
+    } catch (error) {
+      console.log(`[NVST] recording start failed: cannot create ${dir} (${(error as Error).message})`);
+      return;
+    }
+    const safeSession = sessionId.replace(/[^a-zA-Z0-9_-]+/g, "_").slice(0, 64) || "session";
+    const path = join(dir, `${safeSession}-${Date.now()}.mkv`);
+    const id = this.nextId("recording-start");
+    try {
+      // Command shape follows the protocol crate (camelCase): outputPath must
+      // be absolute with an .mkv extension or the engine rejects the start.
+      this.send({ id, type: "recording-start", outputPath: path });
+    } catch (error) {
+      console.log(`[NVST] recording start failed: ${(error as Error).message}`);
+      return;
+    }
+    this.recording = { path, startedAtMs: Date.now(), startCommandId: id };
+    console.log(`[NVST] recording started -> ${path}`);
+  }
+
+  private stopRecording(reason: string): void {
+    const active = this.recording;
+    this.recording = null;
+    if (!active || !this.child) return;
+    try {
+      this.send({ id: this.nextId("recording-stop"), type: "recording-stop" });
+    } catch (error) {
+      console.log(`[NVST] recording stop (${reason}) send failed: ${(error as Error).message}`);
+      return;
+    }
+    console.log(`[NVST] recording stopping (${reason}): ${active.path}`);
+  }
+
   private onStdout(chunk: Buffer): void {
     this.stdoutBuffer += chunk.toString("utf8");
     const lines = this.stdoutBuffer.split("\n");
@@ -366,6 +432,10 @@ class NativeSidecarManager {
       const detail = typeof message.message === "string" ? message.message : "native streamer error";
       this.lastError = detail.slice(0, 500);
       console.log(`[NVST] engine error: ${this.lastError}`);
+      if (typeof message.id === "string" && this.recording?.startCommandId === message.id) {
+        console.log(`[NVST] recording failed to start: ${this.lastError}`);
+        this.recording = null;
+      }
       this.pending?.readyReject(new Error(detail));
       this.pending = null;
       return;
@@ -388,6 +458,37 @@ class NativeSidecarManager {
       console.log("[NVST] engine shortcut toggle-stats (embedded host stats request)");
       return;
     }
+    // F12 / Ctrl+G "Recording" row: the engine only reports the toggle — the
+    // MKV worker itself is driven through recording-start/stop commands here
+    // so clips land next to the other desktop data with a stable file name.
+    if (type === "shortcut-action" && message.action === "toggle-recording") {
+      console.log("[NVST] engine shortcut toggle-recording; toggling native MKV recording");
+      this.toggleRecording();
+      return;
+    }
+    if (type === "recording-started") {
+      console.log(`[NVST] recording acknowledged: ${typeof message.path === "string" ? message.path : "(unknown path)"}`);
+      return;
+    }
+    if (type === "recording-stopped") {
+      const path = typeof message.path === "string" ? message.path : "(unknown path)";
+      console.log(`[NVST] recording saved: ${path} (video ${String(message.videoPackets ?? "?")} packets, audio ${String(message.audioPackets ?? "?")} packets)`);
+      return;
+    }
+    if (type === "recording-not-active") {
+      console.log("[NVST] recording stop ignored: no recording was active");
+      this.recording = null;
+      return;
+    }
+    if (type === "recording-state") {
+      const state = typeof message.state === "string" ? message.state : "unknown";
+      const path = typeof message.path === "string" ? message.path : "";
+      console.log(`[NVST] recording worker ${state}${path ? `: ${path}` : ""}`);
+      if (state === "failed" && this.recording && (!path || this.recording.path === path)) {
+        this.recording = null;
+      }
+      return;
+    }
     // Any non-error reply to the in-flight command resolves it; the engine
     // answers start with ok/status lines before streaming events follow.
     if (this.pending && (type === "ready" || type === "ok" || type === "started" || type === "status")) {
@@ -400,6 +501,10 @@ class NativeSidecarManager {
   private onExit(code: number | null, error?: string): void {
     if (!this.child) return;
     this.child = null;
+    if (this.recording) {
+      console.log(`[NVST] recording discarded with sidecar exit: ${this.recording.path}`);
+      this.recording = null;
+    }
     this.exitCode = code;
     if (error && !this.lastError) this.lastError = error;
     console.log(`[NVST] sidecar exited code=${code}${error ? ` (${error})` : ""}`);

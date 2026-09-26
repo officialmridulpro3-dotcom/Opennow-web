@@ -217,7 +217,7 @@ fn start_backend(app: &tauri::AppHandle) -> Result<String, Box<dyn std::error::E
     let log_file = std::fs::File::create(data_dir.join("server.log"))?;
     let log_file_stderr = log_file.try_clone()?;
 
-    let port = pick_free_loopback_port()?;
+    let port = pick_desktop_port();
     let origin = format!("http://127.0.0.1:{port}");
 
     let child = Command::new(&server_exe)
@@ -233,6 +233,10 @@ fn start_backend(app: &tauri::AppHandle) -> Result<String, Box<dyn std::error::E
         .env("OPENNOW_STATIC_DIR", &static_dir)
         .env("OPENNOW_DATA_DIR", &data_dir)
         .env("OPENNOW_SESSION_SECRET_FILE", data_dir.join("session-secret"))
+        // The backend serves plain HTTP on loopback, which can never satisfy
+        // the Secure cookie flag — without this override the login session
+        // cookie is dropped and the user must log in on every launch.
+        .env("OPENNOW_COOKIE_SECURE", "0")
         .env("OPENNOW_PARENT_PID", std::process::id().to_string())
         // Empty when the engine was not bundled; the backend treats that as
         // "native playback unavailable" and WebRTC is unaffected.
@@ -356,6 +360,13 @@ fn simplified(path: &Path) -> PathBuf {
     }
 }
 
+/// Preferred loopback port for the bundled backend. The port is part of the
+/// WebView origin, so a random port every launch partitions localStorage per
+/// launch and silently resets all app settings — a stable port keeps the
+/// origin (and the stored settings) identical across restarts. Deliberately
+/// outside the GameStream/Moonlight/Sunshine range (47984-48010).
+const DESKTOP_PORT_DEFAULT: u16 = 48127;
+
 /// Binds :0 on loopback, reads the assigned port, and drops the listener.
 /// The backend binds it a moment later — the tiny race is the standard
 /// trade-off for dynamic port picking and is harmless (worst case the health
@@ -363,6 +374,24 @@ fn simplified(path: &Path) -> PathBuf {
 fn pick_free_loopback_port() -> Result<u16, Box<dyn std::error::Error>> {
     let listener = TcpListener::bind(("127.0.0.1", 0))?;
     Ok(listener.local_addr()?.port())
+}
+
+/// Stable desktop port with a random fallback. The single-instance guard
+/// makes a conflict unlikely (only a stale crashed backend could hold the
+/// port); on conflict the app still starts, but settings edited in that run
+/// land on a different origin and will not persist.
+fn pick_desktop_port() -> u16 {
+    let preferred: u16 = std::env::var("OPENNOW_DESKTOP_PORT")
+        .ok()
+        .and_then(|value| value.trim().parse().ok())
+        .unwrap_or(DESKTOP_PORT_DEFAULT);
+    if preferred != 0 && TcpListener::bind(("127.0.0.1", preferred)).is_ok() {
+        return preferred;
+    }
+    eprintln!(
+        "[OpenNOW] preferred loopback port {preferred} is unavailable — falling back to a random port (settings changed this run will not persist)"
+    );
+    pick_free_loopback_port().unwrap_or(DESKTOP_PORT_DEFAULT)
 }
 
 /// Minimal HTTP/1.0 HEAD-ish check without pulling in an HTTP client crate:

@@ -946,6 +946,7 @@ pub(crate) struct SdlInputCapture {
     enabled: bool,
     focused: bool,
     relative_mouse: bool,
+    relock_on_focus: bool,
     external_relative_motion: bool,
     external_mouse_buttons: bool,
     cursor_state: RemoteCursorState,
@@ -996,6 +997,7 @@ impl SdlInputCapture {
             enabled,
             focused: false,
             relative_mouse: false,
+            relock_on_focus: false,
             external_relative_motion,
             external_mouse_buttons,
             // Do not infer hidden-cursor gameplay before the first server
@@ -1285,7 +1287,8 @@ impl SdlInputCapture {
                 // A button event proves this window owns foreground input even
                 // if SDL delivered FocusGained later in the same pump batch.
                 self.focused = true;
-                if self.cursor_state == RemoteCursorState::Hidden {
+                if self.cursor_state == RemoteCursorState::Hidden || self.relock_on_focus {
+                    self.relock_on_focus = false;
                     self.enable_relative_mouse(sdl, window);
                 }
                 if !self.external_mouse_buttons
@@ -1327,7 +1330,8 @@ impl SdlInputCapture {
                 ..
             } => {
                 self.focused = true;
-                if self.cursor_state == RemoteCursorState::Hidden {
+                if self.cursor_state == RemoteCursorState::Hidden || self.relock_on_focus {
+                    self.relock_on_focus = false;
                     self.enable_relative_mouse(sdl, window);
                 }
             }
@@ -1364,6 +1368,13 @@ impl SdlInputCapture {
     #[cfg(target_os = "windows")]
     pub(crate) fn push_shortcut(&mut self, action: StreamShortcutAction) {
         self.captured.push(CapturedInput::Shortcut(action));
+    }
+
+    /// Menu-driven mouse capture: the menu owns OS focus while open, so the
+    /// lock cannot engage synchronously — arm it for the game's next focus
+    /// event instead, when relative mode is guaranteed to land correctly.
+    pub(crate) fn request_capture_on_focus(&mut self) {
+        self.relock_on_focus = true;
     }
 
     pub(crate) fn toggle_pointer_lock(
@@ -2828,6 +2839,24 @@ impl WindowsExternalSdlSurface {
             }
             OverlayAction::ToggleFullscreen => self.toggle_fullscreen(),
             OverlayAction::ToggleStats => self.toggle_overlay_stats(),
+            OverlayAction::CaptureMouse => {
+                // Opening the menu always frees the cursor, so capture is a
+                // one-way action: dismiss the menu, refocus the game, and
+                // re-lock deterministically on the focus event.
+                if let Some(overlay) = self.overlay.as_mut() {
+                    overlay.hide_menu(&self.window, true);
+                }
+                if !self.input_capture.relative_mouse_enabled() {
+                    self.input_capture.request_capture_on_focus();
+                }
+            }
+            OverlayAction::ToggleRecording => {
+                self.input_capture
+                    .push_shortcut(StreamShortcutAction::ToggleRecording);
+                if let Some(overlay) = self.overlay.as_mut() {
+                    overlay.toggle_recording_state();
+                }
+            }
             OverlayAction::Quit => {
                 self.input_capture
                     .push_shortcut(StreamShortcutAction::StopStream);

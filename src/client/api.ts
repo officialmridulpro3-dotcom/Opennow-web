@@ -36,6 +36,30 @@ export interface NativeSidecarStatus {
   phase?: "handshake" | "starting";
   /** True once the engine logs its first inbound video datagram or decoded frame. */
   firstFrame?: boolean;
+  /** Active native MKV recording (engine Ctrl+G menu / F12), if any. */
+  recording?: { path: string; startedAtMs: number };
+}
+
+let cachedNativeSidecarSupport: boolean | null = null;
+
+/**
+ * Whether the backend has a bundled NVST sidecar. Fetched once per page load
+ * (sidecar presence cannot change without restarting the backend) so launch
+ * decisions can fall back to WebRTC on sidecar-less hosts even though native
+ * streaming is the default client mode.
+ */
+export function getCachedNativeSidecarSupport(): Promise<boolean> {
+  if (cachedNativeSidecarSupport === null) {
+    cachedNativeSidecarSupport = false;
+    return getNativeStatus().then(
+      (status) => {
+        cachedNativeSidecarSupport = status.supported === true;
+        return cachedNativeSidecarSupport;
+      },
+      () => false,
+    );
+  }
+  return Promise.resolve(cachedNativeSidecarSupport);
 }
 
 export function getNativeStatus(): Promise<NativeSidecarStatus> {
