@@ -27,15 +27,15 @@ use windows_sys::Win32::Foundation::{HWND, POINT, RECT, SIZE};
 use windows_sys::Win32::Graphics::Gdi::{
     AC_SRC_ALPHA, AC_SRC_OVER, ANTIALIASED_QUALITY, BI_RGB, BITMAPINFO, BITMAPINFOHEADER,
     BLENDFUNCTION, CreateCompatibleDC, CreateDIBSection, CreateFontW, CreateSolidBrush, DeleteDC,
-    DeleteObject, DIB_RGB_COLORS, FW_BOLD, FW_NORMAL, GetStockObject, HBITMAP, HBRUSH, HDC, HFONT,
-    NULL_BRUSH, SelectObject, SetBkMode, SetTextColor, TRANSPARENT,
+    DeleteObject, DIB_RGB_COLORS, DrawTextW, DT_END_ELLIPSIS, DT_LEFT, DT_RIGHT, DT_SINGLELINE,
+    DT_VCENTER, FillRect, FrameRect, FW_BOLD, FW_NORMAL, GetDC, GetStockObject, HBITMAP, HBRUSH,
+    HDC, HFONT, NULL_BRUSH, ReleaseDC, SelectObject, SetBkMode, SetTextColor, TRANSPARENT,
 };
 use windows_sys::Win32::UI::WindowsAndMessaging::{
-    DrawTextW, DT_END_ELLIPSIS, DT_LEFT, DT_RIGHT, DT_SINGLELINE, DT_VCENTER, FillRect, FrameRect,
-    GetCursorPos, GetDC, GetWindowLongPtrW, GetWindowRect, GWL_EXSTYLE, HWND_TOPMOST, ReleaseDC,
-    SetForegroundWindow, SetWindowLongPtrW, SetWindowPos, ShowWindow, SW_HIDE, SW_SHOW, SW_SHOWNA,
-    SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, ULW_ALPHA, UpdateLayeredWindow, WS_EX_LAYERED,
-    WS_EX_NOACTIVATE, WS_EX_TRANSPARENT,
+    GetCursorPos, GetWindowLongPtrW, GetWindowRect, GWL_EXSTYLE, HWND_TOPMOST, SetForegroundWindow,
+    SetWindowLongPtrW, SetWindowPos, ShowWindow, SW_HIDE, SW_SHOW, SW_SHOWNA, SWP_NOACTIVATE,
+    SWP_NOMOVE, SWP_NOSIZE, ULW_ALPHA, UpdateLayeredWindow, WS_EX_LAYERED, WS_EX_NOACTIVATE,
+    WS_EX_TRANSPARENT,
 };
 
 /// Menu selections the overlay hands back to the game surface for execution.
@@ -762,10 +762,10 @@ impl LayeredPanel {
             };
             let src = POINT { x: 0, y: 0 };
             let blend = BLENDFUNCTION {
-                BlendOp: AC_SRC_OVER,
+                BlendOp: AC_SRC_OVER as u8,
                 BlendFlags: 0,
                 SourceConstantAlpha: PANEL_ALPHA,
-                AlphaFormat: AC_SRC_ALPHA,
+                AlphaFormat: AC_SRC_ALPHA as u8,
             };
             UpdateLayeredWindow(
                 self.hwnd,
@@ -828,7 +828,7 @@ fn window_hwnd(window: &Window) -> Result<HWND, String> {
     }
 }
 
-fn create_font(px: i32, weight: i32) -> Result<HFONT, String> {
+fn create_font(px: i32, weight: u32) -> Result<HFONT, String> {
     let face: Vec<u16> = OsStr::new("Segoe UI")
         .encode_wide()
         .chain(std::iter::once(0))
@@ -839,14 +839,14 @@ fn create_font(px: i32, weight: i32) -> Result<HFONT, String> {
             0,
             0,
             0,
-            weight,
+            weight as i32,
             0,
             0,
             0,
             0,
             0,
             0,
-            ANTIALIASED_QUALITY,
+            ANTIALIASED_QUALITY as u32,
             0,
             face.as_ptr(),
         )
@@ -883,7 +883,7 @@ fn draw_text(dc: HDC, font: HFONT, color: u32, mut area: RECT, text: &str, forma
     unsafe {
         SelectObject(dc, font);
         SetTextColor(dc, color);
-        SetBkMode(dc, TRANSPARENT);
+        SetBkMode(dc, TRANSPARENT as i32);
         let wide: Vec<u16> = OsStr::new(text)
             .encode_wide()
             .chain(std::iter::once(0))
