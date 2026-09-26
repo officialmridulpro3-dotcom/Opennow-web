@@ -430,6 +430,7 @@ impl OverlayManager {
         }
         let (net, frames) = match sample.as_ref() {
             Some((rtt, counters)) => {
+                let rtt = *rtt;
                 let rtt_text =
                     rtt.map_or_else(|| String::from("\u{2014}"), |ms| format!("{ms:.0} ms"));
                 let loss_text = seq_loss_percent(counters)
