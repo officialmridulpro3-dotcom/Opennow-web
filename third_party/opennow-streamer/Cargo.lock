@@ -1696,6 +1696,7 @@ dependencies = [
  "opennow-streamer-platform-macos",
  "opennow-streamer-platform-windows",
  "opennow-streamer-protocol",
+ "opennow-streamer-transport",
  "opus",
  "oxideav-core",
  "oxideav-mkv",
