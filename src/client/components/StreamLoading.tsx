@@ -1,5 +1,5 @@
-import { Check, Monitor, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Monitor, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { JSX, Ref } from "react";
 import { AnimatePresence, m } from "motion/react";
 import {
@@ -19,6 +19,11 @@ type TranslateFunction = typeof import("../i18n").t;
 
 const launchStageIds = ["queue", "setup", "connecting", "ready"] as const;
 type LaunchStageId = (typeof launchStageIds)[number];
+
+/** Rail stop positions (percent) for the four launch stages. */
+const RAIL_STOPS = [0, 33.3333, 66.6667, 100];
+
+const MAX_LOG_LINES = 6;
 
 export interface StreamLoadingProps {
   gameTitle: string;
@@ -137,6 +142,13 @@ interface MetaSegment {
   accent?: boolean;
 }
 
+interface DeckLogEntry {
+  id: number;
+  at: string;
+  text: string;
+  tone: "dim" | "live" | "error";
+}
+
 export function StreamLoading({
   gameTitle,
   gameCover,
@@ -155,8 +167,19 @@ export function StreamLoading({
   onCancel,
 }: StreamLoadingProps): JSX.Element {
   const { t } = useTranslation();
-  const [startedAt] = useState(() => Date.now());
+  const startedAtRef = useRef(Date.now());
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [log, setLog] = useState<DeckLogEntry[]>(() => ([
+    { id: 0, at: "00:00", text: t("streamLoading.log.launchRequested"), tone: "dim" },
+  ]));
+  const nextLogId = useRef(0);
+  const prevStatus = useRef(status);
+  const prevPos = useRef<number | undefined>(undefined);
+  const prevDiag = useRef<string | null | undefined>(undefined);
+  const lastDiagAt = useRef(0);
+  const errorLogged = useRef(false);
+  const thresholdFired = useRef<[boolean, boolean]>([false, false]);
+
   const hasError = Boolean(error);
   const statusMessage = getStatusMessage(t, status, queuePosition, adState, hasError);
   const platformName = platformStore ? getStoreDisplayName(platformStore) : "";
@@ -169,6 +192,7 @@ export function StreamLoading({
   const showQueueNumber = !hasError && isQueue && typeof queuePosition === "number";
   const currentStageId = launchStageIds[Math.min(activeStage, 3)];
   const showEq = !hasError && (status === "starting" || status === "connecting");
+  const ghostText = hasError ? (error?.code ?? "ERR") : formatWaitTime(elapsedSeconds);
 
   // Overall progress across the four launch stages (approximate, keeps things
   // moving even when the queue position is unknown).
@@ -205,13 +229,92 @@ export function StreamLoading({
     platformName,
   ].filter(Boolean);
 
+  const stamp = (): string =>
+    formatWaitTime(Math.floor((Date.now() - startedAtRef.current) / 1000));
+
+  const pushLog = (text: string, tone: DeckLogEntry["tone"] = "live"): void => {
+    nextLogId.current += 1;
+    const entry: DeckLogEntry = { id: nextLogId.current, at: stamp(), text, tone };
+    setLog((prev) => [...prev.slice(-(MAX_LOG_LINES - 1)), entry]);
+  };
+
   useEffect(() => {
     if (hasError) return undefined;
     const timer = window.setInterval(() => {
-      setElapsedSeconds(Math.floor((Date.now() - startedAt) / 1000));
+      setElapsedSeconds(Math.floor((Date.now() - startedAtRef.current) / 1000));
     }, 1000);
     return () => window.clearInterval(timer);
-  }, [hasError, startedAt]);
+  }, [hasError]);
+
+  // Log launch-stage transitions.
+  useEffect(() => {
+    if (prevStatus.current === status) return;
+    prevStatus.current = status;
+    if (hasError) return;
+    if (status === "queue") {
+      pushLog(t("streamLoading.log.joinedQueue", { platform: platformName || "cloud" }));
+    } else if (status === "setup") {
+      pushLog(t("streamLoading.log.rigAllocated"));
+    } else if (status === "starting") {
+      pushLog(t("streamLoading.log.streamStarting"));
+    } else {
+      pushLog(t("streamLoading.log.routeOpening"));
+    }
+  });
+
+  // Log queue-position sightings / movement.
+  useEffect(() => {
+    if (typeof queuePosition !== "number") return;
+    const prev = prevPos.current;
+    prevPos.current = queuePosition;
+    if (prev === queuePosition) return;
+    if (prev === undefined) {
+      pushLog(t("streamLoading.log.queuePosition", { position: queuePosition }));
+    } else {
+      pushLog(
+        t("streamLoading.log.queueAdvanced", { position: queuePosition }),
+        queuePosition < prev ? "live" : "dim",
+      );
+    }
+  });
+
+  // Surface raw diagnostics in the log (throttled so poll spam can't flood it).
+  useEffect(() => {
+    if (!diagnosticLine || prevDiag.current === diagnosticLine) return;
+    prevDiag.current = diagnosticLine;
+    const now = Date.now();
+    if (now - lastDiagAt.current < 4000) return;
+    lastDiagAt.current = now;
+    pushLog(diagnosticLine, "dim");
+  });
+
+  // Contextual patience lines on slow launches.
+  useEffect(() => {
+    if (hasError) return;
+    if (elapsedSeconds >= 25 && !thresholdFired.current[0]) {
+      thresholdFired.current[0] = true;
+      pushLog(
+        t(isQueue ? "streamLoading.log.highDemand" : "streamLoading.log.stillTrying"),
+        "dim",
+      );
+    }
+    if (elapsedSeconds >= 70 && !thresholdFired.current[1]) {
+      thresholdFired.current[1] = true;
+      pushLog(t("streamLoading.log.stillTrying"), "dim");
+    }
+  });
+
+  // Log failures once.
+  useEffect(() => {
+    if (!hasError || errorLogged.current) return;
+    errorLogged.current = true;
+    pushLog(
+      error?.code
+        ? `${t("streamLoading.log.launchFailed")} — ${error.code}`
+        : t("streamLoading.log.launchFailed"),
+      "error",
+    );
+  });
 
   return (
     <div className={`gload${hasError ? " gload--error" : ""}`}>
@@ -227,155 +330,181 @@ export function StreamLoading({
       <div className="gload-vignette" />
       <div className="gload-grain" aria-hidden="true" />
 
+      {/* Environmental ghost numeral */}
+      <div className="gload-ghost" aria-hidden="true">
+        {showQueueNumber ? (
+          <AnimatePresence mode="popLayout" initial={false}>
+            <m.span
+              key={queuePosition}
+              className="gload-ghost-num"
+              initial={{ y: 90, opacity: 0, filter: "blur(14px)" }}
+              animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+              exit={{ y: -90, opacity: 0, filter: "blur(14px)" }}
+              transition={{ type: "spring", stiffness: 260, damping: 30 }}
+            >
+              #{queuePosition}
+            </m.span>
+          </AnimatePresence>
+        ) : (
+          <span className="gload-ghost-static">{ghostText}</span>
+        )}
+      </div>
+
       {/* Top bar */}
       <div className="gload-topbar">
         <div className="gload-brand">
           <span className={`gload-brand-dot${hasError ? " gload-brand-dot--error" : ""}`} />
           <span className="gload-brand-text">OpenNOW</span>
         </div>
-        <button
-          type="button"
-          className="gload-close"
-          onClick={onCancel}
-          aria-label={t("streamLoading.actions.cancelLoading")}
-        >
-          <X size={18} />
-        </button>
+        <div className="gload-topbar-right">
+          {!hasError && (
+            <span className="gload-session">
+              {t("streamLoading.log.session")}
+              <b>{formatWaitTime(elapsedSeconds)}</b>
+            </span>
+          )}
+          <button
+            type="button"
+            className="gload-close"
+            onClick={onCancel}
+            aria-label={t("streamLoading.actions.cancelLoading")}
+          >
+            <X size={18} />
+          </button>
+        </div>
       </div>
 
-      {/* Main stage — poster + editorial status column */}
-      <div className="gload-stage">
-        <m.div
-          className="gload-poster-wrap"
-          initial={{ opacity: 0, scale: 0.94, y: 16 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="gload-poster-halo" aria-hidden="true" />
-          <div className="gload-poster">
-            {gameCover ? (
-              <img src={gameCover} alt="" className="gload-poster-img" />
-            ) : (
-              <div className="gload-poster-empty"><Monitor size={64} /></div>
-            )}
-            {!hasError && (
-              <m.span
-                className="gload-poster-sheen"
-                aria-hidden="true"
-                animate={{ x: ["-130%", "230%"] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.6 }}
-              />
-            )}
-            <div className="gload-poster-reflection" aria-hidden="true" />
-            <div className={`gload-poster-badge${hasError ? " gload-poster-badge--error" : ""}`}>
-              {!hasError && <span className="gload-poster-badge-dot" aria-hidden="true" />}
-              <span>{posterBadge}</span>
-            </div>
-          </div>
-        </m.div>
-
-        <m.div
-          className="gload-info"
-          initial={{ opacity: 0, x: 26 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
-        >
-          <span className={`gload-eyebrow${hasError ? " gload-eyebrow--error" : ""}`}>
-            {!hasError && <span className="gload-eyebrow-dot" aria-hidden="true" />}
-            {eyebrowParts.join("  ·  ")}
-          </span>
-          <h1 className="gload-title" title={gameTitle}>{gameTitle}</h1>
-
-          {showQueueNumber ? (
-            <div className="gload-queue" role="status" aria-live="polite">
-              <span className="gload-queue-label">{t("streamLoading.hero.placeInQueue")}</span>
-              <div className="gload-queue-numwrap">
-                <AnimatePresence mode="popLayout" initial={false}>
-                  <m.span
-                    key={queuePosition}
-                    className="gload-queue-num"
-                    initial={{ y: 60, opacity: 0, scale: 0.86, filter: "blur(10px)" }}
-                    animate={{ y: 0, opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    exit={{ y: -60, opacity: 0, scale: 0.92, filter: "blur(10px)" }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  >
-                    #{queuePosition}
-                  </m.span>
-                </AnimatePresence>
-              </div>
-              <p className="gload-queue-detail">{getQueueDetail(t, queuePosition)}</p>
-            </div>
-          ) : !hasError ? (
-            <div className="gload-phase" role="status" aria-live="polite">
-              <p className="gload-phase-title">{statusMessage}</p>
-              {showEq && (
-                <div className="gload-eq" aria-hidden="true">
-                  <span /><span /><span /><span /><span /><span /><span />
-                </div>
+      {/* Main deck — identity + live session log */}
+      <div className="gload-deck">
+        <section className="gload-ident">
+          <m.div
+            className="gload-thumb"
+            initial={{ opacity: 0, scale: 0.94, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="gload-poster">
+              {gameCover ? (
+                <img src={gameCover} alt="" className="gload-poster-img" />
+              ) : (
+                <div className="gload-poster-empty"><Monitor size={48} /></div>
               )}
-              <p className="gload-phase-detail">{getPhaseDetail(t, status)}</p>
-            </div>
-          ) : (
-            <div className="gload-fail" role="alert">
-              <p className="gload-phase-title">{error?.title ?? statusMessage}</p>
-              {error && <p className="gload-error-desc">{error.description}</p>}
-              {error?.code && <span className="gload-error-code">{error.code}</span>}
-            </div>
-          )}
-
-          {/* Meta strip */}
-          {!hasError && (
-            <div className="gload-meta">
-              {metaSegments.map((segment) => (
-                <span
-                  key={segment.key}
-                  className={`gload-meta-item${segment.accent ? " gload-meta-item--accent" : ""}`}
-                >
-                  <span className="gload-meta-label">{segment.label}</span>
-                  <span className="gload-meta-value">{segment.value}</span>
-                </span>
-              ))}
-            </div>
-          )}
-          {!hasError && diagnosticLine && (
-            <p className="gload-diagnostic">{diagnosticLine}</p>
-          )}
-
-          {/* Progress line */}
-          {!hasError && (
-            <div className="gload-progress" aria-hidden="true">
-              <div className="gload-progress-head">
-                <span>{safeStageLabel(t, currentStageId)}</span>
-                <span>{isQueue && queuePosition ? `#${queuePosition}` : `${Math.round(stageProgress * 100)}%`}</span>
-              </div>
-              <div className="gload-progress-track">
+              {!hasError && (
                 <m.span
-                  className="gload-progress-fill"
-                  initial={{ width: "0%" }}
-                  animate={{ width: `${stageProgress * 100}%` }}
-                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="gload-poster-sheen"
+                  aria-hidden="true"
+                  animate={{ x: ["-130%", "230%"] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.6 }}
                 />
+              )}
+              <div className="gload-poster-reflection" aria-hidden="true" />
+              <div className={`gload-poster-badge${hasError ? " gload-poster-badge--error" : ""}`}>
+                {!hasError && <span className="gload-poster-badge-dot" aria-hidden="true" />}
+                <span>{posterBadge}</span>
               </div>
             </div>
-          )}
+            <i className="gload-corner gload-corner--tl" aria-hidden="true" />
+            <i className="gload-corner gload-corner--tr" aria-hidden="true" />
+            <i className="gload-corner gload-corner--bl" aria-hidden="true" />
+            <i className="gload-corner gload-corner--br" aria-hidden="true" />
+          </m.div>
 
-          {/* Stage breadcrumb */}
-          {!hasError && (
-            <div className="gload-crumbs" aria-label={t("streamLoading.labels.launchProgress")}>
-              {launchStageIds.map((stageId, index) => {
-                const state = index < activeStage ? "done" : index === activeStage ? "active" : "todo";
-                return (
-                  <span className={`gload-crumb gload-crumb--${state}`} key={stageId}>
-                    {state === "done" && <Check size={12} />}
-                    {state === "active" && <span className="gload-crumb-dot" aria-hidden="true" />}
-                    <span>{safeStageLabel(t, stageId)}</span>
-                  </span>
-                );
-              })}
+          <m.div
+            className="gload-ident-body"
+            initial={{ opacity: 0, x: 26 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+          >
+            <span className={`gload-eyebrow${hasError ? " gload-eyebrow--error" : ""}`}>
+              {!hasError && <span className="gload-eyebrow-dot" aria-hidden="true" />}
+              {eyebrowParts.join("  ·  ")}
+            </span>
+            <h1 className="gload-title" title={gameTitle}>{gameTitle}</h1>
+
+            {!hasError ? (
+              <>
+                <p className="gload-statusline" role="status">
+                  <span className="gload-statusline-dot" aria-hidden="true" />
+                  <span className="gload-statusline-text">{statusMessage}</span>
+                  {showEq && (
+                    <span className="gload-eq" aria-hidden="true">
+                      <span /><span /><span /><span /><span />
+                    </span>
+                  )}
+                </p>
+                <p className="gload-detail">
+                  {isQueue ? getQueueDetail(t, queuePosition) : getPhaseDetail(t, status)}
+                </p>
+                <div className="gload-meta">
+                  {metaSegments.map((segment) => (
+                    <span
+                      key={segment.key}
+                      className={`gload-meta-item${segment.accent ? " gload-meta-item--accent" : ""}`}
+                    >
+                      <span className="gload-meta-label">{segment.label}</span>
+                      <span className="gload-meta-value">{segment.value}</span>
+                    </span>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="gload-fail" role="alert">
+                <p className="gload-fail-title">{error?.title ?? statusMessage}</p>
+                {error && <p className="gload-error-desc">{error.description}</p>}
+                {error?.code && <span className="gload-error-code">{error.code}</span>}
+              </div>
+            )}
+
+            <div className="gload-actions">
+              {hasError && error?.actionLabel && onErrorAction && (
+                <button type="button" className="gload-btn gload-btn--primary" onClick={onErrorAction}>
+                  <span>{error.actionLabel}</span>
+                </button>
+              )}
+              <button
+                type="button"
+                className="gload-btn gload-btn--ghost"
+                onClick={onCancel}
+                aria-label={t("streamLoading.actions.cancelLoading")}
+              >
+                <X size={15} />
+                <span>{hasError ? t("app.actions.close") : t("app.actions.cancel")}</span>
+              </button>
             </div>
-          )}
+          </m.div>
+        </section>
 
-          {/* Ad preview */}
+        <aside className="gload-log" aria-label={t("streamLoading.log.title")}>
+          <div className="gload-log-head">
+            <span className="gload-log-title">{t("streamLoading.log.title")}</span>
+            {!hasError && (
+              <span className="gload-log-rec">
+                <span className="gload-log-rec-dot" aria-hidden="true" />
+                LIVE
+              </span>
+            )}
+          </div>
+          <div className="gload-log-feed" role="log">
+            <AnimatePresence initial={false}>
+              {log.map((entry, index) => (
+                <m.p
+                  key={entry.id}
+                  className={
+                    `gload-log-line gload-log-line--${entry.tone}`
+                    + (index === log.length - 1 ? " gload-log-line--latest" : "")
+                  }
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <span className="gload-log-time">{entry.at}</span>
+                  <span className="gload-log-text">{entry.text}</span>
+                </m.p>
+              ))}
+            </AnimatePresence>
+          </div>
+
           <AnimatePresence>
             {!hasError && hasAd && (
               <m.div
@@ -400,26 +529,42 @@ export function StreamLoading({
               </m.div>
             )}
           </AnimatePresence>
-
-          {/* Actions */}
-          <div className="gload-actions">
-            {hasError && error?.actionLabel && onErrorAction && (
-              <button type="button" className="gload-btn gload-btn--primary" onClick={onErrorAction}>
-                <span>{error.actionLabel}</span>
-              </button>
-            )}
-            <button
-              type="button"
-              className="gload-btn gload-btn--ghost"
-              onClick={onCancel}
-              aria-label={t("streamLoading.actions.cancelLoading")}
-            >
-              <X size={15} />
-              <span>{hasError ? t("app.actions.close") : t("app.actions.cancel")}</span>
-            </button>
-          </div>
-        </m.div>
+        </aside>
       </div>
+
+      {/* Launch-timeline rail */}
+      {!hasError && (
+        <footer className="gload-rail" aria-label={t("streamLoading.labels.launchProgress")}>
+          <div className="gload-rail-top">
+            <span className="gload-rail-stage">{safeStageLabel(t, currentStageId)}</span>
+            <span className="gload-rail-value">
+              {showQueueNumber ? `#${queuePosition}` : `${Math.round(stageProgress * 100)}%`}
+            </span>
+          </div>
+          <div className="gload-rail-track">
+            <m.span
+              className="gload-rail-fill"
+              initial={{ width: "0%" }}
+              animate={{ width: `${stageProgress * 100}%` }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+            />
+            {launchStageIds.map((stageId, index) => {
+              const state = index < activeStage ? "done" : index === activeStage ? "active" : "todo";
+              const edge = index === 0 ? " gload-rail-node--start" : index === launchStageIds.length - 1 ? " gload-rail-node--end" : "";
+              return (
+                <span
+                  key={stageId}
+                  className={`gload-rail-node gload-rail-node--${state}${edge}`}
+                  style={{ left: `${RAIL_STOPS[index]}%` }}
+                >
+                  <span className="gload-rail-dot" aria-hidden="true" />
+                  <span className="gload-rail-label">{safeStageLabel(t, stageId)}</span>
+                </span>
+              );
+            })}
+          </div>
+        </footer>
+      )}
     </div>
   );
 }

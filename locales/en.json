@@ -341,6 +341,21 @@
       "position": "Position",
       "stage": "Stage",
       "estWait": "Est. wait"
+    },
+    "log": {
+      "title": "Session log",
+      "session": "Session",
+      "launchRequested": "Launch requested",
+      "joinedQueue": "Joined the {platform} queue",
+      "waitingForRig": "Waiting for an available rig",
+      "queuePosition": "Queue position #{position}",
+      "queueAdvanced": "Queue advanced — #{position}",
+      "rigAllocated": "Rig allocated — preparing session",
+      "streamStarting": "Stream starting — running final checks",
+      "routeOpening": "Opening stream route",
+      "highDemand": "Demand is high — holding your place in line",
+      "stillTrying": "Still working on it — thanks for your patience",
+      "launchFailed": "Launch failed"
     }
   },
   "queue": {
