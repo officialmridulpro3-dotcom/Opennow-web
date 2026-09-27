@@ -12738,7 +12738,7 @@ POSTER CARD (shared home rows + library grid)
   color: rgba(255, 255, 255, 0.55);
 }
 .gload-eyebrow--error {
-  color: var(--danger);
+  color: var(--error);
 }
 .gload-eyebrow-dot {
   width: 8px;
@@ -12946,7 +12946,7 @@ POSTER CARD (shared home rows + library grid)
   color: rgba(255, 255, 255, 0.45);
 }
 .gload-log-line--error .gload-log-text {
-  color: var(--danger);
+  color: var(--error);
 }
 .gload-log-line--latest .gload-log-time {
   color: var(--accent);
