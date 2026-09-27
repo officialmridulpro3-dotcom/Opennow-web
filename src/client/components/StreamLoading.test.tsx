@@ -37,6 +37,15 @@ describe("StreamLoading queue console", () => {
     expect(html).toContain("poll #4 · seat status 1 · queue 42");
   });
 
+  it("pins a launch progress hairline to the top edge", () => {
+    // Motion renders the initial width server-side; the stage target is applied
+    // in the browser, so only the structure is assertable here.
+    const html = render();
+    expect(html).toContain('class="qs-progress" aria-hidden="true"');
+    expect(html).toContain("qs-progress-fill");
+    expect(render({ status: "connecting", queuePosition: undefined })).toContain("qs-progress-fill");
+  });
+
   it("renders every stage of the launch rail", () => {
     const html = render();
     for (const stage of ["Queue", "Setup", "Connect", "Ready"]) {

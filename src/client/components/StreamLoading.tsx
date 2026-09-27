@@ -39,6 +39,13 @@ export interface StreamLoadingProps {
 
 const STAGE_KEYS = ["queue", "setup", "connect", "ready"] as const;
 
+/**
+ * Hairline progress across the top edge. Deliberately never reads 100% before
+ * the stream actually takes over the screen, so the bar cannot lie about a
+ * launch that then stalls.
+ */
+const STAGE_PROGRESS = [0.18, 0.48, 0.76, 1] as const;
+
 /** Launch stage the current stream status maps onto (index into STAGE_KEYS). */
 function statusStageIndex(status: StreamLoadingProps["status"]): number {
   switch (status) {
@@ -159,6 +166,7 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
   }, [queuePosition]);
 
   const stageIndex = statusStageIndex(status);
+  const stageProgress = error ? 1 : STAGE_PROGRESS[stageIndex];
   const storeLabel = platformStore ? getStoreDisplayName(platformStore) : undefined;
   const StoreIcon = platformStore ? getStoreIconComponent(platformStore) : null;
   const localTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -278,6 +286,28 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
             transition={{ duration: 0.85, ease: "easeOut" }}
           />
         )}
+        {!error && !reducedMotion && stageIndex > 0 && (
+          <m.div
+            key={`stage-${stageIndex}`}
+            className="qs-stageflash"
+            initial={{ opacity: 0.75 }}
+            animate={{ opacity: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          />
+        )}
+      </div>
+
+      <div className="qs-progress" aria-hidden="true">
+        <m.span
+          className="qs-progress-fill"
+          initial={{ width: "0%" }}
+          animate={{ width: `${stageProgress * 100}%` }}
+          transition={
+            reducedMotion
+              ? { duration: 0.01 }
+              : { duration: 0.9, ease: [0.22, 1, 0.36, 1] }
+          }
+        />
       </div>
 
       <header className="qs-topbar">
@@ -321,12 +351,22 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
             {error.code && <code className="qs-error-code">{error.code}</code>}
             <div className="qs-error-actions">
               {error.actionLabel && onErrorAction && (
-                <button type="button" className="qs-btn qs-btn-primary" onClick={onErrorAction}>
+                <button
+                  type="button"
+                  className="qs-btn qs-btn-primary"
+                  onClick={onErrorAction}
+                  autoFocus
+                >
                   <RotateCcw size={15} />
                   {error.actionLabel}
                 </button>
               )}
-              <button type="button" className="qs-btn qs-btn-ghost" onClick={onCancel}>
+              <button
+                type="button"
+                className="qs-btn qs-btn-ghost"
+                onClick={onCancel}
+                autoFocus={!error.actionLabel || !onErrorAction}
+              >
                 {t("app.actions.close")}
               </button>
             </div>
@@ -551,6 +591,7 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
               type="button"
               className="qs-btn qs-btn-ghost qs-btn--cancel"
               onClick={onCancel}
+              autoFocus
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: reducedMotion ? 0.01 : 0.5, delay: reducedMotion ? 0 : 0.5 }}

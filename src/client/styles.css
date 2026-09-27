@@ -12391,6 +12391,55 @@ POSTER CARD (shared home rows + library grid)
   pointer-events: none;
 }
 
+/* Brighter wash when the launch steps up a stage. */
+.qs-stageflash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(72% 56% at 50% 46%, rgba(var(--accent-rgb), 0.3), transparent 72%);
+  pointer-events: none;
+}
+
+/* Hairline launch progress pinned to the top edge. */
+.qs-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+.qs-progress-fill {
+  position: relative;
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, var(--accent-press), var(--accent) 68%, #dcffe8);
+  box-shadow: 0 0 14px rgba(var(--accent-rgb), 0.6);
+}
+.qs-progress-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  animation: qs-progress-sheen 2.6s ease-in-out infinite;
+}
+@keyframes qs-progress-sheen {
+  0% { transform: translateX(-110%); }
+  55%, 100% { transform: translateX(110%); }
+}
+.qs-root--error .qs-progress-fill {
+  background: linear-gradient(90deg, #b91c1c, var(--error));
+  box-shadow: 0 0 14px rgba(248, 113, 113, 0.5);
+}
+.qs-root--error .qs-progress-fill::after {
+  animation: none;
+  opacity: 0;
+}
+
 /* Spoken-only copy: the numeral is decorative, assistive tech gets a sentence. */
 .qs-sr-only {
   position: absolute;
@@ -13276,9 +13325,11 @@ POSTER CARD (shared home rows + library grid)
   .qs-nowdot,
   .qs-chip-dot,
   .qs-rail-pulse,
+  .qs-progress-fill::after,
   .qs-eq span {
     animation: none !important;
   }
+  .qs-progress-fill::after { opacity: 0; }
   .qs-sweep { display: none; }
   .qs-poster-scan { opacity: 0.35; top: 40%; }
   .qs-iconbtn:hover { transform: none; }
@@ -13297,8 +13348,12 @@ POSTER CARD (shared home rows + library grid)
 .qs-root--static .qs-nowdot,
 .qs-root--static .qs-chip-dot,
 .qs-root--static .qs-rail-pulse,
+.qs-root--static .qs-progress-fill::after,
 .qs-root--static .qs-eq span {
   animation: none !important;
+}
+.qs-root--static .qs-progress-fill::after {
+  opacity: 0;
 }
 .qs-root--static .qs-sweep {
   display: none;
