@@ -340,7 +340,9 @@
       "inQueue": "In queue",
       "position": "Position",
       "stage": "Stage",
-      "estWait": "Est. wait"
+      "estWait": "Est. wait",
+      "aheadOfYou": "{{count}} player ahead of you",
+      "aheadOfYou_plural": "{{count}} players ahead of you"
     },
     "log": {
       "title": "Session log",

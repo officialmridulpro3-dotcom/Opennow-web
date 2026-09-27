@@ -102,7 +102,8 @@ function PreviewApp() {
   const [selectedId, setSelectedId] = useState("1091500");
   const [sortId, setSortId] = useState("last_played");
   const [accountOpen, setAccountOpen] = useState(false);
-  const [loadingDemo, setLoadingDemo] = useState<null | "queue" | "setup" | "connecting">(null);
+  const [loadingDemo, setLoadingDemo] = useState<null | "queue" | "setup" | "connecting" | "error">("queue");
+  const [demoArt, setDemoArt] = useState(true);
   const anchorRef = useRef<HTMLElement | null>(null);
 
   const filtered = useMemo(() => {
@@ -229,9 +230,9 @@ function PreviewApp() {
         <StatusBar />
       </div>
 
-      {/* Connecting-screen demo controls */}
+      {/* Queue / connecting screen demo controls */}
       <div style={{ position: "fixed", top: 14, right: 18, zIndex: 3000, display: "flex", gap: 8 }}>
-        {(["queue", "setup", "connecting"] as const).map((s) => (
+        {(["queue", "setup", "connecting", "error"] as const).map((s) => (
           <button
             key={s}
             type="button"
@@ -245,16 +246,45 @@ function PreviewApp() {
             {s}
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => setDemoArt((a) => !a)}
+          title="Toggle key art to preview the no-cover fallback"
+          style={{
+            height: 30, padding: "0 12px", borderRadius: 999, cursor: "pointer",
+            border: "1px solid rgba(255,255,255,0.16)", background: "rgba(20,22,26,0.8)",
+            color: "#fff", fontSize: 12, fontWeight: 700, fontFamily: "inherit",
+          }}
+        >
+          {demoArt ? "art: on" : "art: off"}
+        </button>
       </div>
 
       {loadingDemo && (
         <StreamLoading
           gameTitle="Cyberpunk 2077"
-          gameCover={cap(1091500)}
+          gameCover={demoArt ? cap(1091500) : undefined}
           platformStore="STEAM"
-          status={loadingDemo}
+          status={loadingDemo === "error" ? "queue" : loadingDemo}
           queuePosition={loadingDemo === "queue" ? 42 : undefined}
           estimatedWait={loadingDemo === "queue" ? "3 min" : undefined}
+          diagnosticLine={
+            loadingDemo === "queue"
+              ? "poll #12 · seat status 1 · setup step n/a · queue 42 · endpoints 0"
+              : undefined
+          }
+          error={
+            loadingDemo === "error"
+              ? {
+                  title: "No cloud rig available",
+                  description:
+                    "Every rig in Europe West is busy right now, so your place in the queue was released. Try again in a few minutes.",
+                  code: "ERR_NO_CAPACITY",
+                  actionLabel: "Try again",
+                }
+              : undefined
+          }
+          onErrorAction={() => setLoadingDemo("queue")}
           onCancel={() => setLoadingDemo(null)}
         />
       )}
