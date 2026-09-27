@@ -1,4 +1,4 @@
-import React, { useEffect, useState, type JSX } from "react";
+import React, { useEffect, useRef, useState, type JSX } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { X, AlertTriangle, RotateCcw, Radio } from "lucide-react";
 import { useTranslation } from "../i18n";
@@ -76,21 +76,30 @@ function usePrefersReducedMotion(): boolean {
   return reduced;
 }
 
-function AnimatedNumber({ value }: { value: number }): JSX.Element {
+function OdometerNumber({ value, reduced }: { value: number; reduced: boolean }): JSX.Element {
+  const digits = String(value).split("");
   return (
-    <span className="qs-odometer">
-      <AnimatePresence mode="popLayout" initial={false}>
-        <m.span
-          key={value}
-          className="qs-odometer-digit"
-          initial={{ y: 14, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -14, opacity: 0 }}
-          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {value}
-        </m.span>
-      </AnimatePresence>
+    <span className="qs-odometer" aria-label={String(value)}>
+      {digits.map((digit, i) => (
+        <span className="qs-odometer-col" key={i} aria-hidden="true">
+          <AnimatePresence mode="popLayout" initial={false}>
+            <m.span
+              key={digit}
+              className="qs-odometer-digit"
+              initial={{ y: "110%", opacity: 0 }}
+              animate={{ y: "0%", opacity: 1 }}
+              exit={{ y: "-110%", opacity: 0 }}
+              transition={
+                reduced
+                  ? { duration: 0.01 }
+                  : { type: "spring", stiffness: 550, damping: 42 }
+              }
+            >
+              {digit}
+            </m.span>
+          </AnimatePresence>
+        </span>
+      ))}
     </span>
   );
 }
@@ -116,6 +125,9 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
 
   const { t } = useTranslation();
   const [elapsed, setElapsed] = useState(0);
+  const [drops, setDrops] = useState<{ id: number; diff: number }[]>([]);
+  const prevPosRef = useRef<number | undefined>(undefined);
+  const dropIdRef = useRef(0);
   const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
@@ -124,8 +136,25 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
     return () => clearInterval(id);
   }, [error]);
 
+  // Celebrate queue movement with a floating "-N" indicator.
+  useEffect(() => {
+    const prev = prevPosRef.current;
+    prevPosRef.current = queuePosition;
+    if (prev === undefined || queuePosition === undefined || queuePosition >= prev) return;
+    dropIdRef.current += 1;
+    const id = dropIdRef.current;
+    const diff = prev - queuePosition;
+    setDrops((current) => [...current.slice(-2), { id, diff }]);
+    window.setTimeout(() => {
+      setDrops((current) => current.filter((drop) => drop.id !== id));
+    }, 1000);
+  }, [queuePosition]);
+
   const stageIndex = statusStageIndex(status);
+  const stageProgress = Math.min(1, (stageIndex + 0.5) / STAGE_KEYS.length);
   const storeLabel = platformStore ? getStoreDisplayName(platformStore) : undefined;
+  const localTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const titleWords = gameTitle.split(" ").filter(Boolean);
 
   const adsRequired = adState ? isSessionAdsRequired(adState) : false;
   const queuePaused = adState ? isSessionQueuePaused(adState) : false;
@@ -192,18 +221,21 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
     : { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const };
 
   return (
-    <div className="qs-root">
+    <div className={`qs-root${error ? " qs-root-error" : ""}`}>
       <div className="qs-atmosphere" aria-hidden="true">
         <LazyShaderAtmosphere
           variant={status === "queue" ? "queue" : "connecting"}
           className="qs-shader"
         />
-        <div className={`qs-vault ${gameCover ? "" : "qs-vault-fallback"} ${reducedMotion ? "qs-no-motion" : ""}`}>
+        <div className={`qs-vault qs-vault-s${stageIndex} ${gameCover ? "" : "qs-vault-fallback"} ${reducedMotion ? "qs-no-motion" : ""}`}>
           {!gameCover && <div className="qs-vault-letter">{fallbackLetter}</div>}
           {slices.map((_, i) => (
-            <div
+            <m.div
               key={i}
               className="qs-vault-slice"
+              initial={reducedMotion ? { opacity: 0 } : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+              animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
+              transition={{ duration: 0.7, delay: 0.15 + i * 0.05, ease: [0.22, 1, 0.36, 1] }}
               style={
                 gameCover
                   ? {
@@ -216,7 +248,18 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
             />
           ))}
         </div>
+        <div className="qs-aurora" />
         <div className="qs-scrim" />
+        <div className="qs-grain" />
+        {!error && !reducedMotion && status === "queue" && queuePosition != null && (
+          <m.div
+            key={`tick-${queuePosition}`}
+            className="qs-tickflash"
+            initial={{ opacity: 0.5 }}
+            animate={{ opacity: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          />
+        )}
       </div>
 
       <header className="qs-topbar">
@@ -272,7 +315,18 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
             <div className="qs-masthead">
               <div className="qs-kicker">{storeLabel && <span className="qs-store">{storeLabel}</span>}</div>
               <h1 className="qs-title" title={gameTitle}>
-                {gameTitle}
+                {titleWords.map((word, i) => (
+                  <m.span
+                    key={`${word}-${i}`}
+                    className="qs-title-word"
+                    initial={{ opacity: 0, y: reducedMotion ? 0 : "0.55em" }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.55, delay: 0.3 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {word}
+                    {i < titleWords.length - 1 ? "\u00A0" : ""}
+                  </m.span>
+                ))}
               </h1>
             </div>
 
@@ -300,6 +354,15 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
               ))}
             </div>
 
+            <div className="qs-stage-track" aria-hidden="true">
+              <m.span
+                className="qs-stage-fill"
+                initial={{ width: "0%" }}
+                animate={{ width: `${stageProgress * 100}%` }}
+                transition={{ duration: 0.7, ease: "easeInOut" }}
+              />
+            </div>
+
             <div className="qs-statusblock" role="status" aria-live="polite">
               <AnimatePresence mode="wait">
                 <m.p
@@ -312,7 +375,26 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
                 >
                   {status === "queue" && queuePosition != null ? (
                     <>
-                      {t("streamLoading.hero.position")} <AnimatedNumber value={queuePosition} />
+                      {t("streamLoading.hero.position")}{" "}
+                      <span className="qs-dropzone">
+                        <OdometerNumber value={queuePosition} reduced={reducedMotion} />
+                        {!reducedMotion && (
+                          <AnimatePresence>
+                            {drops.map((drop) => (
+                              <m.span
+                                key={drop.id}
+                                className="qs-drop"
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: -24 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.9, ease: "easeOut" }}
+                              >
+                                -{drop.diff}
+                              </m.span>
+                            ))}
+                          </AnimatePresence>
+                        )}
+                      </span>
                     </>
                   ) : (
                     statusText
@@ -323,7 +405,7 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
 
               <div className="qs-meta-row">
                 {status === "queue" && (
-                  <span className="qs-meta-item">
+                  <span className="qs-meta-item qs-meta-est">
                     {t("streamLoading.hero.estWait")}: {estimatedWait || t("streamLoading.telemetry.calculating")}
                   </span>
                 )}
@@ -378,7 +460,10 @@ export function StreamLoading(props: StreamLoadingProps): JSX.Element {
       {!error && (
         <footer className="qs-footer">
           <div className="qs-footer-session">
-            {t("streamLoading.telemetry.session")} · {formatElapsed(elapsed)}
+            <span className="qs-eq" aria-hidden="true">
+              <span /><span /><span /><span /><span />
+            </span>
+            <span>{t("streamLoading.telemetry.session")} · {formatElapsed(elapsed)} · {localTime}</span>
           </div>
           <button type="button" className="qs-btn qs-btn-ghost qs-btn-cancel" onClick={onCancel}>
             {t("app.actions.cancel")}
