@@ -160,7 +160,8 @@
   "navigation": {
     "home": "ストア",
     "library": "Library",
-    "settings": "設定"
+    "settings": "設定",
+    "playtime": "プレイ時間"
   },
   "home": {
     "searchPlaceholder": "ゲームを検索...",
@@ -193,7 +194,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "プレイを続ける",
+      "eyebrowReady": "プレイ準備完了",
+      "voiceResume": "累計 {{value}} — 中断した場所から再開しましょう。",
+      "voiceReady": "デッキは準備完了。タイトルを選べば、あとはクラウドにお任せ。",
+      "cellLastPlayed": "最終プレイ",
+      "cellPlaytime": "プレイ時間",
+      "cellStore": "ストア",
+      "cellGenre": "ジャンル",
+      "launch": "起動",
+      "ledger": "記録を見る",
+      "ledgerSessions": "{{count}} 件のセッションを記録",
+      "ledgerSessions_plural": "{{count}} 件のセッションを記録",
+      "jumpBackIn": "続きをプレイ",
+      "mostPlayed": "よくプレイした順",
+      "favourites": "お気に入り",
+      "newInLibrary": "ライブラリの新着",
+      "shelfCount": "{{count}} 本",
+      "shelfCount_plural": "{{count}} 本",
+      "seeAll": "すべて表示",
+      "seeAllCount": "{{count}} 本をすべて表示",
+      "allGames": "すべてのゲーム"
+    },
+    "search": {
+      "resultsFor": "検索 · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "検索中...",
+      "loadMore": "もっと読み込む",
+      "clearSearch": "検索をクリア"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "移動",
+      "commands": "コマンド",
+      "allShortcuts": "すべてのショートカット"
+    },
+    "regionAuto": "リージョン自動",
+    "themeDeck": "デッキテーマ"
   },
   "library": {
     "title": "私のライブラリ",
@@ -232,6 +272,98 @@
       "ownedGamesAppearHere": "あなたが所有するゲームがここに表示されます。カタログを参照してゲームを見つけます。",
       "noGamesFound": "ゲームが見つかりません",
       "noGamesMatch": "「{{query}}」に一致するゲームはありません"
+    },
+    "deck": {
+      "allGames": "すべてのゲーム",
+      "count": "{{count}} 本",
+      "count_plural": "{{count}} 本",
+      "chipAll": "すべて",
+      "hint": "コンソールを見るにはタイトルを選択",
+      "eyebrow": "ライブラリ // 選択中",
+      "launch": "起動",
+      "viewLedger": "記録を見る",
+      "emptyDetail": "グリッドからゲームを選んでコンソールを表示。",
+      "cellLastPlayed": "最終プレイ",
+      "cellPlaytime": "プレイ時間",
+      "cellSessions": "セッション",
+      "cellStore": "ストア",
+      "cellGenre": "ジャンル"
+    },
+    "favoriteToggle": "お気に入り切り替え"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // 記録",
+    "title": "プレイ時間",
+    "subtitle": "ストリームで実際に過ごした時間だけを記録。キューの待機時間は別枠です。",
+    "loading": "記録を読み込んでいます…",
+    "hero": {
+      "label": "合計ストリーム時間",
+      "unitHours": "時間",
+      "unitMinutes": "分",
+      "detail": "あと{{minutes}}分・{{sessions}}セッション・{{games}}タイトル",
+      "sr": "合計{{hours}}時間{{minutes}}分ストリームしました。",
+      "peakHour": "一番プレイした時間帯: {{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "セッション",
+      "games": "プレイしたゲーム",
+      "longest": "最長セッション",
+      "average": "平均セッション",
+      "queue": "キュー待機",
+      "setup": "接続時間"
+    },
+    "live": {
+      "label": "現在ストリーミング中",
+      "unknownGame": "現在のセッション"
+    },
+    "ranking": {
+      "title": "プレイ時間ランキング",
+      "count": "{{count}}タイトル",
+      "count_plural": "{{count}}タイトル",
+      "sessions": "{{count}}セッション",
+      "sessions_plural": "{{count}}セッション",
+      "share": "全体の{{value}}%",
+      "more": "ほか{{count}}タイトルは非表示",
+      "sr": "{{rank}}位: {{title}} — {{sessions}}セッションで{{value}}"
+    },
+    "cadence": {
+      "title": "プレイの傾向",
+      "daily": "過去{{count}}日",
+      "daily_plural": "過去{{count}}日",
+      "dailySr": "この期間に{{value}}",
+      "hourly": "時間帯",
+      "hourlySr": "ピークは{{hour}}:00で{{value}}",
+      "weekday": "曜日",
+      "weekdaySr": "最も多い曜日で{{value}}"
+    },
+    "recent": {
+      "title": "最近のセッション",
+      "empty": "完了したセッションはまだ記録されていません。",
+      "wait": "待機 {{value}}",
+      "engineNative": "ネイティブ",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "更新",
+      "reset": "記録をリセット",
+      "resetConfirmTitle": "プレイ時間をリセット",
+      "resetConfirmBody": "この端末に記録されたすべての時間が消去されます。元に戻せません。",
+      "resetConfirm": "すべて消去",
+      "resetCancel": "統計を残す",
+      "updated": "記録の更新: {{value}}"
+    },
+    "empty": {
+      "eyebrow": "記録 // 空",
+      "title": "まだプレイ時間がありません",
+      "body": "ゲームを起動すると、最初のフレームが届いた瞬間から計測が始まります。キューの待機は別枠なので、実際のプレイだけが記録されます。",
+      "cta": "ライブラリを見る"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}}時間{{minutes}}分",
+      "hours": "{{count}}時間",
+      "minutes": "{{count}}分",
+      "seconds": "{{count}}秒"
     }
   },
   "gameCard": {
@@ -416,7 +548,9 @@
       "autoBest": "オート（最高）",
       "searchPlaceholder": "地域を検索...",
       "refreshPing": "リフレッシュping",
-      "noRegionsMatch": "「{{query}}」に一致するリージョンはありません"
+      "noRegionsMatch": "「{{query}}」に一致するリージョンはありません",
+      "noRegionsAvailable": "利用可能なリージョンがありません",
+      "retry": "再試行"
     },
     "video": {
       "title": "ビデオ",
@@ -518,11 +652,10 @@
       "appLanguageHint": "OpenNOW のインターフェース言語を変更します。未翻訳の文字列には英語が使用されます。",
       "accentColor": "アクセントカラー",
       "accentColorHint": "選択したアクセントを標準デスクトップ UI 全体に適用し、次の起動まで維持します。",
-      "accentColorGreen": "OpenNOW 緑",
-      "accentColorBlue": "コバルトブルー",
-      "accentColorViolet": "バイオレット",
-      "accentColorAmber": "アンバー",
-      "accentColorRose": "ローズ",
+      "accentColorNeon": "ネオン",
+      "accentColorAzure": "アズール",
+      "accentColorWhite": "ホワイト",
+      "accentColorSteel": "スチール",
       "hideStreamOverlayButtons": "ストリームオーバーレイボタンを非表示にする",
       "hideStreamOverlayButtonsHint": "ストリーミング中にマイク、フールスクリーン、セッション終了ボタンを非表示にします。",
       "showStatsOnStreamLaunch": "ストリームの起動時に統計を表示する",
@@ -696,5 +829,27 @@
     "queueAdPlayTimeout": "広告再生タイムアウト",
     "queueAdVideoStuck": "広告ビデオが停止します",
     "queueAdUrlLoad": "URLの読み込みエラー"
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "PCデジタル版",
+    "chooseStore": "ゲームストアを選択",
+    "chooseStoreHint": "このゲームを所有しているストアはどこで、どこでプレイしますか？",
+    "gameStores": "ゲームストア：",
+    "subscriptions": "サブスクリプション：",
+    "owned": "所有済み",
+    "gameNotFound": "ゲームが見つかりません",
+    "subscribed": "購読中",
+    "notSubscribed": "未購読",
+    "markAsOwned": "所有済みとしてマーク",
+    "buy": "購入",
+    "storeHint": "ゲームを所有しているストアを選択し、所有済みとしてマークしてライブラリに追加します。",
+    "rating": "評価",
+    "publisher": "パブリッシャー",
+    "developer": "開発元",
+    "gallery": "ギャラリー"
+  },
+  "common": {
+    "clear": "検索をクリア",
+    "back": "Back"
   }
 }

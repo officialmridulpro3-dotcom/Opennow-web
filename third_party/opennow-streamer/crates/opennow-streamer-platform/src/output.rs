@@ -727,6 +727,41 @@ impl LinuxHardwareOutput {
                 self.presenter = None;
                 self.visible = false;
             } else {
+                // Clipboard paste: Ctrl+V → remote (Linux path)
+                if let sdl2::event::Event::KeyDown {
+                    scancode: Some(scancode),
+                    keymod,
+                    repeat: false,
+                    ..
+                } = &event
+                {
+                    if *scancode == sdl2::keyboard::Scancode::V
+                        && keymod.intersects(
+                            sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD,
+                        )
+                        && !keymod.intersects(
+                            sdl2::keyboard::Mod::LALTMOD
+                                | sdl2::keyboard::Mod::RALTMOD
+                                | sdl2::keyboard::Mod::LGUIMOD
+                                | sdl2::keyboard::Mod::RGUIMOD,
+                        )
+                    {
+                        if let Ok(video) = self._sdl.video() {
+                            if let Ok(text) = video.clipboard().clipboard_text() {
+                                if !text.is_empty() && text.len() <= 65536 {
+                                    let queue = self.output.captured_input();
+                                    if queue.submit_text(text.as_bytes()).is_ok() {
+                                        eprintln!(
+                                            "[Clipboard] pasted {} bytes to remote (linux)",
+                                            text.len()
+                                        );
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 self.input_capture.handle_event(
                     &self._sdl,
                     &mut self.window,
@@ -1816,6 +1851,41 @@ impl SoftwareOutput {
                 self.visible = false;
                 continue;
             }
+            // Clipboard paste: Ctrl+V → remote
+            if let sdl2::event::Event::KeyDown {
+                scancode: Some(scancode),
+                keymod,
+                repeat: false,
+                ..
+            } = &event
+            {
+                if *scancode == sdl2::keyboard::Scancode::V
+                    && keymod.intersects(
+                        sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD,
+                    )
+                    && !keymod.intersects(
+                        sdl2::keyboard::Mod::LALTMOD
+                            | sdl2::keyboard::Mod::RALTMOD
+                            | sdl2::keyboard::Mod::LGUIMOD
+                            | sdl2::keyboard::Mod::RGUIMOD,
+                    )
+                {
+                    if let Ok(video) = self._sdl.video() {
+                        if let Ok(text) = video.clipboard().clipboard_text() {
+                            if !text.is_empty() && text.len() <= 65536 {
+                                let queue = self.output.captured_input();
+                                if queue.submit_text(text.as_bytes()).is_ok() {
+                                    eprintln!(
+                                        "[Clipboard] pasted {} bytes to remote (software)",
+                                        text.len()
+                                    );
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             let window_size = self.canvas.window().size();
             let stream_size = self.texture_size.unwrap_or(window_size);
             self.input_capture.handle_event(
@@ -2647,6 +2717,7 @@ struct WindowsExternalSdlSurface {
     native_surface: NativeSurface,
     input_capture: SdlInputCapture,
     raw_input: Option<WindowsRawInputController>,
+    captured_input: Arc<CapturedInputQueue>,
     stream_size: (u32, u32),
     visible: bool,
     embedded: bool,
@@ -2688,7 +2759,10 @@ impl WindowsExternalSdlSurface {
             .map_err(|error| format!("external SDL event pump creation failed: {error}"))?;
         let capture_input = native_input_capture_enabled();
         let raw_input = if capture_input {
-            match WindowsRawInputController::start(native_surface.window_handle(), captured_input) {
+            match WindowsRawInputController::start(
+                native_surface.window_handle(),
+                Arc::clone(&captured_input),
+            ) {
                 Ok(controller) => {
                     eprintln!("Dedicated Windows Raw Input mouse thread ready");
                     Some(controller)
@@ -2733,6 +2807,7 @@ impl WindowsExternalSdlSurface {
             native_surface,
             input_capture,
             raw_input,
+            captured_input,
             stream_size: (stream.width, stream.height),
             visible: false,
             embedded: false,
@@ -2750,18 +2825,21 @@ impl WindowsExternalSdlSurface {
     }
 
     fn update(&mut self, surface: &RenderSurface) -> Result<(), String> {
-        // Any surface command means an embedding shell owns placement; the
-        // standalone first-frame reveal must stay out of the way.
-        self.embedded = true;
+        // Any surface command with visible=true and handle means embedding shell owns placement
         let Some(rect) = surface.rect.filter(|_| surface.visible) else {
+            // visible=false — hide native surface, but don't mark embedded yet so standalone can show as fallback
             self.visible = false;
             self.sync_input_ownership();
-            self.native_surface.hide_checked()?;
+            let _ = self.native_surface.hide_checked();
             return Ok(());
         };
-        let parent_handle = surface.window_handle.as_deref().ok_or_else(|| {
-            "visible Windows stream surface is missing the Qt window handle".to_owned()
-        })?;
+        let Some(parent_handle) = surface.window_handle.as_deref().filter(|h| !h.trim().is_empty() && h.trim() != "0") else {
+            eprintln!("Windows external SDL surface: visible rect but no window handle yet — waiting for Tauri HWND, keeping standalone");
+            // Don't error, keep standalone visible as fallback
+            return Ok(());
+        };
+        // Now we have handle — this is embedded mode
+        self.embedded = true;
         let foreground_owner = parse_windows_handle(parent_handle)?.get();
         self.native_surface.attach_and_show(
             parent_handle,
@@ -2780,14 +2858,16 @@ impl WindowsExternalSdlSurface {
     /// Standalone presentation for the desktop sidecar: without an embedding
     /// shell no `surface` command ever arrives, so reveal the top-level SDL
     /// window (and arm input for it) when the first frame presents.
+    /// For Tauri, we prefer embedded child (no separate window), but if
+    /// Tauri HWND not yet available, show standalone as fallback to avoid
+    /// black screen. Once surface command with handle arrives, update() will
+    /// attach child inside Tauri and hide standalone.
     fn show_standalone(&mut self) {
         if self.embedded || self.visible {
             return;
         }
-        eprintln!("Windows external SDL surface: showing standalone stream window");
+        eprintln!("Windows external SDL surface: showing standalone stream window (fallback, will embed when Tauri HWND arrives)");
         self.window.show();
-        // The game hides the cursor itself when it wants mouse-look; until the
-        // first server cursor update arrives the OS arrow must stay visible.
         self.sdl.mouse().show_cursor(true);
         self.window.raise();
         if let Some(raw_input) = self.raw_input.as_ref() {
@@ -2799,6 +2879,8 @@ impl WindowsExternalSdlSurface {
 
     /// Ctrl+G sidebar menu when the overlay is available, native dialog otherwise.
     fn toggle_overlay_menu(&mut self) {
+        // Native window GFN long sidebar — 520px full with game image like React version
+        // Embedded hosts use overlay-request → React sidebar, standalone uses this GDI menu
         let Some(overlay) = self.overlay.as_mut() else {
             self.show_menu();
             return;
@@ -2807,8 +2889,6 @@ impl WindowsExternalSdlSurface {
             overlay.hide_menu(&self.window, true);
             return;
         }
-        // Publish neutral input before the menu takes focus so the game can
-        // never retain a key held across the menu, and free the cursor.
         self.input_capture.release(&self.sdl, &mut self.window);
         if let Some(raw_input) = self.raw_input.as_ref() {
             raw_input.release_buttons();
@@ -2971,6 +3051,55 @@ impl WindowsExternalSdlSurface {
                     eprintln!("{error}");
                 }
                 continue;
+            }
+            // Clipboard paste: Ctrl+V (and Ctrl+Shift+V) → submit local clipboard to remote
+            // This is critical for Steam login where users copy credentials.
+            if let sdl2::event::Event::KeyDown {
+                scancode: Some(scancode),
+                keymod,
+                repeat: false,
+                ..
+            } = &event
+            {
+                if *scancode == sdl2::keyboard::Scancode::V
+                    && keymod.intersects(
+                        sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD,
+                    )
+                    && !keymod.intersects(
+                        sdl2::keyboard::Mod::LALTMOD
+                            | sdl2::keyboard::Mod::RALTMOD
+                            | sdl2::keyboard::Mod::LGUIMOD
+                            | sdl2::keyboard::Mod::RGUIMOD,
+                    )
+                {
+                    let menu_open = self
+                        .overlay
+                        .as_ref()
+                        .is_some_and(|o| o.menu_is_open());
+                    if !menu_open {
+                        if let Ok(video) = self.sdl.video() {
+                            if let Ok(text) = video.clipboard().clipboard_text() {
+                                if !text.is_empty() && text.len() <= 65536 {
+                                    let queue = Arc::clone(&self.captured_input);
+                                    match queue.submit_text(text.as_bytes()) {
+                                        Ok(_) => {
+                                            eprintln!(
+                                                "[Clipboard] pasted {} bytes to remote",
+                                                text.len()
+                                            );
+                                            continue;
+                                        }
+                                        Err(e) => {
+                                            eprintln!("[Clipboard] paste failed: {:?}", e);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // Ctrl+C → copy remote? For now log, but allow key to pass through as well
+                // (remote copy is handled by server, we just need paste)
             }
             // Route overlay-window events before game input so menu
             // interaction never leaks into the game.

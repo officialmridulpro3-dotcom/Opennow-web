@@ -1,4 +1,4 @@
-import { Search, LayoutGrid, ArrowUpDown, Filter, ChevronDown, ChevronRight, Gamepad2, Menu, Play } from "lucide-react";
+import { Search, LayoutGrid, ArrowUpDown, Filter, ChevronDown, ChevronRight, Gamepad2, Menu, Play, Timer } from "lucide-react";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import type { JSX } from "react";
 import { AnimatePresence, m } from "motion/react";
@@ -11,6 +11,8 @@ import type { PlaytimeData } from "../lib/gameCatalog";
 import { appendImageType, appendUnique, gameMatchesActiveSession } from "../lib/controllerCatalogUi";
 import { useTranslation } from "../i18n";
 import { controllerButton, readControllerGamepadButtons } from "../utils/controllerGamepad";
+import { formatCatalogLastPlayed } from "../utils/lastPlayedFormat";
+import { formatPlaytimeDuration } from "../utils/playtimeFormat";
 import { pageTransition, panelSpring } from "./MotionProvider";
 import { SelectDropdown } from "./ui/SelectDropdown";
 import { MotionSpinner } from "./MotionSpinner";
@@ -69,6 +71,7 @@ export interface HomePageProps {
   favoriteGameIds?: string[];
   streamMetaLabel?: string;
   onNavigateLibrary?: () => void;
+  onNavigatePlaytime?: () => void;
 }
 
 function getSteamHeaderUrl(game: GameInfo): string | undefined {
@@ -258,6 +261,7 @@ export const HomePage = memo(function HomePage({
   favoriteGameIds = [],
   streamMetaLabel,
   onNavigateLibrary,
+  onNavigatePlaytime,
 }: HomePageProps): JSX.Element {
   const { t } = useTranslation();
   const catalogActionsRef = useCatalogCardActionsRef({
@@ -497,17 +501,29 @@ export const HomePage = memo(function HomePage({
     };
   }, [controllerMode, controllerSearchOpen, onNextControllerPage, onPreviousControllerPage]);
 
+  const [searchVisibleCount, setSearchVisibleCount] = useState(48);
+
+  useEffect(() => {
+    setSearchVisibleCount(48);
+  }, [searchQuery]);
+
+  const visibleSearchGames = useMemo(
+    () => games.slice(0, searchVisibleCount),
+    [games, searchVisibleCount],
+  );
+
   const gameGridItems = useMemo(
-    () => games.map((game) => (
-      <GameCardListItem
+    () => visibleSearchGames.map((game) => (
+      <PosterCard
         key={game.id}
         game={game}
         isSelected={game.id === selectedGameId}
-        selectedVariantId={selectedVariantByGameId[game.id]}
-        actionsRef={catalogActionsRef}
+        onSelect={() => onSelectGame(game.id)}
+        onPlay={() => onPlayGame(game)}
+        note={playtimeData[game.id]?.totalSeconds ? formatPlaytimeDuration(t, playtimeData[game.id]?.totalSeconds ?? 0) : getPrimaryGenre(game)}
       />
     )),
-    [catalogActionsRef, games, selectedGameId, selectedVariantByGameId],
+    [visibleSearchGames, onPlayGame, onSelectGame, playtimeData, selectedGameId],
   );
 
   if (controllerMode) {
@@ -695,13 +711,19 @@ export const HomePage = memo(function HomePage({
   const showInitialLoading = isLoading && !hasGames;
   const isSearching = searchQuery.trim().length > 0;
 
-  // Build rich home shelves from the owned library + playtime signals.
+  // Deck shelves are cut from the owned library plus the playtime ledger.
   const librarySource = libraryGames.length > 0 ? libraryGames : games;
+
+  const lastPlayedIso = (game: GameInfo): string | undefined =>
+    playtimeData[game.id]?.lastPlayedAt ?? game.lastPlayed;
+
   const playtimeMs = (game: GameInfo): number => {
-    const raw = playtimeData[game.id]?.lastPlayedAt ?? game.lastPlayed;
+    const raw = lastPlayedIso(game);
     const ms = raw ? Date.parse(raw) : NaN;
     return Number.isFinite(ms) ? ms : 0;
   };
+
+  const streamedSeconds = (game: GameInfo): number => playtimeData[game.id]?.totalSeconds ?? 0;
 
   const recentlyPlayed = useMemo(
     () => [...librarySource]
@@ -710,81 +732,153 @@ export const HomePage = memo(function HomePage({
     [librarySource, playtimeData],
   );
 
-  const heroGame = recentlyPlayed[0] ?? librarySource[0] ?? games[0];
-
-  const jumpBackIn = useMemo(
-    () => recentlyPlayed.filter((game) => game.id !== heroGame?.id).slice(0, 12),
-    [recentlyPlayed, heroGame],
+  const mostPlayedFull = useMemo(
+    () => [...librarySource]
+      .filter((game) => streamedSeconds(game) > 0)
+      .sort((a, b) => streamedSeconds(b) - streamedSeconds(a)),
+    [librarySource, playtimeData],
   );
 
-  const favourites = useMemo(() => {
+  const mostPlayed = useMemo(
+    () => mostPlayedFull.slice(0, 12),
+    [mostPlayedFull],
+  );
+
+  const spotlightGame = recentlyPlayed[0] ?? mostPlayed[0] ?? librarySource[0] ?? games[0];
+
+  const jumpBackInFull = useMemo(
+    () => recentlyPlayed.filter((game) => game.id !== spotlightGame?.id),
+    [recentlyPlayed, spotlightGame],
+  );
+
+  const jumpBackIn = useMemo(
+    () => jumpBackInFull.slice(0, 12),
+    [jumpBackInFull],
+  );
+
+  const favouritesFull = useMemo(() => {
     const favSet = new Set(favoriteGameIds);
     const favs = librarySource.filter((game) => favSet.has(game.id));
-    if (favs.length > 0) return favs.slice(0, 12);
-    // Fallback: surface a stable pseudo-favourites shelf so the row is never empty.
-    return [...librarySource].slice(0, 12);
+    if (favs.length > 0) return favs;
+    return [...librarySource];
   }, [librarySource, favoriteGameIds]);
 
-  const newInLibrary = useMemo(
-    () => [...librarySource].reverse().slice(0, 12),
+  const favourites = useMemo(() => favouritesFull.slice(0, 12), [favouritesFull]);
+
+  const newInLibraryFull = useMemo(
+    () => [...librarySource].reverse(),
     [librarySource],
   );
 
-  const heroPlaytimeSeconds = heroGame ? playtimeData[heroGame.id]?.totalSeconds ?? 0 : 0;
-  const heroLastPlayedMs = heroGame ? playtimeMs(heroGame) : 0;
+  const newInLibrary = useMemo(
+    () => newInLibraryFull.slice(0, 12),
+    [newInLibraryFull],
+  );
 
-  const formatRelative = (ms: number): string => {
-    if (!ms) return "";
-    const diff = Date.now() - ms;
-    const mins = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-    if (mins < 1) return "just now";
-    if (mins < 60) return `${mins} min ago`;
-    if (hours < 24) return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
-    if (days < 7) return `${days} ${days === 1 ? "day" : "days"} ago`;
-    return new Date(ms).toLocaleDateString();
-  };
-  const formatPlayed = (seconds: number): string => {
-    if (!seconds) return "";
-    const hours = seconds / 3600;
-    if (hours < 1) return `${Math.max(1, Math.round(seconds / 60))} m played`;
-    return `${hours >= 10 ? Math.round(hours) : Math.round(hours * 10) / 10} h played`;
-  };
+  const allGamesFull = useMemo(
+    () => [...games],
+    [games],
+  );
 
-  const heroBg = heroGame
-    ? (heroGame.heroImageUrl
-        ?? heroGame.imageUrlsByType?.HERO_IMAGE?.[0]
-        ?? heroGame.imageUrlsByType?.KEY_ART?.[0]
-        ?? heroGame.screenshotUrls?.[0]
-        ?? heroGame.imageUrl)
+  const allGamesShelf = useMemo(
+    () => allGamesFull.slice(0, 24),
+    [allGamesFull],
+  );
+
+  const [expandedShelfKey, setExpandedShelfKey] = useState<string | null>(null);
+  const [expandedVisibleCount, setExpandedVisibleCount] = useState(48);
+
+  useEffect(() => {
+    setExpandedVisibleCount(48);
+  }, [expandedShelfKey]);
+
+  const shelfFullMap = useMemo(() => ({
+    "home.deck.jumpBackIn": jumpBackInFull,
+    "home.deck.mostPlayed": mostPlayedFull,
+    "home.deck.favourites": favouritesFull,
+    "home.deck.newInLibrary": newInLibraryFull,
+    "home.deck.allGames": allGamesFull,
+  } as Record<string, GameInfo[]>), [jumpBackInFull, mostPlayedFull, favouritesFull, newInLibraryFull, allGamesFull]);
+
+  const expandedGames = useMemo(() => {
+    const full = expandedShelfKey ? (shelfFullMap[expandedShelfKey] ?? []) : [];
+    return full.slice(0, expandedVisibleCount);
+  }, [expandedShelfKey, shelfFullMap, expandedVisibleCount]);
+
+  const expandedTotal = expandedShelfKey ? (shelfFullMap[expandedShelfKey]?.length ?? 0) : 0;
+
+  const spotlightSeconds = spotlightGame ? streamedSeconds(spotlightGame) : 0;
+  const spotlightSessions = spotlightGame ? playtimeData[spotlightGame.id]?.sessionCount ?? 0 : 0;
+  const spotlightLastPlayed = spotlightGame ? formatCatalogLastPlayed(t, lastPlayedIso(spotlightGame)) : "";
+  const spotlightPlaytime = spotlightGame ? formatPlaytimeDuration(t, spotlightSeconds) : "";
+
+  const spotlightArt = spotlightGame
+    ? (spotlightGame.heroImageUrl
+        ?? spotlightGame.imageUrlsByType?.MARQUEE_HERO_IMAGE?.[0]
+        ?? spotlightGame.imageUrlsByType?.HERO_IMAGE?.[0]
+        ?? spotlightGame.imageUrlsByType?.KEY_ART?.[0]
+        ?? spotlightGame.screenshotUrls?.[0]
+        ?? spotlightGame.imageUrl)
     : undefined;
 
-  const heroMetaParts = [formatRelative(heroLastPlayedMs), formatPlayed(heroPlaytimeSeconds)].filter(Boolean);
+  const spotlightVariant = spotlightGame
+    ? (spotlightGame.variants[spotlightGame.selectedVariantIndex] ?? spotlightGame.variants[0])
+    : undefined;
+  const spotlightStoreRaw = spotlightVariant?.store ?? spotlightGame?.availableStores?.[0];
+  const SpotlightStoreIcon = spotlightStoreRaw ? getStoreIconComponent(spotlightStoreRaw) : null;
+  const spotlightStoreName = spotlightStoreRaw ? getStoreDisplayName(spotlightStoreRaw) : "";
+  const spotlightGenre = spotlightGame ? getPrimaryGenre(spotlightGame) : "";
 
-  const heroVariant = heroGame ? (heroGame.variants[heroGame.selectedVariantIndex] ?? heroGame.variants[0]) : undefined;
-  const heroStoreRaw = heroVariant?.store ?? heroGame?.availableStores?.[0];
-  const HeroStoreIcon = heroStoreRaw ? getStoreIconComponent(heroStoreRaw) : null;
-  const heroStoreName = heroStoreRaw ? getStoreDisplayName(heroStoreRaw) : "";
+  const spotlightCells = [
+    { id: "lastPlayed", label: t("home.deck.cellLastPlayed"), value: spotlightLastPlayed },
+    { id: "playtime", label: t("home.deck.cellPlaytime"), value: spotlightPlaytime },
+    {
+      id: "store",
+      label: t("home.deck.cellStore"),
+      value: spotlightStoreName || t("playtime.format.never"),
+      icon: SpotlightStoreIcon,
+    },
+    { id: "genre", label: t("home.deck.cellGenre"), value: spotlightGenre },
+  ].filter((cell) => Boolean(cell.value));
 
-  const renderRow = (title: string, rowGames: GameInfo[], seeAllCount?: number): JSX.Element | null => {
+  const spotlightVoice = spotlightSeconds > 0
+    ? t("home.deck.voiceResume", { value: spotlightPlaytime })
+    : t("home.deck.voiceReady");
+
+  const renderShelf = (
+    titleKey: string,
+    rowGames: GameInfo[],
+    options?: { ranked?: boolean; seeAllCount?: number; noteFor?: (game: GameInfo) => string; fullGames?: GameInfo[] },
+  ): JSX.Element | null => {
     if (rowGames.length === 0) return null;
+    const full = options?.fullGames ?? shelfFullMap[titleKey] ?? rowGames;
+    const count = options?.seeAllCount ?? full.length;
+    const canExpand = full.length > rowGames.length;
     return (
-      <section className="home-shelf" key={title}>
-        <div className="home-shelf-head">
-          <h2 className="home-shelf-title">{title}</h2>
-          {onNavigateLibrary && (
-            <button type="button" className="home-shelf-seeall" onClick={onNavigateLibrary}>
-              {seeAllCount ? `See all ${seeAllCount}` : "See all"}
+      <section className="hd-shelf" key={titleKey} aria-label={t(titleKey)}>
+        <div className="hd-shelf-head">
+          <h2 className="hd-shelf-title">{t(titleKey)}</h2>
+          <span className="hd-shelf-rule" aria-hidden="true" />
+          <span className="hd-shelf-count">{t("home.deck.shelfCount", { count })}</span>
+          {canExpand ? (
+            <button type="button" className="hd-shelf-seeall" onClick={() => setExpandedShelfKey(titleKey)}>
+              {t("home.deck.seeAllCount", { count })}
               <ChevronRight size={14} />
             </button>
-          )}
+          ) : onNavigateLibrary ? (
+            <button type="button" className="hd-shelf-seeall" onClick={onNavigateLibrary}>
+              {t("home.deck.seeAll")}
+              <ChevronRight size={14} />
+            </button>
+          ) : null}
         </div>
-        <div className="home-shelf-row">
-          {rowGames.map((game) => (
+        <div className="hd-shelf-row">
+          {rowGames.map((game, index) => (
             <PosterCard
               key={game.id}
               game={game}
+              rank={options?.ranked ? index + 1 : undefined}
+              note={options?.noteFor ? options.noteFor(game) : undefined}
               isSelected={game.id === selectedGameId}
               onSelect={() => onSelectGame(game.id)}
               onPlay={() => onPlayGame(game)}
@@ -796,7 +890,7 @@ export const HomePage = memo(function HomePage({
   };
 
   return (
-    <div className="home-page home-page--v2">
+    <div className="home-page home-page--deck">
       <div className="home-scroll">
         {showInitialLoading ? (
           <div className="home-empty-state">
@@ -804,46 +898,126 @@ export const HomePage = memo(function HomePage({
             <p>{t("home.empty.loadingGames")}</p>
           </div>
         ) : isSearching ? (
-          hasGames ? (
-            <div className="game-grid game-grid--search">{gameGridItems}</div>
-          ) : (
-            <div className="home-empty-state">
-              <Search size={44} className="home-empty-icon" />
-              <h3>{t("home.empty.noGamesFound")}</h3>
-              <p>{t("home.empty.tryAdjustingSearch")}</p>
+          <div className="hd-search">
+            <div className="hd-search-head">
+              <div className="hd-search-title-row">
+                <Search size={18} className="hd-search-icon" />
+                <h2 className="hd-search-title">
+                  {t("home.search.resultsFor", { query: searchQuery } as any) || `Search · "${searchQuery}"`}
+                </h2>
+                <span className="hd-search-count">{t("home.deck.shelfCount", { count: games.length })}</span>
+              </div>
+              <div className="hd-search-actions">
+                <span className="hd-search-hint">{t("home.search.showing", { shown: visibleSearchGames.length, total: games.length } as any) || `${visibleSearchGames.length} / ${games.length}`}</span>
+                <button type="button" className="hd-search-clear" onClick={() => onSearchChange("")}>
+                  {t("common.clear")}
+                </button>
+              </div>
             </div>
-          )
+
+            {isLoading ? (
+              <div className="hd-search-loading">
+                <MotionSpinner size={28} label={t("common.loading")} />
+                <span>{t("home.search.searching") || "Searching..."}</span>
+              </div>
+            ) : hasGames ? (
+              <>
+                <div className="hd-search-grid">{gameGridItems}</div>
+                {visibleSearchGames.length < games.length && (
+                  <div className="hd-search-more">
+                    <button type="button" className="hd-search-loadmore" onClick={() => setSearchVisibleCount((c) => c + 48)}>
+                      <span>{t("home.search.loadMore") || `Load more · ${games.length - visibleSearchGames.length} remaining`}</span>
+                      <ChevronDown size={14} />
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="home-empty-state hd-search-empty">
+                <Search size={44} className="home-empty-icon" />
+                <h3>{t("home.empty.noGamesFound")}</h3>
+                <p>{t("home.empty.tryAdjustingSearch")}</p>
+                <button type="button" className="hd-search-clear" onClick={() => onSearchChange("")}>
+                  {t("common.clearSearch") || "Clear search"}
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <>
-            {heroGame && (
-              <section className="home-hero" aria-label={heroGame.title}>
-                {heroBg ? (
-                  <img src={heroBg} alt="" className="home-hero-bg" />
-                ) : (
-                  <div className="home-hero-bg home-hero-bg--placeholder" />
-                )}
-                <div className="home-hero-scrim" />
-                <div className="home-hero-content">
-                  <span className="home-hero-eyebrow">Continue playing</span>
-                  <h1 className="home-hero-title">{heroGame.title}</h1>
-                  {heroMetaParts.length > 0 && (
-                    <p className="home-hero-meta">{heroMetaParts.join(" · ")}</p>
+            {spotlightGame && (
+              <section className="hd-spotlight" aria-label={spotlightGame.title}>
+                <div className="hd-spotlight-art">
+                  {spotlightArt ? (
+                    <img src={spotlightArt} alt="" className="hd-art-img" loading="eager" />
+                  ) : (
+                    <span className="hd-art-img hd-art-img--placeholder" aria-hidden="true">
+                      <Gamepad2 size={40} />
+                    </span>
                   )}
-                  <div className="home-hero-actions">
-                    <button type="button" className="home-hero-play" onClick={() => onPlayGame(heroGame)}>
-                      <Play size={16} fill="currentColor" />
-                      <span>Start</span>
-                      <kbd>Enter</kbd>
-                    </button>
-                    {heroStoreRaw && HeroStoreIcon && (
-                      <span className="home-hero-store" title={heroStoreName}>
-                        <span className="home-hero-store-icon"><HeroStoreIcon /></span>
-                        <span>{heroStoreName}</span>
+                  <span className="hd-art-brackets" aria-hidden="true">
+                    <span className="hd-art-bracket hd-art-bracket--tl" />
+                    <span className="hd-art-bracket hd-art-bracket--tr" />
+                    <span className="hd-art-bracket hd-art-bracket--bl" />
+                    <span className="hd-art-bracket hd-art-bracket--br" />
+                  </span>
+                  <span className="hd-art-ticks" aria-hidden="true" />
+                  <span className="hd-art-bloom" aria-hidden="true" />
+                </div>
+
+                <div className="hd-spotlight-panel">
+                  <p className="hd-panel-eyebrow">
+                    <span className="hd-panel-eyebrow-dash" aria-hidden="true" />
+                    {spotlightSeconds > 0 ? t("home.deck.eyebrow") : t("home.deck.eyebrowReady")}
+                  </p>
+
+                  <h1 className="hd-panel-title">{spotlightGame.title}</h1>
+
+                  <p className="hd-panel-voice">{spotlightVoice}</p>
+
+                  <dl className="hd-panel-cells">
+                    {spotlightCells.map((cell) => (
+                      <div className="hd-cell" key={cell.id}>
+                        <dt className="hd-cell-label">{cell.label}</dt>
+                        <dd className="hd-cell-value" title={cell.value}>
+                          {cell.icon && (
+                            <span className="hd-cell-icon" aria-hidden="true">
+                              <cell.icon />
+                            </span>
+                          )}
+                          {cell.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+
+                  <div className="hd-panel-actions">
+                    <button
+                      type="button"
+                      className="hd-launch"
+                      onClick={() => onPlayGame(spotlightGame)}
+                    >
+                      <span className="hd-launch-face">
+                        <Play size={15} fill="currentColor" />
+                        <span>{t("home.deck.launch")}</span>
+                        <kbd>Enter</kbd>
                       </span>
+                    </button>
+
+                    {onNavigatePlaytime && (
+                      <button type="button" className="hd-panel-link" onClick={onNavigatePlaytime}>
+                        <Timer size={14} />
+                        <span>
+                          {spotlightSessions > 0
+                            ? t("home.deck.ledgerSessions", { count: spotlightSessions })
+                            : t("home.deck.ledger")}
+                        </span>
+                      </button>
                     )}
+
                     {streamMetaLabel && (
-                      <span className="home-hero-stats">
-                        <span className="home-hero-stats-dot" />
+                      <span className="hd-panel-live">
+                        <span className="hd-live-dot" aria-hidden="true" />
                         {streamMetaLabel}
                       </span>
                     )}
@@ -852,11 +1026,76 @@ export const HomePage = memo(function HomePage({
               </section>
             )}
 
-            {renderRow("Jump back in", jumpBackIn, jumpBackIn.length)}
-            {renderRow("Favourites", favourites)}
-            {renderRow("New in your library", newInLibrary)}
+            {expandedShelfKey ? (
+              <section className="hd-expanded" aria-label={t(expandedShelfKey)}>
+                <div className="hd-expanded-head">
+                  <button type="button" className="hd-expanded-back" onClick={() => setExpandedShelfKey(null)}>
+                    <ChevronRight size={16} style={{ transform: "rotate(180deg)" }} />
+                    <span>{t("common.back")}</span>
+                  </button>
+                  <h2 className="hd-expanded-title">{t(expandedShelfKey)}</h2>
+                  <span className="hd-expanded-count">{t("home.deck.shelfCount", { count: expandedTotal })}</span>
+                  <span className="hd-expanded-hint">{expandedGames.length} / {expandedTotal}</span>
+                </div>
+                <div className="hd-expanded-grid">
+                  {expandedGames.map((game, index) => (
+                    <PosterCard
+                      key={game.id}
+                      game={game}
+                      rank={expandedShelfKey === "home.deck.mostPlayed" ? index + 1 : undefined}
+                      note={
+                        expandedShelfKey === "home.deck.jumpBackIn"
+                          ? formatCatalogLastPlayed(t, lastPlayedIso(game))
+                          : expandedShelfKey === "home.deck.mostPlayed"
+                          ? formatPlaytimeDuration(t, streamedSeconds(game))
+                          : expandedShelfKey === "home.deck.allGames"
+                          ? (() => {
+                              const secs = streamedSeconds(game);
+                              return secs > 0 ? formatPlaytimeDuration(t, secs) : getPrimaryGenre(game);
+                            })()
+                          : undefined
+                      }
+                      isSelected={game.id === selectedGameId}
+                      onSelect={() => onSelectGame(game.id)}
+                      onPlay={() => onPlayGame(game)}
+                    />
+                  ))}
+                </div>
+                {expandedGames.length < expandedTotal && (
+                  <div className="hd-search-more">
+                    <button type="button" className="hd-search-loadmore" onClick={() => setExpandedVisibleCount((c) => c + 48)}>
+                      <span>Load more · {expandedTotal - expandedGames.length} remaining</span>
+                      <ChevronDown size={14} />
+                    </button>
+                  </div>
+                )}
+              </section>
+            ) : (
+              <>
+                {renderShelf("home.deck.jumpBackIn", jumpBackIn, {
+                  fullGames: jumpBackInFull,
+                  noteFor: (game) => formatCatalogLastPlayed(t, lastPlayedIso(game)),
+                })}
 
-            {!heroGame && (
+                {renderShelf("home.deck.mostPlayed", mostPlayed, {
+                  ranked: true,
+                  fullGames: mostPlayedFull,
+                  noteFor: (game) => formatPlaytimeDuration(t, streamedSeconds(game)),
+                })}
+
+                {renderShelf("home.deck.favourites", favourites, { fullGames: favouritesFull })}
+                {renderShelf("home.deck.newInLibrary", newInLibrary, { fullGames: newInLibraryFull })}
+                {renderShelf("home.deck.allGames", allGamesShelf, {
+                  fullGames: allGamesFull,
+                  noteFor: (game) => {
+                    const secs = streamedSeconds(game);
+                    return secs > 0 ? formatPlaytimeDuration(t, secs) : getPrimaryGenre(game);
+                  },
+                })}
+              </>
+            )}
+
+            {!spotlightGame && (
               <div className="home-empty-state">
                 <LayoutGrid size={44} className="home-empty-icon" />
                 <h3>{t("home.empty.noGamesFound")}</h3>

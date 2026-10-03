@@ -5,6 +5,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import type { IceCandidatePayload, KeyframeRequest, SendAnswerRequest, SignalingConnectRequest } from "@shared/gfn";
 import { GfnSignalingClient } from "./gfn/signaling";
 import { getExistingSession } from "./sessionStore";
+import { onNativeEvent } from "./nativeStream";
 
 type ClientMessage =
   | { type: "connect"; payload: SignalingConnectRequest }
@@ -46,6 +47,11 @@ export function attachSignalingBridge(server: HttpServer): void {
       if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(payload));
     };
 
+    // Forward native sidecar events (overlay-request -> toggleSidebar, toggle-stats) to the web client
+    const unsubscribeNative = onNativeEvent((event) => {
+      send({ type: "event", payload: event });
+    });
+
     socket.on("message", (raw) => {
       void (async () => {
         const message = JSON.parse(raw.toString("utf8")) as ClientMessage;
@@ -78,6 +84,7 @@ export function attachSignalingBridge(server: HttpServer): void {
 
     socket.on("close", () => {
       unsubscribe?.();
+      unsubscribeNative();
       signaling?.disconnect();
     });
   });

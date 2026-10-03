@@ -135,6 +135,15 @@ export class WebAuthSession {
     this.dirty = false;
   }
 
+  /**
+   * Flags the session for re-persistence without changing its contents. Used
+   * when a restored session came from the desktop mirror instead of the request
+   * cookie, so the response re-issues the cookie for that browser.
+   */
+  markDirty(): void {
+    this.dirty = true;
+  }
+
   addActiveSession(sessionId: string): void {
     if (!this.activeSessionIds.has(sessionId)) {
       this.activeSessionIds.add(sessionId);

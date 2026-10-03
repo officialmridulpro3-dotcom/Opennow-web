@@ -1,11 +1,10 @@
-import { Library, Search, Clock, Gamepad2, ArrowUpDown, Filter, ChevronDown, X } from "lucide-react";
+import { Library, Search, Gamepad2, ArrowUpDown, Play, Timer, Clock } from "lucide-react";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import type { JSX } from "react";
-import { AnimatePresence, m } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import type { CatalogSortOption, GameInfo } from "@shared/gfn";
-import { GameCardListItem, useCatalogCardActionsRef } from "./GameCardListItem";
 import { PosterCard } from "./PosterCard";
-import { getStoreDisplayName } from "./GameCard";
+import { getStoreDisplayName, getStoreIconComponent } from "./GameCard";
 import type { PlaytimeData } from "../lib/gameCatalog";
 import { getControllerFeaturedGames } from "../lib/controllerCatalogUi";
 import {
@@ -19,8 +18,8 @@ import {
 } from "../lib/libraryFilters";
 import { useTranslation } from "../i18n";
 import { formatCatalogLastPlayed } from "../utils/lastPlayedFormat";
+import { formatPlaytimeDuration } from "../utils/playtimeFormat";
 import { controllerButton, readControllerGamepadButtons } from "../utils/controllerGamepad";
-import { pageTransition } from "./MotionProvider";
 import { SelectDropdown } from "./ui/SelectDropdown";
 import { LibraryControllerView } from "./library/LibraryControllerView";
 import { MotionSpinner } from "./MotionSpinner";
@@ -28,6 +27,10 @@ import { MotionSpinner } from "./MotionSpinner";
 const CONTROLLER_HERO_ROTATION_MS = 8000;
 const CONTROLLER_MOVE_REPEAT_MS = 140;
 const CONTROLLER_Y_HOLD_MS = 350;
+
+function getPrimaryGenre(game: GameInfo): string {
+  return game.genres?.[0] ?? game.playType ?? "";
+}
 
 export interface LibraryPageProps {
   games: GameInfo[];
@@ -51,6 +54,7 @@ export interface LibraryPageProps {
   activeSessionAppIds?: number[];
   onPreviousControllerPage?: () => void;
   onNextControllerPage?: () => void;
+  onNavigatePlaytime?: () => void;
 }
 
 export const LibraryPage = memo(function LibraryPage({
@@ -75,13 +79,9 @@ export const LibraryPage = memo(function LibraryPage({
   activeSessionAppIds = [],
   onPreviousControllerPage,
   onNextControllerPage,
+  onNavigatePlaytime,
 }: LibraryPageProps): JSX.Element {
   const { t } = useTranslation();
-  const catalogActionsRef = useCatalogCardActionsRef({
-    onPlayGame,
-    onSelectGame,
-    onSelectGameVariant,
-  });
   const [controllerHeroIndex, setControllerHeroIndex] = useState(0);
   const [detailsGame, setDetailsGame] = useState<GameInfo | null>(null);
   const [controllerStoreFilterId, setControllerStoreFilterId] = useState("library");
@@ -133,9 +133,6 @@ export const LibraryPage = memo(function LibraryPage({
     [libraryFilterGroups, selectedLibraryFilterIds],
   );
   const hasActiveLibraryFilters = activeLibraryFilterOptions.length > 0;
-  const libraryCountLabel = hasActiveLibraryFilters || librarySearchHasQuery
-    ? t("library.filteredGameCount", { shown: visibleLibraryGames.length, total: libraryCount, count: libraryCount })
-    : t("library.gameCount", { count: libraryCount });
 
   useEffect(() => {
     const availableFilterIds = new Set(libraryFilterGroups.flatMap((group) => group.options.map((option) => option.id)));
@@ -152,11 +149,11 @@ export const LibraryPage = memo(function LibraryPage({
   }, [controllerMode, onSelectGame, selectedGameId, visibleLibraryGames]);
 
   const toggleLibraryFilter = (filterId: string): void => {
-    setSelectedLibraryFilterIds((previous) => (
+    setSelectedLibraryFilterIds((previous) =>
       previous.includes(filterId)
         ? previous.filter((selectedFilterId) => selectedFilterId !== filterId)
-        : [...previous, filterId]
-    ));
+        : [...previous, filterId],
+    );
   };
 
   const clearLibraryFilters = (): void => {
@@ -168,7 +165,7 @@ export const LibraryPage = memo(function LibraryPage({
     [games, t],
   );
   const controllerGames = useMemo(
-    () => controllerStoreFilterId === "library" ? games : games.filter((game) => gameMatchesStoreFilter(game, controllerStoreFilterId)),
+    () => (controllerStoreFilterId === "library" ? games : games.filter((game) => gameMatchesStoreFilter(game, controllerStoreFilterId))),
     [controllerStoreFilterId, games],
   );
   const controllerFeaturedGames = useMemo(
@@ -265,9 +262,6 @@ export const LibraryPage = memo(function LibraryPage({
     setControllerStoreFilterOpen(false);
   };
 
-  // Keep the gamepad poller on a stable ref snapshot. Do not list the inline
-  // helpers as effect deps — they are recreated every render and only need to
-  // be copied into the ref, not trigger another commit.
   controllerInputStateRef.current = {
     detailsGame,
     selectedControllerGame,
@@ -422,7 +416,6 @@ export const LibraryPage = memo(function LibraryPage({
         if (pressed & controllerButton.down) cycleVariant();
       }
       gamepadPreviousButtonsRef.current = buttons;
-
       gamepadFrameRef.current = window.requestAnimationFrame(handleGamepadFrame);
     };
 
@@ -458,17 +451,71 @@ export const LibraryPage = memo(function LibraryPage({
     };
   }, [controllerMode, controllerSearchOpen, onNextControllerPage, onPreviousControllerPage]);
 
+  // ---- immersive desktop library ----
+
+  const selectedGame = useMemo(() => {
+    return (
+      visibleLibraryGames.find((g) => g.id === selectedGameId) ??
+      allGames.find((g) => g.id === selectedGameId) ??
+      visibleLibraryGames[0] ??
+      allGames[0] ??
+      null
+    );
+  }, [allGames, selectedGameId, visibleLibraryGames]);
+
+  const selectedHero = selectedGame
+    ? selectedGame.heroImageUrl ??
+      selectedGame.imageUrlsByType?.HERO_IMAGE?.[0] ??
+      selectedGame.imageUrlsByType?.MARQUEE_HERO_IMAGE?.[0] ??
+      selectedGame.imageUrlsByType?.KEY_ART?.[0] ??
+      selectedGame.screenshotUrls?.[0] ??
+      selectedGame.imageUrl
+    : undefined;
+
+  const selectedVariant = selectedGame
+    ? selectedGame.variants[selectedGame.selectedVariantIndex] ?? selectedGame.variants[0]
+    : undefined;
+  const selectedStoreRaw = selectedVariant?.store ?? selectedGame?.availableStores?.[0];
+  const SelectedStoreIcon = selectedStoreRaw ? getStoreIconComponent(selectedStoreRaw) : null;
+  const selectedStoreName = selectedStoreRaw ? getStoreDisplayName(selectedStoreRaw) : "";
+  const selectedGenre = selectedGame ? getPrimaryGenre(selectedGame) : "";
+  const selectedPlay = selectedGame ? playtimeData[selectedGame.id] : undefined;
+  const selectedSeconds = selectedPlay?.totalSeconds ?? 0;
+  const selectedSessions = selectedPlay?.sessionCount ?? 0;
+  const selectedLastPlayedIso = selectedPlay?.lastPlayedAt ?? selectedGame?.lastPlayed;
+  const selectedLastPlayed = formatCatalogLastPlayed(t, selectedLastPlayedIso ?? undefined);
+  const selectedPlaytime = formatPlaytimeDuration(t, selectedSeconds);
+
+  const detailCells = [
+    { id: "lastPlayed", label: t("library.deck.cellLastPlayed"), value: selectedLastPlayed },
+    { id: "playtime", label: t("library.deck.cellPlaytime"), value: selectedSeconds > 0 ? selectedPlaytime : t("playtime.format.never") },
+    {
+      id: "sessions",
+      label: t("library.deck.cellSessions"),
+      value: selectedSessions > 0 ? t("playtime.ranking.sessions", { count: selectedSessions }) : "",
+    },
+    { id: "store", label: t("library.deck.cellStore"), value: selectedStoreName, icon: SelectedStoreIcon },
+    { id: "genre", label: t("library.deck.cellGenre"), value: selectedGenre },
+  ].filter((c) => Boolean(c.value));
+
   const libraryGridItems = useMemo(
-    () => visibleLibraryGames.map((game) => (
-      <PosterCard
-        key={game.id}
-        game={game}
-        isSelected={game.id === selectedGameId}
-        onSelect={() => onSelectGame(game.id)}
-        onPlay={() => onPlayGame(game)}
-      />
-    )),
-    [onPlayGame, onSelectGame, selectedGameId, visibleLibraryGames],
+    () => visibleLibraryGames.map((game) => {
+      const seconds = playtimeData[game.id]?.totalSeconds ?? 0;
+      const note = seconds > 0
+        ? formatPlaytimeDuration(t, seconds)
+        : formatCatalogLastPlayed(t, playtimeData[game.id]?.lastPlayedAt ?? game.lastPlayed ?? undefined);
+      return (
+        <PosterCard
+          key={game.id}
+          game={game}
+          isSelected={game.id === selectedGameId}
+          onSelect={() => onSelectGame(game.id)}
+          onPlay={() => onPlayGame(game)}
+          note={note}
+        />
+      );
+    }),
+    [onPlayGame, onSelectGame, playtimeData, selectedGameId, t, visibleLibraryGames],
   );
 
   if (controllerMode) {
@@ -512,89 +559,170 @@ export const LibraryPage = memo(function LibraryPage({
   );
 
   return (
-    <div className="library-page library-page--v2">
-      <div className="library-scroll">
-        <div className="library-section-head">
-          <h2 className="library-section-title">
-            {hasActiveLibraryFilters ? activeLibraryFilterOptions[0].label : "All games"}
-          </h2>
-          <div className="library-section-actions">
-            {sortOptions.length > 0 && (
-              <div className="library-sort">
-                <ArrowUpDown size={14} />
-                <SelectDropdown
-                  value={selectedSortId}
-                  options={sortOptions.map((option) => ({ value: option.id, label: option.label }))}
-                  onChange={onSortChange}
-                  ariaLabel={t("library.sortAriaLabel")}
-                />
+    <div className="library-page library-page--deck">
+      {selectedHero && (
+        <div className="lib-ambient" aria-hidden="true">
+          <img src={selectedHero} alt="" className="lib-ambient-img" />
+          <span className="lib-ambient-bloom" />
+          <span className="lib-ambient-scrim" />
+        </div>
+      )}
+
+      <div className="lib-layout">
+        <div className="lib-main">
+          <div className="lib-head">
+            <h2 className="lib-title">
+              {hasActiveLibraryFilters ? activeLibraryFilterOptions[0].label : t("library.deck.allGames")}
+            </h2>
+            <span className="lib-title-rule" aria-hidden="true" />
+            <span className="lib-count">
+              {t("library.deck.count", { count: visibleLibraryGames.length })}
+            </span>
+            <div className="lib-head-actions">
+              {sortOptions.length > 0 && (
+                <div className="lib-sort">
+                  <ArrowUpDown size={14} />
+                  <SelectDropdown
+                    value={selectedSortId}
+                    options={sortOptions.map((option) => ({ value: option.id, label: option.label }))}
+                    onChange={onSortChange}
+                    ariaLabel={t("library.sortAriaLabel")}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="lib-collections">
+            <div className="lib-collections-chips">
+              <button
+                type="button"
+                className={`lib-chip${!hasActiveLibraryFilters ? " active" : ""}`}
+                onClick={clearLibraryFilters}
+              >
+                <span>{t("library.deck.chipAll")}</span>
+                <span className="lib-chip-count">{libraryCount}</span>
+              </button>
+              {collectionChips.map((chip) => {
+                const active = selectedLibraryFilterIds.includes(chip.id);
+                return (
+                  <button
+                    key={chip.id}
+                    type="button"
+                    className={`lib-chip${active ? " active" : ""}`}
+                    onClick={() => toggleLibraryFilter(chip.id)}
+                    aria-pressed={active}
+                  >
+                    <span>{chip.label}</span>
+                    <span className="lib-chip-count">{chip.count}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <span className="lib-collections-hint">{t("library.deck.hint")}</span>
+          </div>
+
+          <div className="lib-grid-area">
+            {isLoading ? (
+              <div className="lib-empty">
+                <MotionSpinner className="lib-spinner" size={36} label={t("common.loading")} />
+                <p>{t("library.empty.loadingLibrary")}</p>
               </div>
+            ) : libraryCount === 0 ? (
+              <div className="lib-empty">
+                <Gamepad2 className="lib-empty-icon" size={44} />
+                <h3>{t("library.empty.libraryEmpty")}</h3>
+                <p>{t("library.empty.ownedGamesAppearHere")}</p>
+              </div>
+            ) : visibleLibraryGames.length === 0 ? (
+              <div className="lib-empty">
+                <Search className="lib-empty-icon" size={44} />
+                <h3>{hasActiveLibraryFilters && !librarySearchHasQuery ? t("library.empty.noFilteredGames") : t("library.empty.noGamesFound")}</h3>
+                <p>
+                  {librarySearchHasQuery
+                    ? t("library.empty.noGamesMatch", { query: searchQuery })
+                    : hasActiveLibraryFilters
+                      ? t("library.empty.tryAdjustingFilters")
+                      : t("library.empty.noGamesMatch", { query: searchQuery })}
+                </p>
+              </div>
+            ) : (
+              <div className="lib-grid">{libraryGridItems}</div>
             )}
-            <button type="button" className="library-new-collection" disabled>
-              New collection
-            </button>
           </div>
         </div>
 
-        <div className="library-collections">
-          <div className="library-collections-chips">
-            <button
-              type="button"
-              className={`library-chip${!hasActiveLibraryFilters ? " active" : ""}`}
-              onClick={clearLibraryFilters}
-            >
-              <span>All</span>
-              <span className="library-chip-count">{libraryCount}</span>
-            </button>
-            {collectionChips.map((chip) => {
-              const active = selectedLibraryFilterIds.includes(chip.id);
-              return (
-                <button
-                  key={chip.id}
-                  type="button"
-                  className={`library-chip${active ? " active" : ""}`}
-                  onClick={() => toggleLibraryFilter(chip.id)}
-                  aria-pressed={active}
-                >
-                  <span>{chip.label}</span>
-                  <span className="library-chip-count">{chip.count}</span>
-                </button>
-              );
-            })}
-          </div>
-          <span className="library-collections-hint">Right-click a game for actions</span>
-        </div>
+        <aside className="lib-detail" aria-label={selectedGame?.title ?? "Game details"}>
+          {selectedGame ? (
+            <>
+              <div className="lib-detail-art">
+                {selectedHero ? (
+                  <img src={selectedHero} alt="" className="lib-detail-img" />
+                ) : (
+                  <span className="lib-detail-img lib-detail-img--placeholder" aria-hidden="true">
+                    <Gamepad2 size={36} />
+                  </span>
+                )}
+                <span className="lib-detail-brackets" aria-hidden="true">
+                  <span className="lib-detail-bracket lib-detail-bracket--tl" />
+                  <span className="lib-detail-bracket lib-detail-bracket--tr" />
+                  <span className="lib-detail-bracket lib-detail-bracket--bl" />
+                  <span className="lib-detail-bracket lib-detail-bracket--br" />
+                </span>
+                <span className="lib-detail-ticks" aria-hidden="true" />
+              </div>
 
-        <div className="library-grid-area">
-          {isLoading ? (
-            <div className="library-empty-state">
-              <MotionSpinner className="library-spinner" size={36} label={t("common.loading")} />
-              <p>{t("library.empty.loadingLibrary")}</p>
-            </div>
-          ) : libraryCount === 0 ? (
-            <div className="library-empty-state">
-              <Gamepad2 className="library-empty-icon" size={44} />
-              <h3>{t("library.empty.libraryEmpty")}</h3>
-              <p>{t("library.empty.ownedGamesAppearHere")}</p>
-            </div>
-          ) : visibleLibraryGames.length === 0 ? (
-            <div className="library-empty-state">
-              <Search className="library-empty-icon" size={44} />
-              <h3>{hasActiveLibraryFilters && !librarySearchHasQuery ? t("library.empty.noFilteredGames") : t("library.empty.noGamesFound")}</h3>
-              <p>
-                {librarySearchHasQuery
-                  ? t("library.empty.noGamesMatch", { query: searchQuery })
-                  : hasActiveLibraryFilters
-                    ? t("library.empty.tryAdjustingFilters")
-                  : t("library.empty.noGamesMatch", { query: searchQuery })}
-              </p>
-            </div>
+              <div className="lib-detail-body">
+                <p className="lib-detail-eyebrow">
+                  <span className="lib-detail-eyebrow-dash" aria-hidden="true" />
+                  {selectedStoreName || t("library.deck.eyebrow")}
+                </p>
+                <h3 className="lib-detail-title">{selectedGame.title}</h3>
+
+                <dl className="lib-detail-cells">
+                  {detailCells.map((cell) => (
+                    <div className="lib-detail-cell" key={cell.id}>
+                      <dt className="lib-detail-cell-label">{cell.label}</dt>
+                      <dd className="lib-detail-cell-value" title={cell.value as string}>
+                        {cell.icon && (
+                          <span className="lib-detail-cell-icon" aria-hidden="true">
+                            <cell.icon />
+                          </span>
+                        )}
+                        {cell.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="lib-detail-actions">
+                  <button type="button" className="lib-launch" onClick={() => onPlayGame(selectedGame)}>
+                    <span className="lib-launch-face">
+                      <Play size={14} fill="currentColor" />
+                      <span>{t("library.deck.launch")}</span>
+                      <kbd>Enter</kbd>
+                    </span>
+                  </button>
+                  {onNavigatePlaytime && selectedSeconds > 0 && (
+                    <button type="button" className="lib-detail-link" onClick={onNavigatePlaytime}>
+                      <Timer size={14} />
+                      <span>{t("library.deck.viewLedger")}</span>
+                    </button>
+                  )}
+                  <span className="lib-detail-live">
+                    <Clock size={12} />
+                    <span>{selectedLastPlayed}</span>
+                  </span>
+                </div>
+              </div>
+            </>
           ) : (
-            <div className="game-grid">
-              {libraryGridItems}
+            <div className="lib-detail-empty">
+              <Library size={28} />
+              <p>{t("library.deck.emptyDetail")}</p>
             </div>
           )}
-        </div>
+        </aside>
       </div>
     </div>
   );

@@ -121,10 +121,13 @@ export interface NativeRenderSurfaceUpdate {
   visible: boolean;
   deviceScaleFactor: number;
   showStats?: boolean;
+  windowHandle?: string;
+  screenRect?: NativeRenderSurfaceRect | null;
 }
 
 export interface NativeRenderSurface extends NativeRenderSurfaceUpdate {
   windowHandle?: string;
+  screenRect?: NativeRenderSurfaceRect | null;
 }
 
 export interface KeyframeRequest {

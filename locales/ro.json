@@ -160,7 +160,8 @@
   "navigation": {
     "home": "Magazin",
     "library": "Biblioteca",
-    "settings": "Setări"
+    "settings": "Setări",
+    "playtime": "Timp de joc"
   },
   "home": {
     "searchPlaceholder": "Caută jocuri...",
@@ -193,7 +194,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "Continuă jocul",
+      "eyebrowReady": "Gata de joc",
+      "voiceResume": "{{value}} pe ceas — reia de unde ai rămas.",
+      "voiceReady": "Puntea e pregătită. Alege un titlu și cloud-ul face restul.",
+      "cellLastPlayed": "Jucat ultima dată",
+      "cellPlaytime": "Timp de joc",
+      "cellStore": "Magazin",
+      "cellGenre": "Gen",
+      "launch": "Pornește",
+      "ledger": "Vezi jurnalul",
+      "ledgerSessions": "{{count}} sesiune înregistrată",
+      "ledgerSessions_plural": "{{count}} sesiuni înregistrate",
+      "jumpBackIn": "Înapoi în joc",
+      "mostPlayed": "Cele mai jucate",
+      "favourites": "Favorite",
+      "newInLibrary": "Nou în biblioteca ta",
+      "shelfCount": "{{count}} titlu",
+      "shelfCount_plural": "{{count}} titluri",
+      "seeAll": "Vezi tot",
+      "seeAllCount": "Vezi toate {{count}}",
+      "allGames": "Toate jocurile"
+    },
+    "search": {
+      "resultsFor": "Căutare · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "Se caută...",
+      "loadMore": "Încarcă mai mult",
+      "clearSearch": "Șterge căutarea"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "Mută",
+      "commands": "Comenzi",
+      "allShortcuts": "Toate scurtăturile"
+    },
+    "regionAuto": "Regiune automată",
+    "themeDeck": "Temă Deck"
   },
   "library": {
     "title": "Biblioteca mea",
@@ -232,6 +272,98 @@
       "ownedGamesAppearHere": "Jocurile pe care le dețineți vor apărea aici. Răsfoiți catalogul pentru a găsi jocuri.",
       "noGamesFound": "Nu s-au găsit jocuri",
       "noGamesMatch": "Niciun joc nu se potrivește cu „{{query}}”"
+    },
+    "deck": {
+      "allGames": "Toate jocurile",
+      "count": "{{count}} titlu",
+      "count_plural": "{{count}} titluri",
+      "chipAll": "Toate",
+      "hint": "Selectează un titlu pentru consolă",
+      "eyebrow": "Bibliotecă // selectat",
+      "launch": "Pornește",
+      "viewLedger": "Vezi jurnalul",
+      "emptyDetail": "Alege un joc din grilă pentru consola sa.",
+      "cellLastPlayed": "Jucat ultima dată",
+      "cellPlaytime": "Timp de joc",
+      "cellSessions": "Sesiuni",
+      "cellStore": "Magazin",
+      "cellGenre": "Gen"
+    },
+    "favoriteToggle": "Comută favorit"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // jurnal",
+    "title": "Timp de joc",
+    "subtitle": "Fiecare minut petrecut efectiv în stream — așteptările la coadă sunt numărate separat.",
+    "loading": "Se încarcă jurnalul…",
+    "hero": {
+      "label": "Total în stream",
+      "unitHours": "h",
+      "unitMinutes": "min",
+      "detail": "{{minutes}} minute în plus, în {{sessions}} sesiuni și {{games}} jocuri",
+      "sr": "Ai redat {{hours}} ore și {{minutes}} minute în total.",
+      "peakHour": "Ora cea mai activă: {{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "Sesiuni",
+      "games": "Jocuri jucate",
+      "longest": "Cea mai lungă sesiune",
+      "average": "Sesiune medie",
+      "queue": "Timp la coadă",
+      "setup": "Timp de conectare"
+    },
+    "live": {
+      "label": "În stream acum",
+      "unknownGame": "Sesiunea curentă"
+    },
+    "ranking": {
+      "title": "Clasate după timpul de joc",
+      "count": "{{count}} joc",
+      "count_plural": "{{count}} jocuri",
+      "sessions": "{{count}} sesiune",
+      "sessions_plural": "{{count}} sesiuni",
+      "share": "{{value}}% din total",
+      "more": "+ {{count}} jocuri nelistate",
+      "sr": "Locul {{rank}}: {{title}}, {{value}} în {{sessions}} sesiuni."
+    },
+    "cadence": {
+      "title": "Când te joci",
+      "daily": "Ultima {{count}} zi",
+      "daily_plural": "Ultimele {{count}} zile",
+      "dailySr": "{{value}} în acest interval",
+      "hourly": "Ora din zi",
+      "hourlySr": "Vârf la {{hour}}:00 cu {{value}}",
+      "weekday": "Ziua săptămânii",
+      "weekdaySr": "Cea mai activă zi cu {{value}}"
+    },
+    "recent": {
+      "title": "Sesiuni recente",
+      "empty": "Nicio sesiune încheiată înregistrată încă.",
+      "wait": "{{value}} în așteptare",
+      "engineNative": "Nativ",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "Reîmprospătează",
+      "reset": "Resetează jurnalul",
+      "resetConfirmTitle": "Resetează timpul de joc",
+      "resetConfirmBody": "Acest lucru șterge toate orele înregistrate pe acest dispozitiv. Nu poate fi anulat.",
+      "resetConfirm": "Șterge tot",
+      "resetCancel": "Păstrează statisticile",
+      "updated": "Jurnal actualizat {{value}}"
+    },
+    "empty": {
+      "eyebrow": "Jurnal // gol",
+      "title": "Niciun timp de joc înregistrat",
+      "body": "Pornește un joc, iar cronometrul începe în momentul în care sosește primul cadru. Așteptările la coadă sunt urmărite separat, deci contează doar jocul real.",
+      "cta": "Răsfoiește biblioteca"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}} h {{minutes}} min",
+      "hours": "{{count}} h",
+      "minutes": "{{count}} min",
+      "seconds": "{{count}} s"
     }
   },
   "gameCard": {
@@ -416,7 +548,9 @@
       "autoBest": "Auto (cea mai bună)",
       "searchPlaceholder": "Caută regiuni...",
       "refreshPing": "Reîmprospătați ping-ul",
-      "noRegionsMatch": "Nicio regiune nu corespunde cu „{{query}}”"
+      "noRegionsMatch": "Nicio regiune nu corespunde cu „{{query}}”",
+      "noRegionsAvailable": "Nicio regiune disponibilă",
+      "retry": "Reîncercați"
     },
     "video": {
       "title": "Video",
@@ -518,11 +652,10 @@
       "appLanguageHint": "Schimbă limba interfeței OpenNOW. Engleza este folosită pentru șirurile netraduse.",
       "accentColor": "Culoare de accent",
       "accentColorHint": "Aplică accentul selectat în interfața standard de utilizare a desktopului și persistă între lansări.",
-      "accentColorGreen": "OpenNOW Verde",
-      "accentColorBlue": "Albastru Cobalt",
-      "accentColorViolet": "violet",
-      "accentColorAmber": "chihlimbar",
-      "accentColorRose": "Trandafir",
+      "accentColorNeon": "Neon",
+      "accentColorAzure": "Azuriu",
+      "accentColorWhite": "Alb",
+      "accentColorSteel": "Oțel",
       "hideStreamOverlayButtons": "Ascunde butoanele de suprapunere a fluxului",
       "hideStreamOverlayButtonsHint": "Ascundeți microfonul, ecranul complet și butoanele de încheiere a sesiunii în timpul transmiterii în flux.",
       "showStatsOnStreamLaunch": "Afișați statistici la lansarea fluxului",
@@ -696,5 +829,27 @@
     "queueAdPlayTimeout": "Timp limită pentru redarea anunțurilor",
     "queueAdVideoStuck": "Videoclipul publicitar este blocat",
     "queueAdUrlLoad": "Eroare la încărcarea adresei URL"
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "Versiune digitală PC",
+    "chooseStore": "Alege un magazin",
+    "chooseStoreHint": "Unde deții acest joc și vrei să joci?",
+    "gameStores": "Magazine:",
+    "subscriptions": "Abonamente:",
+    "owned": "Deținut",
+    "gameNotFound": "Joc negăsit",
+    "subscribed": "Abonat",
+    "notSubscribed": "Neabonat",
+    "markAsOwned": "MARCHEAZĂ CA DEȚINUT",
+    "buy": "CUMPĂRĂ",
+    "storeHint": "Selectează un magazin unde deții jocul și marchează-l ca deținut.",
+    "rating": "Evaluare",
+    "publisher": "Editor",
+    "developer": "Dezvoltator",
+    "gallery": "Galerie"
+  },
+  "common": {
+    "clear": "Șterge căutarea",
+    "back": "Back"
   }
 }

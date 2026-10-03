@@ -237,6 +237,60 @@ export async function fetchSubscription(
  * @param streamingBaseUrl - Base URL for the streaming service
  * @returns Array of stream regions and the discovered VPC ID
  */
+/**
+ * Static fallback list of known GFN CloudMatch zones.
+ * Used when serverInfo fails or returns empty, so user can always see regions.
+ * URLs follow pattern https://{zone}.cloudmatchbeta.nvidiagrid.net/
+ */
+const FALLBACK_REGION_ZONES: Array<{ name: string; zone: string }> = [
+  { name: "US Central - Dallas", zone: "np-dal-08" },
+  { name: "US East - Ashburn", zone: "np-ash-08" },
+  { name: "US Midwest - Chicago", zone: "np-chi-08" },
+  { name: "US Northeast - Newark", zone: "np-nwk-08" },
+  { name: "US Northwest - Seattle", zone: "np-sea-08" },
+  { name: "US South - Atlanta", zone: "np-atl-08" },
+  { name: "US Southeast - Miami", zone: "np-mia-08" },
+  { name: "US Southwest - Los Angeles", zone: "np-lax-08" },
+  { name: "US West - San Jose", zone: "np-sjc-08" },
+  { name: "CA East - Montreal", zone: "np-yul-08" },
+  { name: "EU Northeast - Amsterdam", zone: "np-ams-08" },
+  { name: "EU Central - Frankfurt", zone: "np-frk-08" },
+  { name: "EU Southwest - Paris", zone: "np-par-08" },
+  { name: "EU West - London", zone: "np-lhr-08" },
+  { name: "EU Northwest - Stockholm", zone: "np-sto-08" },
+  { name: "EU Southeast - Sofia", zone: "np-sof-02" },
+  { name: "EU Southeast - Warsaw", zone: "np-waw-02" },
+  { name: "Caucasus South - Yerevan", zone: "np-evn-02" },
+  { name: "Africa South - Johannesburg", zone: "np-jnb-02" },
+  { name: "SA East - Sao Paulo", zone: "np-gru-08" },
+  { name: "LATAM South - Montevideo", zone: "np-mvd-02" },
+  { name: "AU East - Sydney", zone: "np-syd-02" },
+  { name: "AU West - Perth", zone: "np-per-02" },
+  { name: "JP East - Tokyo", zone: "np-nrt-08" },
+  { name: "SG - Singapore", zone: "np-sin-02" },
+  { name: "KR - Seoul", zone: "np-icn-02" },
+  { name: "TR Central - Ankara", zone: "np-ank-02" },
+  { name: "TR West - Istanbul", zone: "np-ist-02" },
+  { name: "TW - Taipei", zone: "np-tpe-02" },
+  { name: "Netherlands North", zone: "np-ams-08" },
+  { name: "Netherlands South", zone: "np-ams-09" },
+  { name: "Germany North", zone: "np-frk-09" },
+  { name: "UK South", zone: "np-lhr-09" },
+  { name: "France Central", zone: "np-par-09" },
+];
+
+function buildFallbackRegions(): StreamRegion[] {
+  const seen = new Set<string>();
+  const out: StreamRegion[] = [];
+  for (const { name, zone } of FALLBACK_REGION_ZONES) {
+    const url = `https://${zone}.cloudmatchbeta.nvidiagrid.net/`;
+    if (seen.has(url)) continue;
+    seen.add(url);
+    out.push({ name, url });
+  }
+  return out.sort((a, b) => a.name.localeCompare(b.name));
+}
+
 export async function fetchDynamicRegions(
   token: string | undefined,
   streamingBaseUrl: string,
@@ -255,35 +309,89 @@ export async function fetchDynamicRegions(
   let response: Response;
   try {
     response = await fetch(url, { headers });
-  } catch {
-    return { regions: [], vpcId: null };
+  } catch (err) {
+    console.warn("[Regions] serverInfo fetch failed, using fallback:", err);
+    return { regions: buildFallbackRegions(), vpcId: null };
   }
 
   if (!response.ok) {
-    return { regions: [], vpcId: null };
+    console.warn(`[Regions] serverInfo ${response.status}, using fallback`);
+    return { regions: buildFallbackRegions(), vpcId: null };
   }
 
-  const data = (await response.json()) as {
+  let data: {
     requestStatus?: { serverId?: string };
     metaData?: Array<{ key: string; value: string }>;
   };
+  try {
+    data = (await response.json()) as typeof data;
+  } catch (err) {
+    console.warn("[Regions] serverInfo JSON parse failed, using fallback:", err);
+    return { regions: buildFallbackRegions(), vpcId: null };
+  }
 
-  // Extract VPC ID
   const vpcId = data.requestStatus?.serverId ?? null;
+  const meta = data.metaData ?? [];
+  const byKey = new Map(meta.map((e) => [e.key, e.value]));
 
-  // Extract regions
-  const regions = (data.metaData ?? [])
+  // Primary: parse gfn-regions list if present (most reliable)
+  const regionsFromList: StreamRegion[] = [];
+  const gfnRegionsRaw = byKey.get("gfn-regions");
+  if (gfnRegionsRaw) {
+    const names = gfnRegionsRaw
+      .split(",")
+      .map((n) => n.trim())
+      .filter(Boolean);
+    for (const name of names) {
+      const urlRaw = byKey.get(name);
+      if (!urlRaw?.startsWith("https://")) continue;
+      regionsFromList.push({
+        name,
+        url: urlRaw.endsWith("/") ? urlRaw : `${urlRaw}/`,
+      });
+    }
+  }
+
+  // Secondary: all https entries that are not gfn- prefixed (legacy)
+  const regionsFromHttps = meta
     .filter(
       (entry) =>
         entry.value.startsWith("https://") &&
         entry.key !== "gfn-regions" &&
-        !entry.key.startsWith("gfn-"),
+        !entry.key.startsWith("gfn-") &&
+        !entry.key.startsWith("local-"),
     )
     .map<StreamRegion>((entry) => ({
       name: entry.key,
       url: entry.value.endsWith("/") ? entry.value : `${entry.value}/`,
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+    }));
+
+  // Merge both, dedupe by url, keep best name
+  const merged = new Map<string, StreamRegion>();
+  for (const r of [...regionsFromList, ...regionsFromHttps]) {
+    if (!merged.has(r.url)) {
+      merged.set(r.url, r);
+    }
+  }
+
+  let regions = [...merged.values()].sort((a, b) => a.name.localeCompare(b.name));
+
+  // If still empty or only 1 region (like Netherlands North), use fallback + merge
+  if (regions.length <= 1) {
+    const fallback = buildFallbackRegions();
+    for (const fr of fallback) {
+      if (!merged.has(fr.url)) {
+        merged.set(fr.url, fr);
+      }
+    }
+    regions = [...merged.values()].sort((a, b) => a.name.localeCompare(b.name));
+    console.log(`[Regions] using fallback merged, total ${regions.length} (had ${regionsFromList.length} from list, ${regionsFromHttps.length} from https)`);
+  }
+
+  // If still empty, return pure fallback
+  if (regions.length === 0) {
+    regions = buildFallbackRegions();
+  }
 
   return { regions, vpcId };
 }

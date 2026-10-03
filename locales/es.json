@@ -160,7 +160,8 @@
   "navigation": {
     "home": "Tienda",
     "library": "Biblioteca",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "playtime": "Tiempo de juego"
   },
   "home": {
     "searchPlaceholder": "Buscar juegos...",
@@ -193,7 +194,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "Seguir jugando",
+      "eyebrowReady": "Listo para jugar",
+      "voiceResume": "{{value}} en el contador: retómalo donde lo dejaste.",
+      "voiceReady": "La plataforma está lista. Elige un título y la nube hace el resto.",
+      "cellLastPlayed": "Jugado por última vez",
+      "cellPlaytime": "Tiempo de juego",
+      "cellStore": "Tienda",
+      "cellGenre": "Género",
+      "launch": "Iniciar",
+      "ledger": "Ver registro",
+      "ledgerSessions": "{{count}} sesión registrada",
+      "ledgerSessions_plural": "{{count}} sesiones registradas",
+      "jumpBackIn": "Volver a jugar",
+      "mostPlayed": "Más jugados",
+      "favourites": "Favoritos",
+      "newInLibrary": "Nuevo en tu biblioteca",
+      "shelfCount": "{{count}} título",
+      "shelfCount_plural": "{{count}} títulos",
+      "seeAll": "Ver todo",
+      "seeAllCount": "Ver los {{count}}",
+      "allGames": "Todos los juegos"
+    },
+    "search": {
+      "resultsFor": "Buscar · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "Buscando...",
+      "loadMore": "Cargar más",
+      "clearSearch": "Limpiar búsqueda"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "Mover",
+      "commands": "Comandos",
+      "allShortcuts": "Todos los atajos"
+    },
+    "regionAuto": "Región automática",
+    "themeDeck": "Tema Deck"
   },
   "library": {
     "title": "Mi biblioteca",
@@ -232,6 +272,98 @@
       "ownedGamesAppearHere": "Los juegos que posees aparecerán aquí. Explora el catálogo para encontrar juegos.",
       "noGamesFound": "No se encontraron juegos",
       "noGamesMatch": "Ningún juego coincide con \"{{query}}\""
+    },
+    "deck": {
+      "allGames": "Todos los juegos",
+      "count": "{{count}} título",
+      "count_plural": "{{count}} títulos",
+      "chipAll": "Todo",
+      "hint": "Selecciona un título para inspeccionar",
+      "eyebrow": "Biblioteca // seleccionado",
+      "launch": "Iniciar",
+      "viewLedger": "Ver registro",
+      "emptyDetail": "Elige un juego de la cuadrícula para ver su consola.",
+      "cellLastPlayed": "Última vez",
+      "cellPlaytime": "Tiempo de juego",
+      "cellSessions": "Sesiones",
+      "cellStore": "Tienda",
+      "cellGenre": "Género"
+    },
+    "favoriteToggle": "Alternar favorito"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // registro",
+    "title": "Tiempo de juego",
+    "subtitle": "Cada minuto que realmente pasaste en el stream: las esperas en la cola se cuentan por separado.",
+    "loading": "Cargando tu registro…",
+    "hero": {
+      "label": "Total en stream",
+      "unitHours": "h",
+      "unitMinutes": "min",
+      "detail": "{{minutes}} minutos más, en {{sessions}} sesiones y {{games}} juegos",
+      "sr": "Has reproducido {{hours}} horas y {{minutes}} minutos en total.",
+      "peakHour": "Hora más activa: {{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "Sesiones",
+      "games": "Juegos jugados",
+      "longest": "Sesión más larga",
+      "average": "Sesión media",
+      "queue": "Tiempo en cola",
+      "setup": "Tiempo de conexión"
+    },
+    "live": {
+      "label": "En directo ahora",
+      "unknownGame": "Sesión actual"
+    },
+    "ranking": {
+      "title": "Ordenado por tiempo de juego",
+      "count": "{{count}} juego",
+      "count_plural": "{{count}} juegos",
+      "sessions": "{{count}} sesión",
+      "sessions_plural": "{{count}} sesiones",
+      "share": "{{value}} % del total",
+      "more": "+ {{count}} juegos sin mostrar",
+      "sr": "Puesto {{rank}}: {{title}}, {{value}} en {{sessions}} sesiones."
+    },
+    "cadence": {
+      "title": "Cuándo juegas",
+      "daily": "Último {{count}} día",
+      "daily_plural": "Últimos {{count}} días",
+      "dailySr": "{{value}} en este periodo",
+      "hourly": "Hora del día",
+      "hourlySr": "Hora punta {{hour}}:00 con {{value}}",
+      "weekday": "Día de la semana",
+      "weekdaySr": "Día más activo con {{value}}"
+    },
+    "recent": {
+      "title": "Sesiones recientes",
+      "empty": "Aún no hay sesiones finalizadas registradas.",
+      "wait": "{{value}} de espera",
+      "engineNative": "Nativo",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "Actualizar",
+      "reset": "Reiniciar registro",
+      "resetConfirmTitle": "Reiniciar tiempo de juego",
+      "resetConfirmBody": "Esto borra todas las horas registradas en este dispositivo. No se puede deshacer.",
+      "resetConfirm": "Borrar todo",
+      "resetCancel": "Conservar mis datos",
+      "updated": "Registro actualizado {{value}}"
+    },
+    "empty": {
+      "eyebrow": "Registro // vacío",
+      "title": "Todavía sin tiempo de juego",
+      "body": "Inicia un juego y el cronómetro arranca en cuanto llega el primer fotograma. Las esperas en la cola se registran aparte, así que solo cuenta el juego real.",
+      "cta": "Explorar la biblioteca"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}} h {{minutes}} min",
+      "hours": "{{count}} h",
+      "minutes": "{{count}} min",
+      "seconds": "{{count}} s"
     }
   },
   "gameCard": {
@@ -416,7 +548,9 @@
       "autoBest": "Automático (mejor)",
       "searchPlaceholder": "Buscar regiones...",
       "refreshPing": "Actualizar ping",
-      "noRegionsMatch": "Ninguna región coincide con \"{{query}}\""
+      "noRegionsMatch": "Ninguna región coincide con \"{{query}}\"",
+      "noRegionsAvailable": "No hay regiones disponibles",
+      "retry": "Reintentar"
     },
     "video": {
       "title": "Vídeo",
@@ -518,11 +652,10 @@
       "appLanguageHint": "Cambia el idioma de la interfaz de OpenNOW. El inglés se utiliza para cadenas no traducidas.",
       "accentColor": "Color de acento",
       "accentColorHint": "Aplica el acento seleccionado en la interfaz de usuario de escritorio estándar y persiste entre lanzamientos.",
-      "accentColorGreen": "OpenNOW Verde",
-      "accentColorBlue": "Azul cobalto",
-      "accentColorViolet": "violeta",
-      "accentColorAmber": "ámbar",
-      "accentColorRose": "rosa",
+      "accentColorNeon": "Neón",
+      "accentColorAzure": "Azur",
+      "accentColorWhite": "Blanco",
+      "accentColorSteel": "Acero",
       "hideStreamOverlayButtons": "Ocultar botones superpuestos de transmisión",
       "hideStreamOverlayButtonsHint": "Oculte los botones de micrófono, pantalla completa y finalizar sesión durante la transmisión.",
       "showStatsOnStreamLaunch": "Mostrar estadísticas al iniciar la transmisión",
@@ -696,5 +829,27 @@
     "queueAdPlayTimeout": "Tiempo de espera de reproducción de anuncios",
     "queueAdVideoStuck": "El vídeo del anuncio está bloqueado.",
     "queueAdUrlLoad": "Error al cargar la URL"
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "Versión digital PC",
+    "chooseStore": "Elige una tienda",
+    "chooseStoreHint": "¿Dónde tienes este juego y quieres jugar?",
+    "gameStores": "Tiendas:",
+    "subscriptions": "Suscripciones:",
+    "owned": "En propiedad",
+    "gameNotFound": "Juego no encontrado",
+    "subscribed": "Suscrito",
+    "notSubscribed": "No suscrito",
+    "markAsOwned": "MARCAR COMO POSEÍDO",
+    "buy": "COMPRAR",
+    "storeHint": "Selecciona una tienda donde poseas el juego y márcalo como poseído.",
+    "rating": "Clasificación",
+    "publisher": "Editor",
+    "developer": "Desarrollador",
+    "gallery": "Galería"
+  },
+  "common": {
+    "clear": "Limpiar búsqueda",
+    "back": "Back"
   }
 }

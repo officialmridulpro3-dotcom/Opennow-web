@@ -160,7 +160,8 @@
   "navigation": {
     "home": "매장",
     "library": "도서관",
-    "settings": "설정"
+    "settings": "설정",
+    "playtime": "플레이 시간"
   },
   "home": {
     "searchPlaceholder": "게임 검색...",
@@ -193,7 +194,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "이어서 플레이",
+      "eyebrowReady": "플레이 준비 완료",
+      "voiceResume": "누적 {{value}} — 중단한 지점부터 이어가세요.",
+      "voiceReady": "덱이 준비됐습니다. 타이틀을 고르면 나머지는 클라우드가 처리합니다.",
+      "cellLastPlayed": "마지막 플레이",
+      "cellPlaytime": "플레이 시간",
+      "cellStore": "스토어",
+      "cellGenre": "장르",
+      "launch": "실행",
+      "ledger": "기록 보기",
+      "ledgerSessions": "세션 {{count}}개 기록됨",
+      "ledgerSessions_plural": "세션 {{count}}개 기록됨",
+      "jumpBackIn": "다시 시작하기",
+      "mostPlayed": "가장 많이 플레이",
+      "favourites": "즐겨찾기",
+      "newInLibrary": "라이브러리 신규",
+      "shelfCount": "{{count}}개",
+      "shelfCount_plural": "{{count}}개",
+      "seeAll": "전체 보기",
+      "seeAllCount": "{{count}}개 전체 보기",
+      "allGames": "전체 게임"
+    },
+    "search": {
+      "resultsFor": "검색 · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "검색 중...",
+      "loadMore": "더 불러오기",
+      "clearSearch": "검색 지우기"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "이동",
+      "commands": "명령",
+      "allShortcuts": "모든 단축키"
+    },
+    "regionAuto": "자동 리전",
+    "themeDeck": "덱 테마"
   },
   "library": {
     "title": "내 라이브러리",
@@ -232,6 +272,98 @@
       "ownedGamesAppearHere": "소유한 게임이 여기에 표시됩니다. 게임을 찾으려면 카탈로그를 탐색하세요.",
       "noGamesFound": "게임을 찾을 수 없습니다.",
       "noGamesMatch": "\"{{query}}\"와 일치하는 게임이 없습니다."
+    },
+    "deck": {
+      "allGames": "전체 게임",
+      "count": "{{count}}개",
+      "count_plural": "{{count}}개",
+      "chipAll": "전체",
+      "hint": "콘솔을 보려면 타이틀을 선택하세요",
+      "eyebrow": "라이브러리 // 선택됨",
+      "launch": "실행",
+      "viewLedger": "기록 보기",
+      "emptyDetail": "그리드에서 게임을 선택하면 콘솔이 표시됩니다.",
+      "cellLastPlayed": "마지막 플레이",
+      "cellPlaytime": "플레이 시간",
+      "cellSessions": "세션",
+      "cellStore": "스토어",
+      "cellGenre": "장르"
+    },
+    "favoriteToggle": "즐겨찾기 전환"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // 기록",
+    "title": "플레이 시간",
+    "subtitle": "실제로 스트림에 머문 시간만 집계합니다 — 대기열 시간은 별도로 계산됩니다.",
+    "loading": "기록을 불러오는 중…",
+    "hero": {
+      "label": "총 스트리밍 시간",
+      "unitHours": "시간",
+      "unitMinutes": "분",
+      "detail": "추가 {{minutes}}분 · {{sessions}}회 세션 · {{games}}개 게임",
+      "sr": "총 {{hours}}시간 {{minutes}}분을 스트리밍했습니다.",
+      "peakHour": "가장 많이 플레이한 시간: {{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "세션",
+      "games": "플레이한 게임",
+      "longest": "최장 세션",
+      "average": "평균 세션",
+      "queue": "대기열 시간",
+      "setup": "연결 시간"
+    },
+    "live": {
+      "label": "지금 스트리밍 중",
+      "unknownGame": "현재 세션"
+    },
+    "ranking": {
+      "title": "플레이 시간 순위",
+      "count": "{{count}}개 게임",
+      "count_plural": "{{count}}개 게임",
+      "sessions": "{{count}}회 세션",
+      "sessions_plural": "{{count}}회 세션",
+      "share": "전체의 {{value}}%",
+      "more": "나머지 {{count}}개 게임은 표시되지 않습니다",
+      "sr": "{{rank}}위: {{title}} — {{sessions}}회 세션, {{value}}"
+    },
+    "cadence": {
+      "title": "플레이 시간대",
+      "daily": "최근 {{count}}일",
+      "daily_plural": "최근 {{count}}일",
+      "dailySr": "이 기간 동안 {{value}}",
+      "hourly": "시간대",
+      "hourlySr": "{{hour}}:00에 정점, {{value}}",
+      "weekday": "요일",
+      "weekdaySr": "가장 많은 요일 {{value}}"
+    },
+    "recent": {
+      "title": "최근 세션",
+      "empty": "아직 완료된 세션이 기록되지 않았습니다.",
+      "wait": "대기 {{value}}",
+      "engineNative": "네이티브",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "새로고침",
+      "reset": "기록 초기화",
+      "resetConfirmTitle": "플레이 시간 초기화",
+      "resetConfirmBody": "이 기기에 기록된 모든 시간이 삭제되며 되돌릴 수 없습니다.",
+      "resetConfirm": "모두 삭제",
+      "resetCancel": "통계 유지",
+      "updated": "기록 업데이트: {{value}}"
+    },
+    "empty": {
+      "eyebrow": "기록 // 비어 있음",
+      "title": "아직 기록된 플레이 시간이 없습니다",
+      "body": "게임을 실행하면 첫 프레임이 도착하는 순간부터 시간이 집계됩니다. 대기열 시간은 별도로 기록되므로 실제 플레이만 포함됩니다.",
+      "cta": "라이브러리 둘러보기"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}}시간 {{minutes}}분",
+      "hours": "{{count}}시간",
+      "minutes": "{{count}}분",
+      "seconds": "{{count}}초"
     }
   },
   "gameCard": {
@@ -416,7 +548,9 @@
       "autoBest": "자동(최상)",
       "searchPlaceholder": "지역 검색...",
       "refreshPing": "핑 새로 고침",
-      "noRegionsMatch": "\"{{query}}\"와 일치하는 지역이 없습니다."
+      "noRegionsMatch": "\"{{query}}\"와 일치하는 지역이 없습니다.",
+      "noRegionsAvailable": "사용 가능한 리전이 없습니다",
+      "retry": "다시 시도"
     },
     "video": {
       "title": "비디오",
@@ -518,11 +652,10 @@
       "appLanguageHint": "OpenNOW의 인터페이스 언어를 변경합니다. 번역되지 않은 문자열에는 영어가 사용됩니다.",
       "accentColor": "악센트 색상",
       "accentColorHint": "표준 데스크톱 UI 전체에 선택한 악센트를 적용하고 실행 간에 유지됩니다.",
-      "accentColorGreen": "OpenNOW 그린",
-      "accentColorBlue": "코발트블루",
-      "accentColorViolet": "보라색",
-      "accentColorAmber": "호박색",
-      "accentColorRose": "장미",
+      "accentColorNeon": "네온",
+      "accentColorAzure": "애저",
+      "accentColorWhite": "화이트",
+      "accentColorSteel": "스틸",
       "hideStreamOverlayButtons": "스트림 오버레이 버튼 숨기기",
       "hideStreamOverlayButtonsHint": "스트리밍하는 동안 마이크, 전체 화면 및 세션 종료 버튼을 숨깁니다.",
       "showStatsOnStreamLaunch": "스트림 시작 시 통계 표시",
@@ -696,5 +829,27 @@
     "queueAdPlayTimeout": "광고 재생 시간 초과",
     "queueAdVideoStuck": "광고 영상이 멈췄어요",
     "queueAdUrlLoad": "URL을 로드하는 중 오류가 발생했습니다."
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "PC 디지털 버전",
+    "chooseStore": "게임 스토어 선택",
+    "chooseStoreHint": "이 게임을 어디에서 소유하고 플레이하고 싶나요?",
+    "gameStores": "게임 스토어:",
+    "subscriptions": "구독:",
+    "owned": "보유 중",
+    "gameNotFound": "게임을 찾을 수 없음",
+    "subscribed": "구독 중",
+    "notSubscribed": "구독 안 함",
+    "markAsOwned": "보유로 표시",
+    "buy": "구매",
+    "storeHint": "게임을 보유한 스토어를 선택한 뒤 보유로 표시하면 라이브러리에 추가됩니다.",
+    "rating": "등급",
+    "publisher": "퍼블리셔",
+    "developer": "개발사",
+    "gallery": "갤러리"
+  },
+  "common": {
+    "clear": "검색 지우기",
+    "back": "Back"
   }
 }

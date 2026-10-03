@@ -72,7 +72,31 @@ workflow**. It produces two artifacts:
   per-user install (no admin).
 - `OpenNOW-windows-x64-portable` — a ZIP you can extract anywhere and run.
 
-The workflow also runs automatically on pushes to `main` and version tags.
+The workflow also runs automatically on pushes to `main`, `arena/**` branches
+and version tags.
+
+### Installer link (published release)
+
+Artifacts above need a signed-in GitHub session with repo access and expire
+after 90 days, so every successful build also republishes the same binaries to
+a **rolling GitHub Release** with stable asset names:
+
+| Build source | Release tag |
+|---|---|
+| `main` | `latest-build` |
+| any other branch | `latest-build-<branch-with-dashes>` (marked pre-release) |
+| version tag `v*` | that tag |
+
+Assets in each release:
+
+- `OpenNOW-windows-x64-setup.exe` — the NSIS installer
+- `OpenNOW-windows-x64-portable.zip` — extract and run `OpenNOW.exe`
+- `SHA256SUMS.txt` — checksums for both
+
+Because the tag is reused, a direct download URL keeps working and always
+serves the newest build of that branch, e.g.
+`.../releases/download/latest-build/OpenNOW-windows-x64-setup.exe`. The release
+body records the commit, the workflow run and the build time.
 
 ### Local build (Windows)
 

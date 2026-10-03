@@ -7,7 +7,7 @@ import type {
   GamePanelResult,
 } from "@shared/gfn";
 import { cacheManager } from "../services/cacheManager";
-import { appendPublicGameSearchMatches, mergePublicGameVariants } from "./publicGames";
+import { appendMissingPublicGames, appendPublicGameSearchMatches, mergePublicGameVariants } from "./publicGames";
 import { fetchLcarsGraphQl } from "./lcarsGraphql";
 import {
   accountScopedGamesCacheKey,
@@ -28,8 +28,9 @@ import {
   getVpcId,
 } from "./gameAppMapper";
 
-const DEFAULT_CATALOG_FETCH_COUNT = 120;
-const MAX_CATALOG_PAGES = 3;
+const DEFAULT_CATALOG_FETCH_COUNT = 200;
+const MAX_CATALOG_PAGES = 20;
+const MAX_CATALOG_PAGES_SEARCH = 5;
 const DEFAULT_SORT_ID = "relevance";
 
 interface FilterSortDefinitionsResponse {
@@ -362,7 +363,8 @@ ${appFields}
   let endCursor = "";
   let cursor = "";
 
-  for (let page = 0; page < MAX_CATALOG_PAGES; page += 1) {
+  const maxPages = searchQuery.length > 0 ? MAX_CATALOG_PAGES_SEARCH : MAX_CATALOG_PAGES;
+  for (let page = 0; page < maxPages; page += 1) {
     const variables = searchQuery.length > 0
       ? {
           vpcId,
@@ -414,11 +416,10 @@ ${appFields}
 
   const games = dedupeGames(await enrichGamesWithMetadata(token, vpcId, collectedApps.map(appToGame), input.proxyUrl));
   const publicGames = await fetchPublicGames(input.proxyUrl);
-  const gamesWithPublicVariants = appendPublicGameSearchMatches(
-    mergePublicGameVariants(games, publicGames),
-    publicGames,
-    searchQuery,
-  );
+  const mergedWithVariants = mergePublicGameVariants(games, publicGames);
+  const gamesWithPublicVariants = searchQuery
+    ? appendPublicGameSearchMatches(mergedWithVariants, publicGames, searchQuery)
+    : appendMissingPublicGames(mergedWithVariants, publicGames);
 
   return {
     games: gamesWithPublicVariants,

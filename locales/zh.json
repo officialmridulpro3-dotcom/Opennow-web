@@ -160,7 +160,8 @@
   "navigation": {
     "home": "商店",
     "library": "图书馆",
-    "settings": "设置"
+    "settings": "设置",
+    "playtime": "游戏时长"
   },
   "home": {
     "searchPlaceholder": "搜索游戏...",
@@ -193,7 +194,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "继续游戏",
+      "eyebrowReady": "随时可玩",
+      "voiceResume": "累计 {{value}} — 从上次中断的地方继续。",
+      "voiceReady": "主机已就绪。选择一款游戏，其余交给云端。",
+      "cellLastPlayed": "上次游玩",
+      "cellPlaytime": "游戏时长",
+      "cellStore": "商店",
+      "cellGenre": "类型",
+      "launch": "启动",
+      "ledger": "查看记录",
+      "ledgerSessions": "已记录 {{count}} 次会话",
+      "ledgerSessions_plural": "已记录 {{count}} 次会话",
+      "jumpBackIn": "继续上次的游戏",
+      "mostPlayed": "游玩最多",
+      "favourites": "收藏",
+      "newInLibrary": "游戏库新增",
+      "shelfCount": "{{count}} 款",
+      "shelfCount_plural": "{{count}} 款",
+      "seeAll": "查看全部",
+      "seeAllCount": "查看全部 {{count}} 款",
+      "allGames": "全部游戏"
+    },
+    "search": {
+      "resultsFor": "搜索 · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "搜索中...",
+      "loadMore": "加载更多",
+      "clearSearch": "清除搜索"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "移动",
+      "commands": "命令",
+      "allShortcuts": "全部快捷键"
+    },
+    "regionAuto": "自动区域",
+    "themeDeck": "Deck 主题"
   },
   "library": {
     "title": "我的图书馆",
@@ -232,6 +272,98 @@
       "ownedGamesAppearHere": "您拥有的游戏将出现在这里。浏览目录查找游戏。",
       "noGamesFound": "没有找到游戏",
       "noGamesMatch": "没有游戏匹配“{{query}}”"
+    },
+    "deck": {
+      "allGames": "全部游戏",
+      "count": "{{count}} 款",
+      "count_plural": "{{count}} 款",
+      "chipAll": "全部",
+      "hint": "选择一款游戏查看控制台",
+      "eyebrow": "游戏库 // 已选",
+      "launch": "启动",
+      "viewLedger": "查看记录",
+      "emptyDetail": "从网格中选择一款游戏以查看其控制台。",
+      "cellLastPlayed": "上次游玩",
+      "cellPlaytime": "游戏时长",
+      "cellSessions": "会话",
+      "cellStore": "商店",
+      "cellGenre": "类型"
+    },
+    "favoriteToggle": "切换收藏"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // 记录",
+    "title": "游戏时长",
+    "subtitle": "只统计你真正在串流中的时间——排队等待单独计算。",
+    "loading": "正在加载记录…",
+    "hero": {
+      "label": "累计串流",
+      "unitHours": "小时",
+      "unitMinutes": "分钟",
+      "detail": "另有 {{minutes}} 分钟，共 {{sessions}} 次会话、{{games}} 款游戏",
+      "sr": "你总共串流了 {{hours}} 小时 {{minutes}} 分钟。",
+      "peakHour": "最活跃时段：{{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "会话次数",
+      "games": "玩过的游戏",
+      "longest": "最长会话",
+      "average": "平均会话",
+      "queue": "排队时间",
+      "setup": "连接时间"
+    },
+    "live": {
+      "label": "正在串流",
+      "unknownGame": "当前会话"
+    },
+    "ranking": {
+      "title": "按时长排行",
+      "count": "{{count}} 款游戏",
+      "count_plural": "{{count}} 款游戏",
+      "sessions": "{{count}} 次会话",
+      "sessions_plural": "{{count}} 次会话",
+      "share": "占总时长 {{value}}%",
+      "more": "另有 {{count}} 款游戏未显示",
+      "sr": "第 {{rank}} 名：{{title}}，{{sessions}} 次会话共 {{value}}"
+    },
+    "cadence": {
+      "title": "游戏时间分布",
+      "daily": "最近 {{count}} 天",
+      "daily_plural": "最近 {{count}} 天",
+      "dailySr": "该时段共 {{value}}",
+      "hourly": "一天中的小时",
+      "hourlySr": "峰值 {{hour}}:00，共 {{value}}",
+      "weekday": "星期",
+      "weekdaySr": "最活跃的星期共 {{value}}"
+    },
+    "recent": {
+      "title": "最近会话",
+      "empty": "还没有已完成的会话记录。",
+      "wait": "等待 {{value}}",
+      "engineNative": "原生",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "刷新",
+      "reset": "清空记录",
+      "resetConfirmTitle": "清空游戏时长",
+      "resetConfirmBody": "这将删除此设备上记录的所有时长，且无法撤销。",
+      "resetConfirm": "全部删除",
+      "resetCancel": "保留统计",
+      "updated": "记录更新于 {{value}}"
+    },
+    "empty": {
+      "eyebrow": "记录 // 空",
+      "title": "还没有游戏时长",
+      "body": "启动游戏后，计时会在第一帧画面到达时开始。排队等待单独统计，因此只有真正的游戏时间会被计入。",
+      "cta": "浏览游戏库"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}} 小时 {{minutes}} 分",
+      "hours": "{{count}} 小时",
+      "minutes": "{{count}} 分",
+      "seconds": "{{count}} 秒"
     }
   },
   "gameCard": {
@@ -416,7 +548,9 @@
       "autoBest": "自动（最佳）",
       "searchPlaceholder": "搜索地区...",
       "refreshPing": "刷新 ping",
-      "noRegionsMatch": "没有区域匹配“{{query}}”"
+      "noRegionsMatch": "没有区域匹配“{{query}}”",
+      "noRegionsAvailable": "没有可用区域",
+      "retry": "重试"
     },
     "video": {
       "title": "视频",
@@ -518,11 +652,10 @@
       "appLanguageHint": "更改 OpenNOW 的界面语言。英语用于未翻译的字符串。",
       "accentColor": "强调色",
       "accentColorHint": "在标准桌面 UI 中应用选定的重音并在启动之间保持不变。",
-      "accentColorGreen": "OpenNOW 绿色",
-      "accentColorBlue": "钴蓝",
-      "accentColorViolet": "紫罗兰色",
-      "accentColorAmber": "琥珀色",
-      "accentColorRose": "玫瑰",
+      "accentColorNeon": "霓虹绿",
+      "accentColorAzure": "天蓝",
+      "accentColorWhite": "纯白",
+      "accentColorSteel": "钢灰",
       "hideStreamOverlayButtons": "隐藏流叠加按钮",
       "hideStreamOverlayButtonsHint": "流式传输时隐藏麦克风、全屏和结束会话按钮。",
       "showStatsOnStreamLaunch": "显示流启动的统计信息",
@@ -696,5 +829,27 @@
     "queueAdPlayTimeout": "广告播放超时",
     "queueAdVideoStuck": "广告视频卡住了",
     "queueAdUrlLoad": "加载网址时出错"
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "PC 数字版",
+    "chooseStore": "选择游戏商店",
+    "chooseStoreHint": "你在哪里拥有这款游戏并想游玩？",
+    "gameStores": "游戏商店：",
+    "subscriptions": "订阅：",
+    "owned": "已拥有",
+    "gameNotFound": "未找到游戏",
+    "subscribed": "已订阅",
+    "notSubscribed": "未订阅",
+    "markAsOwned": "标记为已拥有",
+    "buy": "购买",
+    "storeHint": "选择你拥有该游戏的商店，然后标记为已拥有以添加到游戏库。",
+    "rating": "分级",
+    "publisher": "发行商",
+    "developer": "开发商",
+    "gallery": "图库"
+  },
+  "common": {
+    "clear": "清除搜索",
+    "back": "Back"
   }
 }

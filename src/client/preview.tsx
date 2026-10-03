@@ -4,13 +4,15 @@ import type { GameInfo } from "@shared/gfn";
 import "./styles.css";
 import { MotionProvider, pageTransition } from "./components/MotionProvider";
 import { AnimatePresence, m } from "motion/react";
-import { SideRail } from "./components/SideRail";
+import { SideRail, type SideRailPage } from "./components/SideRail";
 import { TopHeader } from "./components/TopHeader";
 import { StatusBar } from "./components/StatusBar";
 import { AccountMenu } from "./components/AccountMenu";
 import { HomePage } from "./components/HomePage";
 import { LibraryPage } from "./components/LibraryPage";
 import { StreamLoading } from "./components/StreamLoading";
+import { PlaytimePage } from "./components/PlaytimePage";
+import type { PlaytimeGameAggregate, PlaytimeSessionRecord, PlaytimeSummary } from "@shared/playtime";
 
 // Portrait box art via Steam's library_600x900 capsule (real posters).
 const cap = (appId: number) => `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/library_600x900.jpg`;
@@ -83,6 +85,97 @@ const PLAYTIME = Object.fromEntries(
 );
 const FAVOURITES = ["553850", "1245620", "526870", "2138710", "105600", "367520", "504230"];
 
+/** A plausible ledger, derived from the same seed the other pages use. */
+const PLAYTIME_SUMMARY: PlaytimeSummary = (() => {
+  const games: PlaytimeGameAggregate[] = SEED.map((seed) => {
+    const totalSeconds = (seed.hours ?? 0) * 3600;
+    const sessionCount = Math.max(1, Math.round((seed.hours ?? 0) / 2.5));
+    const lastPlayedAt = seed.daysAgo !== undefined
+      ? new Date(Date.now() - seed.daysAgo * 86_400_000).toISOString()
+      : null;
+    return {
+      gameId: seed.id,
+      title: seed.title,
+      store: seed.store,
+      imageUrl: hero(seed.appId),
+      totalSeconds,
+      queueSeconds: sessionCount * 95,
+      setupSeconds: sessionCount * 28,
+      sessionCount,
+      longestSessionSeconds: Math.round((totalSeconds / sessionCount) * 2.4),
+      firstPlayedAt: lastPlayedAt
+        ? new Date(Date.parse(lastPlayedAt) - sessionCount * 3 * 86_400_000).toISOString()
+        : null,
+      lastPlayedAt,
+    };
+  }).sort((a, b) => b.totalSeconds - a.totalSeconds);
+
+  const recent: PlaytimeSessionRecord[] = games.slice(0, 9).map((game, index) => {
+    const endedAt = new Date(Date.now() - index * 7 * 3_600_000);
+    const seconds = Math.max(600, Math.round(game.longestSessionSeconds * (0.4 + index * 0.06)));
+    return {
+      playbackId: `preview-${game.gameId}`,
+      gameId: game.gameId,
+      title: game.title,
+      store: game.store,
+      imageUrl: game.imageUrl,
+      startedAt: new Date(endedAt.getTime() - seconds * 1000).toISOString(),
+      endedAt: endedAt.toISOString(),
+      seconds,
+      queueSeconds: 120 + index * 35,
+      setupSeconds: 22 + index * 3,
+      region: "EU-West",
+      clientMode: index % 3 === 0 ? "native" : "webrtc",
+    };
+  });
+
+  const totals = games.reduce(
+    (acc, game) => ({
+      streamedSeconds: acc.streamedSeconds + game.totalSeconds,
+      queueSeconds: acc.queueSeconds + game.queueSeconds,
+      setupSeconds: acc.setupSeconds + game.setupSeconds,
+      sessionCount: acc.sessionCount + game.sessionCount,
+      longestSessionSeconds: Math.max(acc.longestSessionSeconds, game.longestSessionSeconds),
+    }),
+    { streamedSeconds: 0, queueSeconds: 0, setupSeconds: 0, sessionCount: 0, longestSessionSeconds: 0 },
+  );
+
+  // Evening-heavy day curve, weekend-heavy week curve.
+  const hourlyShape = [2, 1, 1, 0, 0, 1, 2, 4, 6, 8, 9, 10, 12, 11, 10, 12, 16, 22, 34, 48, 58, 52, 34, 14];
+  const hourlySeconds = hourlyShape.map((weight) => weight * 240);
+  const weekdayShape = [46, 22, 20, 24, 28, 42, 58];
+  const weekdaySeconds = weekdayShape.map((weight) => weight * 300);
+  const daily = Array.from({ length: 14 }, (_, index) => {
+    const date = new Date(Date.now() - (13 - index) * 86_400_000);
+    const weight = 0.35 + Math.abs(Math.sin(index * 1.7)) * 1.5;
+    return {
+      date: date.toLocaleDateString("en-CA"),
+      seconds: Math.round(weight * 5_400),
+      sessionCount: Math.max(1, Math.round(weight * 2)),
+    };
+  });
+
+  return {
+    version: 1,
+    updatedAt: new Date().toISOString(),
+    legacyImported: true,
+    totals: {
+      ...totals,
+      gamesPlayed: games.filter((game) => game.totalSeconds > 0).length,
+      averageSessionSeconds: totals.sessionCount > 0
+        ? Math.round(totals.streamedSeconds / totals.sessionCount)
+        : 0,
+      firstPlayedAt: games.map((game) => game.firstPlayedAt).filter(Boolean).sort()[0] ?? null,
+      lastPlayedAt: games.map((game) => game.lastPlayedAt).filter(Boolean).sort().slice(-1)[0] ?? null,
+    },
+    games,
+    recent,
+    hourlySeconds,
+    weekdaySeconds,
+    daily,
+  };
+})();
+
 const USER = {
   userId: "u1",
   displayName: "Zephyr",
@@ -97,12 +190,19 @@ const SORT_OPTIONS = [
 ] as never[];
 
 function PreviewApp() {
-  const [page, setPage] = useState<"home" | "library" | "settings">("library");
+  // Phase 1 preview opens on the new Playtime ledger; the rail still reaches
+  // home, library and the queue deck demo.
+  const [page, setPage] = useState<SideRailPage>("playtime");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState("1091500");
   const [sortId, setSortId] = useState("last_played");
   const [accountOpen, setAccountOpen] = useState(false);
-  const [loadingDemo, setLoadingDemo] = useState<null | "queue" | "setup" | "connecting">(null);
+  const [loadingDemo, setLoadingDemo] = useState<null | "queue" | "setup" | "connecting" | "error">(null);
+  const [demoArt, setDemoArt] = useState(true);
+  const [demoAds, setDemoAds] = useState(false);
+  const [demoLive, setDemoLive] = useState(true);
+  // A stream that started 21 minutes ago, so the live strip has a real clock.
+  const liveStartedAtMs = useMemo(() => Date.now() - 21 * 60_000, []);
   const anchorRef = useRef<HTMLElement | null>(null);
 
   const filtered = useMemo(() => {
@@ -110,7 +210,13 @@ function PreviewApp() {
     return q ? GAMES.filter((g) => g.title.toLowerCase().includes(q)) : GAMES;
   }, [query]);
 
-  const title = page === "home" ? "Home" : page === "library" ? "Library" : "Settings";
+  const title = page === "home"
+    ? "Home"
+    : page === "library"
+      ? "Library"
+      : page === "playtime"
+        ? "Playtime"
+        : "Settings";
   const count = GAMES.length;
 
   return (
@@ -163,6 +269,7 @@ function PreviewApp() {
           searchQuery={query}
           onSearchChange={setQuery}
           searchPlaceholder={page === "library" ? "Search your library..." : "Search games..."}
+          hideSearch={page === "playtime"}
         />
         <main className="main-content">
           <AnimatePresence mode="wait" initial={false}>
@@ -198,6 +305,7 @@ function PreviewApp() {
                   favoriteGameIds={FAVOURITES}
                   streamMetaLabel="1440p · 120 fps · AV1"
                   onNavigateLibrary={() => setPage("library")}
+                  onNavigatePlaytime={() => setPage("playtime")}
                 />
               )}
               {page === "library" && (
@@ -218,6 +326,19 @@ function PreviewApp() {
                   selectedSortId={sortId}
                   onSortChange={setSortId}
                   featuredGames={GAMES}
+                  onNavigatePlaytime={() => setPage("playtime")}
+                />
+              )}
+              {page === "playtime" && (
+                <PlaytimePage
+                  summary={PLAYTIME_SUMMARY}
+                  libraryGames={GAMES}
+                  isRecording={demoLive}
+                  streamStartedAtMs={demoLive ? liveStartedAtMs : null}
+                  recordingGameTitle="Cyberpunk 2077"
+                  onRefreshPlaytime={async () => {}}
+                  onResetPlaytime={async () => {}}
+                  onNavigateLibrary={() => setPage("library")}
                 />
               )}
               {page === "settings" && (
@@ -229,9 +350,9 @@ function PreviewApp() {
         <StatusBar />
       </div>
 
-      {/* Connecting-screen demo controls */}
+      {/* Queue / connecting screen demo controls */}
       <div style={{ position: "fixed", top: 14, right: 18, zIndex: 3000, display: "flex", gap: 8 }}>
-        {(["queue", "setup", "connecting"] as const).map((s) => (
+        {(["queue", "setup", "connecting", "error"] as const).map((s) => (
           <button
             key={s}
             type="button"
@@ -245,16 +366,80 @@ function PreviewApp() {
             {s}
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => setDemoArt((a) => !a)}
+          title="Toggle key art to preview the no-cover fallback"
+          style={{
+            height: 30, padding: "0 12px", borderRadius: 999, cursor: "pointer",
+            border: "1px solid rgba(255,255,255,0.16)", background: "rgba(20,22,26,0.8)",
+            color: "#fff", fontSize: 12, fontWeight: 700, fontFamily: "inherit",
+          }}
+        >
+          {demoArt ? "art: on" : "art: off"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setDemoLive((l) => !l)}
+          title="Toggle the live session strip on the Playtime page"
+          style={{
+            height: 30, padding: "0 12px", borderRadius: 999, cursor: "pointer",
+            border: "1px solid rgba(255,255,255,0.16)", background: "rgba(20,22,26,0.8)",
+            color: "#fff", fontSize: 12, fontWeight: 700, fontFamily: "inherit",
+          }}
+        >
+          {demoLive ? "live: on" : "live: off"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setDemoAds((a) => !a)}
+          title="Hold the queue for an ad to preview how the body line absorbs it"
+          style={{
+            height: 30, padding: "0 12px", borderRadius: 999, cursor: "pointer",
+            border: "1px solid rgba(255,255,255,0.16)", background: "rgba(20,22,26,0.8)",
+            color: "#fff", fontSize: 12, fontWeight: 700, fontFamily: "inherit",
+          }}
+        >
+          {demoAds ? "ads: on" : "ads: off"}
+        </button>
       </div>
 
       {loadingDemo && (
         <StreamLoading
           gameTitle="Cyberpunk 2077"
-          gameCover={cap(1091500)}
+          gameCover={demoArt ? cap(1091500) : undefined}
+          gameHero={demoArt ? hero(1091500) : undefined}
           platformStore="STEAM"
-          status={loadingDemo}
+          adState={
+            demoAds
+              ? ({
+                  isAdsRequired: true,
+                  message: "Watch to keep your place in line",
+                  sessionAds: [{ adId: "demo-ad", title: "Sponsored break" }],
+                  ads: [],
+                } as never)
+              : undefined
+          }
+          status={loadingDemo === "error" ? "queue" : loadingDemo}
           queuePosition={loadingDemo === "queue" ? 42 : undefined}
           estimatedWait={loadingDemo === "queue" ? "3 min" : undefined}
+          diagnosticLine={
+            loadingDemo === "queue"
+              ? "poll #12 · seat status 1 · setup step n/a · queue 42 · endpoints 0"
+              : undefined
+          }
+          error={
+            loadingDemo === "error"
+              ? {
+                  title: "No cloud rig available",
+                  description:
+                    "Every rig in Europe West is busy right now, so your place in the queue was released. Try again in a few minutes.",
+                  code: "ERR_NO_CAPACITY",
+                  actionLabel: "Try again",
+                }
+              : undefined
+          }
+          onErrorAction={() => setLoadingDemo("queue")}
           onCancel={() => setLoadingDemo(null)}
         />
       )}

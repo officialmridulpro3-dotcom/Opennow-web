@@ -17,6 +17,12 @@ import {
   createUnsupportedNativeStreamerStatus,
 } from "@shared/gfn";
 import { unsupportedNativeCloudGsyncCapabilities } from "@shared/cloudGsync";
+import type {
+  LegacyPlaytimeRecord,
+  PlaytimeImportPayload,
+  PlaytimeSessionPayload,
+  PlaytimeSummary,
+} from "@shared/playtime";
 import type { BrowserSession, DeviceLoginChallengePayload, DeviceLoginPollPayload } from "./types";
 import { WEB_DEFAULT_SETTINGS } from "./webDefaults";
 
@@ -68,12 +74,17 @@ export function getNativeStatus(): Promise<NativeSidecarStatus> {
 
 const NATIVE_START_FETCH_TIMEOUT_MS = 150_000;
 
-export function startNativeStream(sessionId: string, context: unknown): Promise<NativeSidecarStatus> {
+export function startNativeStream(sessionId: string, context: unknown, gameTitle?: string): Promise<NativeSidecarStatus> {
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), NATIVE_START_FETCH_TIMEOUT_MS);
+  const body: Record<string, unknown> = { sessionId, context };
+  if (gameTitle?.trim()) {
+    // Spread gameTitle into context so finalizeNativeContext can pick it up
+    (body.context as Record<string, unknown>) = { ...(context as Record<string, unknown>), gameTitle: gameTitle.trim() };
+  }
   return api<NativeSidecarStatus>("/api/native/start", {
     method: "POST",
-    body: JSON.stringify({ sessionId, context }),
+    body: JSON.stringify(body),
     signal: controller.signal,
   }).finally(() => window.clearTimeout(timer)).catch((error: unknown) => {
     if (error instanceof DOMException && error.name === "AbortError") {
@@ -408,7 +419,77 @@ const bridge: OpenNowApi = {
   sendIceCandidate: (payload: IceCandidatePayload) => sendSignal("ice", payload),
   sendNativeInput: () => {},
   setNativeInputPaused: () => {},
-  updateNativeRenderSurface: () => {},
+  updateNativeRenderSurface: (() => {
+    let cachedHandle: string | null = null;
+    let lastRect: { x: number; y: number; width: number; height: number } | null = null;
+    let lastVisible = false;
+    let pendingHandleFetch = false;
+    return (input: { rect: { x: number; y: number; width: number; height: number } | null; visible: boolean; deviceScaleFactor: number; showStats?: boolean; windowHandle?: string; screenRect?: { x: number; y: number; width: number; height: number } | null }) => {
+      const tauri = (window as any).__TAURI__ as { core?: { invoke?: (cmd: string, args?: any) => Promise<any> } } | undefined;
+      const invoke = tauri?.core?.invoke?.bind(tauri.core);
+      const doSend = (handle?: string) => {
+        const rectKey = input.rect ? `${input.rect.x},${input.rect.y},${input.rect.width},${input.rect.height}` : "null";
+        const visibleKey = input.visible;
+        // Don't spam identical rect without handle, but always send if we have handle
+        if (lastRect && `${lastRect.x},${lastRect.y},${lastRect.width},${lastRect.height}` === rectKey && lastVisible === visibleKey && !handle && !input.windowHandle) {
+          return;
+        }
+        lastRect = input.rect ? { ...input.rect } : null;
+        lastVisible = visibleKey;
+        const finalHandle = handle || input.windowHandle || cachedHandle || undefined;
+        // If visible and no handle, we must still try to get handle — don't send without handle for visible=true
+        // because backend errors "missing Qt window handle" and shows black screen
+        if (input.visible && !finalHandle) {
+          // Trigger handle fetch and retry
+          if (invoke && !pendingHandleFetch) {
+            pendingHandleFetch = true;
+            void invoke("get_window_handle").then((h: string) => {
+              pendingHandleFetch = false;
+              if (h && h !== "0") {
+                cachedHandle = h;
+                doSend(h);
+              }
+            }).catch(() => {
+              pendingHandleFetch = false;
+            });
+          }
+          // Don't send visible=true without handle yet — wait for handle
+          return;
+        }
+        const body = {
+          rect: input.rect,
+          visible: input.visible,
+          deviceScaleFactor: input.deviceScaleFactor,
+          showStats: input.showStats ?? false,
+          windowHandle: finalHandle,
+          screenRect: input.screenRect || input.rect,
+        };
+        void api("/api/native/surface", { method: "POST", body: JSON.stringify(body) }).catch(() => {});
+      };
+      if (invoke) {
+        if (cachedHandle) {
+          doSend(cachedHandle);
+        } else if (!pendingHandleFetch) {
+          pendingHandleFetch = true;
+          void invoke("get_window_handle").then((h: string) => {
+            pendingHandleFetch = false;
+            if (h && h !== "0") {
+              cachedHandle = h;
+            }
+            doSend(h && h !== "0" ? h : undefined);
+          }).catch(() => {
+            pendingHandleFetch = false;
+            doSend();
+          });
+        } else {
+          // Handle fetch pending, but if we have input.windowHandle, send it
+          if (input.windowHandle) doSend(input.windowHandle);
+        }
+      } else {
+        doSend(input.windowHandle);
+      }
+    };
+  })(),
   updateNativeShortcuts: () => {},
   requestKeyframe: (payload: KeyframeRequest) => sendSignal("keyframe", payload),
   onSignalingEvent: (listener) => { signalingListeners.add(listener); return () => signalingListeners.delete(listener); },
@@ -468,6 +549,37 @@ const bridge: OpenNowApi = {
   ackReleaseHighlights: async () => {},
   onReleaseHighlightsShow: () => () => {},
 };
+
+/**
+ * Playtime ledger (server-backed, stored in the installation's app-data
+ * directory). The browser keeps a cache of the last summary so the Playtime
+ * page paints instantly; these calls are the source of truth.
+ */
+export function fetchPlaytimeSummary(): Promise<PlaytimeSummary> {
+  return api<PlaytimeSummary>("/api/playtime");
+}
+
+export function recordPlaytimeSession(
+  payload: PlaytimeSessionPayload,
+  options: { keepalive?: boolean } = {},
+): Promise<PlaytimeSummary> {
+  return api<PlaytimeSummary>("/api/playtime/session", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    ...(options.keepalive ? { keepalive: true } : {}),
+  });
+}
+
+export function importLegacyPlaytime(records: LegacyPlaytimeRecord[]): Promise<PlaytimeSummary> {
+  return api<PlaytimeSummary>("/api/playtime/import", {
+    method: "POST",
+    body: JSON.stringify({ records } satisfies PlaytimeImportPayload),
+  });
+}
+
+export function resetPlaytimeLedger(): Promise<PlaytimeSummary> {
+  return api<PlaytimeSummary>("/api/playtime", { method: "DELETE" });
+}
 
 export function installBrowserBridge(): void {
   window.openNow = bridge;

@@ -2,7 +2,39 @@ import {
   Check, Globe, Heart, MapPin, Monitor, ScanLine, Gauge, Film, SlidersHorizontal, HardDrive, Sparkles, Wifi, Zap, Search, X, Cpu,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type JSX } from "react";
+import { createPortal } from "react-dom";
 import { m } from "motion/react";
+
+const FRONTEND_FALLBACK_REGIONS: StreamRegion[] = [
+  { name: "US Central - Dallas", url: "https://np-dal-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "US East - Ashburn", url: "https://np-ash-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "US Midwest - Chicago", url: "https://np-chi-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "US Northeast - Newark", url: "https://np-nwk-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "US Northwest - Seattle", url: "https://np-sea-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "US South - Atlanta", url: "https://np-atl-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "US Southeast - Miami", url: "https://np-mia-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "US Southwest - Los Angeles", url: "https://np-lax-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "US West - San Jose", url: "https://np-sjc-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "CA East - Montreal", url: "https://np-yul-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "EU Northeast - Amsterdam", url: "https://np-ams-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "EU Central - Frankfurt", url: "https://np-frk-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "EU Southwest - Paris", url: "https://np-par-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "EU West - London", url: "https://np-lhr-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "EU Northwest - Stockholm", url: "https://np-sto-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "EU Southeast - Sofia", url: "https://np-sof-02.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "EU Southeast - Warsaw", url: "https://np-waw-02.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "Netherlands North", url: "https://np-ams-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "Germany North", url: "https://np-frk-09.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "UK South", url: "https://np-lhr-09.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "France Central", url: "https://np-par-09.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "Africa South - Johannesburg", url: "https://np-jnb-02.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "SA East - Sao Paulo", url: "https://np-gru-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "AU East - Sydney", url: "https://np-syd-02.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "AU West - Perth", url: "https://np-per-02.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "JP East - Tokyo", url: "https://np-nrt-08.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "SG - Singapore", url: "https://np-sin-02.cloudmatchbeta.nvidiagrid.net/" },
+  { name: "KR - Seoul", url: "https://np-icn-02.cloudmatchbeta.nvidiagrid.net/" },
+];
 import type {
   ColorQuality,
   EntitledResolution,
@@ -76,6 +108,28 @@ export function SettingsStreamSection({
   const { locale, t } = useTranslation();
   const [regionSearch, setRegionSearch] = useState("");
   const [regionDropdownOpen, setRegionDropdownOpen] = useState(false);
+  const regionSelectorRef = useRef<HTMLDivElement | null>(null);
+  const regionDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  // Effective regions: merge backend regions + frontend fallback, always show all
+  const effectiveRegions = useMemo(() => {
+    const byUrl = new Map<string, StreamRegion>();
+    for (const r of regions) {
+      if (r.url && r.name) byUrl.set(r.url, r);
+    }
+    const needFallback = regions.length <= 1;
+    for (const fr of FRONTEND_FALLBACK_REGIONS) {
+      if (!byUrl.has(fr.url)) byUrl.set(fr.url, fr);
+    }
+    if (byUrl.size <= 1) {
+      byUrl.clear();
+      for (const fr of FRONTEND_FALLBACK_REGIONS) {
+        byUrl.set(fr.url, fr);
+      }
+    }
+    return [...byUrl.values()].sort((a, b) => a.name.localeCompare(b.name));
+  }, [regions]);
+
   const codecTestOpen = codecResults !== null || codecTesting;
   const [codecAdvancedOpen, setCodecAdvancedOpen] = useState(false);
   const [resolutionDropdownOpen, setResolutionDropdownOpen] = useState(false);
@@ -118,10 +172,11 @@ export function SettingsStreamSection({
   }, [zortosCommunityProxyPromptVisible, onBlockingOverlayChange]);
 
   const runPingTest = useCallback(async () => {
-    if (regions.length === 0) return;
+    const targetRegions = effectiveRegions.length > 0 ? effectiveRegions : regions;
+    if (targetRegions.length === 0) return;
     setIsPinging(true);
     try {
-      const results = await window.openNow.pingRegions(regions);
+      const results = await window.openNow.pingRegions(targetRegions);
       const pingMap = new Map<string, number | null>();
       let bestUrl: string | null = null;
       let bestPing = Infinity;
@@ -145,21 +200,28 @@ export function SettingsStreamSection({
   }, [regions]);
 
   useEffect(() => {
-    if (regions.length > 0 && pingResults.size > 0) {
-      const allRegionsCached = regions.every(r => pingResults.has(r.url));
+    const target = effectiveRegions.length > 0 ? effectiveRegions : regions;
+    if (target.length > 0 && pingResults.size > 0) {
+      const allRegionsCached = target.every(r => pingResults.has(r.url));
       if (!allRegionsCached) {
-        setPingResults(new Map());
-        setBestRegionUrl(null);
-        clearStoredRegionPingResults();
+        // Don't clear if we just added fallback, only clear if major mismatch
+        if (pingResults.size < target.length * 0.5) {
+          setPingResults(new Map());
+          setBestRegionUrl(null);
+          clearStoredRegionPingResults();
+        }
       }
     }
-  }, [regions, pingResults]);
+  }, [effectiveRegions, regions, pingResults]);
 
   useEffect(() => {
-    if (regions.length > 0 && pingResults.size === 0 && !isPinging) {
+    const target = effectiveRegions.length > 0 ? effectiveRegions : regions;
+    if (target.length > 0 && pingResults.size === 0 && !isPinging) {
       runPingTest();
     }
-  }, [regions, pingResults.size, isPinging, runPingTest]);
+  }, [effectiveRegions, regions, pingResults.size, isPinging, runPingTest]);
+
+
 
   const effectiveEntitledResolutions = useMemo(
     () => {
@@ -254,8 +316,8 @@ export function SettingsStreamSection({
   const filteredRegions = useMemo(() => {
     const q = regionSearch.trim().toLowerCase();
     const filtered = q
-      ? regions.filter((r) => r.name.toLowerCase().includes(q))
-      : [...regions];
+      ? effectiveRegions.filter((r) => r.name.toLowerCase().includes(q) || r.url.toLowerCase().includes(q))
+      : [...effectiveRegions];
 
     filtered.sort((a, b) => {
       const pingA = pingResults.get(a.url);
@@ -270,13 +332,13 @@ export function SettingsStreamSection({
     });
 
     return filtered;
-  }, [regions, regionSearch, pingResults]);
+  }, [effectiveRegions, regionSearch, pingResults]);
 
   const selectedRegionName = useMemo(() => {
     if (!settings.region) return t("settings.region.autoBest");
-    const found = regions.find((r) => r.url === settings.region);
+    const found = effectiveRegions.find((r) => r.url === settings.region) ?? regions.find((r) => r.url === settings.region);
     return found?.name ?? settings.region;
-  }, [settings.region, regions, locale, t]);
+  }, [settings.region, effectiveRegions, regions, locale, t]);
 
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent): void => {
@@ -284,9 +346,24 @@ export function SettingsStreamSection({
       if (resolutionDropdownRef.current && !resolutionDropdownRef.current.contains(target)) {
         setResolutionDropdownOpen(false);
       }
+      const insideSelector = regionSelectorRef.current?.contains(target) ?? false;
+      const insideDropdown = regionDropdownRef.current?.contains(target) ?? false;
+      if (!insideSelector && !insideDropdown) {
+        setRegionDropdownOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === "Escape") {
+        setResolutionDropdownOpen(false);
+        setRegionDropdownOpen(false);
+      }
     };
     document.addEventListener("mousedown", handlePointerDown);
-    return () => document.removeEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   const openZortosCommunityProxyPrompt = useCallback((): void => {
@@ -398,11 +475,13 @@ export function SettingsStreamSection({
           </div>
           <div className="settings-rows">
             <div className="settings-row settings-row--column settings-row--region">
-            <div className="region-selector">
+            <div className="region-selector" ref={regionSelectorRef}>
       <button
         className={`region-selected ${regionDropdownOpen ? "open" : ""}`}
         onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
         type="button"
+        aria-haspopup="listbox"
+        aria-expanded={regionDropdownOpen}
       >
         <span className="region-selected-leading">
           <Globe size={15} className="region-selected-icon" />
@@ -410,7 +489,7 @@ export function SettingsStreamSection({
         </span>
         {!settings.region && bestRegionUrl && (
           (() => {
-            const bestRegion = regions.find(r => r.url === bestRegionUrl);
+            const bestRegion = effectiveRegions.find(r => r.url === bestRegionUrl) ?? regions.find(r => r.url === bestRegionUrl);
             const pingValue = pingResults.get(bestRegionUrl);
             if (bestRegion && pingValue !== undefined && pingValue !== null) {
               return (
@@ -444,41 +523,52 @@ export function SettingsStreamSection({
         </svg>
       </button>
 
-      {regionDropdownOpen && (
-        <div className="region-dropdown">
-          <div className="region-dropdown-header">
-            <div className="region-dropdown-search">
-              <Search size={14} className="region-dropdown-search-icon" />
-              <input
-                type="text"
-                className="region-dropdown-search-input"
-                placeholder={t("settings.region.searchPlaceholder")}
-                value={regionSearch}
-                onChange={(e) => setRegionSearch(e.target.value)}
-                autoFocus
-              />
-              {regionSearch && (
-                <button className="region-dropdown-clear" onClick={() => setRegionSearch("")} type="button">
-                  <X size={12} />
+      {regionDropdownOpen && typeof document !== "undefined" && createPortal(
+        <>
+          <div className="region-dropdown-backdrop" onClick={() => setRegionDropdownOpen(false)} aria-hidden="true" />
+          <div ref={regionDropdownRef} className="region-dropdown region-dropdown--deck region-dropdown--portal" role="listbox" style={{
+            position: "fixed",
+            top: regionSelectorRef.current ? `${regionSelectorRef.current.getBoundingClientRect().bottom + 8}px` : "50%",
+            left: regionSelectorRef.current ? `${regionSelectorRef.current.getBoundingClientRect().left}px` : "50%",
+            width: regionSelectorRef.current ? `${regionSelectorRef.current.getBoundingClientRect().width}px` : "320px",
+            zIndex: 9999,
+          }}>
+            <div className="region-dropdown-header">
+              <div className="region-dropdown-search">
+                <Search size={14} className="region-dropdown-search-icon" />
+                <input
+                  type="text"
+                  className="region-dropdown-search-input"
+                  placeholder={t("settings.region.searchPlaceholder") || "Search regions..."}
+                  value={regionSearch}
+                  onChange={(e) => setRegionSearch(e.target.value)}
+                  autoFocus
+                />
+                {regionSearch && (
+                  <button className="region-dropdown-clear" onClick={() => setRegionSearch("")} type="button" aria-label="Clear">
+                    <X size={12} />
+                  </button>
+                )}
+              </div>
+              <div className="region-dropdown-meta">
+                <span className="region-dropdown-count">{filteredRegions.length} / {effectiveRegions.length}</span>
+                <button
+                  className="region-ping-refresh"
+                  onClick={runPingTest}
+                  disabled={isPinging}
+                  type="button"
+                  title={t("settings.region.refreshPing") || "Refresh ping"}
+                >
+                  {isPinging ? (
+                    <MotionSpinner size={14} label="Testing regions" />
+                  ) : (
+                    <Wifi size={14} />
+                  )}
                 </button>
-              )}
+              </div>
             </div>
-            <button
-              className="region-ping-refresh"
-              onClick={runPingTest}
-              disabled={isPinging}
-              type="button"
-              title={t("settings.region.refreshPing")}
-            >
-              {isPinging ? (
-                <MotionSpinner size={14} label="Testing regions" />
-              ) : (
-                <Wifi size={14} />
-              )}
-            </button>
-          </div>
 
-          <div className="region-dropdown-list">
+            <div className="region-dropdown-list">
             <button
               className={`region-dropdown-item ${!settings.region ? "active" : ""}`}
               onClick={() => {
@@ -492,7 +582,7 @@ export function SettingsStreamSection({
               <div className="region-auto-best-info">
                 <span>{t("settings.region.autoBest")}</span>
                 {bestRegionUrl && (() => {
-                  const bestRegion = regions.find(r => r.url === bestRegionUrl);
+                  const bestRegion = effectiveRegions.find(r => r.url === bestRegionUrl) ?? regions.find(r => r.url === bestRegionUrl);
                   const bestPing = pingResults.get(bestRegionUrl);
                   if (bestRegion && bestPing !== undefined && bestPing !== null) {
                     return (
@@ -549,11 +639,21 @@ export function SettingsStreamSection({
               </button>
             ))}
 
-            {filteredRegions.length === 0 && regions.length > 0 && (
-              <div className="region-dropdown-empty">{t("settings.region.noRegionsMatch", { query: regionSearch })}</div>
+            {filteredRegions.length === 0 && effectiveRegions.length > 0 && (
+              <div className="region-dropdown-empty">{t("settings.region.noRegionsMatch", { query: regionSearch }) || `No regions match "${regionSearch}"`}</div>
+            )}
+            {effectiveRegions.length === 0 && (
+              <div className="region-dropdown-empty region-dropdown-empty--no-regions">
+                <div>{t("settings.region.noRegionsAvailable") || "No regions available"}</div>
+                <button type="button" className="region-dropdown-retry" onClick={runPingTest} disabled={isPinging}>
+                  {isPinging ? (t("app.status.testing") || "Testing...") : (t("settings.region.retry") || "Retry")}
+                </button>
+              </div>
             )}
           </div>
         </div>
+        </>,
+        document.body
       )}
             </div>
             </div>
@@ -837,27 +937,23 @@ export function SettingsStreamSection({
           </span>
         </div>
 
-        {/* Native streaming client (NVST sidecar, desktop only) */}
+        {/* Native streaming client — now the ONLY mode, WebRTC removed */}
         <div className="settings-row settings-row--column">
           <div className="settings-row-top settings-row-top--compact">
             <label className="settings-label settings-label--wrap">
               <span className="settings-label-title">
                 <Monitor size={15} className="settings-label-icon" />
                 {t("settings.nativeStreamer.nativeStreaming")}
-                <span className="settings-inline-badge settings-inline-badge--beta">{t("app.labels.experimental")}</span>
+                <span className="settings-inline-badge">Native only</span>
               </span>
             </label>
             <label className="settings-toggle">
-              <input
-                type="checkbox"
-                checked={settings.streamClientMode === "native"}
-                onChange={(e) => handleChange("streamClientMode", e.target.checked ? "native" : "web")}
-              />
+              <input type="checkbox" checked={true} disabled title="Native window is the only mode" />
               <span className="settings-toggle-track" />
             </label>
           </div>
           <span className="settings-subtle-hint">
-            {t("settings.nativeStreamer.nativeStreamingHint")}
+            Native window is the only mode now — WebRTC removed. All games open in the revamped native window with full deck UI.
           </span>
         </div>
         {/* Video filters (client-side GPU shaders) */}

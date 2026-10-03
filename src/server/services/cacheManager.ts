@@ -13,7 +13,7 @@ interface CachedData<T> {
 }
 
 const CACHE_DIRECTORY = "gfn-cache";
-const CACHE_TTL_MS = 12 * 60 * 60 * 1000;
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days for instant load on reopen
 
 const THUMBNAILS_DIRECTORY = "media-thumbs";
 

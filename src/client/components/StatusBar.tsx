@@ -11,15 +11,15 @@ interface Hint {
   label: string;
 }
 
-export function StatusBar({ regionLabel = "Auto region", themeLabel = "Nocturne theme" }: StatusBarProps): JSX.Element {
+export function StatusBar({ regionLabel, themeLabel }: StatusBarProps): JSX.Element {
   const { t } = useTranslation();
 
   const hints: Hint[] = [
-    { keys: ["Arrows"], label: "Move" },
+    { keys: ["Arrows"], label: t("statusbar.hint.move") },
     { keys: ["Enter"], label: t("app.actions.play") },
     { keys: ["/"], label: t("app.actions.search") },
-    { keys: ["Ctrl", "K"], label: "Commands" },
-    { keys: ["?"], label: "All shortcuts" },
+    { keys: ["Ctrl", "K"], label: t("statusbar.hint.commands") },
+    { keys: ["?"], label: t("statusbar.hint.allShortcuts") },
   ];
 
   return (
@@ -40,10 +40,12 @@ export function StatusBar({ regionLabel = "Auto region", themeLabel = "Nocturne 
       <div className="status-bar-meta">
         <span className="status-bar-meta-item">
           <span className="status-bar-dot" />
-          {regionLabel}
+          {regionLabel ?? t("statusbar.regionAuto")}
         </span>
         <span className="status-bar-meta-sep" />
-        <span className="status-bar-meta-item status-bar-meta-item--muted">{themeLabel}</span>
+        <span className="status-bar-meta-item status-bar-meta-item--muted">
+          {themeLabel ?? t("statusbar.themeDeck")}
+        </span>
       </div>
     </footer>
   );

@@ -114,6 +114,9 @@ interface StreamViewProps {
   nativeError?: string | null;
   onStartNative?: () => void;
   onStopNative?: () => void;
+  gameCover?: string | null;
+  gameHero?: string | null;
+  gameIcon?: string | null;
 }
 
 export function StreamView({
@@ -175,6 +178,9 @@ export function StreamView({
   nativeError = null,
   onStartNative,
   onStopNative,
+  gameCover = null,
+  gameHero = null,
+  gameIcon = null,
 }: StreamViewProps): JSX.Element {
   const { t } = useTranslation();
   const [showHints, setShowHints] = useState(true);
@@ -242,10 +248,16 @@ export function StreamView({
     };
   }, [isConnecting]);
 
-  const streamVideoReady = streamHasVideo || videoElementHasFrame;
+  // When native is running in-app, video element is a hole for SDL child — treat as ready to avoid black WebRTC screen
+  const streamVideoReady = streamHasVideo || videoElementHasFrame || nativeRunning;
   const [sessionReadySplashVisible, setSessionReadySplashVisible] = useState(false);
   const sessionReadySplashShownRef = useRef(false);
-  const showStatsHud = showStats && !nativeRendererActive && !isConnecting;
+  // Main window is always bare: plain black + video only.
+  // All deck chrome (mesh, scan, bloom, sweep, ticks, chamfered HUD, slanted, brackets, 96px numeral)
+  // lives in the native window's Rust overlay (overlay.rs), not in the React main window.
+  // This satisfies: non-native window has no styling, native window has all styling.
+  const isNativeDeck = false;
+  const showStatsHud = false;
 
   useEffect(() => {
     if (isConnecting) {
@@ -962,17 +974,34 @@ export function StreamView({
       const rect = element.getBoundingClientRect();
       const width = Math.round(rect.width * dpr);
       const height = Math.round(rect.height * dpr);
-      const visible = width >= 2 && height >= 2 && !showSideBar && !exitPrompt.open;
+      // FIX black screen: keep native visible even when sidebar open — sidebar is React overlay on top
+      // Previously visible=false when sidebar open hid the SDL child and showed black
+      const visible = width >= 2 && height >= 2;
+      // For embedded, rect should be relative to parent client area, not viewport with DPR scaling?
+      // Use physical pixels but keep left/top as 0,0 for full-window fill to avoid black bars
+      // When in native mode, we want video to fill entire window, not just video element rect
+      const isNativeMode = nativeRunning || nativeRendererActive || gstreamerEnabled;
       updateSurface({
         deviceScaleFactor: dpr,
         visible,
         showStats: showStats || showNativeStats,
         rect: visible
+          ? isNativeMode
+            ? { x: 0, y: 0, width, height }
+            : {
+                x: Math.round(rect.left * dpr),
+                y: Math.round(rect.top * dpr),
+                width,
+                height,
+              }
+          : null,
+        // screenRect for macOS absolute positioning
+        screenRect: visible
           ? {
-              x: Math.round(rect.left * dpr),
-              y: Math.round(rect.top * dpr),
-              width,
-              height,
+              x: Math.round(window.screenX + rect.left),
+              y: Math.round(window.screenY + rect.top),
+              width: Math.round(rect.width),
+              height: Math.round(rect.height),
             }
           : null,
       });
@@ -1423,11 +1452,49 @@ export function StreamView({
     };
   }, [exitPrompt.open, isConnecting, showSideBar]);
 
-  const nativeInternalHole =
-    (nativeRendererActive || gstreamerEnabled) && !nativeExternalRenderer;
+  // NEW: User wants NO separate OpenNOW stream window — native stream must replace black screen IN-APP
+  // with stylish GFN sidebar (520px). So always embed SDL child inside Tauri window via transparent hole,
+  // never hide video. External popup is eliminated; we keep OPENNOW_NATIVE_EXTERNAL_RENDERER=1 backend
+  // for overlay (Ctrl+G stylish menu) but force frontend to treat as embedded.
+  const isEmbeddedNative = nativeRunning || nativeRendererActive || gstreamerEnabled;
+  const nativeInternalHole = isEmbeddedNative;
+  const isExternalNative = false; // no separate window, no black screen message
+
+  // Make entire page transparent when native hole active so SDL child behind WebView2 shows through
+  useEffect(() => {
+    if (!nativeInternalHole) return;
+    const html = document.documentElement;
+    const body = document.body;
+    const root = document.getElementById("root");
+    const prevHtmlBg = html.style.background;
+    const prevBodyBg = body.style.background;
+    const prevRootBg = root?.style.background || "";
+    html.style.setProperty("background", "transparent", "important");
+    html.style.setProperty("background-color", "transparent", "important");
+    body.style.setProperty("background", "transparent", "important");
+    body.style.setProperty("background-color", "transparent", "important");
+    if (root) {
+      root.style.setProperty("background", "transparent", "important");
+      root.style.setProperty("background-color", "transparent", "important");
+    }
+    // Also set CSS variable --bg-a to transparent to override body background rule
+    html.style.setProperty("--bg-a", "transparent");
+    return () => {
+      html.style.background = prevHtmlBg;
+      body.style.background = prevBodyBg;
+      if (root) root.style.background = prevRootBg;
+      html.style.removeProperty("--bg-a");
+      html.style.removeProperty("background");
+      html.style.removeProperty("background-color");
+      body.style.removeProperty("background");
+      body.style.removeProperty("background-color");
+      root?.style.removeProperty("background");
+      root?.style.removeProperty("background-color");
+    };
+  }, [nativeInternalHole]);
 
   return (
-    <div className={["sv", streamVideoReady ? "sv--video-ready" : "sv--video-pending", nativeInternalHole ? "sv--native-hole" : "", className].filter(Boolean).join(" ")}>
+    <div className={["sv", streamVideoReady ? "sv--video-ready" : "sv--video-pending", nativeInternalHole ? "sv--native-hole" : "", isNativeDeck ? "sv--native-deck" : "sv--bare", className].filter(Boolean).join(" ")}>
       <m.video
         ref={setVideoRef}
         autoPlay
@@ -1482,8 +1549,8 @@ export function StreamView({
         {showSideBar && (
           <SideBar
             key="quick-menu-sidebar"
-            title="Quick menu"
-            className="sv-sidebar"
+            title={`GFN Menu — ${gameTitle}`}
+            className="sv-sidebar sv-sidebar--gfn"
             elementRef={sidebarRef}
             onClose={() => setShowSideBar(false)}
             footer={(
@@ -1504,7 +1571,57 @@ export function StreamView({
               </>
             )}
           >
-            <div className="sidebar-tabs" role="tablist" aria-label="Quick menu pages">
+            {/* GFN-style hero with game image — full fledged long sidebar */}
+            <div className="sidebar-gfn-hero" aria-label="Current game">
+              <div className="sidebar-gfn-hero-art">
+                {gameHero || gameCover ? (
+                  <img
+                    src={(gameHero || gameCover) as string}
+                    alt={gameTitle}
+                    className="sidebar-gfn-hero-img"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="sidebar-gfn-hero-placeholder" aria-hidden>
+                    <Gamepad2 size={32} />
+                  </div>
+                )}
+                <div className="sidebar-gfn-hero-grad" aria-hidden />
+                <div className="sidebar-gfn-hero-glow" aria-hidden />
+              </div>
+              <div className="sidebar-gfn-hero-content">
+                <div className="sidebar-gfn-hero-kicker">
+                  <span className="sidebar-gfn-live-dot" aria-hidden />
+                  <span>Now streaming</span>
+                  {PlatformIcon && platformName && (
+                    <span className="sidebar-gfn-platform" title={platformName}>
+                      <span className="sidebar-gfn-platform-icon"><PlatformIcon /></span>
+                      <span>{platformName}</span>
+                    </span>
+                  )}
+                </div>
+                <h2 className="sidebar-gfn-title">{gameTitle}</h2>
+                <div className="sidebar-gfn-metrics">
+                  <div className="sidebar-gfn-metric">
+                    <span className="sidebar-gfn-metric-label">Playtime left</span>
+                    <span className="sidebar-gfn-metric-value">
+                      <RemainingPlaytimeIndicator subscriptionInfo={subscriptionInfo} startedAtMs={sessionStartedAtMs} active={isStreaming} className="sidebar-gfn-metric-value-inner" />
+                    </span>
+                  </div>
+                  {sessionTimeRemainingText !== null && (
+                    <div className="sidebar-gfn-metric">
+                      <span className="sidebar-gfn-metric-label">{t("sidebar.sessionTimeRemaining")}</span>
+                      <strong className="sidebar-gfn-metric-value">
+                        <Clock3 size={14} />
+                        {sessionTimeRemainingText}
+                      </strong>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="sidebar-tabs sidebar-gfn-tabs" role="tablist" aria-label="Quick menu pages">
               <button
                 type="button"
                 role="tab"
@@ -1549,33 +1666,6 @@ export function StreamView({
 
             {activeSidebarTab === "session" && (
               <div className="sidebar-page sidebar-page--session" role="tabpanel">
-                <section className="sidebar-session-card" aria-label="Current stream session">
-                  <div className="sidebar-session-card-head">
-                    <span className="sidebar-session-kicker">Now streaming</span>
-                    <strong className="sidebar-session-title">{gameTitle}</strong>
-                    {PlatformIcon && platformName && (
-                      <span className="sidebar-session-platform" title={platformName}>
-                        <span className="sidebar-session-platform-icon"><PlatformIcon /></span>
-                        <span>{platformName}</span>
-                      </span>
-                    )}
-                  </div>
-                </section>
-                <section className="sidebar-session-metrics" aria-label="Session time">
-                  <div className="sidebar-metric">
-                    <span>Total playtime left</span>
-                    <RemainingPlaytimeIndicator subscriptionInfo={subscriptionInfo} startedAtMs={sessionStartedAtMs} active={isStreaming} className="sidebar-metric-value" />
-                  </div>
-                  {sessionTimeRemainingText !== null && (
-                    <div className="sidebar-metric">
-                      <span>{t("sidebar.sessionTimeRemaining")}</span>
-                      <strong className="sidebar-metric-value">
-                        <Clock3 size={14} />
-                        {sessionTimeRemainingText}
-                      </strong>
-                    </div>
-                  )}
-                </section>
                 <section className="sidebar-section">
                   <div className="sidebar-section-header">
                     <span>Session controls</span>
@@ -2127,256 +2217,280 @@ export function StreamView({
         </div>
       )}
 
-      {/* Gradient background when no video */}
-      <StreamEmptyState diagnosticsStore={diagnosticsStore} />
-      <StreamWaitingForVideo diagnosticsStore={diagnosticsStore} isConnecting={isConnecting} />
-
-      {/* Connecting overlay */}
-      {isConnecting && (
-        <div className="sv-connect">
-          <div className="sv-connect-inner">
-            <MotionSpinner className="sv-connect-spin" size={44} label="Connecting to stream" />
-            <p className="sv-connect-title">Connecting to {gameTitle}</p>
-            {PlatformIcon && (
-              <div className="sv-connect-platform" title={platformName}>
-                <span className="sv-connect-platform-icon">
-                  <PlatformIcon />
-                </span>
-                <span>{platformName}</span>
-              </div>
-            )}
-            <p className="sv-connect-sub">Setting up stream...</p>
+      {/* ── BARE MODE (WebRTC non-native): plain black + video only, zero chrome ── */}
+      {!isNativeDeck ? (
+        <>
+          {/* No gradient, no deck — just black */}
+          <div className="sv-empty sv-empty--bare" aria-hidden>
+            <div className="sv-empty-grad sv-empty-grad--bare" />
           </div>
-        </div>
-      )}
 
-      {sessionCounterEnabled && !isConnecting && (
-        <div
-          className={`sv-session-clock${showSessionClock ? " is-visible" : ""}`}
-          title="Current gaming session elapsed time"
-          aria-hidden={!showSessionClock}
-        >
-          <SessionElapsedIndicator startedAtMs={sessionStartedAtMs} active={isStreaming} />
-        </div>
-      )}
-
-      {streamWarning && !isConnecting && !exitPrompt.open && (
-        <div
-          className={`sv-time-warning sv-time-warning--${streamWarning.tone}`}
-          title="Session time warning"
-        >
-          <AlertTriangle size={14} />
-          <span>
-            {streamWarning.message}
-            {warningSeconds ? ` · ${warningSeconds} left` : ""}
-          </span>
-        </div>
-      )}
-
-      {antiAfkToggleAck && !isConnecting && (
-        <div className={`sv-afk-ack sv-afk-ack--${antiAfkToggleAck}`} role="status" aria-live="polite">
-          <span className="sv-afk-ack-dot" aria-hidden />
-          <span>{antiAfkToggleAck === "on" ? "Anti-AFK on" : "Anti-AFK off"}</span>
-        </div>
-      )}
-
-      <SessionStartedSplash
-        visible={sessionReadySplashVisible && !isConnecting}
-        gameTitle={gameTitle}
-        onFinished={handleSessionReadySplashFinished}
-      />
-
-      <AnimatePresence>
-        {showStatsHud && (
-          <StreamStatsHud
-            key="stream-stats-hud"
-            diagnosticsStore={diagnosticsStore}
-            gstreamerEnabled={gstreamerEnabled}
-            serverRegion={serverRegion}
-            sessionTimeRemainingText={showSessionTimeRemainingInStats ? sessionTimeRemainingText : null}
-            hintsVisible={showHints}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Microphone toggle button */}
-      <MicrophoneIndicator
-        diagnosticsStore={diagnosticsStore}
-        showAntiAfkIndicator={antiAfkEnabled && showAntiAfkIndicator}
-        hideStreamButtons={hideStreamButtons}
-        isConnecting={isConnecting}
-        onToggleMicrophone={onToggleMicrophone}
-      />
-
-      {/* Anti-AFK indicator */}
-      <AntiAfkIndicator
-        diagnosticsStore={diagnosticsStore}
-        antiAfkEnabled={antiAfkEnabled}
-        showAntiAfkIndicator={showAntiAfkIndicator}
-        isConnecting={isConnecting}
-      />
-
-      {/* Recording indicator (top-left, stacked below other badges) */}
-      <RecordingIndicator
-        diagnosticsStore={diagnosticsStore}
-        showAntiAfkIndicator={antiAfkEnabled && showAntiAfkIndicator}
-        hideStreamButtons={hideStreamButtons}
-        isConnecting={isConnecting}
-        isRecording={isRecording}
-        onToggleMicrophone={onToggleMicrophone}
-        recordingDurationMs={recordingDurationMs}
-      />
-
-      {exitPrompt.open && !isConnecting && typeof document !== "undefined" && createPortal(
-        <div className="sv-exit" role="dialog" aria-modal="true" aria-label="Exit stream confirmation">
-          <button
-            type="button"
-            className="sv-exit-backdrop"
-            onClick={onCancelExit}
-            aria-label="Cancel exit"
-          />
-          <div className="sv-exit-card">
-            <div className="sv-exit-kicker">Session Control</div>
-            <h3 className="sv-exit-title">Exit Stream?</h3>
-            <p className="sv-exit-text">
-              Do you really want to exit <strong>{exitPrompt.gameTitle}</strong>?
-            </p>
-            <p className="sv-exit-subtext">Your current cloud gaming session will be closed.</p>
-            <div className="sv-exit-actions">
-              <button type="button" className="sv-exit-btn sv-exit-btn-cancel" onClick={onCancelExit}>
-                Keep Playing
-              </button>
-              <button type="button" className="sv-exit-btn sv-exit-btn-confirm" onClick={onConfirmExit}>
-                Exit Stream
-              </button>
-            </div>
-            <div className="sv-exit-hint">
-              <span><kbd>Enter</kbd> confirm · <kbd>Esc</kbd> cancel</span>
-              <span><kbd>A</kbd> select · <kbd>B</kbd> cancel</span>
-            </div>
-          </div>
-        </div>,
-        document.body,
-      )}
-
-      {/* Fullscreen toggle */}
-      {!hideStreamButtons && (
-        <button
-          className="sv-fs"
-          onClick={handleFullscreenToggle}
-          title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-        >
-          {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
-        </button>
-      )}
-
-      {/* Native (NVST) sidecar playback — desktop app with bundled engine only */}
-      {nativeSupported && !hideStreamButtons && (
-        <div
-          style={{
-            position: "fixed",
-            right: 16,
-            bottom: 64,
-            zIndex: 30,
-            maxWidth: 300,
-            padding: "10px 12px",
-            borderRadius: 10,
-            background: "rgba(10, 14, 20, 0.88)",
-            border: "1px solid rgba(120, 200, 120, 0.35)",
-            color: "#d7e6d7",
-            fontSize: 12,
-            lineHeight: 1.45,
-          }}
-        >
-          {nativeRunning ? (
-            <>
-              <div style={{ fontWeight: 700, marginBottom: 4 }}>Native window active</div>
-              <div style={{ opacity: 0.85, marginBottom: 8 }}>
-                The game is rendering in a separate window. Use the Stop button to end the cloud session.
+          {/* Minimal connecting overlay — no deck, no platform badge */}
+          {isConnecting && (
+            <div className="sv-connect sv-connect--bare">
+              <div className="sv-connect-inner">
+                <MotionSpinner className="sv-connect-spin" size={28} label="Connecting to stream" />
+                <p className="sv-connect-title">Connecting to {gameTitle}</p>
+                <p className="sv-connect-sub">Setting up stream…</p>
               </div>
-              <button
-                type="button"
-                onClick={onStopNative}
-                disabled={!onStopNative}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 6,
-                  border: "1px solid rgba(120, 200, 120, 0.5)",
-                  background: "rgba(60, 120, 60, 0.25)",
-                  color: "#e6f4e6",
-                  cursor: "pointer",
-                }}
-              >
-                Stop native window
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={onStartNative}
-                disabled={nativeStarting || !onStartNative}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 6,
-                  border: "1px solid rgba(120, 200, 120, 0.5)",
-                  background: "rgba(60, 120, 60, 0.25)",
-                  color: "#e6f4e6",
-                  cursor: nativeStarting ? "wait" : "pointer",
-                  marginBottom: 4,
-                }}
-              >
-                {nativeStarting ? "Starting native window…" : "Play in native window"}
-              </button>
-              <div style={{ opacity: 0.75 }}>Experimental · lower latency on weak PCs</div>
-              {(nativeStarting || nativePhase) && (
-                <div style={{ opacity: 0.9, marginTop: 4 }}>
-                  {nativePhase === "starting"
-                    ? "Negotiating with the game server…"
-                    : "Waiting for the sidecar to answer…"}
-                </div>
+            </div>
+          )}
+
+          {/* Bare native-start affordance — unstyled, so the non-native window stays plain */}
+          {nativeSupported && !hideStreamButtons && (
+            <div className="sv-native-card sv-native-card--bare">
+              {nativeRunning ? (
+                <>
+                  <div className="sv-native-card-title">Native window active</div>
+                  <button type="button" className="sv-native-card-btn" onClick={onStopNative} disabled={!onStopNative}>
+                    Stop native window
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    className="sv-native-card-btn"
+                    onClick={onStartNative}
+                    disabled={nativeStarting || !onStartNative}
+                  >
+                    {nativeStarting ? "Starting…" : "Play in native window"}
+                  </button>
+                  {nativeError && <div className="sv-native-card-error">{nativeError}</div>}
+                </>
               )}
-            </>
+            </div>
           )}
-          {nativeError && (
-            <div style={{ marginTop: 6, color: "#f0a8a8", wordBreak: "break-word" }}>{nativeError}</div>
+
+          {/* Bare exit — plain, no deck */}
+          {exitPrompt.open && !isConnecting && typeof document !== "undefined" && createPortal(
+            <div className="sv-exit sv-exit--bare" role="dialog" aria-modal="true" aria-label="Exit stream confirmation">
+              <button type="button" className="sv-exit-backdrop" onClick={onCancelExit} aria-label="Cancel exit" />
+              <div className="sv-exit-card">
+                <h3 className="sv-exit-title">Exit Stream?</h3>
+                <p className="sv-exit-text">Exit <strong>{exitPrompt.gameTitle}</strong>?</p>
+                <div className="sv-exit-actions">
+                  <button type="button" className="sv-exit-btn sv-exit-btn-cancel" onClick={onCancelExit}>Keep Playing</button>
+                  <button type="button" className="sv-exit-btn sv-exit-btn-confirm" onClick={onConfirmExit}>Exit Stream</button>
+                </div>
+              </div>
+            </div>,
+            document.body,
           )}
-        </div>
-      )}
+        </>
+      ) : (
+        <>
+          {/* ── NATIVE DECK MODE: full cyberpunk deck chrome ── */}
+          {/* Deck ground layers: mesh, scan, bloom, sweep, edge ticks */}
+          <div className="sv-deck-ground" aria-hidden>
+            <div className="sv-deck-mesh" />
+            <div className="sv-deck-scan" />
+            <div className="sv-deck-glow" />
+            <div className="sv-deck-sweep" />
+            <div className="sv-deck-edge" />
+          </div>
 
-      {/* End session button */}
-      {!hideStreamButtons && (
-        <button
-          className="sv-end"
-          onClick={onEndSession}
-          title="End session"
-          aria-label="End session"
-        >
-          <LogOut size={18} />
-        </button>
-      )}
+          <StreamEmptyState diagnosticsStore={diagnosticsStore} />
+          <StreamWaitingForVideo diagnosticsStore={diagnosticsStore} isConnecting={isConnecting} />
 
-      {/* Keyboard hints */}
-      {showHints && !isConnecting && (
-        <div className="sv-hints">
-          <div className="sv-hint"><kbd>{shortcuts.toggleStats}</kbd><span>Stats</span></div>
-          <div className="sv-hint"><kbd>{shortcuts.togglePointerLock}</kbd><span>Mouse lock</span></div>
-          <div className="sv-hint"><kbd>{shortcuts.toggleFullscreen}</kbd><span>Full screen</span></div>
-          <div className="sv-hint"><kbd>{shortcuts.stopStream}</kbd><span>Stop</span></div>
-          <div className="sv-hint"><kbd>{CONTROLLER_SIDEBAR_SHORTCUT_DISPLAY}</kbd><span>Controller menu</span></div>
-          {shortcuts.toggleMicrophone && <div className="sv-hint"><kbd>{shortcuts.toggleMicrophone}</kbd><span>Mic</span></div>}
-        </div>
-      )}
+          {isConnecting && (
+            <div className="sv-connect">
+              <div className="sv-connect-inner">
+                <MotionSpinner className="sv-connect-spin" size={44} label="Connecting to stream" />
+                <p className="sv-connect-title">Connecting to {gameTitle}</p>
+                {PlatformIcon && (
+                  <div className="sv-connect-platform" title={platformName}>
+                    <span className="sv-connect-platform-icon">
+                      <PlatformIcon />
+                    </span>
+                    <span>{platformName}</span>
+                  </div>
+                )}
+                <p className="sv-connect-sub">Setting up stream…</p>
+                {/* Deck tick ruler under connecting */}
+                <div className="sv-connect-ruler" aria-hidden>
+                  <span className="sv-connect-ruler-tick" />
+                  <span className="sv-connect-ruler-tick" />
+                  <span className="sv-connect-ruler-tick" />
+                  <span className="sv-connect-ruler-tick" />
+                </div>
+              </div>
+            </div>
+          )}
 
-      {/* Game title (bottom-center, fades) */}
-      <StreamTitleBar
-        diagnosticsStore={diagnosticsStore}
-        gameTitle={gameTitle}
-        platformName={platformName}
-        PlatformIcon={PlatformIcon}
-        showHints={showHints}
-      />
+          {sessionCounterEnabled && !isConnecting && (
+            <div
+              className={`sv-session-clock${showSessionClock ? " is-visible" : ""}`}
+              title="Current gaming session elapsed time"
+              aria-hidden={!showSessionClock}
+            >
+              <span className="sv-session-clock-bracket" aria-hidden />
+              <SessionElapsedIndicator startedAtMs={sessionStartedAtMs} active={isStreaming} />
+              <span className="sv-session-clock-bracket sv-session-clock-bracket--right" aria-hidden />
+            </div>
+          )}
+
+          {streamWarning && !isConnecting && !exitPrompt.open && (
+            <div className={`sv-time-warning sv-time-warning--${streamWarning.tone}`} title="Session time warning">
+              <AlertTriangle size={14} />
+              <span>
+                {streamWarning.message}
+                {warningSeconds ? ` · ${warningSeconds} left` : ""}
+              </span>
+            </div>
+          )}
+
+          {antiAfkToggleAck && !isConnecting && (
+            <div className={`sv-afk-ack sv-afk-ack--${antiAfkToggleAck}`} role="status" aria-live="polite">
+              <span className="sv-afk-ack-dot" aria-hidden />
+              <span>{antiAfkToggleAck === "on" ? "Anti-AFK on" : "Anti-AFK off"}</span>
+            </div>
+          )}
+
+          <SessionStartedSplash
+            visible={sessionReadySplashVisible && !isConnecting}
+            gameTitle={gameTitle}
+            onFinished={handleSessionReadySplashFinished}
+          />
+
+          <AnimatePresence>
+            {showStatsHud && (
+              <StreamStatsHud
+                key="stream-stats-hud"
+                diagnosticsStore={diagnosticsStore}
+                gstreamerEnabled={gstreamerEnabled}
+                serverRegion={serverRegion}
+                sessionTimeRemainingText={showSessionTimeRemainingInStats ? sessionTimeRemainingText : null}
+                hintsVisible={showHints}
+              />
+            )}
+          </AnimatePresence>
+
+          <MicrophoneIndicator
+            diagnosticsStore={diagnosticsStore}
+            showAntiAfkIndicator={antiAfkEnabled && showAntiAfkIndicator}
+            hideStreamButtons={hideStreamButtons}
+            isConnecting={isConnecting}
+            onToggleMicrophone={onToggleMicrophone}
+          />
+
+          <AntiAfkIndicator
+            diagnosticsStore={diagnosticsStore}
+            antiAfkEnabled={antiAfkEnabled}
+            showAntiAfkIndicator={showAntiAfkIndicator}
+            isConnecting={isConnecting}
+          />
+
+          <RecordingIndicator
+            diagnosticsStore={diagnosticsStore}
+            showAntiAfkIndicator={antiAfkEnabled && showAntiAfkIndicator}
+            hideStreamButtons={hideStreamButtons}
+            isConnecting={isConnecting}
+            isRecording={isRecording}
+            onToggleMicrophone={onToggleMicrophone}
+            recordingDurationMs={recordingDurationMs}
+          />
+
+          {exitPrompt.open && !isConnecting && typeof document !== "undefined" && createPortal(
+            <div className="sv-exit" role="dialog" aria-modal="true" aria-label="Exit stream confirmation">
+              <button type="button" className="sv-exit-backdrop" onClick={onCancelExit} aria-label="Cancel exit" />
+              <div className="sv-exit-card">
+                <div className="sv-exit-kicker">Session Control</div>
+                <h3 className="sv-exit-title">Exit Stream?</h3>
+                <p className="sv-exit-text">
+                  Do you really want to exit <strong>{exitPrompt.gameTitle}</strong>?
+                </p>
+                <p className="sv-exit-subtext">Your current cloud gaming session will be closed.</p>
+                <div className="sv-exit-actions">
+                  <button type="button" className="sv-exit-btn sv-exit-btn-cancel" onClick={onCancelExit}>Keep Playing</button>
+                  <button type="button" className="sv-exit-btn sv-exit-btn-confirm" onClick={onConfirmExit}>Exit Stream</button>
+                </div>
+                <div className="sv-exit-hint">
+                  <span><kbd>Enter</kbd> confirm · <kbd>Esc</kbd> cancel</span>
+                  <span><kbd>A</kbd> select · <kbd>B</kbd> cancel</span>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )}
+
+          {!hideStreamButtons && (
+            <button
+              className="sv-fs"
+              onClick={handleFullscreenToggle}
+              title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            >
+              {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+            </button>
+          )}
+
+          {nativeSupported && !hideStreamButtons && (
+            <div className="sv-native-card">
+              <div className="sv-native-card-brackets" aria-hidden>
+                <span className="sv-native-card-bracket sv-native-card-bracket--tl" />
+                <span className="sv-native-card-bracket sv-native-card-bracket--tr" />
+                <span className="sv-native-card-bracket sv-native-card-bracket--bl" />
+                <span className="sv-native-card-bracket sv-native-card-bracket--br" />
+              </div>
+              {nativeRunning ? (
+                <>
+                  <div className="sv-native-card-kicker">Native Window</div>
+                  <div className="sv-native-card-title">Active</div>
+                  <div className="sv-native-card-sub">Game rendering in separate window. Stop ends cloud session.</div>
+                  <button type="button" className="sv-native-card-btn" onClick={onStopNative} disabled={!onStopNative}>
+                    Stop native window
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="sv-native-card-kicker">NVST Sidecar</div>
+                  <button
+                    type="button"
+                    className="sv-native-card-btn sv-native-card-btn--primary"
+                    onClick={onStartNative}
+                    disabled={nativeStarting || !onStartNative}
+                  >
+                    {nativeStarting ? "Starting native window…" : "Play in native window"}
+                  </button>
+                  <div className="sv-native-card-sub">Experimental · lower latency on weak PCs</div>
+                  {(nativeStarting || nativePhase) && (
+                    <div className="sv-native-card-phase">
+                      {nativePhase === "starting" ? "Negotiating with the game server…" : "Waiting for sidecar…"}
+                    </div>
+                  )}
+                </>
+              )}
+              {nativeError && <div className="sv-native-card-error">{nativeError}</div>}
+            </div>
+          )}
+
+          {!hideStreamButtons && (
+            <button className="sv-end" onClick={onEndSession} title="End session" aria-label="End session">
+              <LogOut size={18} />
+            </button>
+          )}
+
+          {showHints && !isConnecting && (
+            <div className="sv-hints">
+              <div className="sv-hint"><kbd>{shortcuts.toggleStats}</kbd><span>Stats</span></div>
+              <div className="sv-hint"><kbd>{shortcuts.togglePointerLock}</kbd><span>Mouse lock</span></div>
+              <div className="sv-hint"><kbd>{shortcuts.toggleFullscreen}</kbd><span>Full screen</span></div>
+              <div className="sv-hint"><kbd>{shortcuts.stopStream}</kbd><span>Stop</span></div>
+              <div className="sv-hint"><kbd>{CONTROLLER_SIDEBAR_SHORTCUT_DISPLAY}</kbd><span>Controller menu</span></div>
+              {shortcuts.toggleMicrophone && <div className="sv-hint"><kbd>{shortcuts.toggleMicrophone}</kbd><span>Mic</span></div>}
+            </div>
+          )}
+
+          <StreamTitleBar
+            diagnosticsStore={diagnosticsStore}
+            gameTitle={gameTitle}
+            platformName={platformName}
+            PlatformIcon={PlatformIcon}
+            showHints={showHints}
+          />
+        </>
+      )}
     </div>
   );
 }

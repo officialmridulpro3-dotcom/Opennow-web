@@ -160,7 +160,8 @@
   "navigation": {
     "home": "Winkel",
     "library": "Bibliotheek",
-    "settings": "Instellingen"
+    "settings": "Instellingen",
+    "playtime": "Speeltijd"
   },
   "home": {
     "searchPlaceholder": "Zoek spellen...",
@@ -193,7 +194,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "Verder spelen",
+      "eyebrowReady": "Klaar om te spelen",
+      "voiceResume": "{{value}} op de klok — pak op waar je bleef.",
+      "voiceReady": "Het deck is klaar. Kies een titel en de cloud doet de rest.",
+      "cellLastPlayed": "Laatst gespeeld",
+      "cellPlaytime": "Speeltijd",
+      "cellStore": "Store",
+      "cellGenre": "Genre",
+      "launch": "Starten",
+      "ledger": "Logboek bekijken",
+      "ledgerSessions": "{{count}} sessie vastgelegd",
+      "ledgerSessions_plural": "{{count}} sessies vastgelegd",
+      "jumpBackIn": "Spring er weer in",
+      "mostPlayed": "Meest gespeeld",
+      "favourites": "Favorieten",
+      "newInLibrary": "Nieuw in je bibliotheek",
+      "shelfCount": "{{count}} titel",
+      "shelfCount_plural": "{{count}} titels",
+      "seeAll": "Alles bekijken",
+      "seeAllCount": "Bekijk alle {{count}}",
+      "allGames": "Alle games"
+    },
+    "search": {
+      "resultsFor": "Zoeken · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "Zoeken...",
+      "loadMore": "Meer laden",
+      "clearSearch": "Zoekopdracht wissen"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "Verplaatsen",
+      "commands": "Opdrachten",
+      "allShortcuts": "Alle sneltoetsen"
+    },
+    "regionAuto": "Automatische regio",
+    "themeDeck": "Deck-thema"
   },
   "library": {
     "title": "Mijn bibliotheek",
@@ -232,6 +272,98 @@
       "ownedGamesAppearHere": "Games die jij bezit, verschijnen hier. Blader door de catalogus om games te vinden.",
       "noGamesFound": "Geen spellen gevonden",
       "noGamesMatch": "Er komen geen games overeen met \"{{query}}\""
+    },
+    "deck": {
+      "allGames": "Alle games",
+      "count": "{{count}} titel",
+      "count_plural": "{{count}} titels",
+      "chipAll": "Alle",
+      "hint": "Selecteer een titel voor de console",
+      "eyebrow": "Bibliotheek // geselecteerd",
+      "launch": "Starten",
+      "viewLedger": "Logboek bekijken",
+      "emptyDetail": "Kies een game uit het raster voor de console.",
+      "cellLastPlayed": "Laatst gespeeld",
+      "cellPlaytime": "Speeltijd",
+      "cellSessions": "Sessies",
+      "cellStore": "Store",
+      "cellGenre": "Genre"
+    },
+    "favoriteToggle": "Favoriet wisselen"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // logboek",
+    "title": "Speeltijd",
+    "subtitle": "Elke minuut die je echt in de stream doorbracht — wachtrijen tellen apart.",
+    "loading": "Logboek laden…",
+    "hero": {
+      "label": "Totaal gestreamd",
+      "unitHours": "u",
+      "unitMinutes": "m",
+      "detail": "{{minutes}} minuten meer, verdeeld over {{sessions}} sessies en {{games}} games",
+      "sr": "Je hebt in totaal {{hours}} uur en {{minutes}} minuten gestreamd.",
+      "peakHour": "Drukste uur: {{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "Sessies",
+      "games": "Gespeelde games",
+      "longest": "Langste sessie",
+      "average": "Gemiddelde sessie",
+      "queue": "Tijd in de wachtrij",
+      "setup": "Tijd om te verbinden"
+    },
+    "live": {
+      "label": "Nu aan het streamen",
+      "unknownGame": "Huidige sessie"
+    },
+    "ranking": {
+      "title": "Gerangschikt op speeltijd",
+      "count": "{{count}} game",
+      "count_plural": "{{count}} games",
+      "sessions": "{{count}} sessie",
+      "sessions_plural": "{{count}} sessies",
+      "share": "{{value}}% van totaal",
+      "more": "+ {{count}} games niet getoond",
+      "sr": "Plaats {{rank}}: {{title}}, {{value}} gestreamd in {{sessions}} sessies."
+    },
+    "cadence": {
+      "title": "Wanneer je speelt",
+      "daily": "Laatste {{count}} dag",
+      "daily_plural": "Laatste {{count}} dagen",
+      "dailySr": "{{value}} gestreamd in deze periode",
+      "hourly": "Uur van de dag",
+      "hourlySr": "Piek om {{hour}}:00 met {{value}}",
+      "weekday": "Weekdag",
+      "weekdaySr": "Sterkste weekdag met {{value}}"
+    },
+    "recent": {
+      "title": "Recente sessies",
+      "empty": "Nog geen afgeronde sessies vastgelegd.",
+      "wait": "{{value}} wachten",
+      "engineNative": "Native",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "Vernieuwen",
+      "reset": "Logboek wissen",
+      "resetConfirmTitle": "Speeltijd wissen",
+      "resetConfirmBody": "Dit wist elk vastgelegd uur op dit apparaat. Dit kan niet ongedaan worden gemaakt.",
+      "resetConfirm": "Alles wissen",
+      "resetCancel": "Statistieken behouden",
+      "updated": "Logboek bijgewerkt {{value}}"
+    },
+    "empty": {
+      "eyebrow": "Logboek // leeg",
+      "title": "Nog geen speeltijd vastgelegd",
+      "body": "Start een game en de klok begint zodra het eerste beeld binnenkomt. Wachtrijen worden apart bijgehouden, dus alleen echt spelen telt.",
+      "cta": "Bibliotheek openen"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}} u {{minutes}} m",
+      "hours": "{{count}} u",
+      "minutes": "{{count}} m",
+      "seconds": "{{count}} s"
     }
   },
   "gameCard": {
@@ -416,7 +548,9 @@
       "autoBest": "Automatisch (beste)",
       "searchPlaceholder": "Regio's zoeken...",
       "refreshPing": "Ping vernieuwen",
-      "noRegionsMatch": "Er zijn geen regio's die overeenkomen met '{{query}}'"
+      "noRegionsMatch": "Er zijn geen regio's die overeenkomen met '{{query}}'",
+      "noRegionsAvailable": "Geen regio's beschikbaar",
+      "retry": "Opnieuw proberen"
     },
     "video": {
       "title": "Video",
@@ -518,11 +652,10 @@
       "appLanguageHint": "Verandert de interfacetaal van OpenNOW. Voor onvertaalde tekenreeksen wordt Engels gebruikt.",
       "accentColor": "Accentkleur",
       "accentColorHint": "Past het geselecteerde accent toe op de standaard desktop-gebruikersinterface en blijft bestaan tussen lanceringen.",
-      "accentColorGreen": "OpenNOW Groen",
-      "accentColorBlue": "Kobaltblauw",
-      "accentColorViolet": "Violet",
-      "accentColorAmber": "Amber",
-      "accentColorRose": "Roos",
+      "accentColorNeon": "Neon",
+      "accentColorAzure": "Azure",
+      "accentColorWhite": "Wit",
+      "accentColorSteel": "Staal",
       "hideStreamOverlayButtons": "Knoppen voor streamoverlay verbergen",
       "hideStreamOverlayButtonsHint": "Verberg knoppen voor microfoon, volledig scherm en sessie beëindigen tijdens het streamen.",
       "showStatsOnStreamLaunch": "Toon statistieken bij het starten van streams",
@@ -696,5 +829,27 @@
     "queueAdPlayTimeout": "Time-out voor afspelen van advertentie",
     "queueAdVideoStuck": "Advertentievideo loopt vast",
     "queueAdUrlLoad": "Fout bij laden van URL"
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "PC digitale versie",
+    "chooseStore": "Kies een winkel",
+    "chooseStoreHint": "Waar bezit je deze game en wil je spelen?",
+    "gameStores": "Winkels:",
+    "subscriptions": "Abonnementen:",
+    "owned": "In bezit",
+    "gameNotFound": "Game niet gevonden",
+    "subscribed": "Geabonneerd",
+    "notSubscribed": "Niet geabonneerd",
+    "markAsOwned": "MARKEREN ALS BEZIT",
+    "buy": "KOPEN",
+    "storeHint": "Selecteer een winkel waar je de game bezit en markeer als bezit.",
+    "rating": "Beoordeling",
+    "publisher": "Uitgever",
+    "developer": "Ontwikkelaar",
+    "gallery": "Galerij"
+  },
+  "common": {
+    "clear": "Zoekopdracht wissen",
+    "back": "Back"
   }
 }

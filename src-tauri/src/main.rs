@@ -96,8 +96,27 @@ struct BackendProcess {
     child: Mutex<Option<Child>>,
 }
 
+#[tauri::command]
+fn get_window_handle(window: tauri::Window) -> Result<String, String> {
+    #[cfg(target_os = "windows")]
+    {
+        use raw_window_handle::{HasWindowHandle, RawWindowHandle};
+        let handle = window.window_handle().map_err(|e| e.to_string())?;
+        match handle.as_raw() {
+            RawWindowHandle::Win32(h) => Ok(format!("{}", h.hwnd.get() as usize)),
+            _ => Err("Not a Win32 window".into()),
+        }
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        let _ = window;
+        Ok("0".into())
+    }
+}
+
 fn main() {
     tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![get_window_handle])
         // Must stay the first registered plugin.
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             if let Some(window) = app.get_webview_window("main") {
@@ -281,12 +300,18 @@ fn open_main_window(
     origin: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let url: tauri::Url = origin.parse()?;
+    // In-app native stream: SDL child window is embedded inside Tauri window via Win32 SetParent.
+    // WebView background must be transparent where video hole is, so native surface shows through
+    // (no black WebRTC screen). Use transparent window + transparent WebView.
+    // Black background in CSS will still paint, but hole area (opacity 0.01) lets SDL child show through.
     let mut builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(url))
         .title("OpenNOW")
         .inner_size(1280.0, 800.0)
         .min_inner_size(1000.0, 640.0)
         .resizable(true)
         .center()
+        .transparent(true)
+        .background_color(tauri::window::Color(0, 0, 0, 0))
         .initialization_script(EXTERNAL_LINK_SCRIPT);
 
     #[cfg(target_os = "windows")]

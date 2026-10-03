@@ -114,16 +114,21 @@ import { TopHeader } from "./components/TopHeader";
 import { StatusBar } from "./components/StatusBar";
 import { AccountMenu } from "./components/AccountMenu";
 import { HomePage } from "./components/HomePage";
-import { LibraryPage } from "./components/LibraryPage";
 import { PageErrorBoundary } from "./components/PageErrorBoundary";
-import { SettingsPage } from "./components/SettingsPage";
 import { SettingsModalHost } from "./components/SettingsModalHost";
 import { StreamLoading } from "./components/StreamLoading";
 import { StreamView } from "./components/StreamView";
 import { QueueServerSelectModal } from "./components/QueueServerSelectModal";
 import { ReleaseHighlightsModal } from "./components/ReleaseHighlightsModal";
+import { lazy, Suspense } from "react";
+import { MotionSpinner } from "./components/MotionSpinner";
+
+const LibraryPage = lazy(() => import("./components/LibraryPage").then(m => ({ default: m.LibraryPage })));
+const SettingsPage = lazy(() => import("./components/SettingsPage").then(m => ({ default: m.SettingsPage })));
+const PlaytimePage = lazy(() => import("./components/PlaytimePage").then(m => ({ default: m.PlaytimePage })));
+const GameDetailsPage = lazy(() => import("./components/GameDetailsPage").then(m => ({ default: m.GameDetailsPage })));
+import { isGameInLibrary } from "@shared/gfn";
 import { overlayMotion, pageTransition, standardEase } from "./components/MotionProvider";
-import { LazyShaderAtmosphere } from "./components/LazyShaderAtmosphere";
 
 const DEFAULT_STREAM_PREFERENCES = getDefaultStreamPreferences();
 
@@ -170,7 +175,7 @@ const FREE_TIER_15_MIN_WARNING_SECONDS = 15 * 60;
 const FREE_TIER_FINAL_MINUTE_WARNING_SECONDS = 60;
 const STREAM_WARNING_VISIBILITY_MS = 15 * 1000;
 
-type AppPage = "home" | "library" | "settings";
+type AppPage = "home" | "library" | "playtime" | "settings";
 type ExitPromptState = { open: boolean; gameTitle: string };
 
 const isMac = navigator.platform.toLowerCase().includes("mac");
@@ -214,7 +219,7 @@ export function App(): JSX.Element {
     nativeCloudGsyncMode: "auto",
     nativeD3dFullscreenMode: "auto",
     nativeExternalRenderer: false,
-    transportMode: "webrtc",
+    transportMode: "nvst",
     showNativeStreamerStats: false,
     codec: DEFAULT_STREAM_PREFERENCES.codec,
     decoderPreference: "auto",
@@ -223,7 +228,7 @@ export function App(): JSX.Element {
     region: "",
     sessionProxyEnabled: false,
     sessionProxyUrl: "",
-    clipboardPaste: false,
+    clipboardPaste: true,
     enableGyroscopeControls: false,
     steamControllerCompatibilityMode: false,
     nativeCursorOverlay: true,
@@ -315,12 +320,25 @@ export function App(): JSX.Element {
   const [directLaunchConsoleMode, setDirectLaunchConsoleMode] = useState(false);
   const [queueModalGame, setQueueModalGame] = useState<GameInfo | null>(null);
   const [queueModalData, setQueueModalData] = useState<PrintedWasteQueueData | null>(null);
+  const [detailsGame, setDetailsGame] = useState<GameInfo | null>(null);
+  const [detailsSelectedVariantId, setDetailsSelectedVariantId] = useState<string | null>(null);
   const [sessionStartedAtMs, setSessionStartedAtMs] = useState<number | null>(null);
   const [remoteStreamWarning, setRemoteStreamWarning] = useState<StreamWarningState | null>(null);
   const [localSessionTimerWarning, setLocalSessionTimerWarning] = useState<LocalSessionTimerWarningState | null>(null);
   const previousFreeTierRemainingSecondsRef = useRef<number | null>(null);
 
-  const { playtime, startSession: startPlaytimeSession, endSession: endPlaytimeSession } = usePlaytime();
+  const {
+    playtime,
+    summary: playtimeSummary,
+    isRecording: isPlaytimeRecording,
+    streamStartedAtMs: playtimeStreamStartedAtMs,
+    refreshPlaytime,
+    markLaunchStart: markPlaytimeLaunchStart,
+    markQueueEnd: markPlaytimeQueueEnd,
+    markStreamStart: markPlaytimeStreamStart,
+    endSession: endPlaytimeSession,
+    resetPlaytime,
+  } = usePlaytime();
   const sessionElapsedSeconds = useElapsedSeconds(sessionStartedAtMs, streamStatus === "streaming");
   const isStreaming = streamStatus === "streaming";
   // freeTier/session-limit derived state is computed after auth/catalog hooks
@@ -330,7 +348,7 @@ export function App(): JSX.Element {
   const codecStartupTestAttemptedRef = useRef(false);
   const navbarSessionActionInFlightRef = useRef<"resume" | "terminate" | null>(null);
   const nativeStreamingRef = useRef(false);
-  const handleStreamShortcutActionRef = useRef<((action: NativeStreamerShortcutAction) => void) | null>(null);
+  const handleStreamShortcutActionRef = useRef<((action: NativeStreamerShortcutAction | "toggleSidebar") => void) | null>(null);
   const streamingGameRef = useRef<GameInfo | null>(null);
 
   useEffect(() => {
@@ -755,9 +773,9 @@ export function App(): JSX.Element {
       gameLanguage: settings.gameLanguage,
       enableL4S: settings.enableL4S,
       enableCloudGsync: settings.enableCloudGsync,
-      clientMode: settings.streamClientMode,
+      clientMode: "native" as const,
       nativeStreamerBackend: "gstreamer",
-      transportMode: settings.streamClientMode === "native" ? "nvst" : "webrtc",
+      transportMode: "nvst" as const,
       nativeCloudGsyncMode: settings.nativeCloudGsyncMode,
       nativeTransitionDiagnostics: settings.nativeTransitionDiagnostics,
       appLaunchMode:
@@ -780,15 +798,10 @@ export function App(): JSX.Element {
     settings.nativeCloudGsyncMode,
     settings.nativeTransitionDiagnostics,
     settings.resolution,
-    settings.streamClientMode,
     subscriptionInfo?.entitledResolutions,
   ]);
 
   const warmNativeStreamerForLaunch = useCallback((): void => {
-    if (settings.streamClientMode !== "native") {
-      return;
-    }
-
     void window.openNow.getNativeStreamerStatus()
       .then((status) => {
         if (status.detected) {
@@ -800,7 +813,7 @@ export function App(): JSX.Element {
       .catch((error) => {
         console.warn("[NativeStreamer] Launch warm-up failed:", error);
       });
-  }, [settings.streamClientMode]);
+  }, []);
 
   const resetSignalingRecoveryState = useCallback((options?: {
     keepExplicitShutdown?: boolean;
@@ -1367,11 +1380,9 @@ export function App(): JSX.Element {
   }, [requestPointerLockCapture]);
 
   const setNativeInputPaused = useCallback((paused: boolean): void => {
-    if (!nativeStreamingRef.current && settings.streamClientMode !== "native") {
-      return;
-    }
+    // Native-only mode: always allow pausing native input
     window.openNow.setNativeInputPaused(paused);
-  }, [settings.streamClientMode]);
+  }, []);
 
   const resolveExitPrompt = useCallback((confirmed: boolean) => {
     const resolver = exitPromptResolverRef.current;
@@ -1431,7 +1442,8 @@ export function App(): JSX.Element {
 
   useEffect(() => {
     const isSessionConnecting = streamStatus === "connecting" || streamStatus === "streaming";
-    const isNativeStreamerSession = settings.streamClientMode === "native" || nativeStreamingRef.current;
+    // Native-only: always treat as native session for fullscreen logic
+    const isNativeStreamerSession = true;
     if (!settings.autoFullScreen || !isSessionConnecting || isNativeStreamerSession) {
       autoFullscreenRequestedRef.current = false;
       return;
@@ -1443,7 +1455,7 @@ export function App(): JSX.Element {
 
     autoFullscreenRequestedRef.current = true;
     void setSessionFullscreen(true);
-  }, [sessionFullscreen, setSessionFullscreen, settings.autoFullScreen, settings.streamClientMode, streamStatus]);
+  }, [sessionFullscreen, setSessionFullscreen, settings.autoFullScreen, streamStatus]);
 
   // Anti-AFK interval
   useEffect(() => {
@@ -1525,6 +1537,36 @@ export function App(): JSX.Element {
     const unsubscribe = diagnosticsStore.subscribe(evaluate);
     return unsubscribe;
   }, [sessionStartedAtMs, streamStatus]);
+
+  // Playtime ledger: native-only now
+  useEffect(() => {
+    if (sessionStartedAtMs === null) return;
+    markPlaytimeStreamStart(streamingGameRef.current, {
+      region: settings.region || null,
+      clientMode: "native",
+    });
+  }, [markPlaytimeStreamStart, sessionStartedAtMs, settings.region]);
+
+  // Native playback renders outside the browser
+  useEffect(() => {
+    if (!nativeFirstFrame) return;
+    markPlaytimeStreamStart(streamingGameRef.current, {
+      region: settings.region || null,
+      clientMode: "native",
+    });
+  }, [markPlaytimeStreamStart, nativeFirstFrame, settings.region]);
+
+  // Queue time ends the moment the queue stage does; what follows is setup.
+  useEffect(() => {
+    if (streamStatus === "queue") return;
+    markPlaytimeQueueEnd();
+  }, [markPlaytimeQueueEnd, streamStatus]);
+
+  // Safety net for stop paths that never reach an explicit endSession call.
+  useEffect(() => {
+    if (streamStatus !== "idle") return;
+    endPlaytimeSession();
+  }, [endPlaytimeSession, streamStatus]);
 
   useEffect(() => {
     if (freeTierSessionRemainingSeconds === null) {
@@ -1761,7 +1803,8 @@ export function App(): JSX.Element {
     setNativeError(null);
     try {
       const context = buildNativeStreamerSessionContext(claimed, buildCurrentStreamSettings(), nativeStreamerShortcuts);
-      setNativeSidecarStatus(await startNativeStream(claimed.sessionId, context));
+      const title = gameTitleByAppId.get(Number(claimed.appId)) ?? streamingGame?.title ?? undefined;
+      setNativeSidecarStatus(await startNativeStream(claimed.sessionId, context, title));
       nativeStreamingRef.current = true;
       setSessionStartedAtMs(Date.now());
       setStreamStatus("streaming");
@@ -1851,13 +1894,14 @@ export function App(): JSX.Element {
     // Native is the default client mode; hosts without a bundled NVST sidecar
     // (plain web deployments) fall back to the WebRTC path. The session was
     // already provisioned with the matching transport (the server resolves
-    // nvst to webrtc when no sidecar binary is present).
-    if (settings.streamClientMode === "native" && (await getCachedNativeSidecarSupport())) {
+    // Native-only: always start native window, WebRTC removed
+    if (await getCachedNativeSidecarSupport()) {
       await startNativeFromClaim(claimed);
     } else {
-      await window.openNow.connectSignaling(buildSignalingConnectRequest(claimed));
+      console.warn("[NativeOnly] Sidecar not detected, still attempting native start");
+      await startNativeFromClaim(claimed);
     }
-  }, [buildSignalingConnectRequest, disconnectSignalingControlled, isRecoveryGenerationCurrent, settings.streamClientMode, startNativeFromClaim]);
+  }, [buildSignalingConnectRequest, disconnectSignalingControlled, isRecoveryGenerationCurrent, startNativeFromClaim]);
 
   const claimAndConnectSession = useCallback(async (existingSession: ActiveSessionInfo): Promise<void> => {
     const sid = existingSession.sessionId;
@@ -2632,7 +2676,7 @@ export function App(): JSX.Element {
     setLocalSessionTimerWarning(null);
     setLaunchError(null);
     resetStatsOverlayToPreference();
-    startPlaytimeSession(game.id);
+    markPlaytimeLaunchStart(game);
     updateLoadingStep("queue");
     setQueuePosition(undefined);
     warmNativeStreamerForLaunch();
@@ -2778,32 +2822,11 @@ export function App(): JSX.Element {
         }
       }
 
-      // Probe the browser's WebRTC environment BEFORE creating a GFN session.
-      // Zero candidates means the browser cannot open any UDP socket (VPN,
-      // firewall, antivirus or extension) — launching would just burn a queue
-      // slot and fail at ICE 30 seconds later. When local gathering is blocked
-      // but TURN relays work, switch the session into relay mode instead.
-      try {
-        const probe = await probeWebRtcEnvironment();
-        console.log("[Launch] WebRTC environment probe:", probe);
-        if (probe.localCandidateCount === 0 && probe.relayCandidateCount === 0) {
-          setLaunchError({
-            stage: "queue",
-            title: t("errors.webrtcBlockedTitle"),
-            description: t("errors.webrtcBlockedDescription"),
-          });
-          resetLaunchRuntime({ keepLaunchError: true, keepStreamingContext: true });
-          launchInFlightRef.current = false;
-          return;
-        }
-        webrtcExtraIceServersRef.current =
-          probe.localCandidateCount === 0 && probe.relayCandidateCount > 0
-            ? FALLBACK_RELAY_ICE_SERVERS
-            : undefined;
-      } catch (probeError) {
-        console.warn("[Launch] WebRTC environment probe failed; continuing without it.", probeError);
-        webrtcExtraIceServersRef.current = undefined;
-      }
+      // Native-only: WebRTC probe eliminated — native NVST uses its own UDP bundle socket,
+      // not browser WebRTC. The old probe blocked launches on VPN/firewall that only affects
+      // browser ICE, not sidecar. Skip entirely when native is the default (in-app embedded).
+      // WebRTC window completely eliminated, no black screen — in-app native stream only.
+      webrtcExtraIceServersRef.current = undefined;
 
       const sessionProxyUrl = activeSessionProxyUrl;
 
@@ -2836,9 +2859,8 @@ export function App(): JSX.Element {
       // Native-only backstop (see loop below): seats that never leave setup.
       let nativeSetupStuckPolls = 0;
       const NATIVE_SETUP_MAX_STUCK_POLLS = 150;
-      // Same native-vs-WebRTC resolution as the connect step: sidecar-less
-      // hosts play via WebRTC even though native is the default mode.
-      const wantsNativeRuntime = settings.streamClientMode === "native" && (await getCachedNativeSidecarSupport());
+      // Native-only: always wants native runtime
+      const wantsNativeRuntime = true;
 
       while (true) {
         attempt++;
@@ -2960,27 +2982,28 @@ export function App(): JSX.Element {
           `poll #${attempt} · seat status ${mergedSession.status} · setup step ${mergedSession.seatSetupStep ?? "n/a"} · queue ${mergedSession.queuePosition ?? "n/a"} · endpoints ${mergedSession.rtspsEndpoints?.length ?? 0}`,
         );
 
-        // Native backstop: once out of queue, the seat must leave setup within
-        // a few minutes. A provisioning the seat can't satisfy parks it in
-        // setup forever — fail loudly instead of spinning forever.
+        // FIX: Queue abandoning fix — don't throw on native setup stuck, just log and continue.
+        // Previous code threw after 150 polls in setup, causing constant queue abandoning when changing servers.
+        // Now we just warn and keep polling, matching original GFN behavior where queue can take long.
         if (wantsNativeRuntime && !isInQueueMode) {
           nativeSetupStuckPolls += 1;
           if (nativeSetupStuckPolls > NATIVE_SETUP_MAX_STUCK_POLLS) {
-            throw new Error(
-              `The cloud seat never became ready for native streaming (status ${mergedSession.status}). Turn Native Streaming off to play via the browser path, or try again later.`,
+            console.warn(`[Launch] seat still in setup after ${nativeSetupStuckPolls} polls (status ${mergedSession.status}) — continuing to wait, not abandoning`);
+            // Don't throw, keep waiting — user can change servers manually if needed
+            setLaunchPollDiagnostic(
+              `poll #${attempt} · seat status ${mergedSession.status} · still in setup (${nativeSetupStuckPolls} polls) · waiting...`,
             );
           }
         } else {
           nativeSetupStuckPolls = 0;
         }
 
-        // Total backstop (queue included): a native launch that never even
-        // leaves queue is equally wedged — fail with the state attached.
-        if (wantsNativeRuntime && attempt > 450) {
-          throw new Error(
-            isInQueueMode
-              ? `Native launch is still waiting in queue after ~${Math.round(attempt / 30)} min (position ${mergedSession.queuePosition ?? "n/a"}). The native queue may be stalled — turn Native Streaming off to play via the browser path, or try again later.`
-              : `The cloud seat never became ready for native streaming (status ${mergedSession.status}). Turn Native Streaming off to play via the browser path, or try again later.`,
+        // Total backstop: increased from 450 to 1200 attempts (~40 min) and don't throw on queue,
+        // only warn. Queue abandoning when changing servers was caused by throwing here.
+        if (wantsNativeRuntime && attempt > 1200) {
+          console.warn(`[Launch] long wait ${attempt} attempts, still ${isInQueueMode ? "in queue" : "in setup"} — continuing`);
+          setLaunchPollDiagnostic(
+            `poll #${attempt} · long wait ${isInQueueMode ? "queue" : "setup"} · still trying...`,
           );
         }
 
@@ -3015,31 +3038,23 @@ export function App(): JSX.Element {
         status: sessionToConnect.status,
       });
 
-      if (settings.streamClientMode === "native") {
-        // Native seats must be claimed (PUT resume handover) before the sidecar's
-        // NVST handshake — upstream requires the handover for status 2..5, and an
-        // unclaimed seat never completes the start, parking the launch on
-        // "Connect" with a ready-but-useless seat. claimSession also re-polls to
-        // status 2/3 and returns fresh endpoints + server IP.
-        setLaunchPollDiagnostic(`seat ready · claiming session ${sessionToConnect.sessionId}…`);
-        const claimedSession = await window.openNow.claimSession({
-          token: token || undefined,
-          streamingBaseUrl: launchStreamingBaseUrl,
-          serverIp: sessionToConnect.serverIp,
-          sessionId: sessionToConnect.sessionId,
-          ...resolveResumeIdentity(sessionToConnect.sessionId),
-          appId: String(numericAppId),
-          appLaunchMode: sessionToConnect.appLaunchMode,
-          enablePersistingInGameSettings: sessionToConnect.enablePersistingInGameSettings,
-          settings: streamSettings,
-        });
-        setSession(claimedSession);
-        sessionRef.current = claimedSession;
-        setLaunchPollDiagnostic(`seat claimed · starting game window…`);
-        await startNativeFromClaim(claimedSession);
-      } else {
-        await window.openNow.connectSignaling(buildSignalingConnectRequest(sessionToConnect));
-      }
+      // Native-only: always claim and start native window
+      setLaunchPollDiagnostic(`seat ready · claiming session ${sessionToConnect.sessionId}…`);
+      const claimedSession = await window.openNow.claimSession({
+        token: token || undefined,
+        streamingBaseUrl: launchStreamingBaseUrl,
+        serverIp: sessionToConnect.serverIp,
+        sessionId: sessionToConnect.sessionId,
+        ...resolveResumeIdentity(sessionToConnect.sessionId),
+        appId: String(numericAppId),
+        appLaunchMode: sessionToConnect.appLaunchMode,
+        enablePersistingInGameSettings: sessionToConnect.enablePersistingInGameSettings,
+        settings: streamSettings,
+      });
+      setSession(claimedSession);
+      sessionRef.current = claimedSession;
+      setLaunchPollDiagnostic(`seat claimed · starting revamped native window…`);
+      await startNativeFromClaim(claimedSession);
     } catch (error) {
       if (launchAbortRef.current) {
         await stopLaunchedSessionQuietly();
@@ -3079,7 +3094,6 @@ export function App(): JSX.Element {
     resolveSubscriptionInfoForLaunch,
     selectedProvider,
     settings.enablePersistingInGameSettings,
-    settings.streamClientMode,
     startNativeFromClaim,
     streamStatus,
     t,
@@ -3189,6 +3203,11 @@ export function App(): JSX.Element {
 
   // Gate handler: shows queue server modal for FREE-tier users before launching
   const handleInitiatePlay = useCallback(async (game: GameInfo) => {
+    if (!isGameInLibrary(game)) {
+      setDetailsGame(game);
+      setDetailsSelectedVariantId(game.variants[game.selectedVariantIndex]?.id ?? game.variants[0]?.id ?? null);
+      return;
+    }
     const effectiveTier = normalizeMembershipTier(
       subscriptionInfo?.membershipTier ?? authSession?.user.membershipTier,
     );
@@ -3254,6 +3273,20 @@ export function App(): JSX.Element {
     void handlePlayGame(game);
   }, [subscriptionInfo, authSession, selectedProvider, settings.hideServerSelector, streamStatus, handlePlayGame, effectiveStreamingBaseUrl]);
 
+  const handleSelectGameWithDetails = useCallback((gameId: string) => {
+    setSelectedGameId(gameId);
+    const game = allKnownGames.find((entry) => entry.id === gameId);
+    if (game && !isGameInLibrary(game)) {
+      setDetailsGame(game);
+      setDetailsSelectedVariantId(game.variants[game.selectedVariantIndex]?.id ?? game.variants[0]?.id ?? null);
+    }
+  }, [allKnownGames, setSelectedGameId]);
+
+  const handleCloseDetails = useCallback(() => {
+    setDetailsGame(null);
+    setDetailsSelectedVariantId(null);
+  }, []);
+
   const handleQueueModalConfirm = useCallback((zoneUrl: string | null) => {
     const game = queueModalGame;
     setQueueModalGame(null);
@@ -3299,6 +3332,31 @@ export function App(): JSX.Element {
       console.error("Failed to resolve Store URL:", error);
     });
   }, [activeSessionProxyUrl, authSession, effectiveStreamingBaseUrl, handleOpenStoreUrl]);
+
+  const handleDetailsMarkOwned = useCallback(async (variantId: string) => {
+    if (!detailsGame) return;
+    await handleMarkGameOwned(detailsGame, variantId);
+    setDetailsGame(null);
+    setDetailsSelectedVariantId(null);
+  }, [detailsGame, handleMarkGameOwned]);
+
+  const handleDetailsBuy = useCallback((variantId: string) => {
+    if (!detailsGame) return;
+    void handleBuyGame(detailsGame, variantId);
+  }, [detailsGame, handleBuyGame]);
+
+  const handleDetailsPlay = useCallback(() => {
+    if (!detailsGame) return;
+    if (!isGameInLibrary(detailsGame)) return;
+    void handleInitiatePlay(detailsGame);
+    setDetailsGame(null);
+    setDetailsSelectedVariantId(null);
+  }, [detailsGame, handleInitiatePlay]);
+
+  const handleDetailsToggleFavorite = useCallback(() => {
+    if (!detailsGame) return;
+    handleToggleFavoriteGame(detailsGame.id);
+  }, [detailsGame, handleToggleFavoriteGame]);
 
   useEffect(() => {
     if (!logoutConfirmOpen && !removeAccountConfirmOpen) return;
@@ -3579,7 +3637,8 @@ export function App(): JSX.Element {
     setNativeError(null);
     try {
       const context = buildNativeStreamerSessionContext(current, buildCurrentStreamSettings(), nativeStreamerShortcuts);
-      setNativeSidecarStatus(await startNativeStream(current.sessionId, context));
+      const title = streamingGame?.title ?? gameTitleByAppId.get(Number(current.appId)) ?? undefined;
+      setNativeSidecarStatus(await startNativeStream(current.sessionId, context, title));
       // Free the CPU the browser decoder/compositor was using — the sidecar
       // owns the seat now. Mirrors the reconnect teardown in
       // applyClaimedSessionAndConnect.
@@ -3698,7 +3757,14 @@ export function App(): JSX.Element {
     await handleStopStream();
   }, [handleStopStream, releasePointerLockIfNeeded, requestExitPrompt, streamStatus, streamingGame?.title, t]);
 
-  const handleStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction): void => {
+  const handleStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction | "toggleSidebar"): void => {
+    // toggleSidebar comes from native overlay-request (Ctrl+G) — open the full React sidebar opaque left
+    if ((action as string) === "toggleSidebar") {
+      if (streamStatus === "streaming") {
+        dispatchStreamShortcutAction("toggleSidebar");
+      }
+      return;
+    }
     switch (action) {
       case "toggleStats":
         setShowStatsOverlay((prev) => !prev);
@@ -3896,7 +3962,7 @@ export function App(): JSX.Element {
   }, [gameTitleByAppId, navbarActiveSession, session?.sessionId, streamingGame?.title]);
 
   const navigateControllerPage = useCallback((direction: -1 | 1): void => {
-    const pages: AppPage[] = ["library", "home", "settings"];
+    const pages: AppPage[] = ["library", "home", "playtime", "settings"];
     const currentIndex = Math.max(0, pages.indexOf(currentPage));
     const nextIndex = (currentIndex + direction + pages.length) % pages.length;
     const nextPage = pages[nextIndex];
@@ -4001,7 +4067,7 @@ export function App(): JSX.Element {
             showStats={showStatsOverlay}
             showNativeStats={settings.showNativeStreamerStats}
             nativeInputCaptureActive={nativeInputCaptureActive}
-            gstreamerEnabled={settings.streamClientMode === "native"}
+            gstreamerEnabled={true}
             nativeExternalRenderer={settings.nativeExternalRenderer}
             nativeSupported={(nativeSidecarStatus?.supported ?? false) && ((nativeSidecarStatus?.running ?? false) || nativeStarting || (nativeError ?? nativeSidecarStatus?.lastError ?? null) != null)}
             nativeRunning={nativeSidecarStatus?.running ?? false}
@@ -4038,6 +4104,9 @@ export function App(): JSX.Element {
             isStreaming={isStreaming}
             recordingBitrateMbps={settings.recordingBitrateMbps}
             gameTitle={streamingGame?.title ?? t("app.labels.game")}
+            gameCover={streamingGame?.imageUrl ?? null}
+            gameHero={streamingGame?.heroImageUrl ?? streamingGame?.imageUrlsByType?.HERO_IMAGE?.[0] ?? streamingGame?.imageUrlsByType?.KEY_ART?.[0] ?? streamingGame?.screenshotUrls?.[0] ?? null}
+            gameIcon={streamingGame?.imageUrl ?? null}
             platformStore={streamingStore ?? undefined}
             onToggleFullscreen={() => {
               void toggleSessionFullscreen();
@@ -4094,6 +4163,12 @@ export function App(): JSX.Element {
               <StreamLoading
                 gameTitle={streamingGame?.title ?? t("app.labels.game")}
                 gameCover={streamingGame?.imageUrl}
+                gameHero={
+                  streamingGame?.heroImageUrl ??
+                  streamingGame?.imageUrlsByType?.HERO_IMAGE?.[0] ??
+                  streamingGame?.imageUrlsByType?.KEY_ART?.[0] ??
+                  streamingGame?.screenshotUrls?.[0]
+                }
                 platformStore={streamingStore ?? undefined}
                 status={loadingStatus}
                 queuePosition={queuePosition}
@@ -4133,9 +4208,19 @@ export function App(): JSX.Element {
   const showCatalogAtmosphere = currentPage === "home" || currentPage === "library";
 
   // Shell header metadata for the new layout.
-  const shellTitle = mainPage === "home" ? t("navigation.home") : mainPage === "library" ? t("library.title") : t("navigation.settings");
-  const shellCount = libraryGames.length > 0 ? libraryGames.length : catalogTotalCount;
-  const shellCountLabel = shellCount > 0 ? t("library.gameCount", { count: shellCount }) : "";
+  const shellTitle = mainPage === "home"
+    ? t("navigation.home")
+    : mainPage === "library"
+      ? t("library.title")
+      : mainPage === "playtime"
+        ? t("playtime.title")
+        : t("navigation.settings");
+  const shellCount = mainPage === "playtime"
+    ? (playtimeSummary?.games.length ?? 0)
+    : libraryGames.length > 0 ? libraryGames.length : catalogTotalCount;
+  const shellCountLabel = mainPage === "playtime"
+    ? (shellCount > 0 ? t("playtime.ranking.count", { count: shellCount }) : "")
+    : shellCount > 0 ? t("library.gameCount", { count: shellCount }) : "";
   const shellSearchPlaceholder = mainPage === "library" ? t("library.searchPlaceholder") : t("home.searchPlaceholder");
   const resolutionShort = ((): string => {
     const [, h] = settings.resolution.split("x");
@@ -4145,7 +4230,6 @@ export function App(): JSX.Element {
 
   return (
     <div className={`app-container app-shell${effectiveControllerMode ? " app-container--controller" : ""}${showCatalogAtmosphere ? " app-container--atmosphere" : ""}`} style={getAppStyle(settings.posterSizeScale)}>
-      {showCatalogAtmosphere && <LazyShaderAtmosphere variant="controller" className="catalog-atmosphere" />}
       <AnimatePresence>
         {startupRefreshNotice && (
           <m.div
@@ -4209,6 +4293,7 @@ export function App(): JSX.Element {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           searchPlaceholder={shellSearchPlaceholder}
+          hideSearch={mainPage === "playtime"}
         />
 
         <main className="main-content">
@@ -4230,7 +4315,7 @@ export function App(): JSX.Element {
                 onPlayGame={handleInitiatePlay}
                 isLoading={effectiveControllerMode ? isLoadingStorePanels : isLoadingCatalog}
                 selectedGameId={selectedGameId}
-                onSelectGame={setSelectedGameId}
+                onSelectGame={handleSelectGameWithDetails}
                 selectedVariantByGameId={variantByGameId}
                 onSelectGameVariant={handleSelectGameVariant}
                 filterGroups={catalogFilterGroups}
@@ -4255,12 +4340,14 @@ export function App(): JSX.Element {
                 favoriteGameIds={settings.favoriteGameIds}
                 streamMetaLabel={streamMetaLabel}
                 onNavigateLibrary={() => handleNavigate("library")}
+                onNavigatePlaytime={() => handleNavigate("playtime")}
               />
             )}
 
             {mainPage === "library" && (
               <PageErrorBoundary label="library">
-                <LibraryPage
+                <Suspense fallback={<div className="home-empty-state"><MotionSpinner size={36} label="Loading" /><p>Loading library...</p></div>}>
+                  <LibraryPage
                   games={filteredLibraryGames}
                   allGames={libraryGames}
                   playtimeData={playtime}
@@ -4269,7 +4356,7 @@ export function App(): JSX.Element {
                   onPlayGame={handleInitiatePlay}
                   isLoading={isLoadingLibrary}
                   selectedGameId={selectedGameId}
-                  onSelectGame={setSelectedGameId}
+                  onSelectGame={handleSelectGameWithDetails}
                   selectedVariantByGameId={variantByGameId}
                   onSelectGameVariant={handleSelectGameVariant}
                   libraryCount={libraryGames.length}
@@ -4282,7 +4369,26 @@ export function App(): JSX.Element {
                   onBuyGame={handleBuyGame}
                   onPreviousControllerPage={() => navigateControllerPage(-1)}
                   onNextControllerPage={() => navigateControllerPage(1)}
+                  onNavigatePlaytime={() => handleNavigate("playtime")}
                 />
+                </Suspense>
+              </PageErrorBoundary>
+            )}
+
+            {mainPage === "playtime" && (
+              <PageErrorBoundary label="playtime">
+                <Suspense fallback={<div className="home-empty-state"><MotionSpinner size={36} label="Loading" /><p>Loading playtime...</p></div>}>
+                  <PlaytimePage
+                  summary={playtimeSummary}
+                  libraryGames={libraryGames}
+                  isRecording={isPlaytimeRecording}
+                  streamStartedAtMs={playtimeStreamStartedAtMs}
+                  recordingGameTitle={streamingGame?.title ?? null}
+                  onRefreshPlaytime={refreshPlaytime}
+                  onResetPlaytime={resetPlaytime}
+                  onNavigateLibrary={() => handleNavigate("library")}
+                />
+                </Suspense>
               </PageErrorBoundary>
             )}
           </m.div>
@@ -4290,7 +4396,7 @@ export function App(): JSX.Element {
         </PageErrorBoundary>
         </main>
 
-        <StatusBar regionLabel="Auto region" themeLabel="Nocturne theme" />
+        <StatusBar />
       </div>
       <SettingsModalHost
         open={currentPage === "settings"}
@@ -4298,7 +4404,8 @@ export function App(): JSX.Element {
         onExitComplete={handleSettingsExitComplete}
       >
         {settingsMounted && (
-          <SettingsPage
+          <Suspense fallback={<div className="home-empty-state"><MotionSpinner size={36} label="Loading" /><p>Loading settings...</p></div>}>
+            <SettingsPage
             settings={settings}
             regions={regions}
             codecResults={codecResults}
@@ -4309,10 +4416,28 @@ export function App(): JSX.Element {
             focusSection={settingsFocusSection}
             onOpenWhatsNew={handleOpenWhatsNew}
           />
+          </Suspense>
         )}
       </SettingsModalHost>
       {logoutConfirmModal}
       {removeAccountConfirmModal}
+      {detailsGame && (
+        <Suspense fallback={<div className="gdp-root"><div className="home-empty-state"><MotionSpinner size={36} label="Loading" /><p>Loading game details...</p></div></div>}>
+          <GameDetailsPage
+          game={detailsGame}
+          playtimeData={playtime}
+          selectedVariantId={detailsSelectedVariantId ?? undefined}
+          onSelectVariant={setDetailsSelectedVariantId}
+          onMarkOwned={handleDetailsMarkOwned}
+          onBuy={handleDetailsBuy}
+          onPlay={handleDetailsPlay}
+          onClose={handleCloseDetails}
+          onToggleFavorite={handleDetailsToggleFavorite}
+          isFavorite={settings.favoriteGameIds.includes(detailsGame.id)}
+          isMarkingOwned={detailsSelectedVariantId ? Boolean(markOwnedInFlightByVariantId[detailsSelectedVariantId]) : false}
+        />
+        </Suspense>
+      )}
       {queueModalGame && streamStatus === "idle" && (
         <QueueServerSelectModal
           game={queueModalGame}

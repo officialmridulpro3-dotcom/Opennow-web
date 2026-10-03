@@ -160,7 +160,8 @@
   "navigation": {
     "home": "Speichern",
     "library": "Bibliothek",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "playtime": "Spielzeit"
   },
   "home": {
     "searchPlaceholder": "Spiele suchen...",
@@ -193,7 +194,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "Weiterspielen",
+      "eyebrowReady": "Bereit zum Spielen",
+      "voiceResume": "{{value}} auf der Uhr — mach genau da weiter.",
+      "voiceReady": "Das Deck ist warm. Wähle einen Titel, die Cloud übernimmt den Rest.",
+      "cellLastPlayed": "Zuletzt gespielt",
+      "cellPlaytime": "Spielzeit",
+      "cellStore": "Store",
+      "cellGenre": "Genre",
+      "launch": "Starten",
+      "ledger": "Protokoll ansehen",
+      "ledgerSessions": "{{count}} Sitzung erfasst",
+      "ledgerSessions_plural": "{{count}} Sitzungen erfasst",
+      "jumpBackIn": "Wieder einsteigen",
+      "mostPlayed": "Am meisten gespielt",
+      "favourites": "Favoriten",
+      "newInLibrary": "Neu in deiner Bibliothek",
+      "shelfCount": "{{count}} Titel",
+      "shelfCount_plural": "{{count}} Titel",
+      "seeAll": "Alle anzeigen",
+      "seeAllCount": "Alle {{count}} anzeigen",
+      "allGames": "Alle Spiele"
+    },
+    "search": {
+      "resultsFor": "Suche · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "Suche...",
+      "loadMore": "Mehr laden",
+      "clearSearch": "Suche löschen"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "Bewegen",
+      "commands": "Befehle",
+      "allShortcuts": "Alle Kurzbefehle"
+    },
+    "regionAuto": "Region automatisch",
+    "themeDeck": "Deck-Design"
   },
   "library": {
     "title": "Meine Bibliothek",
@@ -232,6 +272,98 @@
       "ownedGamesAppearHere": "Spiele, die Sie besitzen, werden hier angezeigt. Durchsuchen Sie den Katalog, um Spiele zu finden.",
       "noGamesFound": "Keine Spiele gefunden",
       "noGamesMatch": "Keine Spiele passen zu „{{query}}“"
+    },
+    "deck": {
+      "allGames": "Alle Spiele",
+      "count": "{{count}} Titel",
+      "count_plural": "{{count}} Titel",
+      "chipAll": "Alle",
+      "hint": "Wähle einen Titel für die Konsole",
+      "eyebrow": "Bibliothek // ausgewählt",
+      "launch": "Starten",
+      "viewLedger": "Protokoll ansehen",
+      "emptyDetail": "Wähle ein Spiel aus dem Raster für die Konsole.",
+      "cellLastPlayed": "Zuletzt gespielt",
+      "cellPlaytime": "Spielzeit",
+      "cellSessions": "Sitzungen",
+      "cellStore": "Store",
+      "cellGenre": "Genre"
+    },
+    "favoriteToggle": "Favorit umschalten"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // Protokoll",
+    "title": "Spielzeit",
+    "subtitle": "Jede Minute, die du wirklich im Stream verbracht hast — Wartezeiten in der Queue zählen separat.",
+    "loading": "Protokoll wird geladen …",
+    "hero": {
+      "label": "Gesamt gestreamt",
+      "unitHours": "Std",
+      "unitMinutes": "Min",
+      "detail": "{{minutes}} Minuten mehr, verteilt auf {{sessions}} Sitzungen und {{games}} Spiele",
+      "sr": "Du hast insgesamt {{hours}} Stunden und {{minutes}} Minuten gestreamt.",
+      "peakHour": "Stärkste Stunde: {{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "Sitzungen",
+      "games": "Gespielte Spiele",
+      "longest": "Längste Sitzung",
+      "average": "Ø Sitzung",
+      "queue": "Zeit in der Queue",
+      "setup": "Zeit zum Verbinden"
+    },
+    "live": {
+      "label": "Jetzt live",
+      "unknownGame": "Aktuelle Sitzung"
+    },
+    "ranking": {
+      "title": "Nach Spielzeit sortiert",
+      "count": "{{count}} Spiel",
+      "count_plural": "{{count}} Spiele",
+      "sessions": "{{count}} Sitzung",
+      "sessions_plural": "{{count}} Sitzungen",
+      "share": "{{value}} % der Gesamtzeit",
+      "more": "+ {{count}} weitere Spiele nicht angezeigt",
+      "sr": "Platz {{rank}}: {{title}}, {{value}} gestreamt in {{sessions}} Sitzungen."
+    },
+    "cadence": {
+      "title": "Wann du spielst",
+      "daily": "Letzter {{count}} Tag",
+      "daily_plural": "Letzte {{count}} Tage",
+      "dailySr": "{{value}} in diesem Zeitraum gestreamt",
+      "hourly": "Tagesstunde",
+      "hourlySr": "Stärkste Stunde {{hour}}:00 mit {{value}}",
+      "weekday": "Wochentag",
+      "weekdaySr": "Stärkster Wochentag mit {{value}}"
+    },
+    "recent": {
+      "title": "Letzte Sitzungen",
+      "empty": "Noch keine abgeschlossenen Sitzungen erfasst.",
+      "wait": "{{value}} Wartezeit",
+      "engineNative": "Nativ",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "Aktualisieren",
+      "reset": "Protokoll zurücksetzen",
+      "resetConfirmTitle": "Spielzeit zurücksetzen",
+      "resetConfirmBody": "Das löscht jede erfasste Stunde auf diesem Gerät. Das lässt sich nicht rückgängig machen.",
+      "resetConfirm": "Alles löschen",
+      "resetCancel": "Statistiken behalten",
+      "updated": "Protokoll aktualisiert {{value}}"
+    },
+    "empty": {
+      "eyebrow": "Protokoll // leer",
+      "title": "Noch keine Spielzeit erfasst",
+      "body": "Starte ein Spiel und die Uhr läuft, sobald das erste Bild ankommt. Wartezeiten werden separat erfasst, sodass nur echtes Spielen zählt.",
+      "cta": "Bibliothek durchsuchen"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}} Std {{minutes}} Min",
+      "hours": "{{count}} Std",
+      "minutes": "{{count}} Min",
+      "seconds": "{{count}} Sek"
     }
   },
   "gameCard": {
@@ -416,7 +548,9 @@
       "autoBest": "Auto (am besten)",
       "searchPlaceholder": "Regionen durchsuchen...",
       "refreshPing": "Ping aktualisieren",
-      "noRegionsMatch": "Keine Regionen stimmen mit „{{query}}“ überein."
+      "noRegionsMatch": "Keine Regionen stimmen mit „{{query}}“ überein.",
+      "noRegionsAvailable": "Keine Regionen verfügbar",
+      "retry": "Wiederholen"
     },
     "video": {
       "title": "Video",
@@ -518,11 +652,10 @@
       "appLanguageHint": "Ändert die Schnittstellensprache von OpenNOW. Für nicht übersetzte Zeichenfolgen wird Englisch verwendet.",
       "accentColor": "Akzentfarbe",
       "accentColorHint": "Wendet den ausgewählten Akzent auf die Standard-Desktop-Benutzeroberfläche an und bleibt zwischen den Starts bestehen.",
-      "accentColorGreen": "OpenNOW Grün",
-      "accentColorBlue": "Kobaltblau",
-      "accentColorViolet": "Violett",
-      "accentColorAmber": "Bernstein",
-      "accentColorRose": "Rose",
+      "accentColorNeon": "Neon",
+      "accentColorAzure": "Azur",
+      "accentColorWhite": "Weiß",
+      "accentColorSteel": "Stahl",
       "hideStreamOverlayButtons": "Stream-Overlay-Schaltflächen ausblenden",
       "hideStreamOverlayButtonsHint": "Blenden Sie beim Streamen die Schaltflächen „Mikrofon“, „Vollbild“ und „Sitzung beenden“ aus.",
       "showStatsOnStreamLaunch": "Statistiken beim Stream-Start anzeigen",
@@ -696,5 +829,27 @@
     "queueAdPlayTimeout": "Zeitüberschreitung bei der Anzeigenwiedergabe",
     "queueAdVideoStuck": "Das Werbevideo hängt fest",
     "queueAdUrlLoad": "Fehler beim Laden der URL"
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "PC-Digitalversion",
+    "chooseStore": "Spiele-Store wählen",
+    "chooseStoreHint": "Wo besitzt du dieses Spiel und willst spielen?",
+    "gameStores": "Spiele-Stores:",
+    "subscriptions": "Abos:",
+    "owned": "Besitzt",
+    "gameNotFound": "Spiel nicht gefunden",
+    "subscribed": "Abonniert",
+    "notSubscribed": "Nicht abonniert",
+    "markAsOwned": "ALS BESITZT MARKIEREN",
+    "buy": "KAUFEN",
+    "storeHint": "Wähle einen Store, in dem du das Spiel besitzt, und markiere es als besitzt.",
+    "rating": "Bewertung",
+    "publisher": "Publisher",
+    "developer": "Entwickler",
+    "gallery": "Galerie"
+  },
+  "common": {
+    "clear": "Suche löschen",
+    "back": "Back"
   }
 }

@@ -177,34 +177,17 @@ export const GameCard = memo(function GameCard({
     }
   }, []);
 
-  const handlePlayClick = (event: React.MouseEvent): void => {
-    event.stopPropagation();
-    onPlay();
-  };
-
   const handleStoreClick = (event: React.MouseEvent, variantId: string): void => {
     event.stopPropagation();
     onSelectStore?.(variantId);
   };
 
   return (
-    <m.div
+    <m.article
       className={`game-card ${isSelected ? "selected" : ""}`}
-      whileHover={{ y: -2, scale: 1.01 }}
-      whileTap={{ scale: 0.985 }}
-      onClick={onSelect}
-      onKeyDown={(event) => {
-        if (event.target !== event.currentTarget) {
-          return;
-        }
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onPlay();
-        }
-      }}
-      role="button"
-      tabIndex={0}
-      aria-label={t("gameCard.selectGame", { title: game.title })}
+      whileHover={{ y: -5 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ type: "spring", stiffness: 420, damping: 30 }}
     >
       <div
         className="game-card-image-wrapper"
@@ -214,89 +197,109 @@ export const GameCard = memo(function GameCard({
             : undefined
         }
       >
-        {game.imageUrl ? (
-          <img
-            src={game.imageUrl}
-            alt={game.title}
-            className="game-card-image"
-            loading="lazy"
-            onLoad={handleImageLoad}
-          />
-        ) : (
-          <div className="game-card-image-placeholder">
-            <Monitor size={40} />
-          </div>
-        )}
-
-        <div className="game-card-overlay">
-          <div className="game-card-gradient" />
-          <button
-            className="game-card-play-button"
-            onClick={handlePlayClick}
-            aria-label={t("gameCard.playGame", { title: game.title })}
-            tabIndex={-1}
-          >
-            <Play size={24} fill="currentColor" />
-          </button>
-        </div>
-
-        <div className="game-card-info">
-          {availabilityBadge && (
-            <span className={`game-card-status-badge ${availabilityBadge.kind}`} title={availabilityBadge.status}>
-              {t(availabilityBadge.labelKey)}
+        <button
+          type="button"
+          className="game-card-art-button"
+          onClick={onSelect}
+          onDoubleClick={onPlay}
+          aria-pressed={isSelected}
+          aria-label={t("gameCard.selectGame", { title: game.title })}
+        >
+          {game.imageUrl ? (
+            <img
+              src={game.imageUrl}
+              alt=""
+              className="game-card-image"
+              loading="lazy"
+              onLoad={handleImageLoad}
+            />
+          ) : (
+            <span className="game-card-image-placeholder">
+              <Monitor size={40} />
             </span>
           )}
-          {activeStoreOption && (
-            <p className="game-card-platform" title={activeStoreOption.displayName}>
-              {activeStoreOption.displayName}
-            </p>
-          )}
-          {storeOptions.length > 0 && (
-            <div className="game-card-stores">
-              {storeOptions.map((store) => {
-                const className = [
-                  "game-card-store-chip",
-                  store.isActive ? "active" : "",
-                  store.isOwned ? "owned" : "",
-                ].filter(Boolean).join(" ");
-                const titleParts = [store.displayName];
-                if (store.isOwned) {
-                  titleParts.push(t("gameCard.owned"));
-                }
-                if (store.isActive) {
-                  titleParts.push(t("app.actions.select"));
-                }
-                const title = titleParts.join(" · ");
+          <span className="game-card-brackets" aria-hidden="true">
+            <span className="game-card-bracket game-card-bracket--tl" />
+            <span className="game-card-bracket game-card-bracket--tr" />
+            <span className="game-card-bracket game-card-bracket--bl" />
+            <span className="game-card-bracket game-card-bracket--br" />
+          </span>
+          <span className="game-card-sweep" aria-hidden="true" />
+        </button>
 
-                if (onSelectStore) {
-                  return (
-                    <button
-                      key={store.storeKey}
-                      type="button"
-                      className={className}
-                      title={title}
-                      onClick={(event) => handleStoreClick(event, store.variantId)}
-                      aria-label={t("gameCard.store", { store: store.displayName })}
-                      aria-pressed={store.isActive}
-                    >
-                      <StoreBrandIcon store={store.store} />
-                    </button>
-                  );
-                }
-
-                return (
-                  <span key={store.storeKey} className={className} title={title}>
-                    <StoreBrandIcon store={store.store} />
-                  </span>
-                );
-              })}
-            </div>
-          )}
-          <h3 className="game-card-title" title={game.title}>
-            {game.title}
-          </h3>
+        <div className="game-card-overlay">
+          <button
+            type="button"
+            className="game-card-play-button"
+            onClick={onPlay}
+            aria-label={t("gameCard.playGame", { title: game.title })}
+          >
+            <Play size={20} fill="currentColor" />
+          </button>
         </div>
       </div>
-    </m.div>
+
+      <div className="game-card-info">
+        <h3 className="game-card-title" title={game.title}>
+          <button type="button" className="game-card-title-button" onClick={onSelect}>
+            {game.title}
+          </button>
+        </h3>
+        {availabilityBadge && (
+          <span
+            className={`game-card-status-badge ${availabilityBadge.kind}`}
+            title={availabilityBadge.status}
+          >
+            {t(availabilityBadge.labelKey)}
+          </span>
+        )}
+        {activeStoreOption && (
+          <p className="game-card-platform" title={activeStoreOption.displayName}>
+            {activeStoreOption.displayName}
+          </p>
+        )}
+        {storeOptions.length > 0 && (
+          <div className="game-card-stores">
+            {storeOptions.map((store) => {
+              const className = [
+                "game-card-store-chip",
+                store.isActive ? "active" : "",
+                store.isOwned ? "owned" : "",
+              ].filter(Boolean).join(" ");
+              const titleParts = [store.displayName];
+              if (store.isOwned) {
+                titleParts.push(t("gameCard.owned"));
+              }
+              if (store.isActive) {
+                titleParts.push(t("app.actions.select"));
+              }
+              const title = titleParts.join(" · ");
+
+              if (onSelectStore) {
+                return (
+                  <button
+                    key={store.storeKey}
+                    type="button"
+                    className={className}
+                    title={title}
+                    onClick={(event) => handleStoreClick(event, store.variantId)}
+                    aria-label={t("gameCard.store", { store: store.displayName })}
+                    aria-pressed={store.isActive}
+                  >
+                    <StoreBrandIcon store={store.store} />
+                  </button>
+                );
+              }
+
+              return (
+                <span key={store.storeKey} className={className} title={title}>
+                  <StoreBrandIcon store={store.store} />
+                </span>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </m.article>
   );
 }, gameCardPropsAreEqual);

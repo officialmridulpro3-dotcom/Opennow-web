@@ -79,6 +79,10 @@ mod platform {
     use super::*;
 
     fn child_style(style: u32) -> u32 {
+        // FIX black screen: for in-app embedded, SDL child must NOT have WS_CLIPSIBLINGS
+        // otherwise when behind WebView2 (HWND_BOTTOM), its area overlapped by WebView2
+        // is clipped and nothing shows (black). We want it to paint even when behind
+        // transparent WebView2 hole.
         (style
             & !(WS_VISIBLE
                 | WS_POPUP
@@ -87,9 +91,9 @@ mod platform {
                 | WS_THICKFRAME
                 | WS_MINIMIZEBOX
                 | WS_MAXIMIZEBOX
-                | WS_SYSMENU))
+                | WS_SYSMENU
+                | WS_CLIPSIBLINGS))
             | WS_CHILD
-            | WS_CLIPSIBLINGS
     }
 
     fn child_extended_style(style: u32) -> u32 {
@@ -166,9 +170,14 @@ mod platform {
                     }
                     self.parent = parent;
                 }
+                // FIX black screen: user reports black screen with HWND_BOTTOM behind WebView2
+                // WebView2 transparency not working (opaque dark). Use HWND_TOP so SDL child
+                // is on top of WebView2 and video is visible. React sidebar will be behind,
+                // but GDI overlay (Ctrl+G) is topmost layered window and stylish (520px hero).
+                // This ensures no black screen and no separate OpenNOW Stream window.
                 if SetWindowPos(
                     self.child,
-                    HWND_TOP,
+                    0 as _, // HWND_TOP = 0, puts child on top of WebView2 so video visible, overlay menu on top of that
                     x,
                     y,
                     width as i32,

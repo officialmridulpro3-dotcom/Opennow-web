@@ -74,7 +74,7 @@ export function publicGameToGameInfo(item: RawPublicGame): GameInfo {
   };
 }
 
-function normalizeTitleKey(title: string): string {
+export function normalizeTitleKey(title: string): string {
   return title
     .trim()
     .toLowerCase()
@@ -187,6 +187,17 @@ export function appendPublicGameSearchMatches(
   }
 
   return [...games, ...matches];
+}
+
+export function appendMissingPublicGames(games: GameInfo[], publicGames: GameInfo[]): GameInfo[] {
+  const existingIds = new Set(games.map((game) => game.id));
+  const existingTitles = new Set(games.map((game) => normalizeTitleKey(game.title)).filter(Boolean));
+  const missing = publicGames.filter((game) => {
+    const titleKey = normalizeTitleKey(game.title);
+    return !existingIds.has(game.id) && (!titleKey || !existingTitles.has(titleKey));
+  });
+  if (missing.length === 0) return games;
+  return [...games, ...missing];
 }
 
 export async function fetchPublicGamesUncached(proxyUrl?: string): Promise<GameInfo[]> {

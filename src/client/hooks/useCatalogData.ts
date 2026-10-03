@@ -15,6 +15,7 @@ import type {
 import { loadCatalogPreferences, saveCatalogPreferences, VARIANT_SELECTION_LOCALSTORAGE_KEY } from "../lib/catalogPreferences";
 import {
   clearCatalogSnapshot,
+  loadAnyCatalogSnapshot,
   loadCatalogSnapshot,
   saveCatalogSnapshot,
 } from "../lib/catalogSnapshot";
@@ -49,7 +50,7 @@ export interface UseCatalogDataInput {
   authSession: AuthSession | null;
   activeSessionProxyUrl: string | undefined;
   effectiveStreamingBaseUrl: string;
-  currentPage: "home" | "library" | "settings";
+  currentPage: "home" | "library" | "playtime" | "settings";
   effectiveControllerMode: boolean;
   isInitializing: boolean;
   t: TranslateFunction;
@@ -136,6 +137,22 @@ export function useCatalogData({
   } | null>(null);
   const [regions, setRegions] = useState<StreamRegion[]>([]);
   const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
+
+  // Instant load: show cached games immediately on app start, even before auth
+  useEffect(() => {
+    const anySnapshot = loadAnyCatalogSnapshot();
+    if (anySnapshot && games.length === 0) {
+      console.log("[Catalog] instant load from any snapshot:", anySnapshot.games.length, "games");
+      setGames(anySnapshot.games);
+      setLibraryGames(anySnapshot.libraryGames);
+      setCatalogFilterGroups(anySnapshot.filterGroups);
+      setCatalogSortOptions(anySnapshot.sortOptions);
+      setCatalogTotalCount(anySnapshot.totalCount);
+      setCatalogSupportedCount(anySnapshot.supportedCount);
+      setSelectedGameId((prev) => (anySnapshot.games.some((g) => g.id === prev) ? prev : (anySnapshot.games[0]?.id ?? "")));
+      applyVariantSelections([...anySnapshot.games, ...anySnapshot.libraryGames]);
+    }
+  }, []); // run once on mount for instant appearance
 
   const storePanelsLoadedContextRef = useRef("");
   const storePanelsLoadIdRef = useRef(0);

@@ -1,15 +1,17 @@
 import type { Express, NextFunction, Request, Response } from "express";
 
 import type { CatalogBrowseRequest, SessionAdReportRequest, SessionClaimRequest, SessionCreateRequest, SessionPollRequest, SessionStopRequest } from "@shared/gfn";
-import { browseCatalogUncached } from "./gfn/catalogBrowse";
+import type { LegacyPlaytimeRecord, PlaytimeSessionPayload } from "@shared/playtime";
+import { browseCatalog, browseCatalogUncached } from "./gfn/catalogBrowse";
 import { resolveLaunchAppId, resolveStoreUrl } from "./gfn/gameAppMapper";
-import { fetchLibraryGamesUncached, markGameOwned } from "./gfn/libraryGames";
+import { fetchLibraryGames, fetchLibraryGamesUncached, markGameOwned } from "./gfn/libraryGames";
 import { fetchPublicGamesUncached } from "./gfn/publicGames";
 import { claimSession, createSession, getActiveSessions, pollSession, reportSessionAd, stopSession } from "./gfn/cloudmatch";
 import { resolveClientStreamingBaseUrl } from "./gfn/cloudmatchTransport";
 import { fetchSubscription } from "./gfn/subscription";
 import { getLoginProviders } from "./webAuth";
 import { getSession } from "./sessionStore";
+import { getPlaytimeSummary, importLegacyPlaytime, recordPlaytimeSession, resetPlaytime } from "./playtimeStore";
 import { finalizeNativeContext, nativeSidecar, resolveLaunchTransportMode, resolveNativeMediaPeer } from "./nativeStream";
 import { formatUdpPreflight, runUdpPreflight } from "./udpPreflight";
 
@@ -96,6 +98,16 @@ export function registerApi(app: Express): void {
     const state = getSession(request, response);
     const auth = await state.requireAuth();
     const token = auth.tokens.idToken ?? auth.tokens.accessToken;
+    const forceRefresh = request.query.refresh === "1";
+    if (!forceRefresh) {
+      try {
+        const cachedGames = await fetchLibraryGames(token, auth.provider.streamingServiceUrl, auth.user.userId);
+        response.json({ games: cachedGames });
+        return;
+      } catch (err) {
+        console.warn("[Library] cached fetch failed, falling back to uncached:", err);
+      }
+    }
     const games = await fetchLibraryGamesUncached(token, auth.provider.streamingServiceUrl);
     response.json({ games });
   }));
@@ -103,12 +115,25 @@ export function registerApi(app: Express): void {
   app.get("/api/catalog", asyncRoute(async (request, response) => {
     const state = getSession(request, response);
     const auth = await state.requireAuth();
+    const searchQuery = typeof request.query.q === "string" ? request.query.q : undefined;
     const input: CatalogBrowseRequest = {
       token: auth.tokens.idToken ?? auth.tokens.accessToken,
       providerStreamingBaseUrl: auth.provider.streamingServiceUrl,
-      searchQuery: typeof request.query.q === "string" ? request.query.q : undefined,
-      fetchCount: 100,
+      searchQuery,
+      fetchCount: 200,
+      userId: auth.user.userId,
     };
+    // Use cached version for instant load, fallback to uncached if cache miss and not searching
+    const forceRefresh = request.query.refresh === "1";
+    if (!forceRefresh) {
+      try {
+        const cached = await browseCatalog(input);
+        response.json(cached);
+        return;
+      } catch (err) {
+        console.warn("[Catalog] cached browse failed, falling back to uncached:", err);
+      }
+    }
     response.json(await browseCatalogUncached(input));
   }));
 
@@ -288,7 +313,7 @@ export function registerApi(app: Express): void {
         (preflight) => console.log(`[NVST] UDP preflight: ${formatUdpPreflight(preflight)}`),
         (error: unknown) => console.log(`[NVST] UDP preflight error: ${(error as Error).message}`),
       );
-      response.json(await nativeSidecar.start(finalized.sessionId, context));
+      response.json(await nativeSidecar.start(finalized.sessionId, context, finalized.gameTitle));
     } catch (error) {
       const statusCode = (error as { statusCode?: number }).statusCode ?? 500;
       response.status(statusCode).json({ error: (error as Error).message });
@@ -300,4 +325,56 @@ export function registerApi(app: Express): void {
     await state.requireAuth();
     response.json(await nativeSidecar.stop());
   }));
+
+  // In-app native surface — embedded mode: client sends video element rect + Tauri HWND
+  // so sidecar can attach SDL child window inside the app window (no black screen, no external popup)
+  app.post("/api/native/surface", asyncRoute(async (request, response) => {
+    const state = getSession(request, response);
+    await state.requireAuth();
+    const input = (request.body ?? {}) as {
+      rect?: { x: number; y: number; width: number; height: number } | null;
+      visible?: boolean;
+      deviceScaleFactor?: number;
+      showStats?: boolean;
+      windowHandle?: string;
+      screenRect?: { x: number; y: number; width: number; height: number } | null;
+    };
+    nativeSidecar.updateSurface({
+      rect: input.rect ?? null,
+      visible: input.visible ?? false,
+      deviceScaleFactor: input.deviceScaleFactor ?? (typeof window !== "undefined" ? (window as any).devicePixelRatio : 1) ?? 1,
+      showStats: input.showStats ?? false,
+      windowHandle: input.windowHandle,
+      screenRect: input.screenRect ?? input.rect ?? null,
+    });
+    response.json({ ok: true });
+  }));
+
+  // ---- Playtime ledger --------------------------------------------------
+  // Statistics about the local player, not about NVIDIA, so these routes stay
+  // readable while signed out and never call upstream. The ledger lives in the
+  // per-installation app-data directory and survives WebView profile resets.
+  app.get("/api/playtime", (_request, response) => {
+    response.setHeader("Cache-Control", "no-store");
+    response.json(getPlaytimeSummary());
+  });
+
+  app.post("/api/playtime/session", asyncRoute(async (request, response) => {
+    const payload = (request.body ?? {}) as Partial<PlaytimeSessionPayload>;
+    if (typeof payload.gameId !== "string" || payload.gameId.trim().length === 0) {
+      throw Object.assign(new Error("A gameId is required to record playtime."), { statusCode: 400 });
+    }
+    response.json(recordPlaytimeSession(payload as PlaytimeSessionPayload));
+  }));
+
+  // One-shot migration of the pre-ledger localStorage counter. Idempotent: the
+  // store refuses a second import.
+  app.post("/api/playtime/import", asyncRoute(async (request, response) => {
+    const records = Array.isArray(request.body?.records) ? request.body.records as LegacyPlaytimeRecord[] : [];
+    response.json(importLegacyPlaytime(records.slice(0, 2_000)));
+  }));
+
+  app.delete("/api/playtime", (_request, response) => {
+    response.json(resetPlaytime());
+  });
 }

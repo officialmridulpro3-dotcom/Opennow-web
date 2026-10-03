@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState, type JSX } from "rea
 import type { Settings } from "@shared/gfn";
 import { getAccentColorOption } from "../../../lib/uiCustomization";
 import { useTranslation } from "../../../i18n";
-import { SelectDropdown } from "../../ui/SelectDropdown";
 import {
   accentColorOptions,
   getAppLanguageLabel,
@@ -101,24 +100,6 @@ export function SettingsInterfaceSection({ settings, showAll, handleChange, onSa
                 </div>
               )}
             </div>
-          </div>
-
-          <div className="settings-row">
-            <label className="settings-label" htmlFor="appTheme">
-              {t("settings.interface.theme") || "Theme"}
-              <span className="settings-hint">{t("settings.interface.themeHint") || "Choose a light, dark, or system-matching theme."}</span>
-            </label>
-            <SelectDropdown
-              id="appTheme"
-              value={settings.appTheme}
-              options={[
-                { value: "auto", label: t("settings.interface.themeAuto") || "Auto" },
-                { value: "light", label: t("settings.interface.themeLight") || "Light" },
-                { value: "dark", label: t("settings.interface.themeDark") || "Dark" },
-              ]}
-              onChange={(value) => handleChange("appTheme", value as any)}
-              ariaLabel={t("settings.interface.theme") || "Theme"}
-            />
           </div>
 
           <div className="settings-row">

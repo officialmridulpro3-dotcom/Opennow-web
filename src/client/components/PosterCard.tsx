@@ -11,6 +11,10 @@ export interface PosterCardProps {
   onSelect: () => void;
   onPlay: () => void;
   subtitle?: string;
+  /** Deck rank numeral, shown on ranked shelves such as Most played. */
+  rank?: number;
+  /** Optional ledger line under the title (playtime, last played…). */
+  note?: string;
 }
 
 function getPosterUrl(game: GameInfo): string | undefined {
@@ -28,12 +32,20 @@ function getActiveStoreRaw(game: GameInfo): string | undefined {
   return variant?.store ?? game.availableStores?.[0];
 }
 
+/**
+ * Deck poster card: big box art in a chamfered frame with corner brackets,
+ * and a strip *below* the art carrying the title, store and launch control.
+ * Art, title and launch are sibling buttons — nothing is nested inside
+ * another interactive element.
+ */
 export const PosterCard = memo(function PosterCard({
   game,
   isSelected = false,
   onSelect,
   onPlay,
   subtitle,
+  rank,
+  note,
 }: PosterCardProps): JSX.Element {
   const { t } = useTranslation();
   const posterUrl = getPosterUrl(game);
@@ -42,63 +54,87 @@ export const PosterCard = memo(function PosterCard({
   const StoreIcon = !subtitle && storeRaw ? getStoreIconComponent(storeRaw) : null;
 
   return (
-    <m.div
+    <m.article
       className={`poster-card${isSelected ? " selected" : ""}`}
-      onClick={onSelect}
-      onDoubleClick={onPlay}
-      onKeyDown={(event) => {
-        if (event.target !== event.currentTarget) return;
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onPlay();
-        }
-      }}
-      role="button"
-      tabIndex={0}
-      aria-label={t("gameCard.selectGame", { title: game.title })}
-      whileHover={{ y: -5, scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 420, damping: 30 }}
     >
       <div className="poster-card-art">
-        {posterUrl ? (
-          <img src={posterUrl} alt={game.title} className="poster-card-img" loading="lazy" />
-        ) : (
-          <div className="poster-card-placeholder">
-            <Monitor size={34} />
-            <span>{game.title}</span>
-          </div>
-        )}
-        <div className="poster-card-scrim" />
-        <div className="poster-card-body">
-          <p className="poster-card-title" title={game.title}>{game.title}</p>
-          {storeLabel && (
-            <p className="poster-card-meta">
+        <button
+          type="button"
+          className="poster-card-art-button"
+          onClick={onSelect}
+          onDoubleClick={onPlay}
+          aria-pressed={isSelected}
+          aria-label={t("gameCard.selectGame", { title: game.title })}
+        >
+          {posterUrl ? (
+            <img src={posterUrl} alt="" className="poster-card-img" loading="lazy" />
+          ) : (
+            <span className="poster-card-placeholder">
+              <Monitor size={30} />
+              <span>{game.title}</span>
+            </span>
+          )}
+          <span className="poster-card-brackets" aria-hidden="true">
+            <span className="poster-card-bracket poster-card-bracket--tl" />
+            <span className="poster-card-bracket poster-card-bracket--tr" />
+            <span className="poster-card-bracket poster-card-bracket--bl" />
+            <span className="poster-card-bracket poster-card-bracket--br" />
+          </span>
+          <span className="poster-card-sweep" aria-hidden="true" />
+        </button>
+      </div>
+
+      <div className="poster-card-strip">
+        <div className="poster-card-strip-head">
+          {typeof rank === "number" && (
+            <span className="poster-card-rank" aria-hidden="true">
+              {rank}
+            </span>
+          )}
+          <button
+            type="button"
+            className="poster-card-title"
+            onClick={onSelect}
+            title={game.title}
+            aria-pressed={isSelected}
+          >
+            {game.title}
+          </button>
+        </div>
+
+        <div className="poster-card-strip-row">
+          {storeLabel ? (
+            <span className="poster-card-meta" title={storeLabel}>
               {StoreIcon && (
-                <span className="poster-card-meta-icon"><StoreIcon /></span>
+                <span className="poster-card-meta-icon">
+                  <StoreIcon />
+                </span>
               )}
               <span>{storeLabel}</span>
-            </p>
-          )}
-          <span className="poster-card-playwrap" aria-hidden="true">
-            <span className="poster-card-playwrap-inner">
-              <button
-                type="button"
-                className="poster-card-play"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onPlay();
-                }}
-                tabIndex={-1}
-                aria-label={t("gameCard.playGame", { title: game.title })}
-              >
-                <Play size={13} fill="currentColor" />
-                <span>{t("app.actions.play")}</span>
-              </button>
             </span>
-          </span>
+          ) : (
+            <span className="poster-card-meta" />
+          )}
+          <button
+            type="button"
+            className="poster-card-play"
+            onClick={onPlay}
+            aria-label={t("gameCard.playGame", { title: game.title })}
+          >
+            <Play size={12} fill="currentColor" />
+            <span>{t("app.actions.play")}</span>
+          </button>
         </div>
+
+        {note && (
+          <p className="poster-card-note">
+            <span className="poster-card-note-dash" aria-hidden="true" />
+            {note}
+          </p>
+        )}
       </div>
-    </m.div>
+    </m.article>
   );
 });

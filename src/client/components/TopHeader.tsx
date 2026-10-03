@@ -9,6 +9,8 @@ interface TopHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   searchPlaceholder: string;
+  /** Pages with nothing to filter (Playtime) drop the search field entirely. */
+  hideSearch?: boolean;
 }
 
 export function TopHeader({
@@ -18,6 +20,7 @@ export function TopHeader({
   searchQuery,
   onSearchChange,
   searchPlaceholder,
+  hideSearch = false,
 }: TopHeaderProps): JSX.Element {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -44,6 +47,7 @@ export function TopHeader({
         {resolvedCountLabel && <span className="top-header-count">{resolvedCountLabel}</span>}
       </div>
 
+      {!hideSearch && (
       <div className="top-header-search">
         <Search className="top-header-search-icon" size={16} />
         <input
@@ -57,6 +61,7 @@ export function TopHeader({
         />
         <kbd className="top-header-search-kbd">/</kbd>
       </div>
+      )}
     </header>
   );
 }

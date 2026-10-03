@@ -160,7 +160,8 @@
   "navigation": {
     "home": "Mağaza",
     "library": "Kütüphane",
-    "settings": "Ayarlar"
+    "settings": "Ayarlar",
+    "playtime": "Oynama süresi"
   },
   "home": {
     "searchPlaceholder": "Oyun ara...",
@@ -193,7 +194,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "Oynamaya devam et",
+      "eyebrowReady": "Oynamaya hazır",
+      "voiceResume": "Sayaçta {{value}} — kaldığın yerden devam et.",
+      "voiceReady": "Konsol hazır. Bir oyun seç, gerisini bulut halletsin.",
+      "cellLastPlayed": "Son oynanan",
+      "cellPlaytime": "Oyun süresi",
+      "cellStore": "Mağaza",
+      "cellGenre": "Tür",
+      "launch": "Başlat",
+      "ledger": "Kayıtları gör",
+      "ledgerSessions": "{{count}} oturum kaydedildi",
+      "ledgerSessions_plural": "{{count}} oturum kaydedildi",
+      "jumpBackIn": "Geri dön",
+      "mostPlayed": "En çok oynananlar",
+      "favourites": "Favoriler",
+      "newInLibrary": "Kitaplığında yeni",
+      "shelfCount": "{{count}} oyun",
+      "shelfCount_plural": "{{count}} oyun",
+      "seeAll": "Tümünü gör",
+      "seeAllCount": "{{count}} oyunun tümünü gör",
+      "allGames": "Tüm oyunlar"
+    },
+    "search": {
+      "resultsFor": "Ara · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "Aranıyor...",
+      "loadMore": "Daha fazla yükle",
+      "clearSearch": "Aramayı temizle"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "Taşı",
+      "commands": "Komutlar",
+      "allShortcuts": "Tüm kısayollar"
+    },
+    "regionAuto": "Otomatik bölge",
+    "themeDeck": "Deck teması"
   },
   "library": {
     "title": "Kütüphanem",
@@ -232,6 +272,98 @@
       "ownedGamesAppearHere": "Sahip olduğunuz oyunlar burada görünecek. Oyunları bulmak için kataloğa göz atın.",
       "noGamesFound": "Oyun bulunamadı",
       "noGamesMatch": "\"{{query}}\" ile eşleşen oyun yok"
+    },
+    "deck": {
+      "allGames": "Tüm oyunlar",
+      "count": "{{count}} oyun",
+      "count_plural": "{{count}} oyun",
+      "chipAll": "Tümü",
+      "hint": "Konsolu görmek için bir oyun seç",
+      "eyebrow": "Kütüphane // seçili",
+      "launch": "Başlat",
+      "viewLedger": "Kayıtları gör",
+      "emptyDetail": "Konsolunu görmek için ızgaradan bir oyun seç.",
+      "cellLastPlayed": "Son oynanan",
+      "cellPlaytime": "Oyun süresi",
+      "cellSessions": "Oturumlar",
+      "cellStore": "Mağaza",
+      "cellGenre": "Tür"
+    },
+    "favoriteToggle": "Favoriyi değiştir"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // kayıt",
+    "title": "Oynama süresi",
+    "subtitle": "Yayında geçirdiğin her dakika — kuyruk beklemeleri ayrı sayılır.",
+    "loading": "Kayıtlar yükleniyor…",
+    "hero": {
+      "label": "Toplam yayın",
+      "unitHours": "sa",
+      "unitMinutes": "dk",
+      "detail": "{{minutes}} dakika daha, {{sessions}} oturum ve {{games}} oyunda",
+      "sr": "Toplam {{hours}} saat {{minutes}} dakika yayın izledin.",
+      "peakHour": "En yoğun saat: {{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "Oturumlar",
+      "games": "Oynanan oyunlar",
+      "longest": "En uzun oturum",
+      "average": "Ortalama oturum",
+      "queue": "Kuyrukta geçen süre",
+      "setup": "Bağlantı süresi"
+    },
+    "live": {
+      "label": "Şu anda yayında",
+      "unknownGame": "Geçerli oturum"
+    },
+    "ranking": {
+      "title": "Oynama süresine göre sıralı",
+      "count": "{{count}} oyun",
+      "count_plural": "{{count}} oyun",
+      "sessions": "{{count}} oturum",
+      "sessions_plural": "{{count}} oturum",
+      "share": "Toplamın %{{value}} kadarı",
+      "more": "+ {{count}} oyun listelenmedi",
+      "sr": "Sıra {{rank}}: {{title}}, {{sessions}} oturumda {{value}}."
+    },
+    "cadence": {
+      "title": "Ne zaman oynuyorsun",
+      "daily": "Son {{count}} gün",
+      "daily_plural": "Son {{count}} gün",
+      "dailySr": "Bu aralıkta {{value}}",
+      "hourly": "Günün saati",
+      "hourlySr": "{{hour}}:00 zirvesi, {{value}}",
+      "weekday": "Hafta günü",
+      "weekdaySr": "{{value}} ile en yoğun gün"
+    },
+    "recent": {
+      "title": "Son oturumlar",
+      "empty": "Henüz tamamlanmış oturum kaydı yok.",
+      "wait": "{{value}} bekleme",
+      "engineNative": "Yerel",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "Yenile",
+      "reset": "Kayıtları sıfırla",
+      "resetConfirmTitle": "Oynama süresini sıfırla",
+      "resetConfirmBody": "Bu, bu cihazdaki kayıtlı tüm saatleri siler. Geri alınamaz.",
+      "resetConfirm": "Her şeyi sil",
+      "resetCancel": "İstatistiklerim kalsın",
+      "updated": "Kayıtlar güncellendi {{value}}"
+    },
+    "empty": {
+      "eyebrow": "Kayıt // boş",
+      "title": "Henüz oynama süresi kaydedilmedi",
+      "body": "Bir oyun başlat; sayaç ilk kare gelir gelmez başlar. Kuyruk beklemeleri ayrı izlenir, yani yalnızca gerçek oyun sayılır.",
+      "cta": "Kitaplığa göz at"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}} sa {{minutes}} dk",
+      "hours": "{{count}} sa",
+      "minutes": "{{count}} dk",
+      "seconds": "{{count}} sn"
     }
   },
   "gameCard": {
@@ -416,7 +548,9 @@
       "autoBest": "Otomatik (En İyi)",
       "searchPlaceholder": "Bölgeleri ara...",
       "refreshPing": "Ping'i yenile",
-      "noRegionsMatch": "\"{{query}}\" ile eşleşen bölge yok"
+      "noRegionsMatch": "\"{{query}}\" ile eşleşen bölge yok",
+      "noRegionsAvailable": "Bölge yok",
+      "retry": "Yeniden dene"
     },
     "video": {
       "title": "video",
@@ -518,11 +652,10 @@
       "appLanguageHint": "OpenNOW'in arayüz dilini değiştirir. Çevrilmemiş dizeler için İngilizce kullanılır.",
       "accentColor": "Vurgu Rengi",
       "accentColorHint": "Seçilen vurguyu standart masaüstü kullanıcı arayüzüne uygular ve başlatmalar arasında kalıcı olur.",
-      "accentColorGreen": "OpenNOW Yeşil",
-      "accentColorBlue": "Kobalt Mavisi",
-      "accentColorViolet": "Menekşe",
-      "accentColorAmber": "kehribar",
-      "accentColorRose": "Gül",
+      "accentColorNeon": "Neon",
+      "accentColorAzure": "Gök mavisi",
+      "accentColorWhite": "Beyaz",
+      "accentColorSteel": "Çelik",
       "hideStreamOverlayButtons": "Akış Yer Paylaşımı Düğmelerini Gizle",
       "hideStreamOverlayButtonsHint": "Akış sırasında mikrofonu, tam ekranı ve oturum sonu düğmelerini gizleyin.",
       "showStatsOnStreamLaunch": "Yayın Başlatıldığında İstatistikleri Göster",
@@ -696,5 +829,27 @@
     "queueAdPlayTimeout": "Reklam oynatma zaman aşımı",
     "queueAdVideoStuck": "Reklam videosu takılı kaldı",
     "queueAdUrlLoad": "URL yüklenirken hata oluştu"
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "PC Dijital Sürüm",
+    "chooseStore": "Bir mağaza seç",
+    "chooseStoreHint": "Bu oyuna nerede sahipsin ve oynamak istiyorsun?",
+    "gameStores": "Oyun mağazaları:",
+    "subscriptions": "Abonelikler:",
+    "owned": "Sahip olunan",
+    "gameNotFound": "Oyun bulunamadı",
+    "subscribed": "Abone olunan",
+    "notSubscribed": "Abone değil",
+    "markAsOwned": "SAHİP OLUNAN OLARAK İŞARETLE",
+    "buy": "SATIN AL",
+    "storeHint": "Oyuna sahip olduğun bir mağaza seç ve kütüphanene eklemek için işaretle.",
+    "rating": "Derecelendirme",
+    "publisher": "Yayıncı",
+    "developer": "Geliştirici",
+    "gallery": "Galeri"
+  },
+  "common": {
+    "clear": "Aramayı temizle",
+    "back": "Back"
   }
 }

@@ -160,7 +160,8 @@
   "navigation": {
     "home": "Магазин",
     "library": "Библиотека",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "playtime": "Время игры"
   },
   "home": {
     "searchPlaceholder": "Поиск игр...",
@@ -193,7 +194,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "Продолжить игру",
+      "eyebrowReady": "Готово к запуску",
+      "voiceResume": "{{value}} на счётчике — продолжайте с того же места.",
+      "voiceReady": "Дека прогрета. Выберите игру, остальное сделает облако.",
+      "cellLastPlayed": "Последний запуск",
+      "cellPlaytime": "Время игры",
+      "cellStore": "Магазин",
+      "cellGenre": "Жанр",
+      "launch": "Запустить",
+      "ledger": "Открыть журнал",
+      "ledgerSessions": "Записана {{count}} сессия",
+      "ledgerSessions_plural": "Записано {{count}} сессий",
+      "jumpBackIn": "Вернуться к игре",
+      "mostPlayed": "Самые играемые",
+      "favourites": "Избранное",
+      "newInLibrary": "Новое в библиотеке",
+      "shelfCount": "{{count}} игра",
+      "shelfCount_plural": "{{count}} игр",
+      "seeAll": "Показать все",
+      "seeAllCount": "Показать все {{count}}",
+      "allGames": "Все игры"
+    },
+    "search": {
+      "resultsFor": "Поиск · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "Поиск...",
+      "loadMore": "Загрузить ещё",
+      "clearSearch": "Очистить поиск"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "Перемещение",
+      "commands": "Команды",
+      "allShortcuts": "Все сочетания"
+    },
+    "regionAuto": "Регион: авто",
+    "themeDeck": "Тема Deck"
   },
   "library": {
     "title": "Моя библиотека",
@@ -232,6 +272,98 @@
       "ownedGamesAppearHere": "Здесь появятся ваши собственные игры. Просмотрите каталог, чтобы найти игры.",
       "noGamesFound": "Игры не найдены",
       "noGamesMatch": "Нет игр, соответствующих \"{{query}}\""
+    },
+    "deck": {
+      "allGames": "Все игры",
+      "count": "{{count}} игра",
+      "count_plural": "{{count}} игр",
+      "chipAll": "Все",
+      "hint": "Выберите игру для консоли",
+      "eyebrow": "Библиотека // выбрано",
+      "launch": "Запустить",
+      "viewLedger": "Открыть журнал",
+      "emptyDetail": "Выберите игру из сетки, чтобы увидеть консоль.",
+      "cellLastPlayed": "Последний запуск",
+      "cellPlaytime": "Время игры",
+      "cellSessions": "Сессии",
+      "cellStore": "Магазин",
+      "cellGenre": "Жанр"
+    },
+    "favoriteToggle": "Переключить избранное"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // журнал",
+    "title": "Время игры",
+    "subtitle": "Каждая минута, проведённая в стриме, — ожидание в очереди считается отдельно.",
+    "loading": "Загрузка журнала…",
+    "hero": {
+      "label": "Всего в стриме",
+      "unitHours": "ч",
+      "unitMinutes": "мин",
+      "detail": "ещё {{minutes}} минут, {{sessions}} сессий и {{games}} игр",
+      "sr": "Всего вы стримили {{hours}} ч {{minutes}} мин.",
+      "peakHour": "Самый активный час: {{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "Сессии",
+      "games": "Игр сыграно",
+      "longest": "Самая длинная сессия",
+      "average": "Средняя сессия",
+      "queue": "Время в очереди",
+      "setup": "Время подключения"
+    },
+    "live": {
+      "label": "Сейчас в стриме",
+      "unknownGame": "Текущая сессия"
+    },
+    "ranking": {
+      "title": "По времени игры",
+      "count": "{{count}} игра",
+      "count_plural": "{{count}} игр",
+      "sessions": "{{count}} сессия",
+      "sessions_plural": "{{count}} сессий",
+      "share": "{{value}}% от всего",
+      "more": "ещё {{count}} игр не показано",
+      "sr": "Место {{rank}}: {{title}}, {{value}} за {{sessions}} сессий."
+    },
+    "cadence": {
+      "title": "Когда вы играете",
+      "daily": "Последний {{count}} день",
+      "daily_plural": "Последние {{count}} дней",
+      "dailySr": "{{value}} за этот период",
+      "hourly": "Час дня",
+      "hourlySr": "Пик в {{hour}}:00 — {{value}}",
+      "weekday": "День недели",
+      "weekdaySr": "Самый активный день — {{value}}"
+    },
+    "recent": {
+      "title": "Недавние сессии",
+      "empty": "Завершённых сессий пока нет.",
+      "wait": "{{value}} ожидания",
+      "engineNative": "Нативно",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "Обновить",
+      "reset": "Сбросить журнал",
+      "resetConfirmTitle": "Сбросить время игры",
+      "resetConfirmBody": "Это удалит все записанные часы на этом устройстве. Отменить нельзя.",
+      "resetConfirm": "Удалить всё",
+      "resetCancel": "Сохранить статистику",
+      "updated": "Журнал обновлён {{value}}"
+    },
+    "empty": {
+      "eyebrow": "Журнал // пуст",
+      "title": "Время игры ещё не записано",
+      "body": "Запустите игру — отсчёт начнётся с первым кадром. Ожидание в очереди учитывается отдельно, так что считается только настоящая игра.",
+      "cta": "Открыть библиотеку"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}} ч {{minutes}} мин",
+      "hours": "{{count}} ч",
+      "minutes": "{{count}} мин",
+      "seconds": "{{count}} с"
     }
   },
   "gameCard": {
@@ -416,7 +548,9 @@
       "autoBest": "Авто (Лучший)",
       "searchPlaceholder": "Поиск регионов...",
       "refreshPing": "Обновить пинг",
-      "noRegionsMatch": "Нет регионов, соответствующих «{{query}}»."
+      "noRegionsMatch": "Нет регионов, соответствующих «{{query}}».",
+      "noRegionsAvailable": "Нет доступных регионов",
+      "retry": "Повторить"
     },
     "video": {
       "title": "Видео",
@@ -518,11 +652,10 @@
       "appLanguageHint": "Изменяет язык интерфейса OpenNOW. Английский используется для непереведенных строк.",
       "accentColor": "Акцентный цвет",
       "accentColorHint": "Применяет выбранный акцент к стандартному пользовательскому интерфейсу рабочего стола и сохраняется между запусками.",
-      "accentColorGreen": "OpenNOW Зеленый",
-      "accentColorBlue": "Кобальт синий",
-      "accentColorViolet": "Фиолетовый",
-      "accentColorAmber": "Янтарь",
-      "accentColorRose": "Роза",
+      "accentColorNeon": "Неон",
+      "accentColorAzure": "Лазурь",
+      "accentColorWhite": "Белый",
+      "accentColorSteel": "Сталь",
       "hideStreamOverlayButtons": "Скрыть кнопки наложения потока",
       "hideStreamOverlayButtonsHint": "Скройте микрофон, полноэкранный режим и кнопки завершения сеанса во время потоковой передачи.",
       "showStatsOnStreamLaunch": "Показывать статистику при запуске трансляции",
@@ -696,5 +829,27 @@
     "queueAdPlayTimeout": "Тайм-аут воспроизведения рекламы",
     "queueAdVideoStuck": "Рекламное видео зависло",
     "queueAdUrlLoad": "Ошибка загрузки URL."
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "Цифровая версия для ПК",
+    "chooseStore": "Выберите магазин",
+    "chooseStoreHint": "Где у вас есть эта игра и где вы хотите играть?",
+    "gameStores": "Магазины:",
+    "subscriptions": "Подписки:",
+    "owned": "В наличии",
+    "gameNotFound": "Игра не найдена",
+    "subscribed": "Подписка оформлена",
+    "notSubscribed": "Нет подписки",
+    "markAsOwned": "ОТМЕТИТЬ КАК ИМЕЮЩУЮСЯ",
+    "buy": "КУПИТЬ",
+    "storeHint": "Выберите магазин, где у вас есть игра, и отметьте как имеющуюся.",
+    "rating": "Рейтинг",
+    "publisher": "Издатель",
+    "developer": "Разработчик",
+    "gallery": "Галерея"
+  },
+  "common": {
+    "clear": "Очистить поиск",
+    "back": "Back"
   }
 }

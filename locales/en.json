@@ -1,6 +1,8 @@
 {
   "common": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "clear": "Clear",
+    "back": "Back"
   },
   "app": {
     "name": "OpenNOW",
@@ -165,7 +167,8 @@
   "navigation": {
     "home": "Store",
     "library": "Library",
-    "settings": "Settings"
+    "settings": "Settings",
+    "playtime": "Playtime"
   },
   "home": {
     "searchPlaceholder": "Search games...",
@@ -199,7 +202,46 @@
       "playNow": "Play Now",
       "variant": "{{variant}}",
       "storeCount": "{{count}} stores"
+    },
+    "deck": {
+      "eyebrow": "Continue playing",
+      "eyebrowReady": "Ready to play",
+      "voiceResume": "{{value}} on the clock — pick up where you left off.",
+      "voiceReady": "The deck is warm. Pick a title and the cloud does the rest.",
+      "cellLastPlayed": "Last played",
+      "cellPlaytime": "Playtime",
+      "cellStore": "Store",
+      "cellGenre": "Genre",
+      "launch": "Launch",
+      "ledger": "View ledger",
+      "ledgerSessions": "{{count}} session logged",
+      "ledgerSessions_plural": "{{count}} sessions logged",
+      "jumpBackIn": "Jump back in",
+      "mostPlayed": "Most played",
+      "favourites": "Favourites",
+      "newInLibrary": "New in your library",
+      "shelfCount": "{{count}} title",
+      "shelfCount_plural": "{{count}} titles",
+      "seeAll": "See all",
+      "seeAllCount": "See all {{count}}",
+      "allGames": "All games"
+    },
+    "search": {
+      "resultsFor": "Search · \"{query}\"",
+      "showing": "{shown} / {total}",
+      "searching": "Searching...",
+      "loadMore": "Load more",
+      "clearSearch": "Clear search"
     }
+  },
+  "statusbar": {
+    "hint": {
+      "move": "Move",
+      "commands": "Commands",
+      "allShortcuts": "All shortcuts"
+    },
+    "regionAuto": "Auto region",
+    "themeDeck": "Deck theme"
   },
   "library": {
     "title": "My Library",
@@ -261,6 +303,98 @@
       "noGamesMatch": "No games match \"{{query}}\"",
       "noFilteredGames": "No games match those filters",
       "tryAdjustingFilters": "Try clearing a filter or changing your search."
+    },
+    "deck": {
+      "allGames": "All games",
+      "count": "{{count}} title",
+      "count_plural": "{{count}} titles",
+      "chipAll": "All",
+      "hint": "Select a title to inspect the deck",
+      "eyebrow": "Library // selected",
+      "launch": "Launch",
+      "viewLedger": "View ledger",
+      "emptyDetail": "Pick a game from the grid to see its console.",
+      "cellLastPlayed": "Last played",
+      "cellPlaytime": "Playtime",
+      "cellSessions": "Sessions",
+      "cellStore": "Store",
+      "cellGenre": "Genre"
+    },
+    "favoriteToggle": "Toggle favorite"
+  },
+  "playtime": {
+    "eyebrow": "OpenNOW // ledger",
+    "title": "Playtime",
+    "subtitle": "Every minute you actually spent in the stream — queue waits counted separately.",
+    "loading": "Loading your ledger…",
+    "hero": {
+      "label": "Total streamed",
+      "unitHours": "h",
+      "unitMinutes": "m",
+      "detail": "{{minutes}} minutes more, across {{sessions}} sessions and {{games}} games",
+      "sr": "You have streamed {{hours}} hours and {{minutes}} minutes in total.",
+      "peakHour": "Busiest hour: {{hour}}:00 — {{value}}"
+    },
+    "stats": {
+      "sessions": "Sessions",
+      "games": "Games played",
+      "longest": "Longest session",
+      "average": "Average session",
+      "queue": "Time in queue",
+      "setup": "Time connecting"
+    },
+    "live": {
+      "label": "Streaming now",
+      "unknownGame": "Current session"
+    },
+    "ranking": {
+      "title": "Ranked by playtime",
+      "count": "{{count}} game",
+      "count_plural": "{{count}} games",
+      "sessions": "{{count}} session",
+      "sessions_plural": "{{count}} sessions",
+      "share": "{{value}}% of total",
+      "more": "+ {{count}} more games not shown",
+      "sr": "Rank {{rank}}: {{title}}, {{value}} streamed over {{sessions}} sessions."
+    },
+    "cadence": {
+      "title": "When you play",
+      "daily": "Last {{count}} day",
+      "daily_plural": "Last {{count}} days",
+      "dailySr": "{{value}} streamed in this window",
+      "hourly": "Hour of day",
+      "hourlySr": "Peak hour {{hour}}:00 with {{value}} streamed",
+      "weekday": "Weekday",
+      "weekdaySr": "Strongest weekday with {{value}} streamed"
+    },
+    "recent": {
+      "title": "Recent sessions",
+      "empty": "No finished sessions recorded yet.",
+      "wait": "{{value}} waiting",
+      "engineNative": "Native",
+      "engineWeb": "WebRTC"
+    },
+    "actions": {
+      "refresh": "Refresh",
+      "reset": "Reset ledger",
+      "resetConfirmTitle": "Reset playtime",
+      "resetConfirmBody": "This erases every recorded hour on this device. It cannot be undone.",
+      "resetConfirm": "Erase everything",
+      "resetCancel": "Keep my stats",
+      "updated": "Ledger updated {{value}}"
+    },
+    "empty": {
+      "eyebrow": "Ledger // empty",
+      "title": "No playtime logged yet",
+      "body": "Launch a game and the clock starts the moment the first frame lands. Queue waits are tracked separately, so only real play counts.",
+      "cta": "Browse the library"
+    },
+    "format": {
+      "never": "—",
+      "hoursMinutes": "{{hours}} h {{minutes}} m",
+      "hours": "{{count}} h",
+      "minutes": "{{count}} m",
+      "seconds": "{{count}} s"
     }
   },
   "gameCard": {
@@ -277,9 +411,9 @@
   },
   "streamLoading": {
     "labels": {
-      "launchError": "Launch Error",
-      "nowLoading": "Now Loading",
-      "adQueue": "Ad Queue",
+      "launchError": "Launch error",
+      "nowLoading": "Now loading",
+      "adQueue": "Ad queue",
       "launchProgress": "Game launch progress"
     },
     "steps": {
@@ -315,9 +449,10 @@
     },
     "telemetry": {
       "queuePosition": "Queue position",
-      "calculating": "Calculating",
+      "calculating": "Calculating…",
       "cleared": "Cleared",
       "elapsed": "Elapsed",
+      "startedAt": "Started {{time}}",
       "session": "Session",
       "protected": "Secured"
     },
@@ -330,17 +465,29 @@
       "advertisementInProgress": "Advertisement in progress",
       "mediaWillAppear": "Ad media will appear here as soon as it is available.",
       "advertisement": "Advertisement",
-      "titledAdvertisement": "{{title}} advertisement"
+      "titledAdvertisement": "{{title}} advertisement",
+      "sponsored": "Sponsored",
+      "adTag": "Ad",
+      "live": "Live"
     },
     "actions": {
-      "cancelLoading": "Cancel loading"
+      "cancelLoading": "Cancel loading",
+      "tryAgain": "Try again"
     },
     "hero": {
       "placeInQueue": "Your place in queue",
       "inQueue": "In queue",
       "position": "Position",
       "stage": "Stage",
-      "estWait": "Est. wait"
+      "estWait": "Est. wait",
+      "estimatedWait": "Estimated wait",
+      "aheadOfYou": "{{count}} player ahead of you",
+      "aheadOfYou_plural": "{{count}} players ahead of you",
+      "yourPosition": "Your position",
+      "currentStage": "Current stage",
+      "playersAhead": "Players ahead",
+      "youreNext": "You're next",
+      "valueUnknown": "—"
     },
     "log": {
       "title": "Session log",
@@ -356,6 +503,30 @@
       "highDemand": "Demand is high — holding your place in line",
       "stillTrying": "Still working on it — thanks for your patience",
       "launchFailed": "Launch failed"
+    },
+    "topbar": {
+      "error": "Couldn't start your session",
+      "settingUp": "Setting up your session",
+      "connecting": "Connecting",
+      "almostReady": "Almost ready"
+    },
+    "editorial": {
+      "keepWindowOpen": "Keep this window open — closing it drops your place in line.",
+      "noInstalls": "No installs and no patches — the rig handles all of that while you wait.",
+      "savesCarryOver": "Your saves and settings carry over automatically."
+    },
+    "progress": {
+      "ariaText": "Step {{current}} of {{total}}: {{label}}"
+    },
+    "error": {
+      "codeLabel": "Error code"
+    },
+    "movement": {
+      "label": "Movement",
+      "gained": "{{count}} place gained",
+      "gained_plural": "{{count}} places gained",
+      "updates": "over {{count}} update",
+      "updates_plural": "over {{count}} updates"
     }
   },
   "queue": {
@@ -515,7 +686,9 @@
       "autoBest": "Auto (Best)",
       "searchPlaceholder": "Search regions...",
       "refreshPing": "Refresh ping",
-      "noRegionsMatch": "No regions match \"{{query}}\""
+      "noRegionsMatch": "No regions match \"{{query}}\"",
+      "noRegionsAvailable": "No regions available",
+      "retry": "Retry"
     },
     "persistentStorage": {
       "title": "Persistent Storage",
@@ -729,20 +902,14 @@
       "appearance": "Appearance",
       "appLanguage": "App Language",
       "appLanguageHint": "Changes OpenNOW's interface language. English is used for untranslated strings.",
-      "theme": "Theme",
-      "themeHint": "Choose a light, dark, or system-matching theme.",
-      "themeAuto": "System Auto",
-      "themeLight": "Light",
-      "themeDark": "Dark",
       "translucentUI": "Translucent UI",
       "translucentUIHint": "Enable glassmorphism and translucent overlays.",
       "accentColor": "Accent Color",
       "accentColorHint": "Applies the selected accent across the standard desktop UI and persists between launches.",
-      "accentColorGreen": "OpenNOW Green",
-      "accentColorBlue": "Cobalt Blue",
-      "accentColorViolet": "Violet",
-      "accentColorAmber": "Amber",
-      "accentColorRose": "Rose",
+      "accentColorNeon": "Neon",
+      "accentColorAzure": "Azure",
+      "accentColorWhite": "White",
+      "accentColorSteel": "Steel",
       "hideStreamOverlayButtons": "Hide Stream Overlay Buttons",
       "hideStreamOverlayButtonsHint": "Hide microphone, fullscreen, and end-session buttons while streaming.",
       "showStatsOnStreamLaunch": "Show Stats on Stream Launch",
@@ -960,5 +1127,23 @@
     "viewOnGitHub": "View full release on GitHub",
     "unavailable": "Release notes couldn't be loaded right now.",
     "settingsLink": "What's new"
+  },
+  "gameDetails": {
+    "pcDigitalVersion": "PC Digital Version",
+    "chooseStore": "Choose a game store",
+    "chooseStoreHint": "Where do you own this game and want to play?",
+    "gameStores": "Game stores:",
+    "subscriptions": "Subscriptions:",
+    "owned": "Owned",
+    "gameNotFound": "Game not found",
+    "subscribed": "Subscribed",
+    "notSubscribed": "Not subscribed",
+    "markAsOwned": "MARK AS OWNED",
+    "buy": "BUY",
+    "storeHint": "Select a store where you own the game, then mark it as owned to add it to your library.",
+    "rating": "Rating",
+    "publisher": "Publisher",
+    "developer": "Developer",
+    "gallery": "Gallery"
   }
 }

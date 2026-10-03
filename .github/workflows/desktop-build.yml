@@ -151,3 +151,79 @@ jobs:
           name: opennow-nvst-sidecar-windows-x64
           path: third_party/opennow-streamer/target/release/opennow-streamer.exe
           if-no-files-found: error
+
+  # Publishes the build to a rolling GitHub Release. Workflow artifacts can
+  # only be downloaded by a signed-in GitHub session with repo access, and they
+  # expire after 90 days; release assets are public, permanent and give one
+  # stable link per branch line that always points at the newest build.
+  publish:
+    name: Publish installer release
+    needs: [windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download installer
+        uses: actions/download-artifact@v4
+        with:
+          name: OpenNOW-windows-x64-installer
+          path: staging/installer
+
+      - name: Download portable build
+        uses: actions/download-artifact@v4
+        with:
+          name: OpenNOW-windows-x64-portable
+          path: staging/portable
+
+      # Stable asset names so the direct download URL never changes between
+      # builds, plus checksums so a download can be verified.
+      - name: Stage release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          cp staging/installer/*.exe assets/OpenNOW-windows-x64-setup.exe
+          cp staging/portable/*.zip assets/OpenNOW-windows-x64-portable.zip
+          (cd assets && sha256sum OpenNOW-windows-x64-setup.exe OpenNOW-windows-x64-portable.zip > SHA256SUMS.txt)
+          ls -l assets && cat assets/SHA256SUMS.txt
+
+      - name: Create or refresh the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ref="${GITHUB_REF_NAME}"
+          case "$ref" in
+            v*)   tag="$ref";            prerelease="" ;;
+            main) tag="latest-build";    prerelease="" ;;
+            *)    tag="latest-build-$(printf '%s' "$ref" | tr '/' '-')"; prerelease="--prerelease" ;;
+          esac
+          short_sha="${GITHUB_SHA::7}"
+          subject="$(git log -1 --pretty=%s)"
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          built_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          title="OpenNOW Desktop — ${ref} (${short_sha})"
+          notes="$(printf '%s\n' \
+            "Automated Windows x64 build of \`${ref}\` at \`${short_sha}\` — ${subject}." \
+            "" \
+            "- Workflow run: ${run_url}" \
+            "- Built: ${built_at}" \
+            "" \
+            "| Asset | What it is |" \
+            "| --- | --- |" \
+            "| \`OpenNOW-windows-x64-setup.exe\` | NSIS installer, per-user (no admin rights), bootstraps WebView2 if missing |" \
+            "| \`OpenNOW-windows-x64-portable.zip\` | Extract anywhere and run \`OpenNOW.exe\` — no install |" \
+            "| \`SHA256SUMS.txt\` | Checksums for both |" \
+            "" \
+            "This release is refreshed by every successful build of this branch, so the link always serves the newest binary.")"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --title "$title" --notes "$notes" $prerelease
+            gh release upload "$tag" --repo "$GITHUB_REPOSITORY" --clobber assets/*
+          else
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --title "$title" --notes "$notes" $prerelease assets/*
+          fi
+          echo "::notice::Release published: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${tag}"

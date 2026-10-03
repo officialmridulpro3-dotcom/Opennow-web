@@ -1,12 +1,14 @@
 import type { AuthUser } from "@shared/gfn";
-import { House, Library, Settings, PanelsTopLeft, User } from "lucide-react";
+import { House, Library, Settings, PanelsTopLeft, Timer, User } from "lucide-react";
 import type { JSX, Ref } from "react";
 import { useTranslation } from "../i18n";
 import { OpenNowLogoMark } from "./OpenNowLogoMark";
 
+export type SideRailPage = "home" | "library" | "playtime" | "settings";
+
 interface SideRailProps {
-  currentPage: "home" | "library" | "settings";
-  onNavigate: (page: "home" | "library" | "settings") => void;
+  currentPage: SideRailPage;
+  onNavigate: (page: SideRailPage) => void;
   user: AuthUser | null;
   onOpenAccount: () => void;
   avatarRef?: Ref<HTMLButtonElement>;
@@ -19,11 +21,12 @@ export function SideRail({ currentPage, onNavigate, user, onOpenAccount, avatarR
     id: string;
     label: string;
     icon: typeof House;
-    page?: "home" | "library" | "settings";
+    page?: SideRailPage;
     disabled?: boolean;
   }> = [
     { id: "home", label: t("navigation.home"), icon: House, page: "home" },
     { id: "library", label: t("navigation.library"), icon: Library, page: "library" },
+    { id: "playtime", label: t("navigation.playtime"), icon: Timer, page: "playtime" },
     { id: "settings", label: t("navigation.settings"), icon: Settings, page: "settings" },
   ];
 

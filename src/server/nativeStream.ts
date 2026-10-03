@@ -51,6 +51,7 @@ interface ActiveNativeRecording {
 export interface FinalizedNativeContext {
   sessionId: string;
   context: NativeStreamerSessionContext;
+  gameTitle?: string;
 }
 
 function sidecarPath(): string | null {
@@ -68,11 +69,19 @@ function sidecarPath(): string | null {
  * arms the sidecar's SDL + Raw Input capture (keyboard, mouse, gamepad).
  * Without it the game window renders but ignores all input.
  */
-export function buildSidecarEnv(): NodeJS.ProcessEnv {
+export function buildSidecarEnv(gameTitle?: string): NodeJS.ProcessEnv {
+  // FIX black screen: Windows embedded in-app requires external_renderer=true
+  // When false, sidecar uses hidden 2x2 window and no video shows (black).
+  // When true, WindowsExternalSdlSurface is created and can operate as:
+  // - embedded child (when surface command with Tauri HWND arrives) → in-app
+  // - standalone top-level (when no surface command) → separate window
+  // We always want true, and we send surface commands to make it embedded.
+  // User wants no WebRTC black screen, in-app native with GFN sidebar.
   return {
     ...process.env,
     OPENNOW_NATIVE_EXTERNAL_RENDERER: "1",
     OPENNOW_NATIVE_INPUT_OWNER: "native",
+    ...(gameTitle?.trim() ? { OPENNOW_GAME_TITLE: gameTitle.trim() } : {}),
   };
 }
 
@@ -83,7 +92,7 @@ export function buildSidecarEnv(): NodeJS.ProcessEnv {
  * normalize to webrtc) can never leak into a native launch.
  */
 export function finalizeNativeContext(input: unknown): FinalizedNativeContext {
-  const context = input as Partial<NativeStreamerSessionContext> | null;
+  const context = input as (Partial<NativeStreamerSessionContext> & { gameTitle?: unknown }) | null;
   const session = context?.session as unknown as Record<string, unknown> | undefined;
   const sessionId = typeof session?.sessionId === "string" ? session.sessionId.trim() : "";
   const serverIp = typeof session?.serverIp === "string" ? (session.serverIp as string).trim() : "";
@@ -104,13 +113,14 @@ export function finalizeNativeContext(input: unknown): FinalizedNativeContext {
   if (typeof settings !== "object" || typeof shortcuts !== "object") {
     throw httpError("Native launch needs stream settings and shortcut bindings.", 400);
   }
+  const gameTitle = typeof context?.gameTitle === "string" ? context.gameTitle.trim() : undefined;
   const finalized = {
     ...(context as Record<string, unknown>),
     session: { ...(session as Record<string, unknown>), extra: { ...extra, rtspsEndpoints: endpoints } },
     settings: { ...settings, transportMode: "nvst", nativeVideoBackend: "auto" },
     shortcuts,
   } as unknown as NativeStreamerSessionContext;
-  return { sessionId, context: finalized };
+  return { sessionId, context: finalized, gameTitle: gameTitle || undefined };
 }
 
 /**
@@ -209,7 +219,7 @@ class NativeSidecarManager {
     };
   }
 
-  async start(sessionId: string, context: NativeStreamerSessionContext): Promise<NativeSidecarStatus> {
+  async start(sessionId: string, context: NativeStreamerSessionContext, gameTitle?: string): Promise<NativeSidecarStatus> {
     if (this.child) {
       throw httpError("A native stream is already running — stop it first.", 409);
     }
@@ -222,7 +232,7 @@ class NativeSidecarManager {
     this.stdoutBuffer = "";
     this.firstFrame = false;
 
-    const child = spawn(exe, [], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true, env: buildSidecarEnv() });
+    const child = spawn(exe, [], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true, env: buildSidecarEnv(gameTitle) });
     this.child = child;
     this.sessionId = sessionId;
     console.log(`[NVST] spawned sidecar pid=${child.pid} session=${sessionId}`);
@@ -345,6 +355,36 @@ class NativeSidecarManager {
     return this.status();
   }
 
+  updateSurface(surface: {
+    rect: { x: number; y: number; width: number; height: number } | null;
+    visible: boolean;
+    deviceScaleFactor: number;
+    showStats?: boolean;
+    windowHandle?: string;
+    screenRect?: { x: number; y: number; width: number; height: number } | null;
+  }): void {
+    if (!this.child) return;
+    try {
+      // Protocol expects surface command with window_handle as string (HWND)
+      // and rect in physical pixels. This drives WindowsExternalSdlSurface::update
+      // which attaches SDL child window to Tauri parent.
+      this.send({
+        id: this.nextId("surface"),
+        type: "surface",
+        surface: {
+          rect: surface.rect,
+          visible: surface.visible,
+          deviceScaleFactor: surface.deviceScaleFactor,
+          showStats: surface.showStats ?? false,
+          windowHandle: surface.windowHandle,
+          screenRect: surface.screenRect ?? surface.rect,
+        },
+      });
+    } catch (error) {
+      console.log(`[NVST] surface update failed: ${(error as Error).message}`);
+    }
+  }
+
   private nextId(prefix: string): string {
     this.commandId += 1;
     return `${prefix}-${this.commandId}`;
@@ -441,12 +481,12 @@ class NativeSidecarManager {
       return;
     }
     // Engine-initiated session controls. Ctrl+Shift+Q (stop-stream) quits the
-    // native session from the keyboard (also used by the engine Ctrl+G menu's
-    // End stream button). Ctrl+G opens the engine's own sidebar menu and Ctrl+N
-    // its statistics strip in standalone sessions, so overlay-request and
-    // toggle-stats only arrive from embedded hosts.
+    // native session from the keyboard. Ctrl+G (Guide) in embedded mode now
+    // opens the React full sidebar (opaque left, fully functional) instead of
+    // the old GDI box. Ctrl+N toggles compact stats (340x520 GeForce style).
     if (type === "overlay-request") {
-      console.log("[NVST] engine overlay-request (embedded host menu request)");
+      console.log("[NVST] engine overlay-request (embedded host menu request) -> React sidebar");
+      emitNativeEvent({ type: "native-shortcut", action: "toggleSidebar" });
       return;
     }
     if (type === "shortcut-action" && message.action === "stop-stream") {
@@ -456,6 +496,7 @@ class NativeSidecarManager {
     }
     if (type === "shortcut-action" && message.action === "toggle-stats") {
       console.log("[NVST] engine shortcut toggle-stats (embedded host stats request)");
+      emitNativeEvent({ type: "native-shortcut", action: "toggleStats" });
       return;
     }
     // F12 / Ctrl+G "Recording" row: the engine only reports the toggle — the
@@ -510,6 +551,24 @@ class NativeSidecarManager {
     console.log(`[NVST] sidecar exited code=${code}${error ? ` (${error})` : ""}`);
     this.pending?.readyReject(new Error(error ?? "Native sidecar exited during startup."));
     this.pending = null;
+  }
+}
+
+type NativeEventListener = (event: Record<string, unknown>) => void;
+const nativeEventListeners = new Set<NativeEventListener>();
+
+export function onNativeEvent(listener: NativeEventListener): () => void {
+  nativeEventListeners.add(listener);
+  return () => nativeEventListeners.delete(listener);
+}
+
+function emitNativeEvent(event: Record<string, unknown>): void {
+  for (const listener of nativeEventListeners) {
+    try {
+      listener(event);
+    } catch {
+      // best-effort
+    }
   }
 }
 
