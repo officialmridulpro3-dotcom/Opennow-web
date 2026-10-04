@@ -1175,7 +1175,13 @@ impl SdlInputCapture {
         window: &mut sdl2::video::Window,
     ) {
         if paused {
+            let restore_relative_mouse = self.relative_mouse || self.relock_on_focus;
             self.release(sdl, window);
+            // The native shell overlay becomes the focused window while open.
+            // Re-arm relative mode for the next SDL focus event if gameplay
+            // had captured the mouse before the overlay took ownership.
+            self.focused = false;
+            self.relock_on_focus = restore_relative_mouse;
             // Publish neutral states before capture is suspended so a remote
             // game cannot retain a held trigger, stick, or button while the
             // Qt shell owns input.
@@ -1425,8 +1431,16 @@ impl SdlInputCapture {
             // The next server cursor update re-asserts the game state.
             self.cursor_state = RemoteCursorState::Visible;
             sdl.mouse().show_cursor(true);
-        } else {
+        } else if self.focused {
             self.enable_relative_mouse(sdl, window);
+        } else if self.relock_on_focus {
+            // While the host overlay owns focus, a second toggle cancels the
+            // pending recapture that the input-pause transition preserved.
+            self.relock_on_focus = false;
+        } else {
+            // A host overlay may still own OS focus when its capture command
+            // arrives. Apply the request on the next SDL focus transition.
+            self.request_capture_on_focus();
         }
     }
 
@@ -2518,6 +2532,46 @@ impl ActiveOutput {
             }
             #[cfg(target_os = "macos")]
             Self::Mac(output) => output.set_paused(paused),
+        }
+    }
+
+    /// Pause only input capture while the host UI owns keyboard/mouse input.
+    /// Unlike `set_paused`, this keeps receiving, decoding, presenting, and
+    /// playing audio for the native stream.
+    pub(crate) fn set_input_paused(&mut self, paused: bool) -> Result<(), String> {
+        match self {
+            Self::Software(output) => {
+                output
+                    .input_capture
+                    .set_input_paused(paused, &output._sdl, output.canvas.window_mut());
+                Ok(())
+            }
+            #[cfg(target_os = "windows")]
+            Self::Windows(output) => {
+                if let Some(surface) = output.external_surface.as_mut() {
+                    surface.set_paused(paused);
+                    Ok(())
+                } else {
+                    Err("Input capture controls require the external stream window".to_owned())
+                }
+            }
+            #[cfg(target_os = "linux")]
+            Self::LinuxHardware(output) => {
+                output
+                    .input_capture
+                    .set_input_paused(paused, &output._sdl, &mut output.window);
+                if let Some(raw_input) = output.raw_input.as_ref() {
+                    raw_input.set_enabled(
+                        !paused
+                            && output.visible
+                            && output.input_capture.focused
+                            && output.input_capture.relative_mouse_enabled(),
+                    );
+                }
+                Ok(())
+            }
+            #[cfg(target_os = "macos")]
+            Self::Mac(output) => output.set_input_paused(paused),
         }
     }
 

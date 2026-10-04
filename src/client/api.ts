@@ -5,6 +5,8 @@ import type {
   IceCandidatePayload,
   KeyframeRequest,
   MainToRendererSignalingEvent,
+  NativeSidecarControlAction,
+  NativeSidecarEvent,
   OpenNowApi,
   PingResult,
   RecordingEntry,
@@ -96,6 +98,64 @@ export function startNativeStream(sessionId: string, context: unknown, gameTitle
 
 export function stopNativeStream(): Promise<NativeSidecarStatus> {
   return api<NativeSidecarStatus>("/api/native/stop", { method: "POST" });
+}
+
+export function controlNativeSidecar(
+  action: NativeSidecarControlAction,
+  paused?: boolean,
+): Promise<NativeSidecarStatus> {
+  return api<NativeSidecarStatus>("/api/native/control", {
+    method: "POST",
+    body: JSON.stringify({ action, ...(typeof paused === "boolean" ? { paused } : {}) }),
+  });
+}
+
+/**
+ * Keep native shortcut and telemetry events flowing after the GFN signaling
+ * connection is torn down in favor of the sidecar renderer.
+ */
+export function connectNativeSidecarEvents(listener: (event: NativeSidecarEvent) => void): () => void {
+  let closed = false;
+  let socket: WebSocket | null = null;
+  let reconnectTimer: number | null = null;
+
+  const connect = (): void => {
+    if (closed) return;
+    const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+    const activeSocket = new WebSocket(`${protocol}//${location.host}/api/native/events`);
+    socket = activeSocket;
+    activeSocket.onmessage = (messageEvent: MessageEvent<string>) => {
+      try {
+        const envelope = JSON.parse(messageEvent.data) as { type?: unknown; payload?: unknown };
+        if (envelope.type !== "event" || !envelope.payload || typeof envelope.payload !== "object") return;
+        const payload = envelope.payload as Record<string, unknown>;
+        if (payload.type === "native-shortcut" || payload.type === "native-microphone-state" || payload.type === "native-stream-telemetry") {
+          listener(payload as unknown as NativeSidecarEvent);
+        }
+      } catch {
+        // Ignore malformed or unrelated native event messages.
+      }
+    };
+    activeSocket.onclose = () => {
+      if (socket === activeSocket) socket = null;
+      if (!closed && reconnectTimer === null) {
+        reconnectTimer = window.setTimeout(() => {
+          reconnectTimer = null;
+          connect();
+        }, 1500);
+      }
+    };
+    activeSocket.onerror = () => activeSocket.close();
+  };
+
+  connect();
+  return () => {
+    closed = true;
+    if (reconnectTimer !== null) window.clearTimeout(reconnectTimer);
+    reconnectTimer = null;
+    socket?.close();
+    socket = null;
+  };
 }
 
 /**

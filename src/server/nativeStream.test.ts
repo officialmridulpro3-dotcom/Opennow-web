@@ -135,6 +135,7 @@ describe("buildSidecarEnv", () => {
     try {
       const env = buildSidecarEnv();
       expect(env.OPENNOW_NATIVE_EXTERNAL_RENDERER).toBe("1");
+      expect(env.OPENNOW_NATIVE_HOST_OVERLAY).toBe("1");
       // Rest of the environment passes through untouched.
       expect(env.PATH).toBe(process.env.PATH);
       process.env.OPENNOW_NATIVE_EXTERNAL_RENDERER = "0";

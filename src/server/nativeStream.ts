@@ -20,7 +20,7 @@ import { existsSync, mkdirSync } from "node:fs";
 import { isIP } from "node:net";
 import { join, resolve } from "node:path";
 
-import type { NativeStreamerSessionContext } from "@shared/gfn";
+import type { NativeSidecarControlAction, NativeStreamerSessionContext } from "@shared/gfn";
 
 const ENGINE_PROTOCOL_VERSION = 7;
 const SHUTDOWN_GRACE_MS = 5000;
@@ -81,6 +81,9 @@ export function buildSidecarEnv(gameTitle?: string): NodeJS.ProcessEnv {
     ...process.env,
     OPENNOW_NATIVE_EXTERNAL_RENDERER: "1",
     OPENNOW_NATIVE_INPUT_OWNER: "native",
+    // Route SDL menu/stat/fullscreen shortcuts to the React overlay hosted by
+    // the desktop shell instead of the legacy GDI overlay.
+    OPENNOW_NATIVE_HOST_OVERLAY: "1",
     ...(gameTitle?.trim() ? { OPENNOW_GAME_TITLE: gameTitle.trim() } : {}),
   };
 }
@@ -217,6 +220,38 @@ class NativeSidecarManager {
       firstFrame: this.firstFrame || undefined,
       recording: this.recording ? { path: this.recording.path, startedAtMs: this.recording.startedAtMs } : undefined,
     };
+  }
+
+  control(action: NativeSidecarControlAction, paused?: boolean): NativeSidecarStatus {
+    if (!this.child) {
+      throw httpError("There is no active native stream to control.", 409);
+    }
+    try {
+      switch (action) {
+        case "toggle-microphone":
+          this.send({ id: this.nextId("microphone-toggle"), type: "microphone-toggle" });
+          break;
+        case "toggle-pointer-lock":
+          this.send({ id: this.nextId("pointer-lock-toggle"), type: "pointer-lock-toggle" });
+          break;
+        case "input-capture-paused":
+          if (typeof paused !== "boolean") {
+            throw httpError("The input-capture-paused command requires a boolean paused value.", 400);
+          }
+          this.send({ id: this.nextId("input-capture-paused"), type: "input-capture-paused", paused });
+          break;
+        case "anti-afk-pulse":
+          this.send({ id: this.nextId("anti-afk-pulse"), type: "anti-afk-pulse" });
+          break;
+        case "toggle-recording":
+          this.toggleRecording();
+          break;
+      }
+    } catch (error) {
+      if (typeof (error as { statusCode?: unknown }).statusCode === "number") throw error;
+      throw httpError(`Could not send native stream control: ${(error as Error).message}`, 502);
+    }
+    return this.status();
   }
 
   async start(sessionId: string, context: NativeStreamerSessionContext, gameTitle?: string): Promise<NativeSidecarStatus> {
@@ -480,31 +515,64 @@ class NativeSidecarManager {
       this.pending = null;
       return;
     }
-    // Engine-initiated session controls. Ctrl+Shift+Q (stop-stream) quits the
-    // native session from the keyboard. Ctrl+G (Guide) in embedded mode now
-    // opens the React full sidebar (opaque left, fully functional) instead of
-    // the old GDI box. Ctrl+N toggles compact stats (340x520 GeForce style).
+    if (type === "telemetry") {
+      const numeric = (value: unknown): number | null =>
+        typeof value === "number" && Number.isFinite(value) ? value : null;
+      emitNativeEvent({
+        type: "native-stream-telemetry",
+        telemetry: {
+          framesPerSecond: numeric(message.framesPerSecond),
+          bitrateMbps: numeric(message.bitrateMbps),
+          peakBitrateMbps: numeric(message.peakBitrateMbps),
+          pingMs: numeric(message.pingMs),
+          jitterMs: numeric(message.jitterMs),
+          packetLossPercent: numeric(message.packetLossPercent),
+        },
+      });
+      return;
+    }
+    if (type === "microphone-state") {
+      emitNativeEvent({
+        type: "native-microphone-state",
+        enabled: message.enabled === true,
+        state: typeof message.state === "string" ? message.state : "unknown",
+        message: typeof message.message === "string" ? message.message.slice(0, 300) : undefined,
+      });
+      return;
+    }
     if (type === "overlay-request") {
-      console.log("[NVST] engine overlay-request (embedded host menu request) -> React sidebar");
+      console.log("[NVST] engine overlay-request -> styling-capable native stream overlay");
       emitNativeEvent({ type: "native-shortcut", action: "toggleSidebar" });
       return;
     }
-    if (type === "shortcut-action" && message.action === "stop-stream") {
-      console.log("[NVST] engine shortcut stop-stream; stopping native session");
-      void this.stop("shortcut stop-stream");
-      return;
-    }
-    if (type === "shortcut-action" && message.action === "toggle-stats") {
-      console.log("[NVST] engine shortcut toggle-stats (embedded host stats request)");
-      emitNativeEvent({ type: "native-shortcut", action: "toggleStats" });
-      return;
-    }
-    // F12 / Ctrl+G "Recording" row: the engine only reports the toggle — the
-    // MKV worker itself is driven through recording-start/stop commands here
-    // so clips land next to the other desktop data with a stable file name.
-    if (type === "shortcut-action" && message.action === "toggle-recording") {
-      console.log("[NVST] engine shortcut toggle-recording; toggling native MKV recording");
+    if (type === "recording-toggle-request") {
       this.toggleRecording();
+      return;
+    }
+    if (type === "shortcut-action") {
+      const action = typeof message.action === "string" ? message.action : "";
+      if (action === "toggle-recording") {
+        console.log("[NVST] engine shortcut toggle-recording; toggling native MKV recording");
+        this.toggleRecording();
+        return;
+      }
+      const actionMap: Record<string, string> = {
+        "toggle-stats": "toggleStats",
+        "toggle-pointer-lock": "togglePointerLock",
+        "toggle-fullscreen": "toggleFullscreen",
+        "stop-stream": "stopStream",
+        "toggle-anti-afk": "toggleAntiAfk",
+        "toggle-microphone": "toggleMicrophone",
+        screenshot: "screenshot",
+      };
+      const mappedAction = actionMap[action];
+      if (mappedAction) {
+        emitNativeEvent({ type: "native-shortcut", action: mappedAction });
+        return;
+      }
+    }
+    if (type === "screenshot-request") {
+      emitNativeEvent({ type: "native-shortcut", action: "screenshot" });
       return;
     }
     if (type === "recording-started") {

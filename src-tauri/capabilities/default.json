@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Capabilities for the main OpenNOW window. The renderer is the unmodified web client; it only needs the opener plugin so external links (NVIDIA sign-in, store pages) open in the system browser.",
-  "windows": ["main"],
+  "description": "Capabilities for the main OpenNOW window and the transparent native-stream overlay.",
+  "windows": ["main", "native-stream-overlay"],
   "permissions": ["core:default", "opener:default", "dialog:default"]
 }

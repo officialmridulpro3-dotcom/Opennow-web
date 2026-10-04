@@ -66,6 +66,10 @@ pub(crate) enum HostCommand {
         paused: bool,
         reply: Option<Sender<Result<(), String>>>,
     },
+    InputPaused {
+        paused: bool,
+        reply: Sender<Result<(), String>>,
+    },
     Surface {
         surface: RenderSurface,
         reply: Sender<Result<(), String>>,
@@ -475,6 +479,22 @@ impl MediaRuntime {
             .map_err(|_| "native media host did not apply the pause update".to_owned())?
     }
 
+    /// Suspend native keyboard/mouse/gamepad capture without pausing video,
+    /// audio, or the NVST receive/decode pipeline. Used while the shell overlay
+    /// owns pointer and keyboard input.
+    pub fn set_input_paused(&self, paused: bool) -> Result<(), String> {
+        if !matches!(self.mode, MediaRuntimeMode::Standalone) {
+            return Ok(());
+        }
+        let (reply, response) = mpsc::channel();
+        self.commands
+            .send(HostCommand::InputPaused { paused, reply })
+            .map_err(|_| "native media host is no longer running".to_owned())?;
+        response
+            .recv_timeout(HOST_CONTROL_TIMEOUT)
+            .map_err(|_| "native media host did not apply the input-capture update".to_owned())?
+    }
+
     pub fn control(&self, control: MediaRuntimeControl) -> Result<(), String> {
         if !matches!(self.mode, MediaRuntimeMode::Standalone) {
             return Ok(());
@@ -669,6 +689,12 @@ impl MainThreadHost {
                     if let Some(reply) = reply {
                         let _ = reply.send(result);
                     }
+                }
+                Ok(HostCommand::InputPaused { paused, reply }) => {
+                    let result = active
+                        .as_mut()
+                        .map_or(Ok(()), |output| output.set_input_paused(paused));
+                    let _ = reply.send(result);
                 }
                 Ok(HostCommand::Surface {
                     surface: new_surface,
@@ -1387,6 +1413,9 @@ pub fn create_test_runtime() -> (TestMediaRuntimeHost, MediaRuntime) {
                         if let Some(reply) = reply {
                             let _ = reply.send(Ok(()));
                         }
+                    }
+                    HostCommand::InputPaused { reply, .. } => {
+                        let _ = reply.send(Ok(()));
                     }
                     HostCommand::Surface { reply, .. } | HostCommand::Control { reply, .. } => {
                         let _ = reply.send(Ok(()));

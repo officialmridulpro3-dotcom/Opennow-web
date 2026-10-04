@@ -2,12 +2,12 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, m } from "motion/react";
 import type { JSX } from "react";
-import { Maximize, Minimize, LogOut, Clock3, AlertTriangle, Mic, Camera, ChevronLeft, ChevronRight, Save, Trash2, X, Circle, Square, Video, FolderOpen, Gamepad2, Gauge, Images, Keyboard, MousePointer2, SlidersHorizontal } from "lucide-react";
+import { Maximize, Minimize, LogOut, Clock3, AlertTriangle, Mic, Camera, ChevronLeft, ChevronRight, Save, Trash2, X, Circle, Square, Video, FolderOpen, Gamepad2, Gauge, Images, Keyboard, MousePointer2, SlidersHorizontal, Activity } from "lucide-react";
 import SideBar from "./SideBar";
 import { SessionStartedSplash } from "./SessionStartedSplash";
 import { StreamStatsHud } from "./StreamStatsHud";
 import type { StreamDiagnosticsStore } from "../utils/streamDiagnosticsStore";
-import { useStreamDiagnosticsSelector } from "../utils/streamDiagnosticsStore";
+import { useStreamDiagnosticsSelector, useStreamDiagnosticsStore } from "../utils/streamDiagnosticsStore";
 import { getStoreDisplayName, getStoreIconComponent } from "./GameCard";
 import { RemainingPlaytimeIndicator, SessionElapsedIndicator } from "./ElapsedSessionIndicators";
 import type { MicrophoneMode, ScreenshotEntry, RecordingEntry, SubscriptionInfo, VideoShaderSettings } from "@shared/gfn";
@@ -17,6 +17,8 @@ import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut, shortcutF
 import { addStreamShortcutActionListener } from "../streamShortcutActions";
 import { useMicMeter } from "../hooks/useMicMeter";
 import { formatElapsed } from "../utils/timeFormat";
+import { formatBitrate, getRttColor } from "../utils/streamDiagnosticsFormat";
+import { getStreamHealthSummary } from "../utils/streamHealthSummary";
 import { useTranslation } from "../i18n";
 import { controllerButton, readControllerGamepadButtons } from "../utils/controllerGamepad";
 import { formatFileSize, formatSessionTimeRemaining, formatWarningSeconds } from "./stream/streamFormatters";
@@ -43,9 +45,9 @@ interface StreamViewProps {
   diagnosticsStore: StreamDiagnosticsStore;
   showStats: boolean;
   showNativeStats?: boolean;
+  onToggleStats?: () => void;
   nativeInputCaptureActive?: boolean;
-  gstreamerEnabled: boolean;
-  nativeExternalRenderer?: boolean;
+  nativeStreamerEnabled: boolean;
   shortcuts: {
     toggleStats: string;
     togglePointerLock: string;
@@ -125,9 +127,9 @@ export function StreamView({
   diagnosticsStore,
   showStats,
   showNativeStats = false,
+  onToggleStats,
   nativeInputCaptureActive = false,
-  gstreamerEnabled,
-  nativeExternalRenderer = false,
+  nativeStreamerEnabled,
   shortcuts,
   serverRegion,
   antiAfkEnabled,
@@ -213,6 +215,24 @@ export function StreamView({
     diagnosticsStore,
     (stats) => stats.nativeRendererActive,
   );
+  const liveStreamDiagnostics = useStreamDiagnosticsStore(diagnosticsStore);
+  const streamHealth = getStreamHealthSummary(liveStreamDiagnostics);
+  const liveFps = Math.max(liveStreamDiagnostics.decodeFps, liveStreamDiagnostics.renderFps);
+  const liveResolution = liveStreamDiagnostics.resolution || "Waiting for video";
+  const liveFpsLabel = liveFps > 0 ? `${liveFps} FPS` : "—";
+  const liveRttLabel = liveStreamDiagnostics.rttMs > 0
+    ? `${liveStreamDiagnostics.rttMs.toFixed(0)} ms`
+    : "—";
+  const liveBitrateLabel = liveStreamDiagnostics.bitrateKbps > 0
+    ? formatBitrate(liveStreamDiagnostics.bitrateKbps)
+    : liveStreamDiagnostics.targetBitrateKbps > 0
+      ? `Target ${formatBitrate(liveStreamDiagnostics.targetBitrateKbps)}`
+      : "Waiting";
+  const liveLossLabel = liveStreamDiagnostics.packetLossPercent > 0
+    ? `${liveStreamDiagnostics.packetLossPercent.toFixed(2)}%`
+    : liveStreamDiagnostics.resolution
+      ? "0.00%"
+      : "—";
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const shaderPipelineRef = useRef<VideoShaderPipeline | null>(null);
   const streamHasVideo = useStreamDiagnosticsSelector(
@@ -252,12 +272,13 @@ export function StreamView({
   const streamVideoReady = streamHasVideo || videoElementHasFrame || nativeRunning;
   const [sessionReadySplashVisible, setSessionReadySplashVisible] = useState(false);
   const sessionReadySplashShownRef = useRef(false);
-  // Main window is always bare: plain black + video only.
-  // All deck chrome (mesh, scan, bloom, sweep, ticks, chamfered HUD, slanted, brackets, 96px numeral)
-  // lives in the native window's Rust overlay (overlay.rs), not in the React main window.
-  // This satisfies: non-native window has no styling, native window has all styling.
+  // The Rust NVST sidecar owns transport, decode, presentation and input. The
+  // native control surface is deliberately rendered by React in the Tauri
+  // WebView so menus and telemetry can use accessible HTML/CSS without adding
+  // work to the media/render thread.
   const isNativeDeck = false;
-  const showStatsHud = false;
+  const showStatsHud = showStats || showNativeStats;
+  const nativeOverlayActive = nativeRunning || nativeRendererActive;
 
   useEffect(() => {
     if (isConnecting) {
@@ -917,12 +938,12 @@ export function StreamView({
     };
   }, []);
 
-  // Video shader post-processing pipeline (embedded WebRTC path only; the
-  // native streamer renders outside Chromium so shaders cannot apply there).
+  // The native presenter owns video composition; keep browser post-processing
+  // off for NVST so the high-performance path remains zero-copy.
   useEffect(() => {
     const video = localVideoRef.current;
     if (!video) return;
-    const effective = gstreamerEnabled || nativeRendererActive
+    const effective = nativeOverlayActive
       ? { ...videoShader, enabled: false }
       : videoShader;
     if (!shaderPipelineRef.current) {
@@ -931,7 +952,7 @@ export function StreamView({
     } else {
       shaderPipelineRef.current.updateSettings(effective);
     }
-  }, [videoShader, gstreamerEnabled, nativeRendererActive]);
+  }, [videoShader, nativeOverlayActive]);
 
   useEffect(() => () => {
     shaderPipelineRef.current?.dispose();
@@ -980,7 +1001,7 @@ export function StreamView({
       // For embedded, rect should be relative to parent client area, not viewport with DPR scaling?
       // Use physical pixels but keep left/top as 0,0 for full-window fill to avoid black bars
       // When in native mode, we want video to fill entire window, not just video element rect
-      const isNativeMode = nativeRunning || nativeRendererActive || gstreamerEnabled;
+      const isNativeMode = nativeRunning || nativeRendererActive;
       updateSurface({
         deviceScaleFactor: dpr,
         visible,
@@ -1046,7 +1067,7 @@ export function StreamView({
         showStats: false,
       });
     };
-  }, [exitPrompt.open, showNativeStats, showSideBar, showStats]);
+  }, [exitPrompt.open, nativeRendererActive, nativeRunning, showNativeStats, showSideBar, showStats]);
 
   useEffect(() => {
     const handlePointerLockChange = () => {
@@ -1452,13 +1473,10 @@ export function StreamView({
     };
   }, [exitPrompt.open, isConnecting, showSideBar]);
 
-  // NEW: User wants NO separate OpenNOW stream window — native stream must replace black screen IN-APP
-  // with stylish GFN sidebar (520px). So always embed SDL child inside Tauri window via transparent hole,
-  // never hide video. External popup is eliminated; we keep OPENNOW_NATIVE_EXTERNAL_RENDERER=1 backend
-  // for overlay (Ctrl+G stylish menu) but force frontend to treat as embedded.
-  const isEmbeddedNative = nativeRunning || nativeRendererActive || gstreamerEnabled;
-  const nativeInternalHole = isEmbeddedNative;
-  const isExternalNative = false; // no separate window, no black screen message
+  // When NVST is active, the sidecar's native swapchain is attached beneath a
+  // transparent WebView surface. React owns the controls/metrics above it;
+  // video packets never pass through the WebView or a CPU image copy.
+  const nativeInternalHole = nativeOverlayActive;
 
   // Make entire page transparent when native hole active so SDL child behind WebView2 shows through
   useEffect(() => {
@@ -1494,7 +1512,7 @@ export function StreamView({
   }, [nativeInternalHole]);
 
   return (
-    <div className={["sv", streamVideoReady ? "sv--video-ready" : "sv--video-pending", nativeInternalHole ? "sv--native-hole" : "", isNativeDeck ? "sv--native-deck" : "sv--bare", className].filter(Boolean).join(" ")}>
+    <div className={["sv", streamVideoReady ? "sv--video-ready" : "sv--video-pending", nativeInternalHole ? "sv--native-hole sv--native-web-ui" : "", isNativeDeck ? "sv--native-deck" : "sv--bare", className].filter(Boolean).join(" ")}>
       <m.video
         ref={setVideoRef}
         autoPlay
@@ -1602,6 +1620,17 @@ export function StreamView({
                 </div>
                 <h2 className="sidebar-gfn-title">{gameTitle}</h2>
                 <div className="sidebar-gfn-metrics">
+                  <div className="sidebar-gfn-metric sidebar-gfn-metric--elapsed">
+                    <span className="sidebar-gfn-metric-label">Playing for</span>
+                    <strong className="sidebar-gfn-metric-value">
+                      <SessionElapsedIndicator
+                        startedAtMs={sessionStartedAtMs}
+                        active={isStreaming}
+                        className="sidebar-gfn-elapsed"
+                        iconSize={13}
+                      />
+                    </strong>
+                  </div>
                   <div className="sidebar-gfn-metric">
                     <span className="sidebar-gfn-metric-label">Playtime left</span>
                     <span className="sidebar-gfn-metric-value">
@@ -1666,6 +1695,63 @@ export function StreamView({
 
             {activeSidebarTab === "session" && (
               <div className="sidebar-page sidebar-page--session" role="tabpanel">
+                <section className="sidebar-section sidebar-live-overview" aria-label="Live session metrics">
+                  <div className="sidebar-live-heading">
+                    <div>
+                      <span className="sidebar-live-eyebrow">Session overview</span>
+                      <strong>Stream health</strong>
+                    </div>
+                    <span className={`sidebar-health-pill sidebar-health-pill--${streamHealth.tier}`} role="status">
+                      <span className="sidebar-health-dot" aria-hidden="true" />
+                      {streamHealth.label}
+                    </span>
+                  </div>
+                  <div className="sidebar-live-metrics">
+                    <div className="sidebar-live-metric sidebar-live-metric--wide">
+                      <span className="sidebar-live-metric-label">Stream</span>
+                      <strong>{liveResolution}</strong>
+                      <small>{liveFpsLabel}</small>
+                    </div>
+                    <div className="sidebar-live-metric">
+                      <span className="sidebar-live-metric-label">Latency</span>
+                      <strong style={{ color: getRttColor(liveStreamDiagnostics.rttMs) }}>{liveRttLabel}</strong>
+                      <small>Round trip</small>
+                    </div>
+                    <div className="sidebar-live-metric">
+                      <span className="sidebar-live-metric-label">Bitrate</span>
+                      <strong>{liveBitrateLabel}</strong>
+                      <small>{liveStreamDiagnostics.nativeRendererActive ? "Native stream" : "Live stream"}</small>
+                    </div>
+                    <div className="sidebar-live-metric">
+                      <span className="sidebar-live-metric-label">
+                        {liveStreamDiagnostics.nativeRendererActive ? "Frame drops" : "Packet loss"}
+                      </span>
+                      <strong>{liveLossLabel}</strong>
+                      <small>Current session</small>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="sidebar-performance-toggle"
+                    onClick={onToggleStats}
+                    aria-pressed={showStatsHud}
+                  >
+                    <span className="sidebar-performance-icon"><Activity size={16} /></span>
+                    <span className="sidebar-performance-copy">
+                      <strong>Performance overlay</strong>
+                      <small>{showStatsHud ? "Live diagnostics are visible" : "Open detailed live diagnostics"}</small>
+                    </span>
+                    <span className={`sidebar-performance-state${showStatsHud ? " is-on" : ""}`}>
+                      {showStatsHud ? "On" : "View"}
+                    </span>
+                  </button>
+                  {liveStreamDiagnostics.lagReason !== "stable" && liveStreamDiagnostics.lagReason !== "unknown" && (
+                    <p className={`sidebar-live-insight sidebar-live-insight--${streamHealth.tier}`} role="status">
+                      {liveStreamDiagnostics.lagReasonDetail || `${streamHealth.label} stream conditions`}
+                    </p>
+                  )}
+                </section>
+
                 <section className="sidebar-section">
                   <div className="sidebar-section-header">
                     <span>Session controls</span>
@@ -1780,7 +1866,7 @@ export function StreamView({
                     <span>Video Filters</span>
                     <span className="sidebar-section-sub">GPU shaders applied to the stream.</span>
                   </div>
-                  {gstreamerEnabled ? (
+                  {nativeStreamerEnabled ? (
                     <span className="sidebar-hint">Video filters are unavailable while the native streamer renders the video.</span>
                   ) : (
                     <>
@@ -2217,7 +2303,20 @@ export function StreamView({
         </div>
       )}
 
-      {/* ── BARE MODE (WebRTC non-native): plain black + video only, zero chrome ── */}
+      <AnimatePresence>
+        {showStatsHud && (
+          <StreamStatsHud
+            key="stream-stats-hud"
+            diagnosticsStore={diagnosticsStore}
+            nativeStreamerEnabled={nativeStreamerEnabled}
+            serverRegion={serverRegion}
+            sessionTimeRemainingText={showSessionTimeRemainingInStats ? sessionTimeRemainingText : null}
+            hintsVisible={showHints}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* The native SDL surface stays clean; controls and diagnostics are React overlays. */}
       {!isNativeDeck ? (
         <>
           {/* No gradient, no deck — just black */}
@@ -2352,19 +2451,6 @@ export function StreamView({
             gameTitle={gameTitle}
             onFinished={handleSessionReadySplashFinished}
           />
-
-          <AnimatePresence>
-            {showStatsHud && (
-              <StreamStatsHud
-                key="stream-stats-hud"
-                diagnosticsStore={diagnosticsStore}
-                gstreamerEnabled={gstreamerEnabled}
-                serverRegion={serverRegion}
-                sessionTimeRemainingText={showSessionTimeRemainingInStats ? sessionTimeRemainingText : null}
-                hintsVisible={showHints}
-              />
-            )}
-          </AnimatePresence>
 
           <MicrophoneIndicator
             diagnosticsStore={diagnosticsStore}

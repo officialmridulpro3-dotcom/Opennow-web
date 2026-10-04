@@ -13408,8 +13408,6 @@ body:has(.sv--native-hole) #root {
   scroll-snap-align: start;
 }
 
-   POSTER CARD — deck edition
-   ====================================================== */
 /* ======================================================
    POSTER CARD — deck edition (see EOF for the deck implementation)
    The old quiet-tile rules are retired; the deck cards live at the end

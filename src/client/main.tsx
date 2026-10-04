@@ -6,6 +6,7 @@ import { App } from "./App";
 import { MotionProvider } from "./components/MotionProvider";
 import { initializeLocale } from "./i18n";
 import "./styles.css";
+import "./nativeStreamUi.css";
 
 installBrowserBridge();
 

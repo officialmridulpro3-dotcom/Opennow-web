@@ -14,6 +14,7 @@ import {
 } from "../utils/streamDiagnosticsFormat";
 import { panelSpring, smoothEase, surfaceRevealTransition } from "./MotionProvider";
 import { useTranslation } from "../i18n";
+import { getStreamHealthSummary } from "../utils/streamHealthSummary";
 
 function getLagReasonLabel(reason: StreamLagReason): string {
   switch (reason) {
@@ -49,7 +50,7 @@ function getLagReasonColor(reason: StreamLagReason): string {
 
 export interface StreamStatsHudProps {
   diagnosticsStore: StreamDiagnosticsStore;
-  gstreamerEnabled: boolean;
+  nativeStreamerEnabled: boolean;
   serverRegion?: string;
   sessionTimeRemainingText: string | null;
   hintsVisible?: boolean;
@@ -57,13 +58,14 @@ export interface StreamStatsHudProps {
 
 export function StreamStatsHud({
   diagnosticsStore,
-  gstreamerEnabled,
+  nativeStreamerEnabled,
   serverRegion,
   sessionTimeRemainingText,
   hintsVisible = false,
 }: StreamStatsHudProps): JSX.Element {
   const { t } = useTranslation();
   const stats = useStreamDiagnosticsStore(diagnosticsStore);
+  const streamHealth = getStreamHealthSummary(stats);
   const [expanded, setExpanded] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
@@ -117,9 +119,9 @@ export function StreamStatsHud({
       `Input queue peak ${(stats.inputQueuePeakBufferedBytes / 1024).toFixed(1)}KB · PR peak ${(stats.partiallyReliableInputQueuePeakBufferedBytes / 1024).toFixed(1)}KB · drops ${stats.inputQueueDropCount} · sched ${stats.inputQueueMaxSchedulingDelayMs.toFixed(1)}ms · residual ${mouseResidualText}`,
     );
     lines.push(
-      gstreamerEnabled
-        ? `GStreamer enabled · ${stats.nativeRendererActive ? "in use" : "not active"}`
-        : "GStreamer disabled · Chromium WebRTC",
+      nativeStreamerEnabled
+        ? "Native NVST sidecar · hardware decode and presentation"
+        : "Browser WebRTC renderer",
     );
     const hwLine = [stats.hardwareAcceleration, stats.colorCodec].filter(Boolean).join(" · ");
     if (hwLine) lines.push(hwLine);
@@ -150,7 +152,7 @@ export function StreamStatsHud({
     }
     return lines;
   }, [
-    gstreamerEnabled,
+    nativeStreamerEnabled,
     hasLagIssue,
     mouseResidualText,
     regionLabel,
@@ -161,6 +163,7 @@ export function StreamStatsHud({
     <m.aside
       className={[
         "sv-stats",
+        `sv-stats--${streamHealth.tier}`,
         expanded ? "sv-stats--expanded" : "",
         hasIssues ? "sv-stats--warn" : "",
         hintsVisible ? "sv-stats--hints" : "",
@@ -172,6 +175,7 @@ export function StreamStatsHud({
       exit={{ opacity: 0, x: -10, y: 6 }}
       transition={surfaceRevealTransition}
       layout
+      data-health={streamHealth.tier}
       aria-label={t("stream.stats.overlayLabel")}
     >
       <button
@@ -182,6 +186,13 @@ export function StreamStatsHud({
         title={expanded ? t("stream.stats.collapse") : t("stream.stats.expand")}
       >
         <div className="sv-stats-toggle-main">
+          <div className="sv-stats-overline">
+            <span className={`sv-stats-health-dot sv-stats-health-dot--${streamHealth.tier}`} aria-hidden="true" />
+            <span className="sv-stats-overline-label">Live stream</span>
+            <span className={`sv-stats-health-label sv-stats-health-label--${streamHealth.tier}`}>
+              {streamHealth.label}
+            </span>
+          </div>
           <p className="sv-stats-primary">{primaryText}</p>
           <div className="sv-stats-toggle-meta">
             <span className="sv-stats-kpi">
@@ -277,6 +288,9 @@ export function StreamStatsHud({
                   <span className="sv-stats-chip-val" style={{ color: rttColor }}>
                     {rttText}
                   </span>
+                </span>
+                <span className="sv-stats-chip" title="Decoded or presented frames per second">
+                  FPS <span className="sv-stats-chip-val">{displayFps > 0 ? displayFps : "—"}</span>
                 </span>
                 <span className="sv-stats-chip" title={t("stream.stats.decodeTime")}>
                   D <span className="sv-stats-chip-val" style={{ color: decodeColor }}>{dText}</span>

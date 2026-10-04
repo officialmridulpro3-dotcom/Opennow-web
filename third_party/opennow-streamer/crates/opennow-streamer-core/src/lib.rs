@@ -332,6 +332,8 @@ impl Engine {
             "nvst-send" => self.nvst_send(command),
             "start" => self.start(command),
             "input-paused" => self.set_paused(command),
+            "input-capture-paused" => self.set_input_capture_paused(command),
+            "pointer-lock-toggle" => self.toggle_pointer_lock(command),
             "surface" => self.update_surface(command),
             "stats-toggle" => Ok(vec![
                 response(id, "ok"),
@@ -1115,6 +1117,59 @@ impl Engine {
         Ok(vec![response(command.id, "ok")])
     }
 
+    fn set_input_capture_paused(&self, command: Command) -> Result<Vec<Value>, Value> {
+        let state = lock_lifecycle(&self.lifecycle).state;
+        if state != State::Connected {
+            return Err(invalid_state(
+                &command.id,
+                "input-capture-paused",
+                state,
+                "Connected",
+            ));
+        }
+        let paused = command.paused.ok_or_else(|| {
+            error(
+                Some(&command.id),
+                "missing-paused",
+                "Input capture pause command does not include paused state",
+            )
+        })?;
+        let runtime = self.media_runtime.as_ref().ok_or_else(|| {
+            error(
+                Some(&command.id),
+                "unsupported-command",
+                "Native streamer has no media runtime for input capture",
+            )
+        })?;
+        runtime
+            .set_input_paused(paused)
+            .map_err(|message| error(Some(&command.id), "media-host-unavailable", message))?;
+        Ok(vec![response(command.id, "ok")])
+    }
+
+    fn toggle_pointer_lock(&self, command: Command) -> Result<Vec<Value>, Value> {
+        let state = lock_lifecycle(&self.lifecycle).state;
+        if state != State::Connected {
+            return Err(invalid_state(
+                &command.id,
+                "pointer-lock-toggle",
+                state,
+                "Connected",
+            ));
+        }
+        let runtime = self.media_runtime.as_ref().ok_or_else(|| {
+            error(
+                Some(&command.id),
+                "unsupported-command",
+                "Native streamer has no media runtime for pointer lock",
+            )
+        })?;
+        runtime
+            .control(MediaRuntimeControl::PointerLock)
+            .map_err(|message| error(Some(&command.id), "media-host-unavailable", message))?;
+        Ok(vec![response(command.id, "ok")])
+    }
+
     fn update_surface(&self, command: Command) -> Result<Vec<Value>, Value> {
         let Some(runtime) = self.media_runtime.as_ref() else {
             return Err(error(
@@ -1581,11 +1636,28 @@ fn lock_lifecycle(lifecycle: &Mutex<Lifecycle>) -> MutexGuard<'_, Lifecycle> {
         .unwrap_or_else(|poisoned| poisoned.into_inner())
 }
 
+fn native_host_overlay_enabled() -> bool {
+    std::env::var("OPENNOW_NATIVE_HOST_OVERLAY")
+        .is_ok_and(|value| matches!(value.trim().to_ascii_lowercase().as_str(), "1" | "true" | "yes" | "on"))
+}
+
 fn forward_shortcut_action(
     output: &EventSender,
     runtime: Option<&MediaRuntime>,
     action: StreamShortcutAction,
 ) {
+    if native_host_overlay_enabled()
+        && matches!(
+            action,
+            StreamShortcutAction::ToggleStats | StreamShortcutAction::ToggleFullscreen
+        )
+    {
+        let _ = output.send(event(
+            "shortcut-action",
+            json!({"action":action.protocol_name(), "source":"keyboard"}),
+        ));
+        return;
+    }
     if action == StreamShortcutAction::TogglePointerLock
         && runtime.is_some_and(MediaRuntime::is_embedded)
     {
@@ -1746,7 +1818,7 @@ fn forward_nvst_session_events<R: NvstSessionResources>(
                         let standalone = shortcut_runtime
                             .as_ref()
                             .is_some_and(|runtime| !runtime.is_embedded());
-                        if standalone {
+                        if standalone && !native_host_overlay_enabled() {
                             let result = shortcut_runtime.as_ref().map_or_else(
                                 || Err("native media runtime is unavailable".to_owned()),
                                 |runtime| runtime.control(MediaRuntimeControl::Menu),

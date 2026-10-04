@@ -96,6 +96,166 @@ struct BackendProcess {
     child: Mutex<Option<Child>>,
 }
 
+#[derive(Default)]
+struct NativeStreamOverlayWindowState {
+    visible: Mutex<bool>,
+    interactive: Mutex<bool>,
+}
+
+#[tauri::command]
+fn set_native_stream_overlay(
+    app: tauri::AppHandle,
+    visible: bool,
+    interactive: bool,
+    url: String,
+) -> Result<(), String> {
+    let main = app
+        .get_webview_window("main")
+        .ok_or_else(|| "The OpenNOW main window is unavailable.".to_owned())?;
+    let overlay_state = app.state::<NativeStreamOverlayWindowState>();
+    *overlay_state.visible.lock().map_err(|error| error.to_string())? = visible;
+    *overlay_state
+        .interactive
+        .lock()
+        .map_err(|error| error.to_string())? = interactive;
+
+    let Some(overlay) = app.get_webview_window("native-stream-overlay") else {
+        if !visible {
+            return Ok(());
+        }
+        let main_url = main.url().map_err(|error| error.to_string())?;
+        let mut overlay_url = tauri::Url::parse(&url).map_err(|error| error.to_string())?;
+        if overlay_url.origin().ascii_serialization() != main_url.origin().ascii_serialization() {
+            return Err("The native stream overlay must use the app's own origin.".to_owned());
+        }
+        // Do not let a renderer-provided URL turn the privileged transparent
+        // window into an arbitrary remote webview.
+        overlay_url.set_path("/native-overlay.html");
+        overlay_url.set_query(None);
+        overlay_url.set_fragment(None);
+        let overlay = WebviewWindowBuilder::new(
+            &app,
+            "native-stream-overlay",
+            WebviewUrl::External(overlay_url),
+        )
+        .title("OpenNOW Session Overlay")
+        .inner_size(1280.0, 800.0)
+        .resizable(false)
+        .decorations(false)
+        .transparent(true)
+        .background_color(tauri::window::Color(0, 0, 0, 0))
+        .always_on_top(true)
+        .skip_taskbar(true)
+        .shadow(false)
+        .visible(false)
+        .build()
+        .map_err(|error| error.to_string())?;
+        sync_native_overlay_bounds(&main, &overlay)?;
+        overlay
+            .set_ignore_cursor_events(!interactive)
+            .map_err(|error| error.to_string())?;
+        overlay
+            .set_always_on_top(visible)
+            .map_err(|error| error.to_string())?;
+        if visible {
+            overlay.show().map_err(|error| error.to_string())?;
+            if interactive {
+                overlay.set_focus().map_err(|error| error.to_string())?;
+            }
+        }
+        return Ok(());
+    };
+
+    if visible {
+        sync_native_overlay_bounds(&main, &overlay)?;
+        overlay
+            .set_ignore_cursor_events(!interactive)
+            .map_err(|error| error.to_string())?;
+        overlay
+            .set_always_on_top(true)
+            .map_err(|error| error.to_string())?;
+        overlay.show().map_err(|error| error.to_string())?;
+        if interactive {
+            overlay.set_focus().map_err(|error| error.to_string())?;
+        } else if !main.is_focused().unwrap_or(false) {
+            main.set_focus().map_err(|error| error.to_string())?;
+        }
+    } else {
+        overlay.hide().map_err(|error| error.to_string())?;
+        overlay
+            .set_always_on_top(false)
+            .map_err(|error| error.to_string())?;
+        if main.is_visible().unwrap_or(false) && !main.is_focused().unwrap_or(false) {
+            let _ = main.set_focus();
+        }
+    }
+    Ok(())
+}
+
+fn sync_native_overlay_bounds(
+    main: &tauri::WebviewWindow,
+    overlay: &tauri::WebviewWindow,
+) -> Result<(), String> {
+    // Match the main WebView client area (the same coordinate space used by
+    // the embedded SDL child), not the decorated outer window frame.
+    let position = main.inner_position().map_err(|error| error.to_string())?;
+    let size = main.inner_size().map_err(|error| error.to_string())?;
+    overlay
+        .set_position(tauri::Position::Physical(position))
+        .map_err(|error| error.to_string())?;
+    overlay
+        .set_size(tauri::Size::Physical(size))
+        .map_err(|error| error.to_string())?;
+    Ok(())
+}
+
+fn handle_native_overlay_window_event(
+    app: &tauri::AppHandle,
+    label: &str,
+    event: &tauri::WindowEvent,
+) {
+    let Some(main) = app.get_webview_window("main") else {
+        return;
+    };
+    let Some(overlay) = app.get_webview_window("native-stream-overlay") else {
+        return;
+    };
+    let desired_visible = app
+        .try_state::<NativeStreamOverlayWindowState>()
+        .and_then(|state| state.visible.lock().ok().map(|visible| *visible))
+        .unwrap_or(false);
+    let interactive = app
+        .try_state::<NativeStreamOverlayWindowState>()
+        .and_then(|state| state.interactive.lock().ok().map(|interactive| *interactive))
+        .unwrap_or(false);
+
+    if label == "main" {
+        match event {
+            tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) if desired_visible => {
+                let _ = sync_native_overlay_bounds(&main, &overlay);
+            }
+            tauri::WindowEvent::Focused(true) if desired_visible => {
+                let _ = sync_native_overlay_bounds(&main, &overlay);
+                let _ = overlay.set_ignore_cursor_events(!interactive);
+                let _ = overlay.set_always_on_top(true);
+                let _ = overlay.show();
+            }
+            tauri::WindowEvent::Focused(false) if !interactive => {
+                let _ = overlay.hide();
+                let _ = overlay.set_always_on_top(false);
+            }
+            _ => {}
+        }
+    } else if label == "native-stream-overlay" {
+        if let tauri::WindowEvent::Focused(false) = event {
+            if !main.is_focused().unwrap_or(false) {
+                let _ = overlay.hide();
+                let _ = overlay.set_always_on_top(false);
+            }
+        }
+    }
+}
+
 #[tauri::command]
 fn get_window_handle(window: tauri::Window) -> Result<String, String> {
     #[cfg(target_os = "windows")]
@@ -116,7 +276,8 @@ fn get_window_handle(window: tauri::Window) -> Result<String, String> {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_window_handle])
+        .manage(NativeStreamOverlayWindowState::default())
+        .invoke_handler(tauri::generate_handler![get_window_handle, set_native_stream_overlay])
         // Must stay the first registered plugin.
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             if let Some(window) = app.get_webview_window("main") {
@@ -141,10 +302,21 @@ fn main() {
         })
         .build(tauri::generate_context!())
         .expect("error while building the OpenNOW desktop shell")
-        .run(|app_handle, event| {
-            if let tauri::RunEvent::Exit = event {
-                terminate_backend(app_handle);
+        .run(|app_handle, event| match event {
+            tauri::RunEvent::Exit => terminate_backend(app_handle),
+            tauri::RunEvent::WindowEvent { label, event, .. } => {
+                if label == "native-stream-overlay" {
+                    if let tauri::WindowEvent::CloseRequested { api, .. } = &event {
+                        api.prevent_close();
+                        if let Some(overlay) = app_handle.get_webview_window("native-stream-overlay") {
+                            let _ = overlay.hide();
+                            let _ = overlay.set_always_on_top(false);
+                        }
+                    }
+                }
+                handle_native_overlay_window_event(app_handle, &label, &event);
             }
+            _ => {}
         });
 }
 

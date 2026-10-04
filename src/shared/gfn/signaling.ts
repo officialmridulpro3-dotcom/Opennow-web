@@ -30,6 +30,27 @@ export type NativeStreamerShortcutAction =
   | "screenshot"
   | "toggleRecording";
 
+export type NativeSidecarControlAction =
+  | "toggle-microphone"
+  | "toggle-pointer-lock"
+  | "input-capture-paused"
+  | "anti-afk-pulse"
+  | "toggle-recording";
+
+export interface NativeStreamTelemetry {
+  framesPerSecond: number | null;
+  bitrateMbps: number | null;
+  peakBitrateMbps: number | null;
+  pingMs: number | null;
+  jitterMs: number | null;
+  packetLossPercent: number | null;
+}
+
+export type NativeSidecarEvent =
+  | { type: "native-shortcut"; action: NativeStreamerShortcutAction | "toggleSidebar" }
+  | { type: "native-microphone-state"; enabled: boolean; state: string; message?: string }
+  | { type: "native-stream-telemetry"; telemetry: NativeStreamTelemetry };
+
 export interface NativeStreamerShortcutBindings {
   toggleStats: string;
   togglePointerLock: string;
@@ -141,7 +162,9 @@ export type MainToRendererSignalingEvent =
   | { type: "disconnected"; reason: string }
   | { type: "offer"; sdp: string }
   | { type: "remote-ice"; candidate: IceCandidatePayload }
-  | { type: "native-shortcut"; action: NativeStreamerShortcutAction }
+  | { type: "native-shortcut"; action: NativeStreamerShortcutAction | "toggleSidebar" }
+  | { type: "native-microphone-state"; enabled: boolean; state: string; message?: string }
+  | { type: "native-stream-telemetry"; telemetry: NativeStreamTelemetry }
   | { type: "native-clipboard-paste" }
   | { type: "native-input-capture-changed"; captured: boolean }
   | { type: "native-stream-started"; message?: string }

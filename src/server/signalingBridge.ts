@@ -24,14 +24,38 @@ function originAllowed(request: IncomingMessage): boolean {
 
 export function attachSignalingBridge(server: HttpServer): void {
   const wss = new WebSocketServer({ noServer: true, maxPayload: 2 * 1024 * 1024 });
+  const nativeEventsWss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
 
   server.on("upgrade", (request, socket: Duplex, head) => {
     const url = new URL(request.url ?? "/", `http://${request.headers.host ?? "localhost"}`);
-    if (url.pathname !== "/api/signaling" || !originAllowed(request)) {
+    if (!originAllowed(request)) {
       socket.destroy();
       return;
     }
-    wss.handleUpgrade(request, socket, head, (ws) => wss.emit("connection", ws, request));
+    if (url.pathname === "/api/signaling") {
+      wss.handleUpgrade(request, socket, head, (ws) => wss.emit("connection", ws, request));
+      return;
+    }
+    if (url.pathname === "/api/native/events") {
+      nativeEventsWss.handleUpgrade(request, socket, head, (ws) => nativeEventsWss.emit("connection", ws, request));
+      return;
+    }
+    socket.destroy();
+  });
+
+  nativeEventsWss.on("connection", (socket: WebSocket, request) => {
+    const browserSession = getExistingSession(request as never);
+    if (!browserSession) {
+      socket.close(4401, "Authentication required");
+      return;
+    }
+    const unsubscribe = onNativeEvent((event) => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: "event", payload: event }));
+      }
+    });
+    socket.on("close", unsubscribe);
+    socket.on("error", unsubscribe);
   });
 
   wss.on("connection", (socket: WebSocket, request) => {
@@ -46,11 +70,6 @@ export function attachSignalingBridge(server: HttpServer): void {
     const send = (payload: unknown) => {
       if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(payload));
     };
-
-    // Forward native sidecar events (overlay-request -> toggleSidebar, toggle-stats) to the web client
-    const unsubscribeNative = onNativeEvent((event) => {
-      send({ type: "event", payload: event });
-    });
 
     socket.on("message", (raw) => {
       void (async () => {
@@ -84,7 +103,6 @@ export function attachSignalingBridge(server: HttpServer): void {
 
     socket.on("close", () => {
       unsubscribe?.();
-      unsubscribeNative();
       signaling?.disconnect();
     });
   });

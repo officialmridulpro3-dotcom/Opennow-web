@@ -1,6 +1,6 @@
 import type { Express, NextFunction, Request, Response } from "express";
 
-import type { CatalogBrowseRequest, SessionAdReportRequest, SessionClaimRequest, SessionCreateRequest, SessionPollRequest, SessionStopRequest } from "@shared/gfn";
+import type { CatalogBrowseRequest, NativeSidecarControlAction, SessionAdReportRequest, SessionClaimRequest, SessionCreateRequest, SessionPollRequest, SessionStopRequest } from "@shared/gfn";
 import type { LegacyPlaytimeRecord, PlaytimeSessionPayload } from "@shared/playtime";
 import { browseCatalog, browseCatalogUncached } from "./gfn/catalogBrowse";
 import { resolveLaunchAppId, resolveStoreUrl } from "./gfn/gameAppMapper";
@@ -324,6 +324,26 @@ export function registerApi(app: Express): void {
     const state = getSession(request, response);
     await state.requireAuth();
     response.json(await nativeSidecar.stop());
+  }));
+
+  app.post("/api/native/control", asyncRoute(async (request, response) => {
+    const state = getSession(request, response);
+    await state.requireAuth();
+    const input = (request.body ?? {}) as { action?: unknown; paused?: unknown };
+    const allowed = new Set<NativeSidecarControlAction>([
+      "toggle-microphone",
+      "toggle-pointer-lock",
+      "input-capture-paused",
+      "anti-afk-pulse",
+      "toggle-recording",
+    ]);
+    if (typeof input.action !== "string" || !allowed.has(input.action as NativeSidecarControlAction)) {
+      throw Object.assign(new Error("Unsupported native stream control action."), { statusCode: 400 });
+    }
+    response.json(nativeSidecar.control(
+      input.action as NativeSidecarControlAction,
+      typeof input.paused === "boolean" ? input.paused : undefined,
+    ));
   }));
 
   // In-app native surface — embedded mode: client sends video element rect + Tauri HWND

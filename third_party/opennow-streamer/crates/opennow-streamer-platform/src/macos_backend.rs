@@ -206,6 +206,15 @@ impl MacOutput {
         Ok(sink)
     }
 
+    pub(crate) fn set_input_paused(&mut self, paused: bool) -> Result<(), String> {
+        if let Some(surface) = self.external_surface.as_mut() {
+            surface
+                .input_capture
+                .set_input_paused(paused, &surface.sdl, &mut surface.window);
+        }
+        Ok(())
+    }
+
     pub(crate) fn set_paused(&mut self, paused: bool) -> Result<(), String> {
         self.paused = paused;
         if let Some(surface) = self.external_surface.as_mut() {

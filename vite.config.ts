@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
@@ -10,5 +11,14 @@ export default defineConfig({
       "@client": fileURLToPath(new URL("./src/client", import.meta.url)),
     },
   },
-  build: { outDir: "dist", emptyOutDir: true },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: resolve(process.cwd(), "index.html"),
+        nativeOverlay: resolve(process.cwd(), "native-overlay.html"),
+      },
+    },
+  },
 });

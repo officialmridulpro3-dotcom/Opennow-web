@@ -33,7 +33,14 @@ import {
   SAFE_FALLBACK_STREAM_PROFILE,
 } from "@shared/gfn";
 import { FALLBACK_RELAY_ICE_SERVERS, GfnWebRtcClient, probeWebRtcEnvironment } from "./platforms/gfn/webrtcClient";
-import { getCachedNativeSidecarSupport, getNativeStatus, startNativeStream, stopNativeStream } from "./api";
+import {
+  connectNativeSidecarEvents,
+  controlNativeSidecar,
+  getCachedNativeSidecarSupport,
+  getNativeStatus,
+  startNativeStream,
+  stopNativeStream,
+} from "./api";
 import type { NativeSidecarStatus } from "./api";
 import { clientLog } from "./api";
 import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut } from "./shortcuts";
@@ -104,6 +111,13 @@ import {
   toLoadingStatus,
 } from "./lib/sessionState";
 import { defaultDiagnostics, mergeNativeStreamStats } from "./lib/streamDiagnostics";
+import {
+  isTauriDesktop,
+  postNativeStreamOverlayMessage,
+  setNativeStreamOverlayWindow,
+  subscribeNativeStreamOverlay,
+} from "./lib/nativeStreamOverlay";
+import type { NativeStreamOverlayAction, NativeStreamOverlayState } from "./lib/nativeStreamOverlay";
 import { applyAccentColor, applyTheme, applyTranslucentUI } from "./lib/uiCustomization";
 import { useTranslation } from "./i18n";
 
@@ -190,6 +204,20 @@ const DEFAULT_SHORTCUTS = {
   shortcutScreenshot: "F11",
   shortcutToggleRecording: "F12",
 } as const;
+
+function createNativeSessionDiagnostics(settings: StreamSettings) {
+  return {
+    ...defaultDiagnostics(),
+    connectionState: "connected" as const,
+    nativeRendererActive: true,
+    resolution: settings.resolution,
+    codec: settings.codec,
+    hardwareAcceleration: "Native hardware decode",
+    targetBitrateKbps: settings.maxBitrateMbps * 1000,
+    lagReason: "unknown" as const,
+    lagReasonDetail: "Waiting for native stream telemetry",
+  };
+}
 
 export function App(): JSX.Element {
   const { locale, t } = useTranslation();
@@ -293,6 +321,9 @@ export function App(): JSX.Element {
   const [session, setSession] = useState<SessionInfo | null>(null);
   const [streamStatus, setStreamStatus] = useState<StreamStatus>("idle");
   const [showStatsOverlay, setShowStatsOverlay] = useState(false);
+  const [nativeStatsVisibleOverride, setNativeStatsVisibleOverride] = useState<boolean | null>(null);
+  const [nativeOverlayMenuOpen, setNativeOverlayMenuOpen] = useState(false);
+  const [nativeMicrophoneEnabled, setNativeMicrophoneEnabled] = useState(false);
   // Turn relays for the WebRTC client when the environment probe finds local
   // candidate gathering is blocked (VPN/firewall/AV). undefined = normal mode.
   const webrtcExtraIceServersRef = useRef<RTCIceServer[] | undefined>(undefined);
@@ -357,6 +388,7 @@ export function App(): JSX.Element {
 
   const resetStatsOverlayToPreference = useCallback((): void => {
     setShowStatsOverlay(settings.showStatsOnLaunch);
+    setNativeStatsVisibleOverride(null);
   }, [settings.showStatsOnLaunch]);
 
   const runCodecTest = useCallback(async (): Promise<void> => {
@@ -706,6 +738,8 @@ export function App(): JSX.Element {
     setRemoteStreamWarning(null);
     setLocalSessionTimerWarning(null);
     resetStatsOverlayToPreference();
+    setNativeOverlayMenuOpen(false);
+    setNativeMicrophoneEnabled(false);
     nativeStreamingRef.current = false;
     setNativeSidecarStatus(null);
     setNativeError(null);
@@ -1380,7 +1414,13 @@ export function App(): JSX.Element {
   }, [requestPointerLockCapture]);
 
   const setNativeInputPaused = useCallback((paused: boolean): void => {
-    // Native-only mode: always allow pausing native input
+    if (nativeStreamingRef.current) {
+      if (paused) setNativeInputCaptureActive(false);
+      void controlNativeSidecar("input-capture-paused", paused).catch((error) => {
+        clientLog(`[NVST] input pause update failed: ${error instanceof Error ? error.message : String(error)}`);
+      });
+      return;
+    }
     window.openNow.setNativeInputPaused(paused);
   }, []);
 
@@ -1466,14 +1506,20 @@ export function App(): JSX.Element {
 
   useEffect(() => {
     if (!antiAfkEnabled || streamStatus !== "streaming") return;
-    if (nativeStreamingRef.current && !nativeInputBridgeReady) return;
+    if (nativeStreamingRef.current && !nativeSidecarStatus?.running) return;
 
     const interval = window.setInterval(() => {
-      clientRef.current?.sendAntiAfkPulse();
+      if (nativeStreamingRef.current) {
+        void controlNativeSidecar("anti-afk-pulse").catch((error) => {
+          clientLog(`[NVST] Anti-AFK pulse failed: ${error instanceof Error ? error.message : String(error)}`);
+        });
+      } else {
+        clientRef.current?.sendAntiAfkPulse();
+      }
     }, 240000); // 4 minutes
 
     return () => clearInterval(interval);
-  }, [antiAfkEnabled, nativeInputBridgeReady, streamStatus]);
+  }, [antiAfkEnabled, nativeSidecarStatus?.running, streamStatus]);
 
   // Periodically re-sync subscription playtime from backend while streaming.
   useEffect(() => {
@@ -1790,10 +1836,14 @@ export function App(): JSX.Element {
   // streamer at create time, so hand it to the sidecar instead of opening
   // WebRTC signaling. The sidecar owns decode/render/input in its own window.
   const startNativeFromClaim = useCallback(async (claimed: SessionInfo): Promise<void> => {
+    const streamSettings = buildCurrentStreamSettings();
     const existing = await getNativeStatus().catch(() => null);
     if (existing?.running) {
       if (existing.sessionId === claimed.sessionId) {
         setNativeSidecarStatus(existing);
+        setNativeMicrophoneEnabled(false);
+        diagnosticsStore.set(createNativeSessionDiagnostics(streamSettings));
+        nativeStreamingRef.current = true;
         setStreamStatus("streaming");
         return;
       }
@@ -1802,9 +1852,11 @@ export function App(): JSX.Element {
     setNativeStarting(true);
     setNativeError(null);
     try {
-      const context = buildNativeStreamerSessionContext(claimed, buildCurrentStreamSettings(), nativeStreamerShortcuts);
+      const context = buildNativeStreamerSessionContext(claimed, streamSettings, nativeStreamerShortcuts);
       const title = gameTitleByAppId.get(Number(claimed.appId)) ?? streamingGame?.title ?? undefined;
       setNativeSidecarStatus(await startNativeStream(claimed.sessionId, context, title));
+      setNativeMicrophoneEnabled(false);
+      diagnosticsStore.set(createNativeSessionDiagnostics(streamSettings));
       nativeStreamingRef.current = true;
       setSessionStartedAtMs(Date.now());
       setStreamStatus("streaming");
@@ -1817,7 +1869,7 @@ export function App(): JSX.Element {
     } finally {
       setNativeStarting(false);
     }
-  }, [buildCurrentStreamSettings, nativeStreamerShortcuts]);
+  }, [buildCurrentStreamSettings, diagnosticsStore, gameTitleByAppId, nativeStreamerShortcuts, streamingGame?.title]);
 
   const applyClaimedSessionAndConnect = useCallback(async (
     claimed: SessionInfo,
@@ -2439,6 +2491,8 @@ export function App(): JSX.Element {
           const reason = event.reason ?? "Native streamer stopped";
           console.warn("[App] Native streamer stopped:", reason);
           nativeStreamingRef.current = false;
+          setNativeOverlayMenuOpen(false);
+          setNativeMicrophoneEnabled(false);
           nativeInputProtocolVersionRef.current = null;
           setNativeInputBridgeReady(false);
           setNativeInputCaptureActive(false);
@@ -3638,7 +3692,10 @@ export function App(): JSX.Element {
     try {
       const context = buildNativeStreamerSessionContext(current, buildCurrentStreamSettings(), nativeStreamerShortcuts);
       const title = streamingGame?.title ?? gameTitleByAppId.get(Number(current.appId)) ?? undefined;
-      setNativeSidecarStatus(await startNativeStream(current.sessionId, context, title));
+      const startedStatus = await startNativeStream(current.sessionId, context, title);
+      setNativeSidecarStatus(startedStatus);
+      setNativeMicrophoneEnabled(false);
+      diagnosticsStore.set(createNativeSessionDiagnostics(context.settings));
       // Free the CPU the browser decoder/compositor was using — the sidecar
       // owns the seat now. Mirrors the reconnect teardown in
       // applyClaimedSessionAndConnect.
@@ -3652,7 +3709,7 @@ export function App(): JSX.Element {
     } finally {
       setNativeStarting(false);
     }
-  }, [buildCurrentStreamSettings, disconnectSignalingControlled, nativeStarting, nativeStreamerShortcuts]);
+  }, [buildCurrentStreamSettings, diagnosticsStore, disconnectSignalingControlled, gameTitleByAppId, nativeStarting, nativeStreamerShortcuts, streamingGame?.title]);
 
   const handleStopNative = useCallback(async () => {
     try {
@@ -3661,11 +3718,15 @@ export function App(): JSX.Element {
       setNativeError(error instanceof Error ? error.message : String(error));
     } finally {
       nativeStreamingRef.current = false;
+      setNativeOverlayMenuOpen(false);
+      setNativeMicrophoneEnabled(false);
     }
   }, []);
 
   const handleStopStream = useCallback(async () => {
     try {
+      setNativeOverlayMenuOpen(false);
+      setNativeMicrophoneEnabled(false);
       resolveExitPrompt(false);
       try {
         await stopNativeStream();
@@ -3758,20 +3819,29 @@ export function App(): JSX.Element {
   }, [handleStopStream, releasePointerLockIfNeeded, requestExitPrompt, streamStatus, streamingGame?.title, t]);
 
   const handleStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction | "toggleSidebar"): void => {
-    // toggleSidebar comes from native overlay-request (Ctrl+G) — open the full React sidebar opaque left
     if ((action as string) === "toggleSidebar") {
       if (streamStatus === "streaming") {
-        dispatchStreamShortcutAction("toggleSidebar");
+        if (nativeStreamingRef.current) {
+          setNativeOverlayMenuOpen((open) => !open);
+        } else {
+          dispatchStreamShortcutAction("toggleSidebar");
+        }
       }
       return;
     }
     switch (action) {
       case "toggleStats":
-        setShowStatsOverlay((prev) => !prev);
+        if (nativeStreamingRef.current) {
+          setNativeStatsVisibleOverride((visible) => !(visible ?? (showStatsOverlay || settings.showNativeStreamerStats)));
+        } else {
+          setShowStatsOverlay((prev) => !prev);
+        }
         return;
       case "togglePointerLock":
         if (nativeStreamingRef.current) {
-          // Native streamer toggles OS input capture locally in the renderer window.
+          void controlNativeSidecar("toggle-pointer-lock").catch((error) => {
+            clientLog(`[NVST] mouse capture toggle failed: ${error instanceof Error ? error.message : String(error)}`);
+          });
           return;
         }
         {
@@ -3792,7 +3862,12 @@ export function App(): JSX.Element {
         }
         return;
       case "stopStream":
-        void handlePromptedStopStream();
+        if (nativeStreamingRef.current) {
+          setNativeOverlayMenuOpen(true);
+          postNativeStreamOverlayMessage({ type: "prompt-end-session" });
+        } else {
+          void handlePromptedStopStream();
+        }
         return;
       case "toggleAntiAfk":
         if (streamStatus === "streaming") {
@@ -3802,21 +3877,230 @@ export function App(): JSX.Element {
         return;
       case "toggleMicrophone":
         if (streamStatus === "streaming") {
-          clientRef.current?.toggleMicrophone();
+          if (nativeStreamingRef.current) {
+            void controlNativeSidecar("toggle-microphone").catch((error) => {
+              clientLog(`[NVST] microphone toggle failed: ${error instanceof Error ? error.message : String(error)}`);
+            });
+          } else {
+            clientRef.current?.toggleMicrophone();
+          }
         }
         return;
       case "screenshot":
-      case "toggleRecording":
         if (streamStatus === "streaming" && !nativeStreamingRef.current) {
           dispatchStreamShortcutAction(action);
         }
         return;
+      case "toggleRecording":
+        if (streamStatus === "streaming") {
+          if (nativeStreamingRef.current) {
+            void controlNativeSidecar("toggle-recording").then(refreshNativeStatus).catch((error) => {
+              clientLog(`[NVST] recording toggle failed: ${error instanceof Error ? error.message : String(error)}`);
+            });
+          } else {
+            dispatchStreamShortcutAction(action);
+          }
+        }
+        return;
     }
-  }, [handlePromptedStopStream, requestPointerLockCapture, streamStatus, toggleSessionFullscreen]);
+  }, [handlePromptedStopStream, refreshNativeStatus, requestPointerLockCapture, settings.showNativeStreamerStats, showStatsOverlay, streamStatus, toggleSessionFullscreen]);
 
   useEffect(() => {
     handleStreamShortcutActionRef.current = handleStreamShortcutAction;
   }, [handleStreamShortcutAction]);
+
+  const nativeStatsVisible = nativeStatsVisibleOverride ?? (showStatsOverlay || settings.showNativeStreamerStats);
+  const nativeOverlayState = useMemo<NativeStreamOverlayState>(() => ({
+    menuOpen: nativeOverlayMenuOpen,
+    statsVisible: nativeStatsVisible,
+    gameTitle: streamingGame?.title ?? t("app.labels.game"),
+    gameCover: streamingGame?.imageUrl ?? null,
+    gameHero: streamingGame?.heroImageUrl
+      ?? streamingGame?.imageUrlsByType?.HERO_IMAGE?.[0]
+      ?? streamingGame?.imageUrlsByType?.KEY_ART?.[0]
+      ?? streamingGame?.screenshotUrls?.[0]
+      ?? null,
+    platformName: streamingStore ?? undefined,
+    sessionStartedAtMs,
+    sessionTimeRemainingSeconds,
+    serverRegion: session?.serverIp,
+    diagnostics: diagnosticsStore.getSnapshot(),
+    isFullscreen: sessionFullscreen || !!document.fullscreenElement,
+    inputCaptured: nativeInputCaptureActive,
+    antiAfkEnabled,
+    microphoneAvailable: settings.microphoneMode !== "disabled",
+    microphoneEnabled: nativeMicrophoneEnabled,
+    recording: Boolean(nativeSidecarStatus?.recording),
+    shortcuts: {
+      toggleStats: formatShortcutForDisplay(settings.shortcutToggleStats, isMac),
+      togglePointerLock: formatShortcutForDisplay(settings.shortcutTogglePointerLock, isMac),
+      toggleFullscreen: formatShortcutForDisplay(settings.shortcutToggleFullscreen, isMac),
+      stopStream: formatShortcutForDisplay(settings.shortcutStopStream, isMac),
+      toggleAntiAfk: formatShortcutForDisplay(settings.shortcutToggleAntiAfk, isMac),
+      toggleMicrophone: formatShortcutForDisplay(settings.shortcutToggleMicrophone, isMac),
+      screenshot: formatShortcutForDisplay(settings.shortcutScreenshot, isMac),
+      recording: formatShortcutForDisplay(settings.shortcutToggleRecording, isMac),
+      toggleSidebar: formatShortcutForDisplay(isMac ? "Meta+G" : "Ctrl+G", isMac),
+    },
+  }), [
+    antiAfkEnabled,
+    diagnosticsStore,
+    nativeInputCaptureActive,
+    nativeMicrophoneEnabled,
+    nativeOverlayMenuOpen,
+    nativeStatsVisible,
+    nativeSidecarStatus?.recording,
+    session?.serverIp,
+    sessionStartedAtMs,
+    sessionTimeRemainingSeconds,
+    sessionFullscreen,
+    settings.microphoneMode,
+    settings.showNativeStreamerStats,
+    settings.shortcutScreenshot,
+    settings.shortcutStopStream,
+    settings.shortcutToggleAntiAfk,
+    settings.shortcutToggleFullscreen,
+    settings.shortcutToggleMicrophone,
+    settings.shortcutTogglePointerLock,
+    settings.shortcutToggleRecording,
+    settings.shortcutToggleStats,
+    showStatsOverlay,
+    streamingGame,
+    streamingStore,
+    t,
+  ]);
+  const nativeOverlayStateRef = useRef(nativeOverlayState);
+
+  useEffect(() => {
+    nativeOverlayStateRef.current = nativeOverlayState;
+    if (isTauriDesktop()) {
+      postNativeStreamOverlayMessage({ type: "state", state: nativeOverlayState });
+    }
+  }, [nativeOverlayState]);
+
+  const handleNativeOverlayCommand = useCallback((action: Exclude<NativeStreamOverlayAction, "ready">): void => {
+    switch (action) {
+      case "toggle-menu":
+        if (nativeStreamingRef.current) setNativeOverlayMenuOpen((open) => !open);
+        return;
+      case "close-menu":
+        setNativeOverlayMenuOpen(false);
+        return;
+      case "toggle-stats":
+        handleStreamShortcutAction("toggleStats");
+        return;
+      case "toggle-fullscreen":
+        handleStreamShortcutAction("toggleFullscreen");
+        return;
+      case "toggle-pointer-lock":
+        if (nativeOverlayMenuOpen) {
+          void controlNativeSidecar("toggle-pointer-lock").catch((error) => {
+            clientLog(`[NVST] mouse capture toggle failed: ${error instanceof Error ? error.message : String(error)}`);
+          });
+          setNativeOverlayMenuOpen(false);
+        } else {
+          handleStreamShortcutAction("togglePointerLock");
+        }
+        return;
+      case "toggle-microphone":
+        handleStreamShortcutAction("toggleMicrophone");
+        return;
+      case "toggle-recording":
+        handleStreamShortcutAction("toggleRecording");
+        return;
+      case "toggle-anti-afk":
+        handleStreamShortcutAction("toggleAntiAfk");
+        return;
+      case "prompt-stop-stream":
+        handleStreamShortcutAction("stopStream");
+        return;
+      case "end-stream":
+        setNativeOverlayMenuOpen(false);
+        void handleStopStream();
+        return;
+    }
+  }, [handleStopStream, handleStreamShortcutAction, nativeOverlayMenuOpen]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeNativeStreamOverlay((message) => {
+      if (message.type === "ready") {
+        postNativeStreamOverlayMessage({ type: "state", state: nativeOverlayStateRef.current });
+      } else if (message.type === "command") {
+        handleNativeOverlayCommand(message.action);
+      }
+    });
+    return unsubscribe;
+  }, [handleNativeOverlayCommand]);
+
+  useEffect(() => {
+    if (!isTauriDesktop() || !authSession) return undefined;
+    return connectNativeSidecarEvents((event) => {
+      if (event.type === "native-shortcut") {
+        handleStreamShortcutActionRef.current?.(event.action);
+        return;
+      }
+      if (event.type === "native-microphone-state") {
+        setNativeMicrophoneEnabled(event.enabled);
+        const current = diagnosticsStore.getSnapshot();
+        const next = {
+          ...current,
+          micEnabled: event.enabled,
+          micState: event.state as typeof current.micState,
+        };
+        diagnosticsStore.set(next);
+        postNativeStreamOverlayMessage({
+          type: "microphone-state",
+          enabled: event.enabled,
+          state: event.state,
+          message: event.message,
+        });
+        return;
+      }
+      const current = diagnosticsStore.getSnapshot();
+      const telemetry = event.telemetry;
+      const fps = telemetry.framesPerSecond;
+      const bitrateKbps = telemetry.bitrateMbps === null ? current.bitrateKbps : telemetry.bitrateMbps * 1000;
+      const rttMs = telemetry.pingMs === null ? current.rttMs : telemetry.pingMs;
+      const packetLossPercent = telemetry.packetLossPercent === null
+        ? current.packetLossPercent
+        : telemetry.packetLossPercent;
+      const fpsLabel = fps === null ? "FPS unavailable" : `${fps.toFixed(0)} fps`;
+      const peakLabel = telemetry.peakBitrateMbps === null ? "" : `${telemetry.peakBitrateMbps.toFixed(1)} Mbps peak`;
+      const next = {
+        ...current,
+        connectionState: "connected" as const,
+        nativeRendererActive: true,
+        decodeFps: fps === null ? current.decodeFps : Math.round(fps),
+        renderFps: fps === null ? current.renderFps : Math.round(fps),
+        bitrateKbps,
+        rttMs,
+        jitterMs: telemetry.jitterMs === null ? current.jitterMs : telemetry.jitterMs,
+        packetLossPercent,
+        lagReason: packetLossPercent >= 2 || rttMs >= 90 ? "network" as const : "stable" as const,
+        lagReasonDetail: `Native stream · ${fpsLabel}${peakLabel ? ` · ${peakLabel}` : ""}`,
+      };
+      diagnosticsStore.set(next);
+      postNativeStreamOverlayMessage({ type: "stats", diagnostics: next });
+    });
+  }, [authSession, diagnosticsStore]);
+
+  useEffect(() => {
+    if (nativeOverlayMenuOpen && !nativeStreamingRef.current && !nativeSidecarStatus?.running) {
+      setNativeOverlayMenuOpen(false);
+      return;
+    }
+    if (!nativeStreamingRef.current && !nativeSidecarStatus?.running) return;
+    setNativeInputPaused(nativeOverlayMenuOpen);
+  }, [nativeOverlayMenuOpen, nativeSidecarStatus?.running, setNativeInputPaused]);
+
+  const nativeOverlayVisible = Boolean(nativeSidecarStatus?.running && (nativeOverlayMenuOpen || nativeStatsVisible));
+  useEffect(() => {
+    if (!isTauriDesktop()) return;
+    const overlayUrl = new URL("/native-overlay.html", window.location.origin).toString();
+    void setNativeStreamOverlayWindow(nativeOverlayVisible, nativeOverlayMenuOpen, overlayUrl).catch((error) => {
+      clientLog(`[NVST] overlay window update failed: ${error instanceof Error ? error.message : String(error)}`);
+    });
+  }, [nativeOverlayMenuOpen, nativeOverlayVisible]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -4064,11 +4348,11 @@ export function App(): JSX.Element {
             videoRef={videoRef}
             audioRef={audioRef}
             diagnosticsStore={diagnosticsStore}
-            showStats={showStatsOverlay}
-            showNativeStats={settings.showNativeStreamerStats}
+            showStats={nativeSidecarStatus?.running ? false : showStatsOverlay}
+            showNativeStats={nativeSidecarStatus?.running ? false : settings.showNativeStreamerStats}
+            onToggleStats={() => setShowStatsOverlay((visible) => !visible)}
             nativeInputCaptureActive={nativeInputCaptureActive}
-            gstreamerEnabled={true}
-            nativeExternalRenderer={settings.nativeExternalRenderer}
+            nativeStreamerEnabled={nativeSidecarStatus?.running ?? false}
             nativeSupported={(nativeSidecarStatus?.supported ?? false) && ((nativeSidecarStatus?.running ?? false) || nativeStarting || (nativeError ?? nativeSidecarStatus?.lastError ?? null) != null)}
             nativeRunning={nativeSidecarStatus?.running ?? false}
             nativeStarting={nativeStarting}
