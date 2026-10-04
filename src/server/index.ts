@@ -48,16 +48,21 @@ if (process.env.NODE_ENV === "production") {
   app.get("/{*path}", (_request, response) => response.sendFile(resolve(staticDir, "index.html")));
 } else {
   const { createServer: createViteServer } = await import("vite");
-  // Vite rejects unknown Host headers by default. Set OPENNOW_DEV_ALLOWED_HOSTS to a
-  // comma-separated list when developing through a tunnel, cloud IDE, or reverse proxy.
-  const devAllowedHosts = (process.env.OPENNOW_DEV_ALLOWED_HOSTS ?? "")
-    .split(",")
-    .map((host) => host.trim())
-    .filter((host) => host.length > 0);
+  // Vite rejects unknown Host headers by default. Hosted sandboxes and preview
+  // tunnels hand the app a *.e2b.app hostname, so that suffix is allowed out of
+  // the box; set OPENNOW_DEV_ALLOWED_HOSTS to a comma-separated list for any
+  // other tunnel, cloud IDE, or reverse proxy.
+  const devAllowedHosts = [
+    ".e2b.app",
+    ...(process.env.OPENNOW_DEV_ALLOWED_HOSTS ?? "")
+      .split(",")
+      .map((host) => host.trim())
+      .filter((host) => host.length > 0),
+  ];
   const vite = await createViteServer({
     server: {
       middlewareMode: true,
-      ...(devAllowedHosts.length > 0 ? { allowedHosts: devAllowedHosts } : {}),
+      allowedHosts: devAllowedHosts,
     },
     appType: "spa",
   });
