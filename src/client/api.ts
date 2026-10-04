@@ -99,6 +99,18 @@ export function stopNativeStream(): Promise<NativeSidecarStatus> {
 }
 
 /**
+ * Deck actions for a running native session ("recording-toggle",
+ * "microphone-toggle", …). The backend keeps a whitelist; unsupported types are
+ * rejected with 400.
+ */
+export function sendNativeCommand(type: string): Promise<NativeSidecarStatus> {
+  return api<NativeSidecarStatus>("/api/native/command", {
+    method: "POST",
+    body: JSON.stringify({ type }),
+  });
+}
+
+/**
  * Forward browser-side stream diagnostics to the server console so a single
  * server log shows both sides of the signaling/ICE handshake. Fire-and-forget,
  * batched once per second and hard-capped to keep it debug-grade, not noisy.

@@ -350,6 +350,22 @@ export function registerApi(app: Express): void {
     response.json({ ok: true });
   }));
 
+  // Deck actions from the styled overlay window. Whitelisted in the sidecar so
+  // the web layer can only touch microphone/recording/fullscreen, never the
+  // transport or session shape.
+  app.post("/api/native/command", asyncRoute(async (request, response) => {
+    const state = getSession(request, response);
+    await state.requireAuth();
+    const input = (request.body ?? {}) as { type?: unknown };
+    const type = typeof input.type === "string" ? input.type : "";
+    try {
+      response.json(nativeSidecar.command(type));
+    } catch (error) {
+      const statusCode = (error as { statusCode?: number }).statusCode ?? 500;
+      response.status(statusCode).json({ error: (error as Error).message });
+    }
+  }));
+
   // ---- Playtime ledger --------------------------------------------------
   // Statistics about the local player, not about NVIDIA, so these routes stay
   // readable while signed out and never call upstream. The ledger lives in the

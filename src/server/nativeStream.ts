@@ -81,7 +81,38 @@ export function buildSidecarEnv(gameTitle?: string): NodeJS.ProcessEnv {
     ...process.env,
     OPENNOW_NATIVE_EXTERNAL_RENDERER: "1",
     OPENNOW_NATIVE_INPUT_OWNER: "native",
+    // Ctrl+G / Ctrl+N / Guide belong to the styled overlay window instead of
+    // the engine's built-in GDI panel, and the engine publishes its live
+    // counters as `native-stream-stats` lines for the overlay HUD.
+    OPENNOW_NATIVE_HOST_OVERLAY: "1",
     ...(gameTitle?.trim() ? { OPENNOW_GAME_TITLE: gameTitle.trim() } : {}),
+  };
+}
+
+/**
+ * Pull the negotiated stream shape out of a launch context. Tolerant by design:
+ * any missing field just leaves the label out of the stats event.
+ */
+function readStreamProfile(context: NativeStreamerSessionContext): {
+  codec?: string;
+  resolution?: string;
+  requestedFps?: number;
+  targetBitrateMbps?: number;
+  hardwareAcceleration?: string;
+} {
+  const settings = (context as unknown as { settings?: Record<string, unknown> }).settings ?? {};
+  const asString = (value: unknown): string | undefined =>
+    typeof value === "string" && value.trim() ? value.trim() : undefined;
+  const asNumber = (value: unknown): number | undefined =>
+    typeof value === "number" && Number.isFinite(value) ? value : undefined;
+  return {
+    codec: asString(settings.codec),
+    resolution: asString(settings.resolution),
+    requestedFps: asNumber(settings.fps),
+    targetBitrateMbps: asNumber(settings.maxBitrateKbps) !== undefined
+      ? (asNumber(settings.maxBitrateKbps) as number) / 1000
+      : undefined,
+    hardwareAcceleration: asString(settings.nativeVideoBackend),
   };
 }
 
@@ -203,6 +234,18 @@ class NativeSidecarManager {
   private phase: "handshake" | "starting" | undefined;
   private firstFrame = false;
   private recording: ActiveNativeRecording | null = null;
+  /**
+   * Stream shape taken from the launch context. The engine's once-per-second
+   * telemetry line carries rates, not labels, so the negotiated codec and
+   * resolution are remembered here and merged into every stats event.
+   */
+  private streamProfile: {
+    codec?: string;
+    resolution?: string;
+    requestedFps?: number;
+    targetBitrateMbps?: number;
+    hardwareAcceleration?: string;
+  } = {};
 
   status(): NativeSidecarStatus {
     return {
@@ -231,6 +274,7 @@ class NativeSidecarManager {
     this.capabilities = undefined;
     this.stdoutBuffer = "";
     this.firstFrame = false;
+    this.streamProfile = readStreamProfile(context);
 
     const child = spawn(exe, [], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true, env: buildSidecarEnv(gameTitle) });
     this.child = child;
@@ -397,6 +441,33 @@ class NativeSidecarManager {
     this.child.stdin.write(`${JSON.stringify(message)}\n`);
   }
 
+  /**
+   * Whitelisted engine commands the styled overlay deck may trigger. The list
+   * is deliberately small — anything that changes transport, session or capture
+   * shape stays with the engine, the shell or the launch flow.
+   */
+  command(type: string): NativeSidecarStatus {
+    if (!this.child) throw httpError("No native stream is running.", 409);
+    switch (type) {
+      case "recording-toggle":
+        this.toggleRecording();
+        break;
+      case "recording-start":
+        this.startRecording();
+        break;
+      case "recording-stop":
+        this.stopRecording("deck");
+        break;
+      case "microphone-toggle":
+      case "fullscreen-toggle":
+        this.send({ id: this.nextId(type), type });
+        break;
+      default:
+        throw httpError(`Unsupported native command: ${type || "(empty)"}`, 400);
+    }
+    return this.status();
+  }
+
   private toggleRecording(): void {
     if (!this.child) {
       console.log("[NVST] toggle-recording ignored: the sidecar is not running");
@@ -467,6 +538,40 @@ class NativeSidecarManager {
     const type = typeof message.type === "string" ? message.type : "";
     if (type === "ready" && message.capabilities !== undefined) {
       this.capabilities = message.capabilities;
+    }
+    // The engine publishes `telemetry` once a second (frames per second, bitrate,
+    // ping, jitter, packet loss). Re-shape it as the client's native stats event
+    // so the diagnostics store and the styled overlay HUD both show live engine
+    // numbers instead of the same three frozen values.
+    if (type === "telemetry") {
+      const numberOf = (key: string): number | undefined => {
+        const value = message[key];
+        return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+      };
+      const bitrateMbps = numberOf("bitrateMbps") ?? 0;
+      const framesPerSecond = numberOf("framesPerSecond") ?? 0;
+      const targetMbps = this.streamProfile.targetBitrateMbps ?? 0;
+      emitNativeEvent({
+        type: "native-stream-stats",
+        stats: {
+          codec: this.streamProfile.codec ?? "h264",
+          resolution: this.streamProfile.resolution ?? "",
+          hardwareAcceleration: this.streamProfile.hardwareAcceleration ?? "native decode",
+          bitrateKbps: Math.round(bitrateMbps * 1000),
+          targetBitrateKbps: Math.round(targetMbps * 1000),
+          bitratePerformancePercent: targetMbps > 0 ? Math.min(100, (bitrateMbps / targetMbps) * 100) : 0,
+          decodedFps: framesPerSecond,
+          renderFps: framesPerSecond,
+          framesDecoded: numberOf("framesDecoded") ?? 0,
+          framesRendered: numberOf("framesDecoded") ?? 0,
+          sinkDropped: numberOf("framesDropped") ?? 0,
+          rttMs: numberOf("pingMs"),
+          packetLossPercent: numberOf("packetLossPercent") ?? 0,
+          zeroCopyD3D11: false,
+          zeroCopyD3D12: false,
+        },
+      });
+      return;
     }
     if (type === "error") {
       const detail = typeof message.message === "string" ? message.message : "native streamer error";

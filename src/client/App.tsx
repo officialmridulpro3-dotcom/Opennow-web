@@ -33,11 +33,21 @@ import {
   SAFE_FALLBACK_STREAM_PROFILE,
 } from "@shared/gfn";
 import { FALLBACK_RELAY_ICE_SERVERS, GfnWebRtcClient, probeWebRtcEnvironment } from "./platforms/gfn/webrtcClient";
-import { getCachedNativeSidecarSupport, getNativeStatus, startNativeStream, stopNativeStream } from "./api";
+import { getCachedNativeSidecarSupport, getNativeStatus, sendNativeCommand, startNativeStream, stopNativeStream } from "./api";
 import type { NativeSidecarStatus } from "./api";
 import { clientLog } from "./api";
 import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut } from "./shortcuts";
 import { dispatchStreamShortcutAction } from "./streamShortcutActions";
+import {
+  hideNativeOverlay,
+  isNativeOverlayHostAvailable,
+  pushNativeOverlaySession,
+  pushNativeOverlayStats,
+  pushNativeOverlayToast,
+  pushNativeOverlayToggles,
+  sendNativeOverlayCommand,
+  subscribeNativeOverlayActions,
+} from "./nativeOverlayHost";
 import { useElapsedSeconds } from "./utils/useElapsedSeconds";
 import { useAuthSession } from "./hooks/useAuthSession";
 import { useCatalogData } from "./hooks/useCatalogData";
@@ -349,6 +359,28 @@ export function App(): JSX.Element {
   const navbarSessionActionInFlightRef = useRef<"resume" | "terminate" | null>(null);
   const nativeStreamingRef = useRef(false);
   const handleStreamShortcutActionRef = useRef<((action: NativeStreamerShortcutAction | "toggleSidebar") => void) | null>(null);
+  /**
+   * Native sessions render gameplay in the engine's own window *above* this
+   * page, so the in-page sidebar would be invisible behind the video child
+   * window. Ctrl+G / Ctrl+N / Guide arrive here as `native-shortcut` events and
+   * are handed to the styled overlay window instead (see nativeOverlayHost.ts).
+   * Returns true when the overlay took the request.
+   */
+  const forwardNativeShortcutToOverlayRef = useRef<((action: string) => boolean) | null>(null);
+  useEffect(() => {
+    forwardNativeShortcutToOverlayRef.current = (action: string): boolean => {
+      if (!isNativeOverlayHostAvailable() || !nativeStreamingRef.current) return false;
+      if (action === "toggleSidebar") {
+        sendNativeOverlayCommand("toggle-deck");
+        return true;
+      }
+      if (action === "toggleStats") {
+        sendNativeOverlayCommand("toggle-hud");
+        return true;
+      }
+      return false;
+    };
+  }, []);
   const streamingGameRef = useRef<GameInfo | null>(null);
 
   useEffect(() => {
@@ -710,6 +742,7 @@ export function App(): JSX.Element {
     setNativeSidecarStatus(null);
     setNativeError(null);
     setNativeStarting(false);
+    hideNativeOverlay();
     diagnosticsStore.set(defaultDiagnostics());
 
     if (!options?.keepStreamingContext) {
@@ -2406,7 +2439,9 @@ export function App(): JSX.Element {
             activateNativeInputForCurrentSession(event.protocolVersion);
           }
         } else if (event.type === "native-shortcut") {
-          handleStreamShortcutActionRef.current?.(event.action);
+          if (!forwardNativeShortcutToOverlayRef.current?.(event.action)) {
+            handleStreamShortcutActionRef.current?.(event.action);
+          }
         } else if (event.type === "native-clipboard-paste") {
           if (settings.clipboardPaste && (!nativeStreamingRef.current || nativeInputBridgeReady)) {
             void sendStreamClipboardPaste(clientRef.current);
@@ -2425,6 +2460,24 @@ export function App(): JSX.Element {
             diagnosticsStore.getSnapshot(),
             event.stats,
           ));
+          // Mirror the engine counters into the overlay HUD: the overlay is the
+          // only place they are visible while the video plane is on top.
+          pushNativeOverlayStats({
+            codec: event.stats.codec,
+            resolution: event.stats.resolution,
+            decodedFps: event.stats.decodedFps,
+            renderFps: event.stats.renderFps,
+            bitrateKbps: event.stats.bitrateKbps,
+            targetBitrateKbps: event.stats.targetBitrateKbps,
+            rttMs: event.stats.rttMs,
+            packetLossPercent: event.stats.packetLossPercent,
+            framesDecoded: event.stats.framesDecoded,
+            framesDropped: event.stats.sinkDropped,
+            hardwareAcceleration: event.stats.hardwareAcceleration,
+            queueMode: event.stats.queueMode,
+            zeroCopy: event.stats.zeroCopyD3D11 || event.stats.zeroCopyD3D12,
+            updatedAtMs: Date.now(),
+          });
         } else if (event.type === "native-stream-transition") {
           diagnosticsStore.set({
             ...diagnosticsStore.getSnapshot(),
@@ -2439,6 +2492,7 @@ export function App(): JSX.Element {
           const reason = event.reason ?? "Native streamer stopped";
           console.warn("[App] Native streamer stopped:", reason);
           nativeStreamingRef.current = false;
+          hideNativeOverlay();
           nativeInputProtocolVersionRef.current = null;
           setNativeInputBridgeReady(false);
           setNativeInputCaptureActive(false);
@@ -3655,6 +3709,7 @@ export function App(): JSX.Element {
   }, [buildCurrentStreamSettings, disconnectSignalingControlled, nativeStarting, nativeStreamerShortcuts]);
 
   const handleStopNative = useCallback(async () => {
+    hideNativeOverlay();
     try {
       setNativeSidecarStatus(await stopNativeStream());
     } catch (error) {
@@ -3756,6 +3811,107 @@ export function App(): JSX.Element {
 
     await handleStopStream();
   }, [handleStopStream, releasePointerLockIfNeeded, requestExitPrompt, streamStatus, streamingGame?.title, t]);
+
+  /**
+   * Styled native overlay bridge. This page owns the session state; the overlay
+   * window only renders it, and its buttons come back as actions that reuse the
+   * very same handlers as the in-app controls.
+   */
+  useEffect(() => {
+    if (!isNativeOverlayHostAvailable()) return;
+    return subscribeNativeOverlayActions((action, value) => {
+      switch (action) {
+        case "end-session":
+          void handlePromptedStopStream();
+          return;
+        case "toggle-fullscreen":
+          if (streamStatus === "connecting" || streamStatus === "streaming") {
+            void toggleSessionFullscreen();
+          }
+          return;
+        case "capture-mouse":
+        case "resume":
+          // Dismissing the deck returns focus to the game window, which is what
+          // re-locks the engine's relative-mouse capture.
+          sendNativeOverlayCommand("close-deck");
+          return;
+        case "toggle-mic":
+          if (nativeStreamingRef.current) {
+            void sendNativeCommand("microphone-toggle");
+          } else {
+            clientRef.current?.toggleMicrophone();
+          }
+          return;
+        case "toggle-recording":
+          if (nativeStreamingRef.current) {
+            void sendNativeCommand("recording-toggle");
+          }
+          return;
+        case "clipboard-paste":
+          // Native sessions read the Windows clipboard inside the engine window;
+          // the useful thing the deck can do is get out of the way.
+          sendNativeOverlayCommand("close-deck");
+          pushNativeOverlayToast({
+            kind: "info",
+            title: "Press Ctrl + V in the game",
+            detail: "The native window pastes your clipboard into the remote desktop",
+          });
+          return;
+        case "open-settings":
+          setCurrentPage("settings");
+          return;
+        case "set-mouse-sensitivity":
+          if (typeof value === "number") {
+            void updateSetting("mouseSensitivity", Math.max(0.25, Math.min(2, value / 100)));
+          }
+          return;
+        default:
+          return;
+      }
+    });
+  }, [handlePromptedStopStream, streamStatus, toggleSessionFullscreen, updateSetting]);
+
+  /**
+   * Keeps the overlay window fed while a native seat is live: session header
+   * once per change, live toggles whenever the app state they mirror moves.
+   */
+  useEffect(() => {
+    if (!isNativeOverlayHostAvailable() || !nativeStreamingRef.current) return;
+    const hero =
+      streamingGame?.heroImageUrl
+      ?? streamingGame?.imageUrlsByType?.HERO_IMAGE?.[0]
+      ?? streamingGame?.imageUrlsByType?.KEY_ART?.[0]
+      ?? null;
+    pushNativeOverlaySession({
+      gameTitle: streamingGame?.title ?? t("app.labels.game"),
+      heroImageUrl: hero,
+      coverImageUrl: streamingGame?.imageUrl ?? null,
+      region: session?.zone ?? null,
+      startedAtMs: sessionStartedAtMs,
+      transport: "nvst",
+      enginePid: nativeSidecarStatus?.pid ?? null,
+      protocolVersion: nativeInputProtocolVersionRef.current ?? null,
+      firstFrame: nativeSidecarStatus?.firstFrame === true,
+      recording: nativeSidecarStatus?.recording ?? null,
+    });
+    pushNativeOverlayToggles({
+      fullscreen: sessionFullscreen,
+      micMuted: settings.microphoneMode === "disabled",
+      recording: Boolean(nativeSidecarStatus?.recording),
+      inputCaptured: nativeInputCaptureActive,
+    });
+  }, [
+    nativeInputCaptureActive,
+    nativeSidecarStatus?.firstFrame,
+    nativeSidecarStatus?.pid,
+    nativeSidecarStatus?.recording,
+    session?.zone,
+    sessionFullscreen,
+    sessionStartedAtMs,
+    settings.microphoneMode,
+    streamingGame,
+    t,
+  ]);
 
   const handleStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction | "toggleSidebar"): void => {
     // toggleSidebar comes from native overlay-request (Ctrl+G) — open the full React sidebar opaque left

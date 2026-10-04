@@ -67,9 +67,14 @@ DirectX 10-class graphics cards. See [docs/DESKTOP.md](docs/DESKTOP.md) for
 architecture, builds (CI artifacts or local), and troubleshooting.
 
 ```bash
-npm run desktop:dev     # native window around the dev stack
-npm run desktop:build   # Windows installer + portable exe
+npm run desktop:dev      # native window around the dev stack
+npm run desktop:build    # Windows installer + portable exe
+npm run preview:overlay  # browser preview of the native-stream deck + live stats
 ```
+
+The stream chrome for native sessions (deck, live stats, toasts) is a
+transparent React/CSS overlay window floated above the engine's D3D11 video
+plane — see [docs/NATIVE_OVERLAY.md](docs/NATIVE_OVERLAY.md).
 
 ## Checks
 

@@ -10,8 +10,11 @@ fallback.
 ```text
 OpenNOW.exe (Tauri shell)
 ├── WebView2 window — library / settings / account (existing web client)
+├── WebView2 overlay window — styled stream deck + live stats (transparent,
+│   always-on-top, click-through; see NATIVE_OVERLAY.md)
 ├── opennow-server — auth / catalog / CloudMatch (existing Node backend)
 │   └── NEW: /api/native-session → SessionContext JSON for the engine
+│   └── NEW: /api/native/command → whitelisted deck actions (mic, recording)
 └── opennow-nvst.exe (NEW sidecar: third_party/opennow-streamer standalone)
     └── own D3D11 window, native input + audio; JSON-lines over stdio
 ```
@@ -47,6 +50,12 @@ to its stdin → gameplay in the native window → sidecar exit returns to libra
   and the portable ZIP.
 - [ ] **Phase 4 — Test loop.** Iterate on real hardware (no NVIDIA account/GPU
   in CI) until playback is smooth.
+- [x] **Phase 5 — Styled overlay.** The stream deck and live stats left the
+  engine's GDI panel and became a React/CSS overlay window floated above the
+  video plane: transparent, always-on-top, click-through unless the deck is
+  open, driven from the main window over Tauri IPC, with the engine's telemetry
+  line feeding real numbers into the HUD. See
+  [NATIVE_OVERLAY.md](NATIVE_OVERLAY.md). Preview with `npm run preview:overlay`.
 
 ## Provisioning (HTTP 501 lesson)
 

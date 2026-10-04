@@ -170,6 +170,10 @@ export interface NativeStreamStats {
   framesPendingToPresent?: number;
   sinkRendered?: number;
   sinkDropped?: number;
+  /** Round-trip time to the media peer, when the engine publishes it. */
+  rttMs?: number;
+  /** Packet loss over the video stream in percent. */
+  packetLossPercent?: number;
   zeroCopyD3D11: boolean;
   zeroCopyD3D12: boolean;
   queueMode?: NativeQueueMode;

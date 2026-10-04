@@ -30,4 +30,14 @@ cp -r native/opennow-streamer <this-repo>/third_party/opennow-streamer
 
 Keep the vendored tree byte-identical to upstream so updates stay trivial.
 Any OpenNOW-web-specific changes belong in our own shell/backend code, never
-as edits inside `third_party/`.
+as edits inside `third_party/` — with one documented exception.
+
+### Local patches (apply after re-copying the tree)
+
+| File | Change | Reason |
+|---|---|---|
+| `crates/opennow-streamer-platform/src/output.rs` | `update()` does not mark the surface embedded while `visible=false`; standalone window stays as a fallback | black-screen fix (missing Tauri HWND during startup) |
+| `crates/opennow-streamer-core/src/lib.rs` | `host_overlay_enabled()` (env `OPENNOW_NATIVE_HOST_OVERLAY`) forwards Ctrl+G / Ctrl+N / Alt+Enter / pointer-lock, and the Guide button, to the host instead of opening the built-in GDI panel | the host shell draws the stream chrome in a styled transparent web view — see [docs/NATIVE_OVERLAY.md](../docs/NATIVE_OVERLAY.md). Unset ⇒ upstream behaviour, built-in panel in charge |
+
+Both patches are additive and env-/state-gated, so re-applying them after an
+upstream bump is a two-hunk diff.

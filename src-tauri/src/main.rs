@@ -29,6 +29,10 @@ use std::time::{Duration, Instant};
 use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_dialog::DialogExt;
 
+/// Transparent, always-on-top overlay window carrying the styled stream
+/// chrome (deck, live stats, toasts) above the native video plane.
+mod native_overlay;
+
 /// WebView2 command-line switches for the main window.
 ///
 /// `--ignore-gpu-blocklist` is the critical one for DirectX 10-class GPUs:
@@ -116,7 +120,15 @@ fn get_window_handle(window: tauri::Window) -> Result<String, String> {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_window_handle])
+        .invoke_handler(tauri::generate_handler![
+            get_window_handle,
+            native_overlay::native_overlay_command,
+            native_overlay::native_overlay_state,
+            native_overlay::native_overlay_action,
+            native_overlay::native_overlay_push,
+            native_overlay::native_overlay_ready,
+            native_overlay::native_overlay_hide,
+        ])
         // Must stay the first registered plugin.
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             if let Some(window) = app.get_webview_window("main") {
@@ -160,7 +172,18 @@ fn startup(app: &tauri::AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(not(debug_assertions))]
     let origin = start_backend(app)?;
 
-    open_main_window(app, &origin)
+    open_main_window(app, &origin)?;
+
+    // The overlay window is intentionally created even when the user never
+    // opens the deck: it boots once (a few MB, no rendering while hidden) and
+    // is then instantly available for Ctrl+G / Ctrl+N / guide-button requests
+    // coming from the native engine. A failure here is not fatal — WebRTC and
+    // native playback both keep working.
+    if let Err(error) = native_overlay::setup(app, &origin) {
+        eprintln!("[OpenNOW] styled stream overlay unavailable, engine menu stays in use: {error}");
+    }
+
+    Ok(())
 }
 
 /// Spawns the bundled backend and returns the origin to load in the window.

@@ -1581,32 +1581,44 @@ fn lock_lifecycle(lifecycle: &Mutex<Lifecycle>) -> MutexGuard<'_, Lifecycle> {
         .unwrap_or_else(|poisoned| poisoned.into_inner())
 }
 
+/// True when the host shell asked for the *styled* stream chrome.
+///
+/// OpenNOW Desktop renders the stream menu and the live-stats HUD in a
+/// transparent web view of its own (see `src-tauri/src/native_overlay.rs`).
+/// Those surfaces are DOM/CSS rather than Win32 draws, so the shortcuts that
+/// would otherwise open the engine's built-in panel are forwarded to the host
+/// as events instead. Upstream behaviour is unchanged when the variable is
+/// unset — the built-in panel stays in charge.
+fn host_overlay_enabled() -> bool {
+    std::env::var("OPENNOW_NATIVE_HOST_OVERLAY")
+        .map(|value| {
+            let value = value.trim();
+            value == "1" || value.eq_ignore_ascii_case("true") || value.eq_ignore_ascii_case("yes")
+        })
+        .unwrap_or(false)
+}
+
 fn forward_shortcut_action(
     output: &EventSender,
     runtime: Option<&MediaRuntime>,
     action: StreamShortcutAction,
 ) {
-    if action == StreamShortcutAction::TogglePointerLock
-        && runtime.is_some_and(MediaRuntime::is_embedded)
-    {
+    let host_owned = runtime.is_some_and(MediaRuntime::is_embedded) || host_overlay_enabled();
+    if action == StreamShortcutAction::TogglePointerLock && host_owned {
         let _ = output.send(event(
             "shortcut-action",
             json!({"action":action.protocol_name(), "source":"keyboard"}),
         ));
         return;
     }
-    if action == StreamShortcutAction::ToggleStats
-        && runtime.is_some_and(MediaRuntime::is_embedded)
-    {
+    if action == StreamShortcutAction::ToggleStats && host_owned {
         let _ = output.send(event(
             "shortcut-action",
             json!({"action":action.protocol_name(), "source":"keyboard"}),
         ));
         return;
     }
-    if action == StreamShortcutAction::ToggleFullscreen
-        && runtime.is_some_and(MediaRuntime::is_embedded)
-    {
+    if action == StreamShortcutAction::ToggleFullscreen && host_owned {
         let _ = output.send(event(
             "shortcut-action",
             json!({"action":action.protocol_name(), "source":"keyboard"}),
@@ -1741,12 +1753,14 @@ fn forward_nvst_session_events<R: NvstSessionResources>(
                         break;
                     };
                     if matches!(input.input, CapturedInput::Guide) {
-                        // Standalone sessions have no host shell to show a menu:
-                        // the engine shows its own stream menu instead.
-                        let standalone = shortcut_runtime
+                        // Sessions hosted by a shell that owns its own chrome get
+                        // an overlay request; everything else falls back to the
+                        // engine's built-in stream menu.
+                        let host_owned = shortcut_runtime
                             .as_ref()
-                            .is_some_and(|runtime| !runtime.is_embedded());
-                        if standalone {
+                            .is_some_and(MediaRuntime::is_embedded)
+                            || host_overlay_enabled();
+                        if !host_owned {
                             let result = shortcut_runtime.as_ref().map_or_else(
                                 || Err("native media runtime is unavailable".to_owned()),
                                 |runtime| runtime.control(MediaRuntimeControl::Menu),
