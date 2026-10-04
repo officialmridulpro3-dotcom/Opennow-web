@@ -153,9 +153,8 @@
 
 .novp-game__label {
   position: absolute;
-  left: 50%;
-  bottom: 2.4%;
-  transform: translateX(-50%);
+  left: 4%;
+  top: 3.2%;
   font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -165,7 +164,7 @@
 /* ---- Control strip ---- */
 .novp-panel {
   position: fixed;
-  left: 18px;
+  right: 18px;
   bottom: 18px;
   z-index: 40;
   width: 330px;

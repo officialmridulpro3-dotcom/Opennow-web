@@ -90,11 +90,13 @@ html.nov-page body {
   position: fixed;
   inset: 0;
   pointer-events: auto;
+  /* Deliberately no backdrop-filter here: the overlay window is a transparent
+     WebView2, and a full-screen blur sampling a transparent backdrop is exactly
+     the case that can composite as a black sheet on some WebView2 builds. The
+     panels keep theirs because their own near-opaque background dominates. */
   background:
-    radial-gradient(120% 90% at 0% 40%, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.34) 52%, rgba(0, 0, 0, 0.12)),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.22) 46%, rgba(0, 0, 0, 0) 72%);
-  backdrop-filter: blur(3px) saturate(0.92);
-  -webkit-backdrop-filter: blur(3px) saturate(0.92);
+    radial-gradient(120% 90% at 0% 40%, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.44) 52%, rgba(0, 0, 0, 0.22)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.68) 0%, rgba(0, 0, 0, 0.3) 46%, rgba(0, 0, 0, 0.06) 72%);
   cursor: default;
 }
 
