@@ -246,8 +246,10 @@ export function NativeOverlayRoot({
 
   const scrimVisible = deckOpen && !exitOpen;
 
+  const hudOnly = !deckOpen && hudVisible;
+
   return (
-    <div className="nov-root">
+    <div className={`nov-root${hudOnly ? " nov-root--hud-only" : ""}`}>
       <AnimatePresence>
         {scrimVisible ? (
           <m.div

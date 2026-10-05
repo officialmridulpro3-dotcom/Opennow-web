@@ -43,9 +43,11 @@ What was missing was a surface that can be styled. So the chrome moved into one:
   bitrate sparkline, toast stack, end-session dialog). Full design-system
   styling, motion, focus rings, keyboard navigation.
 * **Overlay window** — `src-tauri/src/native_overlay.rs`. Created hidden at
-  startup, follows the main window's client rect on a 200 ms poll, and is
-  click-through whenever the deck is closed, so the stats HUD never eats a
-  mouse click meant for the game.
+  startup and follows the main window's client rect on a 200 ms poll. In deck
+  mode it covers the whole client area; in HUD-only mode it shrinks to a
+  352x470 box in the top-right corner, so the play area is untouched even
+  before click-through is taken into account (it is also set click-through
+  whenever the deck is closed).
 * **Bridge** — `src/client/nativeOverlayHost.ts` (main window ⇒ shell ⇒ overlay)
   and `nativeOverlayChannel.ts` (overlay ⇒ shell). The main window stays the
   single source of truth for session state; the overlay renders it and sends
@@ -94,6 +96,23 @@ window renders on Windows.
 | `src-tauri/src/native_overlay.rs` | overlay window lifecycle, bounds sync, IPC commands |
 | `src/server/nativeStream.ts` | `OPENNOW_NATIVE_HOST_OVERLAY`, telemetry → stats mapping, whitelisted commands |
 | `third_party/.../core/src/lib.rs` | host-overlay shortcut routing (env-gated, upstream default untouched) |
+
+## Verify on the first Windows run
+
+The Rust shell can only be compiled and exercised on Windows, so these are the
+points to check on the first desktop build:
+
+1. **Click-through in HUD mode** — `WebviewWindow::set_ignore_cursor_events`
+   should let clicks reach the game. The HUD-only window is deliberately small
+   so a failure here costs a 352x470 corner, not the whole screen. If it does
+   fail, set `WS_EX_TRANSPARENT` on the overlay HWND directly (the vendored
+   engine already shows the `windows-sys` calls to copy).
+2. **Transparency** — the overlay must composite over the video plane rather
+   than painting a black sheet. The scrim deliberately avoids a full-screen
+   `backdrop-filter` for this reason; if a black sheet still appears, drop the
+   remaining blurs or fall back to an opaque deck.
+3. **Focus hand-off** — opening the deck focuses the overlay, closing it returns
+   focus to the main window so the engine re-locks the cursor.
 
 ## Follow-ups
 

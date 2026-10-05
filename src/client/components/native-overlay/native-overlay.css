@@ -1031,7 +1031,26 @@ html.nov-page body {
 
 /* =========================================================================
  * Toasts
+ *
+ * In HUD-only mode the overlay window is a small box in the top-right corner
+ * (see HUD_WIDTH/HUD_HEIGHT in native_overlay.rs), so the centred bottom stack
+ * would land in the middle of that box. Anchor it to the box instead.
  * ========================================================================= */
+.nov-root--hud-only .nov-toasts {
+  left: auto;
+  right: 16px;
+  bottom: 16px;
+  transform: none;
+  align-items: stretch;
+  max-width: 320px;
+}
+
+.nov-root--hud-only .nov-toast {
+  min-width: 0;
+  width: 100%;
+}
+
+
 .nov-toasts {
   position: absolute;
   left: 50%;

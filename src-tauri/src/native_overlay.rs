@@ -54,6 +54,16 @@ pub const ACTION_EVENT: &str = "opennow:native-overlay-action";
 /// How often the overlay window re-checks the main window's client rect.
 const SYNC_INTERVAL: Duration = Duration::from_millis(200);
 
+/// Footprint of the stats HUD when it is the only thing on screen. The window
+/// shrinks to this corner box instead of covering the whole game: even if the
+/// compositor ignored click-through, only this corner would eat a click, and
+/// the rest of the video keeps receiving input. Keep in sync with the
+/// `.nov-hud` size in `native-overlay.css` (292 px wide + 2x18 px margin, tall
+/// enough for the expanded detail rows).
+const HUD_WIDTH: u32 = 352;
+const HUD_HEIGHT: u32 = 470;
+const HUD_MARGIN: i32 = 0;
+
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
 enum Mode {
     /// Nothing to show — the overlay window is hidden.
@@ -196,18 +206,27 @@ pub fn setup(app: &AppHandle, origin: &str) -> Result<(), Box<dyn std::error::Er
                 continue;
             };
             let interactive = mode == Mode::Deck;
-            let wanted = (mode, position.x, position.y, size.width, size.height, interactive);
+            // Deck: cover the whole client area (scrim + sidebar). HUD only:
+            // a small box in the top-right corner, leaving the play area free.
+            let (x, y, width, height) = if mode == Mode::Deck {
+                (position.x, position.y, size.width.max(1), size.height.max(1))
+            } else {
+                let width = HUD_WIDTH.min(size.width.max(1));
+                let height = HUD_HEIGHT.min(size.height.max(1));
+                (
+                    position.x + size.width as i32 - width as i32 - HUD_MARGIN,
+                    position.y + HUD_MARGIN,
+                    width,
+                    height,
+                )
+            };
+            let wanted = (mode, x, y, width, height, interactive);
             if applied == Some(wanted) {
                 continue;
             }
 
-            // Hide while moving keeps the topmost window from trailing the
-            // main window with a visible lag; it is shown again right after.
-            let _ = overlay.set_position(PhysicalPosition::new(position.x, position.y));
-            let _ = overlay.set_size(PhysicalSize::new(
-                size.width.max(1),
-                size.height.max(1),
-            ));
+            let _ = overlay.set_position(PhysicalPosition::new(x, y));
+            let _ = overlay.set_size(PhysicalSize::new(width, height));
             let _ = overlay.set_ignore_cursor_events(!interactive);
             if !overlay.is_visible().unwrap_or(false) {
                 let _ = overlay.show();
