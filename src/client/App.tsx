@@ -177,6 +177,14 @@ function launchPollDiagnosticWithSidecar(
   return `${prefix} · engine stopped${exit}${error}`;
 }
 
+/**
+ * How long a stream shortcut chord counts as "already applied". The engine's
+ * Raw Input thread mirrors every key it owns, so one physical press can reach
+ * this page twice (its own key handler and the engine's `native-shortcut`
+ * event); two applications of a toggle cancel out, which is exactly what a
+ * dead-looking shortcut is.
+ */
+const STREAM_SHORTCUT_DEDUPE_MS = 400;
 const SESSION_READY_POLL_INTERVAL_MS = 2000;
 const SESSION_AD_POLL_INTERVAL_MS = 30000;
 const PLAYTIME_RESYNC_INTERVAL_MS = 5 * 60 * 1000;
@@ -368,13 +376,10 @@ export function App(): JSX.Element {
   const nativeStreamingRef = useRef(false);
   const handleStreamShortcutActionRef = useRef<((action: NativeStreamerShortcutAction | "toggleSidebar") => void) | null>(null);
   /**
-   * When the page itself handled a stream shortcut chord. The engine's Raw Input
-   * thread mirrors every key it forwards — it owns the embedded surface's
-   * keyboard — so the very same chord also arrives back as a `native-shortcut`
-   * event. Acting on both would toggle the deck / stats / fullscreen twice,
-   * which looks exactly like the shortcut doing nothing.
+   * When each stream shortcut chord was last applied, whichever side applied it
+   * (see `STREAM_SHORTCUT_DEDUPE_MS`).
    */
-  const localShortcutHandledAtRef = useRef<Record<string, number>>({});
+  const shortcutAppliedAtRef = useRef<Record<string, number>>({});
   /**
    * Native sessions render gameplay in the engine's own window *above* this
    * page, so the in-page sidebar would be invisible behind the video child
@@ -831,6 +836,25 @@ export function App(): JSX.Element {
    * player keeps the window and the styled deck whenever the engine is idle.
    */
   const nativeEngineActive = nativeSidecarStatus?.running ?? false;
+
+  /**
+   * Native sessions need the backend event channel.
+   *
+   * Everything the engine initiates — the Ctrl+G/Ctrl+N/F11 chords, the
+   * clipboard-paste request, the live counters — is published over the
+   * `/api/signaling` socket. A native session never opens that socket (there is
+   * no WebRTC negotiation), so before this the engine's shortcuts and stats had
+   * nowhere to arrive: F11/Ctrl+N only worked when the WebView itself saw the
+   * key, and WebView2 swallows exactly those two as browser accelerators. Keep a
+   * passive socket open for as long as the engine runs.
+   */
+  useEffect(() => {
+    if (!nativeEngineActive && !nativeStarting) return undefined;
+    window.openNow.openNativeEventChannel?.();
+    return () => {
+      window.openNow.closeNativeEventChannel?.();
+    };
+  }, [nativeEngineActive, nativeStarting]);
 
   const buildCurrentStreamSettings = useCallback((subscriptionOverride?: SubscriptionInfo | null): StreamSettings => {
     const currentSubscription = subscriptionOverride === undefined ? subscriptionInfo : subscriptionOverride;
@@ -4048,29 +4072,50 @@ export function App(): JSX.Element {
     }
   }, [handlePromptedStopStream, requestPointerLockCapture, streamStatus, toggleSessionFullscreen]);
 
-  /** Records that this page handled a chord itself, then applies it. */
-  const applyLocalStreamShortcutAction = useCallback(
-    (action: NativeStreamerShortcutAction): void => {
-      localShortcutHandledAtRef.current[action] = performance.now();
-      applyStreamShortcutAction(action);
+  const wasStreamShortcutAppliedRecently = useCallback((action: string): boolean => {
+    const appliedAt = shortcutAppliedAtRef.current[action];
+    return typeof appliedAt === "number" && performance.now() - appliedAt < STREAM_SHORTCUT_DEDUPE_MS;
+  }, []);
+
+  const markStreamShortcutApplied = useCallback((action: string): void => {
+    shortcutAppliedAtRef.current[action] = performance.now();
+  }, []);
+
+  /**
+   * Runs a stream chord this page saw itself. The key is always consumed (so
+   * WebView2 cannot turn it into a browser accelerator and the game never sees
+   * half a chord), but the action is skipped when the engine already applied the
+   * same press — and skipped for held-key repeats, which the remote side
+   * generates on its own.
+   */
+  const runPageStreamShortcut = useCallback(
+    (event: KeyboardEvent, action: NativeStreamerShortcutAction | "toggleSidebar", run: () => void): void => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      if (event.repeat || wasStreamShortcutAppliedRecently(action)) return;
+      markStreamShortcutApplied(action);
+      run();
     },
-    [applyStreamShortcutAction],
+    [markStreamShortcutApplied, wasStreamShortcutAppliedRecently],
   );
 
   /**
-   * Entry point for the engine's `native-shortcut` events. Echoes of a chord the
-   * page already handled are dropped: the engine's Raw Input thread reports
-   * every key even while the WebView holds the focus (that is what lets Ctrl+G
-   * work with the game focused), so without this the deck would open and close
-   * again in the same keypress.
+   * Entry point for the engine's `native-shortcut` events — the only way Ctrl+G
+   * / Ctrl+N / F11 can work while the game owns the keyboard, and the fallback
+   * for the chords WebView2 swallows as browser accelerators. A chord this page
+   * already applied for the same press is dropped (see
+   * `STREAM_SHORTCUT_DEDUPE_MS`).
    */
   const handleStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction | "toggleSidebar"): void => {
-    const lastLocal = localShortcutHandledAtRef.current[action];
-    if (typeof lastLocal === "number" && performance.now() - lastLocal < 600) {
+    if (wasStreamShortcutAppliedRecently(action)) {
+      clientLog(`[Native] engine shortcut ${action} already applied by the page; ignoring echo`);
       return;
     }
+    markStreamShortcutApplied(action);
+    clientLog(`[Native] engine shortcut ${action}`);
     applyStreamShortcutAction(action);
-  }, [applyStreamShortcutAction]);
+  }, [applyStreamShortcutAction, markStreamShortcutApplied, wasStreamShortcutAppliedRecently]);
 
   useEffect(() => {
     handleStreamShortcutActionRef.current = handleStreamShortcutAction;
@@ -4121,61 +4166,48 @@ export function App(): JSX.Element {
       }
 
       if (isShortcutMatch(e, shortcuts.toggleStats)) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        applyLocalStreamShortcutAction("toggleStats");
+        runPageStreamShortcut(e, "toggleStats", () => applyStreamShortcutAction("toggleStats"));
         return;
       }
 
       if (isShortcutMatch(e, shortcuts.togglePointerLock)) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        applyLocalStreamShortcutAction("togglePointerLock");
+        runPageStreamShortcut(e, "togglePointerLock", () =>
+          applyStreamShortcutAction("togglePointerLock"));
         return;
       }
 
       if (isShortcutMatch(e, shortcuts.toggleFullscreen)) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        if (streamStatus === "connecting" || streamStatus === "streaming") {
-          localShortcutHandledAtRef.current["toggleFullscreen"] = performance.now();
-          void toggleSessionFullscreen();
-        }
+        runPageStreamShortcut(e, "toggleFullscreen", () => {
+          if (streamStatus === "connecting" || streamStatus === "streaming") {
+            void toggleSessionFullscreen();
+          }
+        });
         return;
       }
 
       if (isShortcutMatch(e, shortcuts.stopStream)) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        localShortcutHandledAtRef.current["stopStream"] = performance.now();
-        void handlePromptedStopStream();
+        runPageStreamShortcut(e, "stopStream", () => {
+          void handlePromptedStopStream();
+        });
         return;
       }
 
       if (isShortcutMatch(e, shortcuts.toggleAntiAfk)) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        if (streamStatus === "streaming") {
-          localShortcutHandledAtRef.current["toggleAntiAfk"] = performance.now();
-          setAntiAfkEnabled((prev) => !prev);
-          setAntiAfkAckNonce((n) => n + 1);
-        }
+        runPageStreamShortcut(e, "toggleAntiAfk", () => {
+          if (streamStatus === "streaming") {
+            setAntiAfkEnabled((prev) => !prev);
+            setAntiAfkAckNonce((n) => n + 1);
+          }
+        });
         return;
       }
 
       if (isShortcutMatch(e, shortcuts.toggleMicrophone)) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        if (streamStatus === "streaming") {
-          localShortcutHandledAtRef.current["toggleMicrophone"] = performance.now();
-          clientRef.current?.toggleMicrophone();
-        }
+        runPageStreamShortcut(e, "toggleMicrophone", () => {
+          if (streamStatus === "streaming") {
+            clientRef.current?.toggleMicrophone();
+          }
+        });
       }
     };
 
@@ -4183,11 +4215,12 @@ export function App(): JSX.Element {
     window.addEventListener("keydown", handleKeyDown, true);
     return () => window.removeEventListener("keydown", handleKeyDown, true);
   }, [
-    applyLocalStreamShortcutAction,
+    applyStreamShortcutAction,
     exitPrompt.open,
     handleExitPromptCancel,
     handleExitPromptConfirm,
     handlePromptedStopStream,
+    runPageStreamShortcut,
     requestPointerLockCapture,
     settings.clipboardPaste,
     shortcuts,

@@ -113,15 +113,27 @@ deck. The shells bindings are handed to the thread with
 `set_shortcut_bindings`, and their key-up is swallowed so the remote game never
 sees half a chord.
 
+Those chords reach the page as `native-shortcut` events, which travel over the
+same `/api/signaling` socket the WebRTC player negotiates on. A native session
+never opens it on its own — there is no SDP to exchange — so the client keeps a
+passive socket (no `connect` frame) open for the lifetime of the engine session
+(`openNativeEventChannel`). Without it the engine's shortcuts, the clipboard
+request and the live counters have nowhere to arrive, and F11/Ctrl+N only worked
+when the WebView itself saw the key — which it does not, because WebView2 treats
+those as browser accelerators.
+
 Because the Raw Input thread reports those chords even while the WebView holds
 the focus, the page can see the very same physical keypress through its own DOM
-handler and then again as a `native-shortcut` event. The client drops the echo
-when it handled that action within the last few hundred milliseconds, so one
-press can never toggle the deck / stats / fullscreen twice (which looks exactly
-like the shortcut doing nothing).
+handler and then again as a `native-shortcut` event. Whichever side applies a
+chord marks it, and the other side drops the same press within a few hundred
+milliseconds, so one press can never toggle the deck / stats / fullscreen twice
+(which looks exactly like the shortcut doing nothing).
 
 Fullscreen is the shell's job: F11 / the deck button / the engine's
-`toggle-fullscreen` shortcut all call `set_app_fullscreen` on the Tauri window.
+`toggle-fullscreen` shortcut all call `set_app_fullscreen` on the Tauri window,
+and the shell command is authoritative — the in-page fullscreen API is only the
+fallback for browsers, because fullscreening the WebView inside a windowed shell
+would leave the video plane its old size.
 The client republishes the surface rect as the window resizes *and* the engine
 watches the shell window it is embedded in: every 250 ms it compares the live
 client area with the size it last placed the plane at, re-derives the rect from

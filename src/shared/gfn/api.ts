@@ -131,6 +131,14 @@ export interface OpenNowApi {
   updateNativeShortcuts(shortcuts: NativeStreamerShortcutBindings): void;
   requestKeyframe(input: KeyframeRequest): Promise<void>;
   onSignalingEvent(listener: (event: MainToRendererSignalingEvent) => void): () => void;
+  /**
+   * Keep a passive connection to the backend open for the lifetime of a native
+   * (NVST) session. Engine-initiated events — the Ctrl+G/Ctrl+N/F11 chords, the
+   * clipboard-paste request and the live counters — are delivered over that
+   * socket, and a native session has no WebRTC signaling socket of its own.
+   */
+  openNativeEventChannel(): void;
+  closeNativeEventChannel(): void;
   /** Listen for F11 fullscreen toggle from main process */
   onToggleFullscreen(listener: () => void): () => void;
   onExitFullscreen(listener: () => void): () => void;

@@ -253,6 +253,10 @@ function writeSettings(settings: Settings): void {
 
 type SignalingListener = (event: MainToRendererSignalingEvent) => void;
 let socket: WebSocket | null = null;
+/** Passive socket that carries engine events during a native (NVST) session. */
+let nativeChannelSocket: WebSocket | null = null;
+let nativeChannelWanted = false;
+let nativeChannelRetryTimer: number | null = null;
 const signalingListeners = new Set<SignalingListener>();
 
 function emitSignaling(event: MainToRendererSignalingEvent): void {
@@ -267,8 +271,20 @@ function sendSignal(type: string, payload?: unknown): Promise<void> {
   return Promise.resolve();
 }
 
+function routeSignalingFrame(data: unknown): void {
+  try {
+    const parsed = JSON.parse(String(data)) as { type?: string; payload?: MainToRendererSignalingEvent };
+    if (parsed.type === "event" && parsed.payload) emitSignaling(parsed.payload);
+  } catch {
+    emitSignaling({ type: "error", message: "Received an invalid signaling message." });
+  }
+}
+
 async function connectSignaling(payload: SignalingConnectRequest): Promise<void> {
   socket?.close();
+  // The native event channel is a passive socket on the same endpoint; the
+  // WebRTC connect supersedes it (its frames are routed identically).
+  closeNativeEventChannel();
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
   socket = new WebSocket(`${protocol}//${location.host}/api/signaling`);
   await new Promise<void>((resolve, reject) => {
@@ -279,16 +295,61 @@ async function connectSignaling(payload: SignalingConnectRequest): Promise<void>
       resolve();
     };
     activeSocket.onerror = () => reject(new Error("Unable to open the signaling bridge."));
-    activeSocket.onmessage = (message) => {
-      try {
-        const parsed = JSON.parse(String(message.data)) as { type?: string; payload?: MainToRendererSignalingEvent };
-        if (parsed.type === "event" && parsed.payload) emitSignaling(parsed.payload);
-      } catch {
-        emitSignaling({ type: "error", message: "Received an invalid signaling message." });
-      }
-    };
+    activeSocket.onmessage = (message) => routeSignalingFrame(message.data);
     activeSocket.onclose = (event) => emitSignaling({ type: "disconnected", reason: event.reason || "bridge closed" });
   });
+}
+
+/**
+ * Native (NVST) sessions get every engine-initiated event — Ctrl+G/Ctrl+N/F11
+ * chords, clipboard-paste requests, live counters — over the same
+ * `/api/signaling` socket the WebRTC player uses. A native session never opens
+ * that socket (there is no SDP to negotiate), so without this the engine's
+ * events have nowhere to go and the deck's shortcuts only worked when the
+ * WebView itself happened to see the key — which it does not for the chords
+ * WebView2 treats as browser accelerators (Ctrl+N, F11). Open a passive socket
+ * (no `connect` frame) for the lifetime of the native session.
+ */
+function openNativeEventChannel(): void {
+  nativeChannelWanted = true;
+  if (nativeChannelSocket && nativeChannelSocket.readyState <= WebSocket.OPEN) return;
+  if (socket && socket.readyState === WebSocket.OPEN) return;
+  const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+  const opened = new WebSocket(`${protocol}//${location.host}/api/signaling`);
+  nativeChannelSocket = opened;
+  opened.onmessage = (message) => routeSignalingFrame(message.data);
+  opened.onerror = () => {
+    // `onclose` follows and drives the retry.
+  };
+  opened.onclose = () => {
+    if (nativeChannelSocket === opened) nativeChannelSocket = null;
+    if (!nativeChannelWanted || nativeChannelRetryTimer !== null) return;
+    // The backend may still be coming up (or restarted): keep trying while the
+    // native session is alive so a shortcut never silently goes deaf.
+    nativeChannelRetryTimer = window.setTimeout(() => {
+      nativeChannelRetryTimer = null;
+      if (nativeChannelWanted) openNativeEventChannel();
+    }, 1500);
+  };
+}
+
+function closeNativeEventChannel(): void {
+  nativeChannelWanted = false;
+  if (nativeChannelRetryTimer !== null) {
+    window.clearTimeout(nativeChannelRetryTimer);
+    nativeChannelRetryTimer = null;
+  }
+  const opened = nativeChannelSocket;
+  nativeChannelSocket = null;
+  if (!opened) return;
+  opened.onclose = null;
+  opened.onerror = null;
+  opened.onmessage = null;
+  try {
+    opened.close();
+  } catch {
+    // Already closing.
+  }
 }
 
 const screenshots: ScreenshotEntry[] = [];
@@ -476,6 +537,14 @@ const bridge: OpenNowApi = {
   showSessionConflictDialog: async () => "resume",
   connectSignaling,
   disconnectSignaling: async () => { if (socket?.readyState === WebSocket.OPEN) await sendSignal("disconnect"); socket?.close(); socket = null; },
+  openNativeEventChannel: () => {
+    openNativeEventChannel();
+    clientLog("[Native] engine event channel requested");
+  },
+  closeNativeEventChannel: () => {
+    closeNativeEventChannel();
+    clientLog("[Native] engine event channel closed");
+  },
   sendAnswer: (payload: SendAnswerRequest) => sendSignal("answer", payload),
   sendIceCandidate: (payload: IceCandidatePayload) => sendSignal("ice", payload),
   sendNativeInput: () => {},
@@ -621,13 +690,21 @@ const bridge: OpenNowApi = {
     // child window positioned inside it, so a DOM fullscreen request alone
     // never grows the OS window. Ask the shell first, then run the DOM path as
     // the fallback for browsers and shells without that command.
-    const tauriInvoke = (window as unknown as {
+    const tauriCore = (window as unknown as {
       __TAURI__?: { core?: { invoke?: (command: string, args?: Record<string, unknown>) => Promise<unknown> } };
-    }).__TAURI__?.core?.invoke;
-    if (typeof tauriInvoke === "function") {
+    }).__TAURI__?.core;
+    const tauriInvoke = typeof tauriCore?.invoke === "function" ? tauriCore.invoke.bind(tauriCore) : undefined;
+    if (tauriInvoke) {
       try {
         await tauriInvoke("set_app_fullscreen", { fullscreen: value });
+        clientLog(`[Native] shell window fullscreen ${value ? "on" : "off"}`);
+        // The OS window (and with it the embedded video plane) is what had to
+        // grow, and it just did. The in-page fullscreen API would only
+        // fullscreen the WebView inside that window — and it is the call that
+        // can reject, which used to abort the state update below.
+        return;
       } catch (error) {
+        clientLog(`[Native] shell window fullscreen failed (${value ? "enter" : "exit"}): ${String(error)}`);
         console.warn(`Native window fullscreen failed (${value ? "enter" : "exit"}):`, error);
       }
     }

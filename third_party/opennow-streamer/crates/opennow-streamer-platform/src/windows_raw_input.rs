@@ -473,6 +473,7 @@ unsafe fn process_raw_keyboard(state: &RawInputState, raw: &RAWINPUT) {
                 .unwrap_or_else(std::sync::PoisonError::into_inner)
                 .insert(key);
             state.captured_input.push(CapturedInput::Guide);
+            eprintln!("Raw Input shortcut: Ctrl+G (guide/deck)");
             return;
         }
         if is_alt_enter(key, modifiers) {
@@ -484,6 +485,7 @@ unsafe fn process_raw_keyboard(state: &RawInputState, raw: &RAWINPUT) {
             state
                 .captured_input
                 .push(CapturedInput::Shortcut(StreamShortcutAction::ToggleFullscreen));
+            eprintln!("Raw Input shortcut: Alt+Enter (toggle fullscreen)");
             return;
         }
         let action = {
@@ -500,6 +502,13 @@ unsafe fn process_raw_keyboard(state: &RawInputState, raw: &RAWINPUT) {
                 .unwrap_or_else(std::sync::PoisonError::into_inner)
                 .insert(key);
             state.captured_input.push(CapturedInput::Shortcut(action));
+            // One line per chord press: with the game focused this is the only
+            // record that a shortcut was seen, and it is what makes a
+            // "shortcut does nothing" report diagnosable from server.log.
+            eprintln!(
+                "Raw Input shortcut: {} (virtual key {key:#04x}, modifiers {modifiers:#04x})",
+                action.protocol_name()
+            );
             return;
         }
     } else if state

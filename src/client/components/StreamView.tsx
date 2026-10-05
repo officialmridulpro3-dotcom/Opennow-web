@@ -15,6 +15,7 @@ import { DEFAULT_VIDEO_SHADER_SETTINGS } from "@shared/gfn";
 import { VideoShaderPipeline } from "../platforms/gfn/videoShaderPipeline";
 import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut, shortcutFromKeyboardEvent } from "../shortcuts";
 import { addStreamShortcutActionListener } from "../streamShortcutActions";
+import { clientLog } from "../api";
 import { useMicMeter } from "../hooks/useMicMeter";
 import { formatElapsed } from "../utils/timeFormat";
 import { useTranslation } from "../i18n";
@@ -1254,12 +1255,13 @@ export function StreamView({
   }, [screenshots, selectedScreenshotId]);
 
   /**
-   * When the page's own Ctrl+G opened the sidebar. The engine mirrors the chord
-   * as `native-shortcut` whenever its Raw Input thread forwards the key, so the
-   * echo has to be ignored — otherwise the deck opens and closes again in one
-   * keypress and Ctrl+G looks dead.
+   * When Ctrl+G last applied — from either side. The engine's Raw Input thread
+   * mirrors the chord as `native-shortcut` (that is what makes Ctrl+G work while
+   * the game owns the keyboard), so one physical press reaches this page twice;
+   * two toggles cancel out and the deck looks dead. Applied in both directions.
    */
-  const localSidebarShortcutAtRef = useRef(0);
+  const sidebarShortcutAppliedAtRef = useRef(0);
+  const SIDEBAR_SHORTCUT_DEDUPE_MS = 400;
   const handleToggleSideBar = useCallback(() => {
     setShowSideBar((s) => {
       if (!s && document.pointerLockElement) {
@@ -1448,9 +1450,12 @@ export function StreamView({
   useEffect(() => {
     return addStreamShortcutActionListener((action) => {
       if (action === "toggleSidebar") {
-        if (performance.now() - localSidebarShortcutAtRef.current < 600) {
+        if (performance.now() - sidebarShortcutAppliedAtRef.current < SIDEBAR_SHORTCUT_DEDUPE_MS) {
+          clientLog("[Native] Ctrl+G echo ignored (the page already toggled the deck)");
           return;
         }
+        sidebarShortcutAppliedAtRef.current = performance.now();
+        clientLog("[Native] engine Ctrl+G opens the deck");
         handleToggleSideBar();
         return;
       }
@@ -1484,6 +1489,8 @@ export function StreamView({
         ? event.metaKey && !event.ctrlKey && !event.altKey && !event.shiftKey && key === "g"
         : event.ctrlKey && !event.altKey && !event.metaKey && key === "g";
       if (isSidebarShortcut) {
+        // Ctrl+G is handled by the dedicated handler below, and by the engine's
+        // Raw Input thread while the game owns the keyboard.
         return;
       }
 
@@ -1519,21 +1526,20 @@ export function StreamView({
       }
 
       const key = event.key.toLowerCase();
-      if (isMacClient) {
-        if (event.metaKey && !event.ctrlKey && !event.shiftKey && key === "g") {
-          event.preventDefault();
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          localSidebarShortcutAtRef.current = performance.now();
-          handleToggleSideBar();
-        }
-      } else if (event.ctrlKey && !event.altKey && !event.metaKey && key === "g") {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        localSidebarShortcutAtRef.current = performance.now();
-        handleToggleSideBar();
+      const sidebarShortcutPressed = isMacClient
+        ? event.metaKey && !event.ctrlKey && !event.shiftKey && key === "g"
+        : event.ctrlKey && !event.altKey && !event.metaKey && key === "g";
+      if (!sidebarShortcutPressed) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      if (event.repeat) return;
+      if (performance.now() - sidebarShortcutAppliedAtRef.current < SIDEBAR_SHORTCUT_DEDUPE_MS) {
+        return;
       }
+      sidebarShortcutAppliedAtRef.current = performance.now();
+      clientLog("[Native] page Ctrl+G toggles the deck");
+      handleToggleSideBar();
     };
 
     window.addEventListener("keydown", onKeyDown, true);
