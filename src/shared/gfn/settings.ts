@@ -96,6 +96,13 @@ export interface Settings {
    * (default-on). Keeps later explicit user toggles from being overwritten.
    */
   statsHudProvisioned?: boolean;
+  /**
+   * Web-only migration marker: set once the user explicitly picks a stream
+   * client mode. Builds where the native engine window was the only mode had
+   * no such choice, so a stored "native" without this flag is migrated back to
+   * the in-app player.
+   */
+  streamModeChosen?: boolean;
   /** Skip the free-tier queue server selection modal and launch with default routing */
   hideServerSelector: boolean;
   /** Desktop UI accent preset */

@@ -222,14 +222,14 @@ export function App(): JSX.Element {
     fps: 60,
     maxBitrateMbps: 75,
     recordingBitrateMbps: null,
-    streamClientMode: "native",
+    streamClientMode: "web",
     nativeStreamerBackend: "gstreamer",
     nativeVideoBackend: "auto",
     nativeStreamerExecutablePath: "",
     nativeCloudGsyncMode: "auto",
     nativeD3dFullscreenMode: "auto",
     nativeExternalRenderer: false,
-    transportMode: "nvst",
+    transportMode: "webrtc",
     showNativeStreamerStats: false,
     codec: DEFAULT_STREAM_PREFERENCES.codec,
     decoderPreference: "auto",
@@ -367,6 +367,12 @@ export function App(): JSX.Element {
    * Returns true when the overlay took the request.
    */
   const forwardNativeShortcutToOverlayRef = useRef<((action: string) => boolean) | null>(null);
+  /**
+   * Opens the NVIDIA signaling bridge for the in-page (WebRTC) player. Defined
+   * further down, next to the media elements it needs; launches reach it through
+   * this ref so the launch path stays in one place.
+   */
+  const startWebRtcFromClaimRef = useRef<((claimed: SessionInfo) => Promise<void>) | null>(null);
   useEffect(() => {
     forwardNativeShortcutToOverlayRef.current = (action: string): boolean => {
       if (!isNativeOverlayHostAvailable() || !nativeStreamingRef.current) return false;
@@ -788,6 +794,24 @@ export function App(): JSX.Element {
   // launched with a direct-launch argument (frontend / big picture usage).
   const effectiveControllerMode = settings.controllerMode || directLaunchConsoleMode;
 
+  /**
+   * Which player handles this launch. The native path is only taken when the
+   * user asked for it *and* this install ships the NVST sidecar; every other
+   * case (web builds, missing sidecar, user preference) streams into the app
+   * window, where the styled UI and browser input live.
+   */
+  const [nativeSidecarAvailable, setNativeSidecarAvailable] = useState(false);
+  useEffect(() => {
+    void getCachedNativeSidecarSupport().then(setNativeSidecarAvailable).catch(() => setNativeSidecarAvailable(false));
+  }, []);
+  const nativeStreamMode = settings.streamClientMode === "native" && nativeSidecarAvailable;
+  /**
+   * True while the NVST engine is running: it paints its own frames, so
+   * StreamView then reduces this window to a transparent hole. The WebRTC
+   * player keeps the window and the styled deck whenever the engine is idle.
+   */
+  const nativeEngineActive = nativeSidecarStatus?.running ?? false;
+
   const buildCurrentStreamSettings = useCallback((subscriptionOverride?: SubscriptionInfo | null): StreamSettings => {
     const currentSubscription = subscriptionOverride === undefined ? subscriptionInfo : subscriptionOverride;
     const entitledProfile = resolveEntitledStreamProfile(currentSubscription?.entitledResolutions ?? [], {
@@ -806,9 +830,13 @@ export function App(): JSX.Element {
       gameLanguage: settings.gameLanguage,
       enableL4S: settings.enableL4S,
       enableCloudGsync: settings.enableCloudGsync,
-      clientMode: "native" as const,
+      // Transport follows the selected stream mode. The seat is provisioned
+      // from these two fields (CloudMatch), so they must always agree with the
+      // player that will actually attach: `web` + `webrtc` renders in a page
+      // <video> element, `native` + `nvst` hands the seat to the NVST engine.
+      clientMode: (nativeStreamMode ? "native" : "web") as "native" | "web",
       nativeStreamerBackend: "gstreamer",
-      transportMode: "nvst" as const,
+      transportMode: (nativeStreamMode ? "nvst" : "webrtc") as "nvst" | "webrtc",
       nativeCloudGsyncMode: settings.nativeCloudGsyncMode,
       nativeTransitionDiagnostics: settings.nativeTransitionDiagnostics,
       appLaunchMode:
@@ -831,6 +859,7 @@ export function App(): JSX.Element {
     settings.nativeCloudGsyncMode,
     settings.nativeTransitionDiagnostics,
     settings.resolution,
+    nativeStreamMode,
     subscriptionInfo?.entitledResolutions,
   ]);
 
@@ -1924,17 +1953,21 @@ export function App(): JSX.Element {
     setQueuePosition(undefined);
     setLaunchError(null);
     setStreamStatus("connecting");
-    // Native is the default client mode; hosts without a bundled NVST sidecar
-    // (plain web deployments) fall back to the WebRTC path. The session was
-    // already provisioned with the matching transport (the server resolves
-    // Native-only: always start native window, WebRTC removed
-    if (await getCachedNativeSidecarSupport()) {
+    // The session was provisioned with the transport this client asked for, so
+    // reattach with the same player: NVST engine window, or the in-page video
+    // element fed by WebRTC.
+    if (nativeStreamMode) {
       await startNativeFromClaim(claimed);
     } else {
-      console.warn("[NativeOnly] Sidecar not detected, still attempting native start");
-      await startNativeFromClaim(claimed);
+      await startWebRtcFromClaimRef.current?.(claimed);
     }
-  }, [buildSignalingConnectRequest, disconnectSignalingControlled, isRecoveryGenerationCurrent, startNativeFromClaim]);
+  }, [
+    buildSignalingConnectRequest,
+    disconnectSignalingControlled,
+    isRecoveryGenerationCurrent,
+    nativeStreamMode,
+    startNativeFromClaim,
+  ]);
 
   const claimAndConnectSession = useCallback(async (existingSession: ActiveSessionInfo): Promise<void> => {
     const sid = existingSession.sessionId;
@@ -2308,6 +2341,20 @@ export function App(): JSX.Element {
         void clientRef.current.startMicrophone();
       }
       return clientRef.current;
+    };
+
+    // In-page player attach: open the signaling bridge for this seat. The SDP
+    // offer arrives as a signaling event and is applied by the offer handler
+    // (which creates the peer connection and starts the video element).
+    startWebRtcFromClaimRef.current = async (claimed: SessionInfo): Promise<void> => {
+      if (!videoRef.current || !audioRef.current) {
+        throw new Error("The in-app player is still mounting — try again in a moment.");
+      }
+      await window.openNow.connectSignaling(buildSignalingConnectRequest(claimed));
+      console.log("[Stream] In-app player: signaling bridge opened", {
+        sessionId: claimed.sessionId,
+        signalingUrl: claimed.signalingUrl,
+      });
     };
 
     const activateNativeInputForCurrentSession = (protocolVersion?: number): void => {
@@ -3107,8 +3154,16 @@ export function App(): JSX.Element {
       });
       setSession(claimedSession);
       sessionRef.current = claimedSession;
-      setLaunchPollDiagnostic(`seat claimed · starting revamped native window…`);
-      await startNativeFromClaim(claimedSession);
+      setLaunchPollDiagnostic(
+        nativeStreamMode
+          ? "seat claimed · starting native window…"
+          : "seat claimed · opening the in-app player…",
+      );
+      if (nativeStreamMode) {
+        await startNativeFromClaim(claimedSession);
+      } else {
+        await startWebRtcFromClaimRef.current?.(claimedSession);
+      }
     } catch (error) {
       if (launchAbortRef.current) {
         await stopLaunchedSessionQuietly();
@@ -3139,6 +3194,7 @@ export function App(): JSX.Element {
     buildSignalingConnectRequest,
     claimAndConnectSession,
     effectiveStreamingBaseUrl,
+    nativeStreamMode,
     refreshNavbarActiveSession,
     resetSignalingRecoveryState,
     resetLaunchRuntime,
@@ -4223,10 +4279,10 @@ export function App(): JSX.Element {
             showStats={showStatsOverlay}
             showNativeStats={settings.showNativeStreamerStats}
             nativeInputCaptureActive={nativeInputCaptureActive}
-            gstreamerEnabled={true}
+            gstreamerEnabled={nativeEngineActive}
             nativeExternalRenderer={settings.nativeExternalRenderer}
             nativeSupported={(nativeSidecarStatus?.supported ?? false) && ((nativeSidecarStatus?.running ?? false) || nativeStarting || (nativeError ?? nativeSidecarStatus?.lastError ?? null) != null)}
-            nativeRunning={nativeSidecarStatus?.running ?? false}
+            nativeRunning={nativeEngineActive}
             nativeStarting={nativeStarting}
             nativePhase={nativeSidecarStatus?.phase ?? null}
             nativeError={nativeError ?? nativeSidecarStatus?.lastError ?? null}

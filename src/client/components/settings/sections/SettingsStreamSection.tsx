@@ -39,6 +39,7 @@ import type {
   ColorQuality,
   EntitledResolution,
   Settings,
+  StreamClientMode,
   StreamRegion,
   VideoCodec,
 } from "@shared/gfn";
@@ -70,6 +71,7 @@ import {
   STATIC_RESOLUTION_PRESETS,
 } from "../settingsFormatters";
 import { dialogMotion, overlayMotion } from "../../MotionProvider";
+import { SelectDropdown } from "../../ui/SelectDropdown";
 import { MotionSpinner } from "../../MotionSpinner";
 
 export interface SettingsStreamSectionProps {
@@ -937,23 +939,36 @@ export function SettingsStreamSection({
           </span>
         </div>
 
-        {/* Native streaming client — now the ONLY mode, WebRTC removed */}
+        {/* Streaming client — in-app WebRTC player or the native NVST engine */}
         <div className="settings-row settings-row--column">
           <div className="settings-row-top settings-row-top--compact">
             <label className="settings-label settings-label--wrap">
               <span className="settings-label-title">
                 <Monitor size={15} className="settings-label-icon" />
                 {t("settings.nativeStreamer.nativeStreaming")}
-                <span className="settings-inline-badge">Native only</span>
               </span>
             </label>
-            <label className="settings-toggle">
-              <input type="checkbox" checked={true} disabled title="Native window is the only mode" />
-              <span className="settings-toggle-track" />
-            </label>
+            <SelectDropdown
+              id="stream-client-mode"
+              className="settings-storage-select-dropdown"
+              value={settings.streamClientMode}
+              ariaLabel="Stream mode"
+              options={[
+                { value: "web", label: "In-app player" },
+                { value: "native", label: "Native engine window" },
+              ]}
+              onChange={(value) => {
+                handleChange("streamClientMode", value as StreamClientMode);
+                // Remember that this was a deliberate choice so the migration
+                // in readSettings() never rewrites it.
+                handleChange("streamModeChosen", true);
+              }}
+            />
           </div>
           <span className="settings-subtle-hint">
-            Native window is the only mode now — WebRTC removed. All games open in the revamped native window with full deck UI.
+            In-app player streams video and audio straight into this window with the full OpenNOW deck — recommended.
+            Native engine window hands the picture to the bundled NVST engine (lowest latency, DirectX 10-class GPUs);
+            its controls live in the OpenNOW overlay, so press the guide shortcut there to open the deck.
           </span>
         </div>
         {/* Video filters (client-side GPU shaders) */}

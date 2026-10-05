@@ -252,12 +252,13 @@ export function StreamView({
   const streamVideoReady = streamHasVideo || videoElementHasFrame || nativeRunning;
   const [sessionReadySplashVisible, setSessionReadySplashVisible] = useState(false);
   const sessionReadySplashShownRef = useRef(false);
-  // Main window is always bare: plain black + video only.
-  // All deck chrome (mesh, scan, bloom, sweep, ticks, chamfered HUD, slanted, brackets, 96px numeral)
-  // lives in the native window's Rust overlay (overlay.rs), not in the React main window.
-  // This satisfies: non-native window has no styling, native window has all styling.
-  const isNativeDeck = false;
-  const showStatsHud = false;
+  // When the NVST engine paints its own frames this window is nothing but a
+  // transparent hole punched for the SDL surface, and the styled chrome is
+  // drawn by the overlay webview window (see NativeOverlayRoot). Every other
+  // renderer — i.e. the in-app WebRTC player — gets the full styled deck.
+  const nativeInternalHole = nativeRunning || nativeRendererActive || gstreamerEnabled;
+  const isNativeDeck = !nativeInternalHole;
+  const showStatsHud = showStats || Boolean(showNativeStats);
 
   useEffect(() => {
     if (isConnecting) {
@@ -1452,15 +1453,8 @@ export function StreamView({
     };
   }, [exitPrompt.open, isConnecting, showSideBar]);
 
-  // NEW: User wants NO separate OpenNOW stream window — native stream must replace black screen IN-APP
-  // with stylish GFN sidebar (520px). So always embed SDL child inside Tauri window via transparent hole,
-  // never hide video. External popup is eliminated; we keep OPENNOW_NATIVE_EXTERNAL_RENDERER=1 backend
-  // for overlay (Ctrl+G stylish menu) but force frontend to treat as embedded.
-  const isEmbeddedNative = nativeRunning || nativeRendererActive || gstreamerEnabled;
-  const nativeInternalHole = isEmbeddedNative;
-  const isExternalNative = false; // no separate window, no black screen message
-
-  // Make entire page transparent when native hole active so SDL child behind WebView2 shows through
+  // Make the page transparent while the native hole is active so the SDL child
+  // behind the WebView2 surface shows through.
   useEffect(() => {
     if (!nativeInternalHole) return;
     const html = document.documentElement;
@@ -2217,7 +2211,7 @@ export function StreamView({
         </div>
       )}
 
-      {/* ── BARE MODE (WebRTC non-native): plain black + video only, zero chrome ── */}
+      {/* ── BARE MODE (native engine hole): no React chrome, SDL surface shows through ── */}
       {!isNativeDeck ? (
         <>
           {/* No gradient, no deck — just black */}

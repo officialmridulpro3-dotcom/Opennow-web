@@ -14,14 +14,18 @@ export const WEB_DEFAULT_SETTINGS: Settings = {
   fps: 60,
   maxBitrateMbps: 75,
   recordingBitrateMbps: null,
-  streamClientMode: "native",
+  // In-page WebRTC player by default: the game renders inside the app window,
+  // so the whole styled React UI works over it and browser input goes straight
+  // to the game. "native" hands the seat to the NVST engine's own OS window
+  // (Settings -> Stream -> Stream mode), where the host UI cannot overlay video.
+  streamClientMode: "web",
   nativeStreamerBackend: "gstreamer",
   nativeVideoBackend: "auto",
   nativeStreamerExecutablePath: "",
   nativeCloudGsyncMode: "auto",
   nativeD3dFullscreenMode: "auto",
   nativeExternalRenderer: false,
-  transportMode: "nvst",
+  transportMode: "webrtc",
   showNativeStreamerStats: false,
   codec: streamPreferences.codec,
   decoderPreference: "auto",

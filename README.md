@@ -76,6 +76,11 @@ The stream chrome for native sessions (deck, live stats, toasts) is a
 transparent React/CSS overlay window floated above the engine's D3D11 video
 plane — see [docs/NATIVE_OVERLAY.md](docs/NATIVE_OVERLAY.md).
 
+**Stream mode** (`Settings → Stream`) picks the player: **In-app player**
+(default) streams WebRTC into the app window with the full styled deck, while
+**Native engine window** hands the picture to the bundled NVST engine. See
+[docs/NATIVE_STREAMER.md](docs/NATIVE_STREAMER.md).
+
 ## Checks
 
 ```bash

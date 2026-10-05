@@ -192,6 +192,13 @@ function readSettings(): Settings {
       settings.statsHudProvisioned = true;
       writeSettings(settings);
     }
+    // One-time migration: the native-engine-only builds persisted "native"
+    // without ever offering a choice. Only keep it when the user picked it.
+    if (settings.streamClientMode === "native" && settings.streamModeChosen !== true) {
+      settings.streamClientMode = "web";
+      settings.transportMode = "webrtc";
+      writeSettings(settings);
+    }
     return settings;
   } catch {
     return { ...WEB_DEFAULT_SETTINGS };

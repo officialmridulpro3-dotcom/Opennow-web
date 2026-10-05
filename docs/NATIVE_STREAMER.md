@@ -57,6 +57,26 @@ to its stdin → gameplay in the native window → sidecar exit returns to libra
   line feeding real numbers into the HUD. See
   [NATIVE_OVERLAY.md](NATIVE_OVERLAY.md). Preview with `npm run preview:overlay`.
 
+## Choosing the player (stream mode)
+
+`Settings → Stream → Native streaming` stores `settings.streamClientMode`:
+
+| Mode | Player | Stream chrome |
+| --- | --- | --- |
+| **In-app player** (default) | Browser WebRTC into the in-app `<video>` element | React/CSS deck in the app window (sidebar, live stats HUD, video filters) |
+| **Native engine window** | NVST sidecar (RTSPS/SRTP/SCTP, D3D11 present, DXVA decode) | Transparent overlay window — [NATIVE_OVERLAY.md](NATIVE_OVERLAY.md) |
+
+The mode drives the claim (`clientMode`/`transportMode`) and the attach path on
+launch, resume and recovery (`startNativeFromClaim` vs. opening the signaling
+bridge for the in-app player), so the seat's transport always matches the
+player. While the sidecar runs, StreamView reduces the app window to a
+transparent hole for the engine's surface; when it is idle the app window keeps
+the video and the styled deck.
+
+Installs upgraded from builds where the native window was the only mode are
+migrated back to the in-app player once; picking a mode in Settings sets
+`streamModeChosen` so later upgrades never overwrite the user's choice.
+
 ## Provisioning (HTTP 501 lesson)
 
 The seat's transport locks at CloudMatch allocation: `GSStreamerType=WebRTC`
