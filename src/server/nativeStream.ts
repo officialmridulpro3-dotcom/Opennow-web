@@ -460,6 +460,9 @@ class NativeSidecarManager {
       // Protocol expects surface command with window_handle as string (HWND)
       // and rect in physical pixels. This drives WindowsExternalSdlSurface::update
       // which attaches SDL child window to Tauri parent.
+      console.log(
+        `[NVST] surface rect ${surface.rect ? `${surface.rect.x},${surface.rect.y} ${surface.rect.width}x${surface.rect.height}` : "none"} visible=${surface.visible} handle=${surface.windowHandle ?? "-"}`,
+      );
       this.send({
         id: this.nextId("surface"),
         type: "surface",

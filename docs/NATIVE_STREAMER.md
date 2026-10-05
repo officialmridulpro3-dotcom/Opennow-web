@@ -144,10 +144,28 @@ host-side publish is late, instead of leaving the game in a corner of the
 window.
 
 Because the engine's plane is drawn *above* the WebView on Windows, the client
-publishes a rect that stops short of the deck's own panels (sidebar column,
-stats HUD, title pill — measured from the DOM and scaled by devicePixelRatio),
-and hides the surface entirely while a centred modal is open. Without that the
-React chrome would be visible only until the first frame arrived.
+publishes a rect that stops short of the deck's own panels (sidebar column and
+stats HUD, measured from the DOM and scaled by devicePixelRatio), and hides the
+surface entirely while a centred modal is open. Without that the React chrome
+would be visible only until the first frame arrived. The reservation is kept as
+small as possible — the title pill is hidden in this mode and the keyboard-hint
+list too, and hidden chrome reserves nothing — so with the stats HUD off the
+plane covers the whole window.
+
+The plane being *on top* also means the page never has to be transparent: the
+deck paints its own chrome (`.sv--native-hole`) everywhere the plane does not
+cover. While the page was transparent, every reserved pixel showed the desktop
+(or the app page behind the window) straight through, which reads as "the
+stream is not maximised". Only the standalone fallback window is transparent
+nowhere — it keeps the plain deck background.
+
+Cursor: the server sends cursor *shapes* and expects the client to draw the
+pointer, so in an embedded session the OS pointer stays visible and is redrawn
+from that data (`GFN cursor applied …`); SDL's relative mode — which hides and
+clips the pointer — is only used by the standalone SDL window, where locking
+the pointer inside the game is what you want. The pointer is re-asserted on
+every pump while the remote cursor reads visible, because SDL hides it on focus
+changes and never brings it back on its own.
 
 The mode drives the claim (`clientMode`/`transportMode`) and the attach path on
 launch, resume and recovery (`startNativeFromClaim` vs. opening the signaling

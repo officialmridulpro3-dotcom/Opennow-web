@@ -991,6 +991,13 @@ pub(crate) struct SdlInputCapture {
     /// video child never holds the focus, so SDL would only see a subset of the
     /// keys and would double-send the ones it does see.
     external_keyboard: bool,
+    /// Embedded (shell-placement) sessions keep the OS pointer visible: the
+    /// game's cursor *is* that pointer (the server only sends shapes to draw),
+    /// and a windowed client whose pointer vanishes the moment a game grabs the
+    /// mouse is unusable. Only the standalone SDL window uses the hidden
+    /// mouselook behaviour, where locking the pointer is right. Enabled once
+    /// the plane really embedded inside the shell window.
+    keep_pointer_visible: bool,
     cursor_state: RemoteCursorState,
     cursors: HashMap<(u8, u8), sdl2::mouse::Cursor>,
     game_controller: Option<sdl2::GameControllerSubsystem>,
@@ -1044,6 +1051,7 @@ impl SdlInputCapture {
             external_relative_motion,
             external_mouse_buttons,
             external_keyboard,
+            keep_pointer_visible: false,
             // Do not infer hidden-cursor gameplay before the first server
             // update. GFN sends a distinct predefined cursor ID 0 when the
             // game actually wants locked relative input.
@@ -1398,6 +1406,21 @@ impl SdlInputCapture {
 
     fn enable_relative_mouse(&mut self, sdl: &sdl2::Sdl, window: &mut sdl2::video::Window) {
         if self.focused && !self.relative_mouse {
+            // SDL's relative mode hides and clips the OS pointer, and the
+            // embedded surface has no cursor of its own to replace it with: the
+            // server sends cursor *shapes* and expects the client to draw the
+            // pointer. Relative motion is owned by the Raw Input thread anyway,
+            // so the embedded client only flips the ownership flag and keeps the
+            // pointer on screen.
+            if self.keep_pointer_visible {
+                self.relative_mouse = true;
+                window.set_mouse_grab(false);
+                sdl.mouse().show_cursor(true);
+                eprintln!(
+                    "External SDL mouse control mode: relative motion, OS pointer kept visible (embedded)"
+                );
+                return;
+            }
             window.set_mouse_grab(true);
             sdl.mouse().set_relative_mouse_mode(true);
             sdl.mouse().show_cursor(false);
@@ -1411,6 +1434,9 @@ impl SdlInputCapture {
             sdl.mouse().set_relative_mouse_mode(false);
             window.set_mouse_grab(false);
             self.relative_mouse = false;
+            if self.keep_pointer_visible {
+                sdl.mouse().show_cursor(true);
+            }
             eprintln!("External SDL mouse control mode: absolute cursor");
         }
     }
@@ -1474,7 +1500,9 @@ impl SdlInputCapture {
         }
         self.disable_relative_mouse(sdl, window);
         if !native_cursor_overlay_enabled() {
-            sdl.mouse().show_cursor(false);
+            // Only the standalone window may hide the pointer; the embedded
+            // client would be left with no cursor at all.
+            sdl.mouse().show_cursor(self.keep_pointer_visible);
             return;
         }
         let cursor_key = (message_type, cursor_id);
@@ -1547,6 +1575,18 @@ impl SdlInputCapture {
         self.disable_relative_mouse(sdl, window);
         window.set_mouse_grab(false);
         sdl.mouse().show_cursor(true);
+    }
+
+    /// Whether the server currently wants the game's own cursor hidden (FPS
+    /// mouse-look). Everything else draws with the OS pointer in embedded mode.
+    pub(crate) fn remote_cursor_hidden(&self) -> bool {
+        self.cursor_state == RemoteCursorState::Hidden
+    }
+
+    /// Adopt the embedded pointer policy (see `keep_pointer_visible`). The
+    /// pointer is re-asserted the next time the plane is pumped.
+    pub(crate) fn set_keep_pointer_visible(&mut self, keep: bool) {
+        self.keep_pointer_visible = keep;
     }
 
     pub(crate) fn take(&mut self) -> Vec<CapturedInput> {
@@ -2893,6 +2933,7 @@ impl WindowsExternalSdlSurface {
         let Some(rect) = surface.rect.filter(|_| surface.visible) else {
             // visible=false — hide native surface, but don't mark embedded yet so standalone can show as fallback
             self.visible = false;
+            self.input_capture.set_keep_pointer_visible(false);
             self.sync_input_ownership();
             let _ = self.native_surface.hide_checked();
             return Ok(());
@@ -2904,6 +2945,10 @@ impl WindowsExternalSdlSurface {
         };
         // Now we have handle — this is embedded mode
         self.embedded = true;
+        // The plane now lives inside the app window, so the OS pointer becomes
+        // the game's cursor (see `keep_pointer_visible`).
+        self.input_capture
+            .set_keep_pointer_visible(shell_placement_enabled());
         let foreground_owner = parse_windows_handle(parent_handle)?.get();
         if let Err(error) = self.native_surface.attach_and_show(
             parent_handle,
@@ -3276,11 +3321,19 @@ impl WindowsExternalSdlSurface {
             overlay.tick(&self.window);
         }
         self.sync_parent_resize();
+        // SDL hides the pointer behind its back (focus loss, a stray relative
+        // mode) and never re-shows it. The embedded plane draws the game cursor
+        // with the OS pointer, so re-assert it once per pump while the session
+        // reads a visible cursor; SDL's show_cursor is a no-op when unchanged.
+        if self.input_capture.keep_pointer_visible && !self.input_capture.remote_cursor_hidden() {
+            self.sdl.mouse().show_cursor(true);
+        }
         self.sync_raw_input();
     }
 
     fn release(&mut self) -> Result<(), String> {
         self.visible = false;
+        self.input_capture.set_keep_pointer_visible(false);
         if let Some(overlay) = self.overlay.as_mut() {
             overlay.hide_all();
         }

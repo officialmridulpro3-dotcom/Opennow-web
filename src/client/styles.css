@@ -7018,9 +7018,35 @@ button.game-card-store-chip.owned.active:hover {
 /* Transparent hole so the streamer-owned child HWND/NSView/X11 surface shows
    through Chromium while React overlays (sidebar, HUD) stay above. */
 .sv--native-hole {
-  background: transparent !important;
+  /* The engine's video plane is a child window drawn *above* this WebView, so
+     the deck only has to look right where the plane does not cover: the sidebar
+     column, the strip reserved for the stats HUD / title pill and the edges.
+     It used to be transparent so the surface could show through from behind
+     WebView2; with the plane on top that only let the desktop (or the app page
+     behind the window) bleed through, which reads as "the stream is not
+     maximised". Paint the deck's own chrome instead. */
+  background: #05070a !important;
+  background-image: var(--deck-ground, none) !important;
   /* Ensure the stream root remains the focus/pointer-lock target. */
   pointer-events: auto;
+}
+
+/* Native mode reserves as little of the picture as possible: the stats HUD is
+   the only chrome in the strip, and the game title pill (which the deck shows
+   anyway once Ctrl+G is pressed) is hidden rather than reserving ~100px of the
+   window just to float a pill over the game. */
+.sv--native-hole .sv-title-bar {
+  display: none !important;
+}
+
+.sv--native-hole .sv-stats--hints {
+  /* The keyboard-hint list is hidden in native mode (it would eat the strip);
+     keep the HUD in the strip rather than jumping it 118px up. */
+  bottom: 14px !important;
+}
+
+.sv--native-hole .sv-hints {
+  display: none !important;
 }
 
 .sv--native-hole.sv--bare,
@@ -7038,8 +7064,9 @@ body:has(.sv--native-hole),
 #root:has(.sv--native-hole),
 html:has(.sv--native-hole) body,
 body:has(.sv--native-hole) #root {
-  background: transparent !important;
-  background-color: transparent !important;
+  background: #05070a !important;
+  background-color: #05070a !important;
+  background-image: var(--deck-ground, none) !important;
 }
 
 .sv-video--native-hole {

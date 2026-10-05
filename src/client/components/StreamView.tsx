@@ -71,6 +71,11 @@ function measureNativeChromeInsets(): { left: number; bottom: number } {
     for (const node of Array.from(document.querySelectorAll(selector))) {
       const box = node.getBoundingClientRect();
       if (box.width < 2 || box.height < 2 || box.bottom <= 0 || box.top >= viewportHeight) continue;
+      // A faded or hidden element reserves nothing: the title pill and the HUD
+      // fade out on their own, and the picture must grow back when they do.
+      const style = window.getComputedStyle(node);
+      if (style.display === "none" || style.visibility === "hidden") continue;
+      if (Number.parseFloat(style.opacity || "1") < 0.05) continue;
       bottom = Math.max(bottom, viewportHeight - box.top);
     }
   }
@@ -1584,8 +1589,15 @@ export function StreamView({
     };
   }, [exitPrompt.open, isConnecting, showSideBar]);
 
-  // Make the page transparent while the native hole is active so the SDL child
-  // behind the WebView2 surface shows through.
+  // The engine's plane is a child window drawn *above* this WebView, so the
+  // page never needs to be transparent for the video to show. It used to be
+  // (back when the child was stacked behind WebView2), which made every pixel
+  // the plane does not cover — the deck's left column, the strip reserved for
+  // the stats HUD and the title pill — show straight through to the desktop or
+  // the app page behind the window. That reads as "the stream is not
+  // maximised", so the deck paints an opaque chrome surface instead; see
+  // `.sv--native-hole` in styles.css. This effect only keeps the window's own
+  // backdrop in step with it.
   useEffect(() => {
     if (!nativeInternalHole) return;
     const html = document.documentElement;
@@ -1594,16 +1606,18 @@ export function StreamView({
     const prevHtmlBg = html.style.background;
     const prevBodyBg = body.style.background;
     const prevRootBg = root?.style.background || "";
-    html.style.setProperty("background", "transparent", "important");
-    html.style.setProperty("background-color", "transparent", "important");
-    body.style.setProperty("background", "transparent", "important");
-    body.style.setProperty("background-color", "transparent", "important");
+    const chrome = "#05070a";
+    html.style.setProperty("background", chrome, "important");
+    html.style.setProperty("background-color", chrome, "important");
+    body.style.setProperty("background", chrome, "important");
+    body.style.setProperty("background-color", chrome, "important");
     if (root) {
-      root.style.setProperty("background", "transparent", "important");
-      root.style.setProperty("background-color", "transparent", "important");
+      root.style.setProperty("background", chrome, "important");
+      root.style.setProperty("background-color", chrome, "important");
     }
-    // Also set CSS variable --bg-a to transparent to override body background rule
-    html.style.setProperty("--bg-a", "transparent");
+    // The body rule paints `var(--bg-a)`; point it at the chrome colour so no
+    // app gradient can show through the deck while the native plane is active.
+    html.style.setProperty("--bg-a", chrome);
     return () => {
       html.style.background = prevHtmlBg;
       body.style.background = prevBodyBg;
