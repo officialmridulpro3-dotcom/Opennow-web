@@ -5,7 +5,7 @@ use std::io::Cursor as IoCursor;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering;
 use std::sync::{Arc, Mutex};
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use crate::audio_playout::AudioPlayoutBuffer;
 use base64::Engine as _;
@@ -2408,6 +2408,10 @@ fn is_native_guide_shortcut(
 /// `surface` command carries the shell's HWND, so a missing/failed handshake
 /// can never leave a second window floating over the app. The standalone
 /// fallback stays available for CLI runs and other shells that do not set it.
+/// How often the embedded surface re-asserts keyboard focus while the game owns
+/// input. The check in between is a single `GetFocus`. 
+const FOCUS_REASSERT_INTERVAL: Duration = Duration::from_millis(200);
+
 fn shell_placement_enabled() -> bool {
     std::env::var("OPENNOW_NATIVE_SHELL_PLACEMENT")
         .map(|value| {
@@ -2745,6 +2749,8 @@ struct WindowsExternalSdlSurface {
     shell_placement: bool,
     /// The suppression notice is worth exactly one log line per session.
     shell_placement_logged: bool,
+    /// Last time the surface asked for the keyboard (throttles the handover).
+    last_focus_assert: Instant,
 }
 
 #[cfg(target_os = "windows")]
@@ -2837,6 +2843,7 @@ impl WindowsExternalSdlSurface {
             overlay,
             shell_placement: shell_placement_enabled(),
             shell_placement_logged: false,
+            last_focus_assert: Instant::now(),
         })
     }
 
@@ -3083,6 +3090,7 @@ impl WindowsExternalSdlSurface {
     }
 
     fn pump(&mut self) {
+        self.assert_stream_focus();
         let stream_window_id = self.window.id();
         if let Some(overlay) = self.overlay.as_mut() {
             overlay.set_context(self.fullscreen);
@@ -3191,6 +3199,26 @@ impl WindowsExternalSdlSurface {
         self.sync_input_ownership();
     }
 
+    /// Keep the keyboard on the embedded stream window while the game owns input.
+    ///
+    /// Mouse and gamepad input bypass window focus (dedicated Raw Input thread),
+    /// but keyboard events are WM_KEYDOWN to the focused window — and a child
+    /// window cannot take that focus from another thread on its own. The deck
+    /// takes the keyboard back by pausing input (`input-paused`), which stops
+    /// this re-assertion, so the two never fight.
+    fn assert_stream_focus(&mut self) {
+        if !(self.embedded && self.visible) || self.session_paused {
+            return;
+        }
+        if self.last_focus_assert.elapsed() < FOCUS_REASSERT_INTERVAL {
+            return;
+        }
+        self.last_focus_assert = Instant::now();
+        if let Err(error) = self.native_surface.focus() {
+            eprintln!("External SDL surface focus handover failed: {error}");
+        }
+    }
+
     fn sync_input_ownership(&mut self) {
         let suspended = self.session_paused || !self.visible;
         if suspended == self.input_suspended {
@@ -3199,6 +3227,12 @@ impl WindowsExternalSdlSurface {
         self.input_capture
             .set_input_paused(suspended, &self.sdl, &mut self.window);
         self.input_suspended = suspended;
+        if suspended {
+            // The deck (or a modal) now owns the pointer and the keyboard:
+            // hand the keyboard back to the shell's WebView so its React
+            // shortcuts — Ctrl+G to close the deck, Escape, HUD toggles — work.
+            self.native_surface.release_focus();
+        }
         self.sync_raw_input();
     }
 

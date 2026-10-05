@@ -657,6 +657,20 @@ class NativeSidecarManager {
       emitNativeEvent({ type: "native-shortcut", action: "toggleStats" });
       return;
     }
+    // F11 / Alt+Enter and the mouse-lock binding are handled by the engine while
+    // it owns the keyboard (the game has the focus, not the web page), so the
+    // host has to apply them to the app window — otherwise fullscreen would be
+    // unreachable exactly when a game is running.
+    if (type === "shortcut-action" && message.action === "toggle-fullscreen") {
+      console.log("[NVST] engine shortcut toggle-fullscreen; toggling the app window");
+      emitNativeEvent({ type: "native-shortcut", action: "toggleFullscreen" });
+      return;
+    }
+    if (type === "shortcut-action" && message.action === "toggle-pointer-lock") {
+      console.log("[NVST] engine shortcut toggle-pointer-lock");
+      emitNativeEvent({ type: "native-shortcut", action: "togglePointerLock" });
+      return;
+    }
     // F12 / Ctrl+G "Recording" row: the engine only reports the toggle — the
     // MKV worker itself is driven through recording-start/stop commands here
     // so clips land next to the other desktop data with a stable file name.

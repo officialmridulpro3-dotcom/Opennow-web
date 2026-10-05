@@ -2493,11 +2493,17 @@ export function StreamView({
               </div>
               {nativeRunning ? (
                 <>
-                  <div className="sv-native-card-kicker">Native Window</div>
-                  <div className="sv-native-card-title">Active</div>
-                  <div className="sv-native-card-sub">Game rendering in separate window. Stop ends cloud session.</div>
+                  <div className="sv-native-card-kicker">Native Engine</div>
+                  <div className="sv-native-card-title">
+                    {nativeInternalHole ? "Embedded" : "Active"}
+                  </div>
+                  <div className="sv-native-card-sub">
+                    {nativeInternalHole
+                      ? "Engine decode + raw input, clipped inside this window. Ctrl+G opens the deck and releases the pointer."
+                      : "Game rendering in a window of its own. Stop ends the cloud session."}
+                  </div>
                   <button type="button" className="sv-native-card-btn" onClick={onStopNative} disabled={!onStopNative}>
-                    Stop native window
+                    {nativeInternalHole ? "Stop native stream" : "Stop native window"}
                   </button>
                 </>
               ) : (

@@ -98,6 +98,19 @@ window) and logged as `External SDL surface attached …` or
 `surfaceAttached`/`surfaceError` on `/api/native/status`, so the deck can fall
 back to opaque chrome with a visible warning instead of showing a dead hole.
 
+Keyboard input needs one more handshake. Mouse and gamepad bypass window focus
+(the engine's Raw Input thread sees them as long as the shell window is in
+front), but key presses are `WM_KEYDOWN` messages to the *focused* window, and
+the embedded surface — a child window living on the engine's thread — cannot
+take focus from the shell's WebView on its own. So while the game owns input the
+engine re-asserts it every 200 ms (`AttachThreadInput` + `SetFocus`, only while
+the shell window is foreground); that is what makes the game receive typing and
+makes `Ctrl+G` reach the engine's guide shortcut. When the deck opens the client
+sends `input-paused`, which stops the re-assertion and hands the keyboard back
+to the WebView, so the deck's own React shortcuts (Ctrl+G to close, Escape)
+keep working. The engine's `F11`/`Alt+Enter` and mouse-lock shortcuts arrive
+through `shortcut-action` events and are applied to the app window by the host.
+
 Because the engine's plane is drawn *above* the WebView on Windows, the client
 publishes a rect that stops short of the deck's own panels (sidebar column,
 stats HUD, title pill — measured from the DOM and scaled by devicePixelRatio),
