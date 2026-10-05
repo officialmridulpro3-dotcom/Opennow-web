@@ -135,6 +135,9 @@ describe("buildSidecarEnv", () => {
     try {
       const env = buildSidecarEnv();
       expect(env.OPENNOW_NATIVE_EXTERNAL_RENDERER).toBe("1");
+      // The shell owns the window layout: the engine waits for the HWND
+      // instead of opening a stream window of its own.
+      expect(env.OPENNOW_NATIVE_SHELL_PLACEMENT).toBe("1");
       // Rest of the environment passes through untouched.
       expect(env.PATH).toBe(process.env.PATH);
       process.env.OPENNOW_NATIVE_EXTERNAL_RENDERER = "0";

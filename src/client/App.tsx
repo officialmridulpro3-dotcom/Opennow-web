@@ -33,7 +33,7 @@ import {
   SAFE_FALLBACK_STREAM_PROFILE,
 } from "@shared/gfn";
 import { FALLBACK_RELAY_ICE_SERVERS, GfnWebRtcClient, probeWebRtcEnvironment } from "./platforms/gfn/webrtcClient";
-import { getCachedNativeSidecarSupport, getNativeStatus, isNativeSurfaceAttached, sendNativeCommand, startNativeStream, stopNativeStream } from "./api";
+import { getCachedNativeSidecarSupport, getNativeStatus, isNativeSurfaceAttached, sendNativeCommand, startNativeStream, stopNativeStream, syncNativeSurfaceAttached } from "./api";
 import type { NativeSidecarStatus } from "./api";
 import { clientLog } from "./api";
 import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut } from "./shortcuts";
@@ -311,6 +311,14 @@ export function App(): JSX.Element {
   const [nativeInputCaptureActive, setNativeInputCaptureActive] = useState(false);
   const [nativeInputBridgeReady, setNativeInputBridgeReady] = useState(false);
   const [nativeSidecarStatus, setNativeSidecarStatus] = useState<NativeSidecarStatus | null>(null);
+  // The engine reports whether it really embedded its video surface inside this
+  // window. Until it says otherwise the optimistic value written when the
+  // handle was handed over stands; a reported failure flips the deck back to
+  // opaque chrome so the user is not left staring at a hole with nothing
+  // behind it.
+  useEffect(() => {
+    syncNativeSurfaceAttached(nativeSidecarStatus?.surfaceAttached);
+  }, [nativeSidecarStatus]);
   const [nativeStarting, setNativeStarting] = useState(false);
   const [nativeError, setNativeError] = useState<string | null>(null);
   const [exitPrompt, setExitPrompt] = useState<ExitPromptState>({ open: false, gameTitle: t("app.labels.game") });
@@ -4292,6 +4300,7 @@ export function App(): JSX.Element {
             nativeStarting={nativeStarting}
             nativePhase={nativeSidecarStatus?.phase ?? null}
             nativeError={nativeError ?? nativeSidecarStatus?.lastError ?? null}
+            nativeSurfaceError={nativeSidecarStatus?.surfaceError ?? null}
             onStartNative={handleStartNative}
             onStopNative={handleStopNative}
             shortcuts={{

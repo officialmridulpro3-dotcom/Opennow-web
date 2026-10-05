@@ -18,7 +18,7 @@ import { addStreamShortcutActionListener } from "../streamShortcutActions";
 import { useMicMeter } from "../hooks/useMicMeter";
 import { formatElapsed } from "../utils/timeFormat";
 import { useTranslation } from "../i18n";
-import { isNativeSurfaceAttached } from "../api";
+import { isNativeSurfaceAttached, subscribeNativeSurfaceAttached } from "../api";
 import { controllerButton, readControllerGamepadButtons } from "../utils/controllerGamepad";
 import { formatFileSize, formatSessionTimeRemaining, formatWarningSeconds } from "./stream/streamFormatters";
 import { AntiAfkIndicator, MicrophoneIndicator, RecordingIndicator } from "./stream/StreamIndicators";
@@ -38,6 +38,48 @@ const CONTROLLER_SIDEBAR_SHORTCUT_DISPLAY = "View + Menu";
 const STREAM_MENU_TABS = ["session", "controls", "media", "shortcuts"] as const;
 type StreamMenuTab = (typeof STREAM_MENU_TABS)[number];
 
+/**
+ * Space the React chrome occupies along the window edges.
+ *
+ * The engine's video plane is a child HWND drawn *above* the WebView on
+ * Windows, so any panel the deck paints over it (sidebar, stats HUD, title
+ * pill) would be invisible and — worse — unclickable. Publishing a surface
+ * rect that stops short of those panels keeps the styled UI usable while the
+ * native video fills everything else. The values are measured from the DOM
+ * instead of hard-coded so they follow the responsive sidebar width, the
+ * expandable stats HUD and the auto-hiding title pill.
+ */
+function measureNativeChromeInsets(): { left: number; bottom: number } {
+  if (typeof document === "undefined") {
+    return { left: 0, bottom: 0 };
+  }
+  const viewportWidth = window.innerWidth || 0;
+  const viewportHeight = window.innerHeight || 0;
+  let left = 0;
+  let bottom = 0;
+  // Sidebar is a full-height left column: it only constrains the video's left
+  // edge (never the bottom, or the video would collapse to nothing).
+  for (const node of Array.from(document.querySelectorAll(".sv-sidebar"))) {
+    const box = node.getBoundingClientRect();
+    if (box.width < 2 || box.height < 2) continue;
+    left = Math.max(left, box.right);
+  }
+  // Stats HUD and title pill sit against the bottom edge, so they only
+  // constrain the video's bottom edge.
+  for (const selector of [".sv-stats", ".sv-title-bar"]) {
+    for (const node of Array.from(document.querySelectorAll(selector))) {
+      const box = node.getBoundingClientRect();
+      if (box.width < 2 || box.height < 2 || box.bottom <= 0 || box.top >= viewportHeight) continue;
+      bottom = Math.max(bottom, viewportHeight - box.top);
+    }
+  }
+  // Sanity floor: never let the reserved chrome starve the video plane.
+  return {
+    left: Math.max(0, Math.min(left, viewportWidth * 0.6)),
+    bottom: Math.max(0, Math.min(bottom, viewportHeight * 0.6)),
+  };
+}
+
 interface StreamViewProps {
   videoRef: React.Ref<HTMLVideoElement>;
   audioRef: React.Ref<HTMLAudioElement>;
@@ -45,6 +87,8 @@ interface StreamViewProps {
   showStats: boolean;
   showNativeStats?: boolean;
   nativeInputCaptureActive?: boolean;
+  /** Engine log marker when it failed to embed its surface in this window. */
+  nativeSurfaceError?: string | null;
   gstreamerEnabled: boolean;
   nativeExternalRenderer?: boolean;
   shortcuts: {
@@ -127,6 +171,7 @@ export function StreamView({
   showStats,
   showNativeStats = false,
   nativeInputCaptureActive = false,
+  nativeSurfaceError = null,
   gstreamerEnabled,
   nativeExternalRenderer = false,
   shortcuts,
@@ -259,8 +304,17 @@ export function StreamView({
   // native video plane. The in-app WebRTC player uses the very same chrome.
   // Without an attached native surface the window stays opaque, which keeps a
   // standalone engine window from leaving a see-through app window behind.
+  const [nativeSurfaceAttached, setNativeSurfaceAttachedState] = useState<boolean>(() =>
+    isNativeSurfaceAttached(),
+  );
+  useEffect(() => {
+    setNativeSurfaceAttachedState(isNativeSurfaceAttached());
+    return subscribeNativeSurfaceAttached(() =>
+      setNativeSurfaceAttachedState(isNativeSurfaceAttached()),
+    );
+  }, []);
   const nativeInternalHole =
-    (nativeRunning || nativeRendererActive || gstreamerEnabled) && isNativeSurfaceAttached();
+    (nativeRunning || nativeRendererActive || gstreamerEnabled) && nativeSurfaceAttached;
   const showStatsHud = showStats || Boolean(showNativeStats);
 
   useEffect(() => {
@@ -978,20 +1032,34 @@ export function StreamView({
       const rect = element.getBoundingClientRect();
       const width = Math.round(rect.width * dpr);
       const height = Math.round(rect.height * dpr);
-      // FIX black screen: keep native visible even when sidebar open — sidebar is React overlay on top
-      // Previously visible=false when sidebar open hid the SDL child and showed black
       const visible = width >= 2 && height >= 2;
-      // For embedded, rect should be relative to parent client area, not viewport with DPR scaling?
-      // Use physical pixels but keep left/top as 0,0 for full-window fill to avoid black bars
-      // When in native mode, we want video to fill entire window, not just video element rect
       const isNativeMode = nativeRunning || nativeRendererActive || gstreamerEnabled;
+      // Modal dialogs (end session) are centred, i.e. right under the native
+      // plane: hide the surface while one is open so the dialog is readable and
+      // the engine releases the pointer for it.
+      if (isNativeMode && nativeInternalHole && exitPrompt.open) {
+        updateSurface({ rect: null, visible: false, deviceScaleFactor: dpr, showStats: false });
+        return;
+      }
+      // Keep the engine's plane out from under the React chrome (see
+      // measureNativeChromeInsets): every pixel outside the video viewport is
+      // painted by the deck itself.
+      const chrome =
+        isNativeMode && nativeInternalHole ? measureNativeChromeInsets() : { left: 0, bottom: 0 };
+      const nativeLeft = Math.min(width, Math.max(0, Math.round(chrome.left * dpr)));
+      const nativeBottom = Math.min(height, Math.max(0, Math.round(chrome.bottom * dpr)));
       updateSurface({
         deviceScaleFactor: dpr,
         visible,
         showStats: showStats || showNativeStats,
         rect: visible
           ? isNativeMode
-            ? { x: 0, y: 0, width, height }
+            ? {
+                x: nativeLeft,
+                y: 0,
+                width: Math.max(2, width - nativeLeft),
+                height: Math.max(2, height - nativeBottom),
+              }
             : {
                 x: Math.round(rect.left * dpr),
                 y: Math.round(rect.top * dpr),
@@ -1001,12 +1069,19 @@ export function StreamView({
           : null,
         // screenRect for macOS absolute positioning
         screenRect: visible
-          ? {
-              x: Math.round(window.screenX + rect.left),
-              y: Math.round(window.screenY + rect.top),
-              width: Math.round(rect.width),
-              height: Math.round(rect.height),
-            }
+          ? isNativeMode
+            ? {
+                x: Math.round(window.screenX + chrome.left),
+                y: Math.round(window.screenY),
+                width: Math.round(Math.max(2, rect.width - chrome.left)),
+                height: Math.round(Math.max(2, rect.height - chrome.bottom)),
+              }
+            : {
+                x: Math.round(window.screenX + rect.left),
+                y: Math.round(window.screenY + rect.top),
+                width: Math.round(rect.width),
+                height: Math.round(rect.height),
+              }
           : null,
       });
     };
@@ -1039,10 +1114,16 @@ export function StreamView({
     // (which used to be the separate GDI-chrome window). Re-publish a few times
     // while it comes up.
     const retries: number[] = [];
+    let settle: number | null = null;
     if (nativeInternalHole) {
-      for (const delay of [120, 400, 900, 1800, 3200]) {
+      // Covers the engine's attach (its first surface commands can land before
+      // the sidecar accepts them) and the sidebar/HUD open transitions.
+      for (const delay of [80, 200, 400, 900, 1800, 3200]) {
         retries.push(window.setTimeout(schedule, delay));
       }
+      // The title pill auto-hides and the sidebar animates, so insets change
+      // without a React render. Re-measuring is a no-op unless the rect moved.
+      settle = window.setInterval(schedule, 500);
     }
 
     return () => {
@@ -1051,6 +1132,9 @@ export function StreamView({
       }
       for (const timer of retries) {
         window.clearTimeout(timer);
+      }
+      if (settle !== null) {
+        window.clearInterval(settle);
       }
       observer?.disconnect();
       window.removeEventListener("resize", schedule);
@@ -1526,6 +1610,15 @@ export function StreamView({
         }}
       />
       <audio ref={setAudioRef} autoPlay playsInline />
+      {!nativeInternalHole && nativeRunning && nativeSurfaceError && (
+        <div className="sv-native-surface-warning" role="status">
+          <strong>Native video runs in a window of its own</strong>
+          <span>
+            The engine could not embed its video surface in this window. Switch to the in-app
+            player under Settings → Stream to keep the deck over the video.
+          </span>
+        </div>
+      )}
       <VideoFocusOnReady
         diagnosticsStore={diagnosticsStore}
         isConnecting={isConnecting}

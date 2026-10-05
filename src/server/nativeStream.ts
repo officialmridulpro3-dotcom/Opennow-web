@@ -40,6 +40,14 @@ export interface NativeSidecarStatus {
   firstFrame?: boolean;
   /** Active engine-side MKV recording (Ctrl+G menu / F12 toggle), if any. */
   recording?: { path: string; startedAtMs: number };
+  /**
+   * Whether the engine presents into a child surface clipped inside the app
+   * window. `undefined` until the engine reports; `false` means it fell back to
+   * a window of its own.
+   */
+  surfaceAttached?: boolean;
+  /** Engine log marker explaining a `surfaceAttached: false` verdict. */
+  surfaceError?: string;
 }
 
 interface ActiveNativeRecording {
@@ -81,6 +89,10 @@ export function buildSidecarEnv(gameTitle?: string): NodeJS.ProcessEnv {
     ...process.env,
     OPENNOW_NATIVE_EXTERNAL_RENDERER: "1",
     OPENNOW_NATIVE_INPUT_OWNER: "native",
+    // The shell owns the window layout: the engine must never reveal a
+    // top-level window of its own, it waits (hidden) for the surface command
+    // that carries this window's HWND.
+    OPENNOW_NATIVE_SHELL_PLACEMENT: "1",
     // Ctrl+G / Ctrl+N / Guide belong to the styled overlay window instead of
     // the engine's built-in GDI panel, and the engine publishes its live
     // counters as `native-stream-stats` lines for the overlay HUD.
@@ -222,6 +234,23 @@ interface PendingStart {
  */
 const FIRST_FRAME_MARKERS = ["inbound first datagram", "first H264 access unit", "first H265 access unit", "first AV1 access unit"];
 
+/**
+ * Engine markers for the in-app surface handshake, in the order they matter.
+ *
+ * The engine presents into a child window of the shell only after a `surface`
+ * command carrying the shell HWND reaches it. When that never happens it falls
+ * back to a window of its own — the bug this handshake exists to prevent — so
+ * the host watches the engine's stderr for the verdict and reports it to the
+ * client instead of assuming the embed worked.
+ */
+const SURFACE_ATTACHED_MARKER = "External SDL surface attached";
+const SURFACE_FAILURE_MARKERS = [
+  "External SDL surface attach failed",
+  "external SDL surface: visible rect but no window handle",
+  "shell-placement: standalone window suppressed",
+];
+
+
 class NativeSidecarManager {
   private child: ChildProcess | null = null;
   private sessionId: string | undefined;
@@ -233,6 +262,9 @@ class NativeSidecarManager {
   private commandId = 0;
   private phase: "handshake" | "starting" | undefined;
   private firstFrame = false;
+  /** `undefined` until the engine reports on the surface handshake. */
+  private surfaceAttached: boolean | undefined;
+  private surfaceError: string | undefined;
   private recording: ActiveNativeRecording | null = null;
   /**
    * Stream shape taken from the launch context. The engine's once-per-second
@@ -258,6 +290,8 @@ class NativeSidecarManager {
       capabilities: this.capabilities,
       phase: this.child !== null ? this.phase : undefined,
       firstFrame: this.firstFrame || undefined,
+      surfaceAttached: this.surfaceAttached,
+      surfaceError: this.surfaceError,
       recording: this.recording ? { path: this.recording.path, startedAtMs: this.recording.startedAtMs } : undefined,
     };
   }
@@ -274,6 +308,8 @@ class NativeSidecarManager {
     this.capabilities = undefined;
     this.stdoutBuffer = "";
     this.firstFrame = false;
+    this.surfaceAttached = undefined;
+    this.surfaceError = undefined;
     this.streamProfile = readStreamProfile(context);
 
     const child = spawn(exe, [], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true, env: buildSidecarEnv(gameTitle) });
@@ -291,6 +327,18 @@ class NativeSidecarManager {
       if (!this.firstFrame && FIRST_FRAME_MARKERS.some((marker) => text.includes(marker))) {
         this.firstFrame = true;
         console.log(`[NVST:${child.pid}] first video frame observed`);
+      }
+      if (text.includes(SURFACE_ATTACHED_MARKER)) {
+        this.surfaceAttached = true;
+        this.surfaceError = undefined;
+        console.log(`[NVST:${child.pid}] in-app surface attached to the shell window`);
+      } else {
+        const failure = SURFACE_FAILURE_MARKERS.find((marker) => text.includes(marker));
+        if (failure) {
+          this.surfaceAttached = false;
+          this.surfaceError = failure;
+          console.log(`[NVST:${child.pid}] in-app surface NOT attached: ${failure}`);
+        }
       }
       console.log(`[NVST:${child.pid}] ${text.slice(0, 2000)}`);
     });

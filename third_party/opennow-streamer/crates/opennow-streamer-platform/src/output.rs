@@ -2401,6 +2401,22 @@ fn is_native_guide_shortcut(
     scancode == sdl2::keyboard::Scancode::G && sdl_modifiers(scancode, keymod) == 0x02
 }
 
+/// Whether the embedding shell owns the stream window's placement.
+///
+/// Set by the OpenNOW desktop launcher. With it the external SDL surface never
+/// reveals its top-level window of its own accord: it stays hidden until a
+/// `surface` command carries the shell's HWND, so a missing/failed handshake
+/// can never leave a second window floating over the app. The standalone
+/// fallback stays available for CLI runs and other shells that do not set it.
+fn shell_placement_enabled() -> bool {
+    std::env::var("OPENNOW_NATIVE_SHELL_PLACEMENT")
+        .map(|value| {
+            let value = value.trim().to_ascii_lowercase();
+            matches!(value.as_str(), "1" | "true" | "yes" | "shell")
+        })
+        .unwrap_or(false)
+}
+
 pub(crate) fn native_input_capture_enabled() -> bool {
     native_input_capture_enabled_value(std::env::var("OPENNOW_NATIVE_INPUT_OWNER").ok().as_deref())
 }
@@ -2725,6 +2741,10 @@ struct WindowsExternalSdlSurface {
     session_paused: bool,
     input_suspended: bool,
     overlay: Option<OverlayManager>,
+    /// Shell-owns-placement mode: the standalone window is never shown.
+    shell_placement: bool,
+    /// The suppression notice is worth exactly one log line per session.
+    shell_placement_logged: bool,
 }
 
 #[cfg(target_os = "windows")]
@@ -2815,6 +2835,8 @@ impl WindowsExternalSdlSurface {
             session_paused: false,
             input_suspended: true,
             overlay,
+            shell_placement: shell_placement_enabled(),
+            shell_placement_logged: false,
         })
     }
 
@@ -2841,17 +2863,28 @@ impl WindowsExternalSdlSurface {
         // Now we have handle — this is embedded mode
         self.embedded = true;
         let foreground_owner = parse_windows_handle(parent_handle)?.get();
-        self.native_surface.attach_and_show(
+        if let Err(error) = self.native_surface.attach_and_show(
             parent_handle,
             rect,
             surface.screen_rect,
             surface.device_scale_factor,
-        )?;
+        ) {
+            // Report the failure to the host (it watches stderr for this
+            // marker) and stay attachable: a later surface update, e.g. after
+            // the shell window is recreated, must be able to retry.
+            self.embedded = false;
+            eprintln!("External SDL surface attach failed: {error}");
+            return Err(error);
+        }
         if let Some(raw_input) = self.raw_input.as_ref() {
             raw_input.set_foreground_owner(foreground_owner);
         }
         self.visible = true;
         self.sync_input_ownership();
+        eprintln!(
+            "External SDL surface attached to shell HWND {parent_handle} at {},{} {}x{}",
+            rect.x, rect.y, rect.width, rect.height
+        );
         Ok(())
     }
 
@@ -2864,6 +2897,15 @@ impl WindowsExternalSdlSurface {
     /// attach child inside Tauri and hide standalone.
     fn show_standalone(&mut self) {
         if self.embedded || self.visible {
+            return;
+        }
+        if self.shell_placement {
+            if !self.shell_placement_logged {
+                self.shell_placement_logged = true;
+                eprintln!(
+                    "Windows external SDL surface: shell-placement: standalone window suppressed (waiting for the shell HWND)"
+                );
+            }
             return;
         }
         eprintln!("Windows external SDL surface: showing standalone stream window (fallback, will embed when Tauri HWND arrives)");

@@ -8048,6 +8048,37 @@ body:has(.sv--native-hole) #root {
 }
 
 /* Game title toast */
+/* Engine could not embed its surface: the deck is opaque and the game sits in
+   a foreign window, so say so instead of leaving a dead video hole. */
+.sv-native-surface-warning {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: min(92vw, 560px);
+  padding: 10px 16px;
+  border: 1px solid color-mix(in srgb, var(--warning, #ffb020) 42%, transparent);
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, #1a1204 88%, transparent);
+  color: var(--ink);
+  font-size: 0.82rem;
+  line-height: 1.35;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.sv-native-surface-warning strong {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.sv-native-surface-warning span {
+  color: var(--ink-muted, rgba(255, 255, 255, 0.72));
+}
+
 .sv-title-bar {
   position: fixed;
   bottom: 68px;

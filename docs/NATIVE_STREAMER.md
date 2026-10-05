@@ -76,6 +76,34 @@ the deck closes. If the shell never hands over a valid HWND the engine falls bac
 to a standalone window and the transparent overlay window from
 [NATIVE_OVERLAY.md](NATIVE_OVERLAY.md) carries the chrome instead.
 
+Two independent paths deliver that HWND, because the handshake is the one thing
+everything else depends on:
+
+* `invoke("get_window_handle")` — direct Tauri IPC. The shell serves this page
+  from `http://127.0.0.1:<port>`, which Tauri treats as a *remote* origin: the
+  IPC bridge only exists when a capability lists the origin, which is what
+  `src-tauri/capabilities/remote-backend.json` does.
+* `<app-data>/window-handle.json` — the shell writes its main-window handle at
+  launch (and deletes it on exit); the client reads it through
+  `GET /api/native/surface-handle` whenever IPC is missing or denied. The
+  backend refuses stale entries and handles whose owning process is gone.
+
+The shell also passes `OPENNOW_NATIVE_SHELL_PLACEMENT=1`, so the engine never
+reveals a window of its own while it waits for that handle: the surface stays
+hidden and the engine logs
+`shell-placement: standalone window suppressed (waiting for the shell HWND)`
+instead. Each attach attempt is verified (`GetParent` must return the shell
+window) and logged as `External SDL surface attached …` or
+`… attach failed: <reason>`; the backend turns those markers into
+`surfaceAttached`/`surfaceError` on `/api/native/status`, so the deck can fall
+back to opaque chrome with a visible warning instead of showing a dead hole.
+
+Because the engine's plane is drawn *above* the WebView on Windows, the client
+publishes a rect that stops short of the deck's own panels (sidebar column,
+stats HUD, title pill — measured from the DOM and scaled by devicePixelRatio),
+and hides the surface entirely while a centred modal is open. Without that the
+React chrome would be visible only until the first frame arrived.
+
 The mode drives the claim (`clientMode`/`transportMode`) and the attach path on
 launch, resume and recovery (`startNativeFromClaim` vs. opening the signaling
 bridge for the in-app player), so the seat's transport always matches the

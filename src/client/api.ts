@@ -44,6 +44,10 @@ export interface NativeSidecarStatus {
   firstFrame?: boolean;
   /** Active native MKV recording (engine Ctrl+G menu / F12), if any. */
   recording?: { path: string; startedAtMs: number };
+  /** Engine confirmed it embedded its surface inside the app window. */
+  surfaceAttached?: boolean;
+  /** Engine marker explaining a failed embed (see `server/nativeStream.ts`). */
+  surfaceError?: string;
 }
 
 let cachedNativeSidecarSupport: boolean | null = null;
@@ -95,7 +99,7 @@ export function startNativeStream(sessionId: string, context: unknown, gameTitle
 }
 
 export function stopNativeStream(): Promise<NativeSidecarStatus> {
-  nativeSurfaceAttached = false;
+  setNativeSurfaceAttached(false);
   return api<NativeSidecarStatus>("/api/native/stop", { method: "POST" });
 }
 
@@ -106,9 +110,34 @@ export function stopNativeStream(): Promise<NativeSidecarStatus> {
  * whether React chrome can be drawn on top of the native video plane.
  */
 let nativeSurfaceAttached = false;
+const nativeSurfaceListeners = new Set<() => void>();
 
 export function isNativeSurfaceAttached(): boolean {
   return nativeSurfaceAttached;
+}
+
+/** Re-render hook for components whose layout depends on the embed state. */
+export function subscribeNativeSurfaceAttached(listener: () => void): () => void {
+  nativeSurfaceListeners.add(listener);
+  return () => {
+    nativeSurfaceListeners.delete(listener);
+  };
+}
+
+export function setNativeSurfaceAttached(attached: boolean): void {
+  if (nativeSurfaceAttached === attached) return;
+  nativeSurfaceAttached = attached;
+  for (const listener of [...nativeSurfaceListeners]) listener();
+}
+
+/**
+ * Adopt the engine's verdict once it reports one. `undefined` (no report yet)
+ * keeps the optimistic value written when the handle was sent — the engine only
+ * logs after it processed the command, so silence means "in flight", not
+ * "failed".
+ */
+export function syncNativeSurfaceAttached(reported: boolean | undefined): void {
+  if (typeof reported === "boolean") setNativeSurfaceAttached(reported);
 }
 
 /**
@@ -463,19 +492,50 @@ const bridge: OpenNowApi = {
     let cachedHandle: string | null = null;
     let lastRect: { x: number; y: number; width: number; height: number } | null = null;
     let lastVisible = false;
+    let lastHandle: string | null = null;
     let pendingHandleFetch = false;
     return (input: { rect: { x: number; y: number; width: number; height: number } | null; visible: boolean; deviceScaleFactor: number; showStats?: boolean; windowHandle?: string; screenRect?: { x: number; y: number; width: number; height: number } | null }) => {
       const tauri = (window as any).__TAURI__ as { core?: { invoke?: (cmd: string, args?: any) => Promise<any> } } | undefined;
       const invoke = tauri?.core?.invoke?.bind(tauri.core);
+      // The shell's breadcrumb (written to the app data dir on launch) is the
+      // fallback for resolving this window's HWND: the Tauri IPC bridge is only
+      // available when a capability grants the loopback origin, and without a
+      // handle the engine opens a window of its own.
+      let shellHandleFetch: Promise<string | undefined> | null = null;
+      const fetchShellHandle = (): Promise<string | undefined> => {
+        if (!shellHandleFetch) {
+          shellHandleFetch = api<{ handle?: string | null }>("/api/native/surface-handle")
+            .then((result) => {
+              const handle =
+                typeof result?.handle === "string" && result.handle !== "0" ? result.handle : undefined;
+              // The shell may not have published yet (backend boots first):
+              // forget the miss so the next publish re-asks.
+              if (!handle) shellHandleFetch = null;
+              return handle;
+            })
+            .catch(() => {
+              shellHandleFetch = null;
+              return undefined;
+            });
+        }
+        return shellHandleFetch;
+      };
       const doSend = (handle?: string) => {
         const rectKey = input.rect ? `${input.rect.x},${input.rect.y},${input.rect.width},${input.rect.height}` : "null";
         const visibleKey = input.visible;
         // Don't spam identical rect without handle, but always send if we have handle
-        if (lastRect && `${lastRect.x},${lastRect.y},${lastRect.width},${lastRect.height}` === rectKey && lastVisible === visibleKey && !handle && !input.windowHandle) {
+        const handleKey = handle ?? input.windowHandle ?? cachedHandle ?? null;
+        if (
+          lastRect &&
+          `${lastRect.x},${lastRect.y},${lastRect.width},${lastRect.height}` === rectKey &&
+          lastVisible === visibleKey &&
+          lastHandle === handleKey
+        ) {
           return;
         }
         lastRect = input.rect ? { ...input.rect } : null;
         lastVisible = visibleKey;
+        lastHandle = handleKey;
         const finalHandle = handle || input.windowHandle || cachedHandle || undefined;
         // If visible and no handle, we must still try to get handle — don't send without handle for visible=true
         // because backend errors "missing Qt window handle" and shows black screen
@@ -505,7 +565,7 @@ const bridge: OpenNowApi = {
           screenRect: input.screenRect || input.rect,
         };
         if (input.visible && finalHandle) {
-          nativeSurfaceAttached = true;
+          setNativeSurfaceAttached(true);
         }
         void api("/api/native/surface", { method: "POST", body: JSON.stringify(body) }).catch(() => {});
       };
@@ -518,18 +578,30 @@ const bridge: OpenNowApi = {
             pendingHandleFetch = false;
             if (h && h !== "0") {
               cachedHandle = h;
+              doSend(h);
+              return;
             }
-            doSend(h && h !== "0" ? h : undefined);
+            void fetchShellHandle().then((shellHandle) => {
+              if (shellHandle) cachedHandle = shellHandle;
+              doSend(shellHandle);
+            });
           }).catch(() => {
             pendingHandleFetch = false;
-            doSend();
+            void fetchShellHandle().then((shellHandle) => {
+              if (shellHandle) cachedHandle = shellHandle;
+              doSend(shellHandle);
+            });
           });
         } else {
           // Handle fetch pending, but if we have input.windowHandle, send it
           if (input.windowHandle) doSend(input.windowHandle);
         }
       } else {
-        doSend(input.windowHandle);
+        // No Tauri bridge in this page (browser session, or IPC not granted for
+        // the loopback origin). Ask the backend for the shell's breadcrumb.
+        void fetchShellHandle().then((shellHandle) => {
+          doSend(input.windowHandle || shellHandle || undefined);
+        });
       }
     };
   })(),

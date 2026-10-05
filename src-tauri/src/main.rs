@@ -32,6 +32,10 @@ use tauri_plugin_dialog::DialogExt;
 /// Transparent, always-on-top overlay window carrying the styled stream
 /// chrome (deck, live stats, toasts) above the native video plane.
 mod native_overlay;
+/// Main-window handle breadcrumb shared with the backend (see
+/// `publish_window_handle`). Lives in the app data directory, next to
+/// `server.log`.
+const WINDOW_HANDLE_FILE: &str = "window-handle.json";
 
 /// WebView2 command-line switches for the main window.
 ///
@@ -102,9 +106,17 @@ struct BackendProcess {
 
 #[tauri::command]
 fn get_window_handle(window: tauri::Window) -> Result<String, String> {
+    native_window_handle(&window)
+}
+
+/// Win32 handle of a shell window as a decimal string, `"0"` elsewhere.
+fn native_window_handle<H>(window: &H) -> Result<String, String>
+where
+    H: raw_window_handle::HasWindowHandle,
+{
     #[cfg(target_os = "windows")]
     {
-        use raw_window_handle::{HasWindowHandle, RawWindowHandle};
+        use raw_window_handle::RawWindowHandle;
         let handle = window.window_handle().map_err(|e| e.to_string())?;
         match handle.as_raw() {
             RawWindowHandle::Win32(h) => Ok(format!("{}", h.hwnd.get() as usize)),
@@ -115,6 +127,47 @@ fn get_window_handle(window: tauri::Window) -> Result<String, String> {
     {
         let _ = window;
         Ok("0".into())
+    }
+}
+
+/// Breadcrumb the backend reads when the web client asks for the main window's
+/// handle. The Tauri IPC bridge (`get_window_handle`) is the fast path, but a
+/// page loaded from the loopback backend origin is a *remote* origin for Tauri,
+/// so IPC can be unavailable — without this file the native engine would never
+/// be told where to embed and would fall back to a separate window.
+fn publish_window_handle(app: &tauri::AppHandle) {
+    let Some(window) = app.get_webview_window("main") else {
+        eprintln!("[OpenNOW] main window missing — native surface embedding has no handle");
+        return;
+    };
+    let handle = match native_window_handle(&window) {
+        Ok(handle) if handle != "0" => handle,
+        Ok(_) => return,
+        Err(error) => {
+            eprintln!("[OpenNOW] could not resolve the main window handle: {error}");
+            return;
+        }
+    };
+    let Ok(data_dir) = app.path().app_data_dir() else {
+        return;
+    };
+    let written_at_ms = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|elapsed| elapsed.as_millis())
+        .unwrap_or_default();
+    let payload = format!(
+        "{{\"handle\":\"{handle}\",\"pid\":{},\"writtenAtMs\":{written_at_ms}}}\n",
+        std::process::id()
+    );
+    if let Err(error) = std::fs::write(simplified(&data_dir).join(WINDOW_HANDLE_FILE), payload) {
+        eprintln!("[OpenNOW] could not publish the main window handle: {error}");
+    }
+}
+
+/// The handle file is only meaningful while the shell that wrote it is alive.
+fn remove_window_handle_file(app: &tauri::AppHandle) {
+    if let Ok(data_dir) = app.path().app_data_dir() {
+        let _ = std::fs::remove_file(simplified(&data_dir).join(WINDOW_HANDLE_FILE));
     }
 }
 
@@ -155,6 +208,7 @@ fn main() {
         .expect("error while building the OpenNOW desktop shell")
         .run(|app_handle, event| {
             if let tauri::RunEvent::Exit = event {
+                remove_window_handle_file(app_handle);
                 terminate_backend(app_handle);
             }
         });
@@ -173,6 +227,7 @@ fn startup(app: &tauri::AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let origin = start_backend(app)?;
 
     open_main_window(app, &origin)?;
+    publish_window_handle(app);
 
     // The overlay window is intentionally created even when the user never
     // opens the deck: it boots once (a few MB, no rendering while hidden) and

@@ -1,0 +1,20 @@
+{
+  "$schema": "../gen/schemas/remote-schema.json",
+  "identifier": "remote-backend",
+  "description": "IPC for the loopback backend origin. The shell deliberately loads the web client from http://127.0.0.1:<port> (same-origin cookies, signaling WebSocket, no CORS), which is a *remote* origin as far as Tauri is concerned: without this capability the IPC bridge is not injected, so window.__TAURI__.core.invoke is missing and the app silently loses get_window_handle, the overlay-window commands and the updater. Scoped to the loopback host only.",
+  "windows": [
+    "main",
+    "overlay"
+  ],
+  "remote": {
+    "urls": [
+      "http://127.0.0.1:*/*",
+      "http://localhost:*/*"
+    ]
+  },
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "dialog:default"
+  ]
+}

@@ -69,7 +69,7 @@ mod platform {
     use windows_sys::Win32::Foundation::{GetLastError, SetLastError};
     use windows_sys::Win32::UI::Input::KeyboardAndMouse::SetFocus;
     use windows_sys::Win32::UI::WindowsAndMessaging::{
-        GWL_EXSTYLE, GWL_STYLE, GetWindowLongPtrW, HWND_TOP, SW_HIDE, SWP_FRAMECHANGED,
+        GWL_EXSTYLE, GWL_STYLE, GetParent, GetWindowLongPtrW, HWND_TOP, SW_HIDE, SWP_FRAMECHANGED,
         SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SWP_SHOWWINDOW, SetForegroundWindow,
         SetParent, SetWindowLongPtrW, SetWindowPos, ShowWindow, WS_CAPTION, WS_CHILD,
         WS_CLIPSIBLINGS, WS_DISABLED, WS_EX_APPWINDOW, WS_EX_NOACTIVATE, WS_EX_TRANSPARENT,
@@ -151,6 +151,19 @@ mod platform {
                     GWL_EXSTYLE,
                     child_extended_style(self.standalone_extended_style) as isize,
                 );
+                // Flush the cached window style before reparenting. SetParent
+                // does not apply WS_CHILD on its own, and a window that still
+                // paints as a popup shows up as a *separate* window hovering
+                // over the app even though its parent changed.
+                let _ = SetWindowPos(
+                    self.child,
+                    std::ptr::null_mut(),
+                    0,
+                    0,
+                    0,
+                    0,
+                    SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER,
+                );
                 if self.parent != parent {
                     SetLastError(0);
                     if SetParent(self.child, parent).is_null() && GetLastError() != 0 {
@@ -165,10 +178,18 @@ mod platform {
                             self.standalone_extended_style as isize,
                         );
                         return Err(
-                            "failed to attach SDL video surface to the Qt window".to_owned()
+                            "failed to attach SDL video surface to the shell window".to_owned()
                         );
                     }
                     self.parent = parent;
+                }
+                // SetParent can report success without the window actually
+                // becoming a child (wrong style, foreign thread). Verify before
+                // telling the host the embed worked.
+                if GetParent(self.child) != parent {
+                    return Err(
+                        "SDL video surface did not become a child of the shell window".to_owned()
+                    );
                 }
                 // FIX black screen: user reports black screen with HWND_BOTTOM behind WebView2
                 // WebView2 transparency not working (opaque dark). Use HWND_TOP so SDL child

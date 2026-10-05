@@ -13,6 +13,7 @@ import { getLoginProviders } from "./webAuth";
 import { getSession } from "./sessionStore";
 import { getPlaytimeSummary, importLegacyPlaytime, recordPlaytimeSession, resetPlaytime } from "./playtimeStore";
 import { finalizeNativeContext, nativeSidecar, resolveLaunchTransportMode, resolveNativeMediaPeer } from "./nativeStream";
+import { readShellWindowHandle } from "./shellWindowHandle";
 import { formatUdpPreflight, runUdpPreflight } from "./udpPreflight";
 
 function asyncRoute(handler: (request: Request, response: Response) => Promise<void>) {
@@ -290,6 +291,18 @@ export function registerApi(app: Express): void {
   app.get("/api/native/status", (_request, response) => {
     response.json(nativeSidecar.status());
   });
+
+  // Main-window handle breadcrumb written by the desktop shell. The web client
+  // normally asks Tauri directly (`get_window_handle`), but the shell serves
+  // this page from the loopback origin — a remote origin for Tauri — so IPC can
+  // be unavailable. The native engine needs this handle to embed its video
+  // surface inside the app window instead of opening a window of its own.
+  app.get("/api/native/surface-handle", asyncRoute(async (request, response) => {
+    const state = getSession(request, response);
+    await state.requireAuth();
+    const shell = readShellWindowHandle();
+    response.json({ handle: shell?.handle ?? null, pid: shell?.pid ?? null });
+  }));
 
   app.post("/api/native/start", asyncRoute(async (request, response) => {
     const state = getSession(request, response);
