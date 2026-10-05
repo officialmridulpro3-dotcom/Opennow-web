@@ -18,6 +18,7 @@ import { addStreamShortcutActionListener } from "../streamShortcutActions";
 import { useMicMeter } from "../hooks/useMicMeter";
 import { formatElapsed } from "../utils/timeFormat";
 import { useTranslation } from "../i18n";
+import { isNativeSurfaceAttached } from "../api";
 import { controllerButton, readControllerGamepadButtons } from "../utils/controllerGamepad";
 import { formatFileSize, formatSessionTimeRemaining, formatWarningSeconds } from "./stream/streamFormatters";
 import { AntiAfkIndicator, MicrophoneIndicator, RecordingIndicator } from "./stream/StreamIndicators";
@@ -252,12 +253,14 @@ export function StreamView({
   const streamVideoReady = streamHasVideo || videoElementHasFrame || nativeRunning;
   const [sessionReadySplashVisible, setSessionReadySplashVisible] = useState(false);
   const sessionReadySplashShownRef = useRef(false);
-  // When the NVST engine paints its own frames this window is nothing but a
-  // transparent hole punched for the SDL surface, and the styled chrome is
-  // drawn by the overlay webview window (see NativeOverlayRoot). Every other
-  // renderer — i.e. the in-app WebRTC player — gets the full styled deck.
-  const nativeInternalHole = nativeRunning || nativeRendererActive || gstreamerEnabled;
-  const isNativeDeck = !nativeInternalHole;
+  // The NVST engine presents into a child surface clipped inside this window
+  // (it only becomes a hole once the shell handed the engine its HWND), so the
+  // full React deck — sidebar, live stats HUD, toasts — is drawn on top of the
+  // native video plane. The in-app WebRTC player uses the very same chrome.
+  // Without an attached native surface the window stays opaque, which keeps a
+  // standalone engine window from leaving a see-through app window behind.
+  const nativeInternalHole =
+    (nativeRunning || nativeRendererActive || gstreamerEnabled) && isNativeSurfaceAttached();
   const showStatsHud = showStats || Boolean(showNativeStats);
 
   useEffect(() => {
@@ -1030,9 +1033,24 @@ export function StreamView({
     window.visualViewport?.addEventListener("scroll", schedule);
     schedule();
 
+    // When the engine starts it must receive this window's HWND quickly: its
+    // first surface command can land before the sidecar accepts commands, and
+    // without a follow-up the engine keeps a standalone window of its own
+    // (which used to be the separate GDI-chrome window). Re-publish a few times
+    // while it comes up.
+    const retries: number[] = [];
+    if (nativeInternalHole) {
+      for (const delay of [120, 400, 900, 1800, 3200]) {
+        retries.push(window.setTimeout(schedule, delay));
+      }
+    }
+
     return () => {
       if (frame !== 0) {
         window.cancelAnimationFrame(frame);
+      }
+      for (const timer of retries) {
+        window.clearTimeout(timer);
       }
       observer?.disconnect();
       window.removeEventListener("resize", schedule);
@@ -1047,7 +1065,7 @@ export function StreamView({
         showStats: false,
       });
     };
-  }, [exitPrompt.open, showNativeStats, showSideBar, showStats]);
+  }, [exitPrompt.open, nativeInternalHole, showNativeStats, showSideBar, showStats]);
 
   useEffect(() => {
     const handlePointerLockChange = () => {
@@ -1488,7 +1506,7 @@ export function StreamView({
   }, [nativeInternalHole]);
 
   return (
-    <div className={["sv", streamVideoReady ? "sv--video-ready" : "sv--video-pending", nativeInternalHole ? "sv--native-hole" : "", isNativeDeck ? "sv--native-deck" : "sv--bare", className].filter(Boolean).join(" ")}>
+    <div className={["sv", streamVideoReady ? "sv--video-ready" : "sv--video-pending", nativeInternalHole ? "sv--native-hole" : "", "sv--native-deck", className].filter(Boolean).join(" ")}>
       <m.video
         ref={setVideoRef}
         autoPlay
@@ -2211,78 +2229,20 @@ export function StreamView({
         </div>
       )}
 
-      {/* ── BARE MODE (native engine hole): no React chrome, SDL surface shows through ── */}
-      {!isNativeDeck ? (
-        <>
-          {/* No gradient, no deck — just black */}
-          <div className="sv-empty sv-empty--bare" aria-hidden>
-            <div className="sv-empty-grad sv-empty-grad--bare" />
-          </div>
-
-          {/* Minimal connecting overlay — no deck, no platform badge */}
-          {isConnecting && (
-            <div className="sv-connect sv-connect--bare">
-              <div className="sv-connect-inner">
-                <MotionSpinner className="sv-connect-spin" size={28} label="Connecting to stream" />
-                <p className="sv-connect-title">Connecting to {gameTitle}</p>
-                <p className="sv-connect-sub">Setting up stream…</p>
-              </div>
+      <>
+          {/* ── STREAM DECK: full cyberpunk chrome over WebRTC or the native plane ── */}
+          {/* Deck ground layers: mesh, scan, bloom, sweep, edge ticks.
+              Skipped while the native plane is the video: these layers paint
+              the whole viewport and would hide the engine's child surface. */}
+          {!nativeInternalHole && (
+            <div className="sv-deck-ground" aria-hidden>
+              <div className="sv-deck-mesh" />
+              <div className="sv-deck-scan" />
+              <div className="sv-deck-glow" />
+              <div className="sv-deck-sweep" />
+              <div className="sv-deck-edge" />
             </div>
           )}
-
-          {/* Bare native-start affordance — unstyled, so the non-native window stays plain */}
-          {nativeSupported && !hideStreamButtons && (
-            <div className="sv-native-card sv-native-card--bare">
-              {nativeRunning ? (
-                <>
-                  <div className="sv-native-card-title">Native window active</div>
-                  <button type="button" className="sv-native-card-btn" onClick={onStopNative} disabled={!onStopNative}>
-                    Stop native window
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    className="sv-native-card-btn"
-                    onClick={onStartNative}
-                    disabled={nativeStarting || !onStartNative}
-                  >
-                    {nativeStarting ? "Starting…" : "Play in native window"}
-                  </button>
-                  {nativeError && <div className="sv-native-card-error">{nativeError}</div>}
-                </>
-              )}
-            </div>
-          )}
-
-          {/* Bare exit — plain, no deck */}
-          {exitPrompt.open && !isConnecting && typeof document !== "undefined" && createPortal(
-            <div className="sv-exit sv-exit--bare" role="dialog" aria-modal="true" aria-label="Exit stream confirmation">
-              <button type="button" className="sv-exit-backdrop" onClick={onCancelExit} aria-label="Cancel exit" />
-              <div className="sv-exit-card">
-                <h3 className="sv-exit-title">Exit Stream?</h3>
-                <p className="sv-exit-text">Exit <strong>{exitPrompt.gameTitle}</strong>?</p>
-                <div className="sv-exit-actions">
-                  <button type="button" className="sv-exit-btn sv-exit-btn-cancel" onClick={onCancelExit}>Keep Playing</button>
-                  <button type="button" className="sv-exit-btn sv-exit-btn-confirm" onClick={onConfirmExit}>Exit Stream</button>
-                </div>
-              </div>
-            </div>,
-            document.body,
-          )}
-        </>
-      ) : (
-        <>
-          {/* ── NATIVE DECK MODE: full cyberpunk deck chrome ── */}
-          {/* Deck ground layers: mesh, scan, bloom, sweep, edge ticks */}
-          <div className="sv-deck-ground" aria-hidden>
-            <div className="sv-deck-mesh" />
-            <div className="sv-deck-scan" />
-            <div className="sv-deck-glow" />
-            <div className="sv-deck-sweep" />
-            <div className="sv-deck-edge" />
-          </div>
 
           <StreamEmptyState diagnosticsStore={diagnosticsStore} />
           <StreamWaitingForVideo diagnosticsStore={diagnosticsStore} isConnecting={isConnecting} />
@@ -2484,7 +2444,6 @@ export function StreamView({
             showHints={showHints}
           />
         </>
-      )}
     </div>
   );
 }

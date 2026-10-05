@@ -356,10 +356,12 @@ export function registerApi(app: Express): void {
   app.post("/api/native/command", asyncRoute(async (request, response) => {
     const state = getSession(request, response);
     await state.requireAuth();
-    const input = (request.body ?? {}) as { type?: unknown };
+    const input = (request.body ?? {}) as { type?: unknown; paused?: unknown };
     const type = typeof input.type === "string" ? input.type : "";
     try {
-      response.json(nativeSidecar.command(type));
+      response.json(
+        nativeSidecar.command(type, { paused: typeof input.paused === "boolean" ? input.paused : undefined }),
+      );
     } catch (error) {
       const statusCode = (error as { statusCode?: number }).statusCode ?? 500;
       response.status(statusCode).json({ error: (error as Error).message });

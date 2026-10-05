@@ -954,8 +954,8 @@ export function SettingsStreamSection({
               value={settings.streamClientMode}
               ariaLabel="Stream mode"
               options={[
-                { value: "web", label: "In-app player" },
-                { value: "native", label: "Native engine window" },
+                { value: "native", label: "Native engine (recommended)" },
+                { value: "web", label: "In-app player (WebRTC)" },
               ]}
               onChange={(value) => {
                 handleChange("streamClientMode", value as StreamClientMode);
@@ -966,9 +966,10 @@ export function SettingsStreamSection({
             />
           </div>
           <span className="settings-subtle-hint">
-            In-app player streams video and audio straight into this window with the full OpenNOW deck — recommended.
-            Native engine window hands the picture to the bundled NVST engine (lowest latency, DirectX 10-class GPUs);
-            its controls live in the OpenNOW overlay, so press the guide shortcut there to open the deck.
+            Native engine plays through the bundled NVST engine: it decodes with Media Foundation/DXVA, presents over
+            D3D11 and owns raw mouse/keyboard input, so the cursor and input feel like a local game. Its video plane is
+            clipped inside this window and the OpenNOW deck is drawn on top of it (no separate window, no GDI chrome).
+            In-app player uses browser WebRTC instead — pick it if the engine cannot run on this machine.
           </span>
         </div>
         {/* Video filters (client-side GPU shaders) */}

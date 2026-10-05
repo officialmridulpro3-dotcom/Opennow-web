@@ -33,7 +33,7 @@ import {
   SAFE_FALLBACK_STREAM_PROFILE,
 } from "@shared/gfn";
 import { FALLBACK_RELAY_ICE_SERVERS, GfnWebRtcClient, probeWebRtcEnvironment } from "./platforms/gfn/webrtcClient";
-import { getCachedNativeSidecarSupport, getNativeStatus, sendNativeCommand, startNativeStream, stopNativeStream } from "./api";
+import { getCachedNativeSidecarSupport, getNativeStatus, isNativeSurfaceAttached, sendNativeCommand, startNativeStream, stopNativeStream } from "./api";
 import type { NativeSidecarStatus } from "./api";
 import { clientLog } from "./api";
 import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut } from "./shortcuts";
@@ -222,14 +222,14 @@ export function App(): JSX.Element {
     fps: 60,
     maxBitrateMbps: 75,
     recordingBitrateMbps: null,
-    streamClientMode: "web",
+    streamClientMode: "native",
     nativeStreamerBackend: "gstreamer",
     nativeVideoBackend: "auto",
     nativeStreamerExecutablePath: "",
     nativeCloudGsyncMode: "auto",
     nativeD3dFullscreenMode: "auto",
     nativeExternalRenderer: false,
-    transportMode: "webrtc",
+    transportMode: "nvst",
     showNativeStreamerStats: false,
     codec: DEFAULT_STREAM_PREFERENCES.codec,
     decoderPreference: "auto",
@@ -376,6 +376,10 @@ export function App(): JSX.Element {
   useEffect(() => {
     forwardNativeShortcutToOverlayRef.current = (action: string): boolean => {
       if (!isNativeOverlayHostAvailable() || !nativeStreamingRef.current) return false;
+      // Embedded native sessions draw the deck inside this window (React chrome
+      // over the engine surface), so the shortcuts belong to the in-app UI
+      // rather than the separate always-on-top overlay window.
+      if (isNativeSurfaceAttached()) return false;
       if (action === "toggleSidebar") {
         sendNativeOverlayCommand("toggle-deck");
         return true;
@@ -1442,7 +1446,9 @@ export function App(): JSX.Element {
   }, [requestPointerLockCapture]);
 
   const setNativeInputPaused = useCallback((paused: boolean): void => {
-    // Native-only mode: always allow pausing native input
+    // Only meaningful while a native session runs: the engine owns raw input
+    // there, and releasing it is what makes the styled deck clickable.
+    if (!nativeStreamingRef.current) return;
     window.openNow.setNativeInputPaused(paused);
   }, []);
 

@@ -63,8 +63,18 @@ to its stdin → gameplay in the native window → sidecar exit returns to libra
 
 | Mode | Player | Stream chrome |
 | --- | --- | --- |
-| **In-app player** (default) | Browser WebRTC into the in-app `<video>` element | React/CSS deck in the app window (sidebar, live stats HUD, video filters) |
-| **Native engine window** | NVST sidecar (RTSPS/SRTP/SCTP, D3D11 present, DXVA decode) | Transparent overlay window — [NATIVE_OVERLAY.md](NATIVE_OVERLAY.md) |
+| **Native engine** (default) | NVST sidecar (RTSPS/SRTP/SCTP, D3D11 present, DXVA decode) painting into a child surface clipped inside the app window, with the engine owning raw mouse/keyboard input | React/CSS deck in the app window over the native plane (the page goes transparent only where the video shows) |
+| **In-app player** | Browser WebRTC into the in-app `<video>` element | React/CSS deck in the app window (sidebar, live stats HUD, video filters) |
+
+The native surface handshake is what keeps the engine inside the app window: the
+client posts the video rect plus the Tauri HWND to `/api/native/surface`, and the
+CLI re-posts it when the sidecar comes up (the first command can arrive before
+the engine accepts commands, and then the engine would keep a window of its
+own). While the deck is open the client sends `input-paused`, which releases the
+engine's raw-input capture so the deck can be clicked, and clears it again when
+the deck closes. If the shell never hands over a valid HWND the engine falls back
+to a standalone window and the transparent overlay window from
+[NATIVE_OVERLAY.md](NATIVE_OVERLAY.md) carries the chrome instead.
 
 The mode drives the claim (`clientMode`/`transportMode`) and the attach path on
 launch, resume and recovery (`startNativeFromClaim` vs. opening the signaling
@@ -73,9 +83,9 @@ player. While the sidecar runs, StreamView reduces the app window to a
 transparent hole for the engine's surface; when it is idle the app window keeps
 the video and the styled deck.
 
-Installs upgraded from builds where the native window was the only mode are
-migrated back to the in-app player once; picking a mode in Settings sets
-`streamModeChosen` so later upgrades never overwrite the user's choice.
+Until a mode is picked in Settings (`streamModeChosen`) the shipped default owns
+`streamClientMode`, so upgrades follow the default instead of a mode an older
+build happened to persist.
 
 ## Provisioning (HTTP 501 lesson)
 

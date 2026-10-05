@@ -446,7 +446,7 @@ class NativeSidecarManager {
    * is deliberately small — anything that changes transport, session or capture
    * shape stays with the engine, the shell or the launch flow.
    */
-  command(type: string): NativeSidecarStatus {
+  command(type: string, options: { paused?: boolean } = {}): NativeSidecarStatus {
     if (!this.child) throw httpError("No native stream is running.", 409);
     switch (type) {
       case "recording-toggle":
@@ -461,6 +461,11 @@ class NativeSidecarManager {
       case "microphone-toggle":
       case "fullscreen-toggle":
         this.send({ id: this.nextId(type), type });
+        break;
+      case "input-paused":
+        // Engine-side capture toggle: the styled deck releases the mouse while
+        // it is open and hands it back when it closes.
+        this.send({ id: this.nextId(type), type, paused: options.paused === true });
         break;
       default:
         throw httpError(`Unsupported native command: ${type || "(empty)"}`, 400);

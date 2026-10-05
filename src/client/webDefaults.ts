@@ -14,18 +14,19 @@ export const WEB_DEFAULT_SETTINGS: Settings = {
   fps: 60,
   maxBitrateMbps: 75,
   recordingBitrateMbps: null,
-  // In-page WebRTC player by default: the game renders inside the app window,
-  // so the whole styled React UI works over it and browser input goes straight
-  // to the game. "native" hands the seat to the NVST engine's own OS window
-  // (Settings -> Stream -> Stream mode), where the host UI cannot overlay video.
-  streamClientMode: "web",
+  // Native (NVST) presentation by default: the Rust engine decodes/presents and
+  // owns raw input, while its surface is clipped inside the app window so the
+  // styled React deck still draws on top (no GDI chrome, no cursor/input lag).
+  // "web" runs the in-page WebRTC player instead — useful on machines without
+  // the bundled sidecar or when the engine cannot attach.
+  streamClientMode: "native",
   nativeStreamerBackend: "gstreamer",
   nativeVideoBackend: "auto",
   nativeStreamerExecutablePath: "",
   nativeCloudGsyncMode: "auto",
   nativeD3dFullscreenMode: "auto",
   nativeExternalRenderer: false,
-  transportMode: "webrtc",
+  transportMode: "nvst",
   showNativeStreamerStats: false,
   codec: streamPreferences.codec,
   decoderPreference: "auto",

@@ -95,7 +95,20 @@ export function startNativeStream(sessionId: string, context: unknown, gameTitle
 }
 
 export function stopNativeStream(): Promise<NativeSidecarStatus> {
+  nativeSurfaceAttached = false;
   return api<NativeSidecarStatus>("/api/native/stop", { method: "POST" });
+}
+
+/**
+ * True once a native surface update actually carried this window's HWND to the
+ * engine, i.e. the engine presents into a child surface clipped inside the app
+ * window instead of a window of its own. The stream UI uses it to decide
+ * whether React chrome can be drawn on top of the native video plane.
+ */
+let nativeSurfaceAttached = false;
+
+export function isNativeSurfaceAttached(): boolean {
+  return nativeSurfaceAttached;
 }
 
 /**
@@ -192,11 +205,11 @@ function readSettings(): Settings {
       settings.statsHudProvisioned = true;
       writeSettings(settings);
     }
-    // One-time migration: the native-engine-only builds persisted "native"
-    // without ever offering a choice. Only keep it when the user picked it.
-    if (settings.streamClientMode === "native" && settings.streamModeChosen !== true) {
-      settings.streamClientMode = "web";
-      settings.transportMode = "webrtc";
+    // Builds before the stream-mode setting persisted a mode the user never
+    // chose, so until a mode is picked explicitly the shipped default owns it.
+    if (settings.streamModeChosen !== true) {
+      settings.streamClientMode = WEB_DEFAULT_SETTINGS.streamClientMode;
+      settings.transportMode = WEB_DEFAULT_SETTINGS.transportMode;
       writeSettings(settings);
     }
     return settings;
@@ -437,7 +450,15 @@ const bridge: OpenNowApi = {
   sendAnswer: (payload: SendAnswerRequest) => sendSignal("answer", payload),
   sendIceCandidate: (payload: IceCandidatePayload) => sendSignal("ice", payload),
   sendNativeInput: () => {},
-  setNativeInputPaused: () => {},
+  setNativeInputPaused: (paused: boolean) => {
+    // The engine owns raw input in native sessions: pausing it releases the
+    // mouse so the React deck can be clicked, and resuming hands it back.
+    // Without a native session the backend answers 409 and nothing happens.
+    void api<NativeSidecarStatus>("/api/native/command", {
+      method: "POST",
+      body: JSON.stringify({ type: "input-paused", paused }),
+    }).catch(() => {});
+  },
   updateNativeRenderSurface: (() => {
     let cachedHandle: string | null = null;
     let lastRect: { x: number; y: number; width: number; height: number } | null = null;
@@ -483,6 +504,9 @@ const bridge: OpenNowApi = {
           windowHandle: finalHandle,
           screenRect: input.screenRect || input.rect,
         };
+        if (input.visible && finalHandle) {
+          nativeSurfaceAttached = true;
+        }
         void api("/api/native/surface", { method: "POST", body: JSON.stringify(body) }).catch(() => {});
       };
       if (invoke) {
