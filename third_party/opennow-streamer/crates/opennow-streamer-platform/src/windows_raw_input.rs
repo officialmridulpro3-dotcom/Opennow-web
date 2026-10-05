@@ -27,7 +27,9 @@ use windows_sys::Win32::UI::WindowsAndMessaging::{
     WM_SYSKEYDOWN, WM_SYSKEYUP, WNDCLASSW,
 };
 
-use crate::media::{CapturedInput, CapturedInputQueue};
+use crate::media::{
+    CapturedInput, CapturedInputQueue, StreamShortcutAction, StreamShortcutBindings,
+};
 
 const RAW_INPUT_CLASS: &[u16] = &[
     b'O' as u16,
@@ -51,6 +53,7 @@ const WM_RAW_INPUT_REREGISTER: u32 = WM_APP + 1;
 
 /// Virtual-key codes (Win32 `VK_*`) used for modifier tracking. Spelled out so
 /// this module does not depend on the shape of the windows-sys constants.
+const VK_RETURN: u16 = 0x0D;
 const VK_SHIFT: u16 = 0x10;
 const VK_CONTROL: u16 = 0x11;
 const VK_MENU: u16 = 0x12;
@@ -62,6 +65,9 @@ const VK_LCONTROL: u16 = 0xA2;
 const VK_RCONTROL: u16 = 0xA3;
 const VK_LMENU: u16 = 0xA4;
 const VK_RMENU: u16 = 0xA5;
+/// 'G' — the fixed Ctrl+G stream guide chord, mirrored from
+/// `output.rs::is_native_guide_shortcut`.
+const VK_G: u16 = 0x47;
 
 /// Modifier bits of the stream input protocol (`CapturedInput::Key`).
 const MOD_SHIFT: u16 = 0x01;
@@ -103,6 +109,15 @@ struct RawInputState {
     /// keyboard itself and forwards the samples to the stream.
     forward_keyboard: AtomicBool,
     pressed_keys: Mutex<HashSet<u16>>,
+    /// VKs of shortcut chords currently held down. Their key-up is swallowed so
+    /// the remote game never receives half of a local shortcut.
+    pressed_shortcuts: Mutex<HashSet<u16>>,
+    /// Stream shortcut bindings configured by the shell (Ctrl+N / F8 / F11 /
+    /// Ctrl+Shift+Q / ...). The Raw Input thread owns the keyboard whenever the
+    /// embedded surface cannot hold focus, so it has to recognise the chords
+    /// itself: otherwise every local shortcut would be typed into the game
+    /// instead of reaching the deck.
+    shortcuts: Mutex<StreamShortcutBindings>,
     captured_input: Arc<CapturedInputQueue>,
 }
 
@@ -125,6 +140,8 @@ impl WindowsRawInputController {
             pressed_buttons: Mutex::new(HashSet::new()),
             forward_keyboard: AtomicBool::new(forward_keyboard),
             pressed_keys: Mutex::new(HashSet::new()),
+            pressed_shortcuts: Mutex::new(HashSet::new()),
+            shortcuts: Mutex::new(StreamShortcutBindings::default()),
             captured_input,
         });
         let thread_state = Arc::clone(&state);
@@ -155,6 +172,16 @@ impl WindowsRawInputController {
         self.state
             .foreground_owner
             .store(foreground_owner, Ordering::Release);
+    }
+
+    /// Hand the thread the shell's shortcut bindings (see the `shortcuts`
+    /// field). Safe to call again whenever the shell re-publishes settings.
+    pub(crate) fn set_shortcut_bindings(&self, shortcuts: StreamShortcutBindings) {
+        *self
+            .state
+            .shortcuts
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner) = shortcuts;
     }
 
     pub(crate) fn set_capture(&self, enabled: bool, relative_motion: bool) {
@@ -434,6 +461,55 @@ unsafe fn process_raw_keyboard(state: &RawInputState, raw: &RAWINPUT) {
         }
         raw_modifiers(&pressed_keys, key)
     };
+    // Local stream chords are recognised here, exactly like the SDL event path
+    // does when the window holds the focus: Ctrl+G opens the deck, Alt+Enter or
+    // the configured F11 toggle fullscreen, Ctrl+N the stats strip, and so on.
+    // Everything else is gameplay input.
+    if pressed {
+        if is_guide_key(key, modifiers) {
+            state
+                .pressed_shortcuts
+                .lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner)
+                .insert(key);
+            state.captured_input.push(CapturedInput::Guide);
+            return;
+        }
+        if is_alt_enter(key, modifiers) {
+            state
+                .pressed_shortcuts
+                .lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner)
+                .insert(key);
+            state
+                .captured_input
+                .push(CapturedInput::Shortcut(StreamShortcutAction::ToggleFullscreen));
+            return;
+        }
+        let action = {
+            let shortcuts = state
+                .shortcuts
+                .lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner);
+            shortcuts.action(key, modifiers)
+        };
+        if let Some(action) = action {
+            state
+                .pressed_shortcuts
+                .lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner)
+                .insert(key);
+            state.captured_input.push(CapturedInput::Shortcut(action));
+            return;
+        }
+    } else if state
+        .pressed_shortcuts
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
+        .remove(&key)
+    {
+        return;
+    }
     state.captured_input.push(CapturedInput::Key {
         virtual_key: key,
         modifiers,
@@ -442,6 +518,11 @@ unsafe fn process_raw_keyboard(state: &RawInputState, raw: &RAWINPUT) {
 }
 
 fn release_pressed_keys(state: &RawInputState) {
+    state
+        .pressed_shortcuts
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
+        .clear();
     let mut pressed_keys = state
         .pressed_keys
         .lock()
@@ -453,6 +534,19 @@ fn release_pressed_keys(state: &RawInputState) {
             pressed: false,
         });
     }
+}
+
+/// Ctrl+G is the fixed stream guide chord (see `output.rs`). `modifiers`
+/// already excludes the pressed key's own bit, so an exact match keeps Alt or
+/// Shift + Ctrl + G available to the game.
+fn is_guide_key(key: u16, modifiers: u16) -> bool {
+    key == VK_G && modifiers == MOD_CTRL
+}
+
+/// Alt+Enter is the universal game-fullscreen chord and must stay local even
+/// where the configured binding only lists F11 (Fn-lock laptops).
+fn is_alt_enter(key: u16, modifiers: u16) -> bool {
+    key == VK_RETURN && modifiers & MOD_ALT != 0
 }
 
 fn raw_mouse_button_up_mask() -> u16 {
@@ -537,7 +631,9 @@ mod tests {
         MOD_ALT, MOD_CTRL, MOD_SHIFT, RawInputState, VK_LCONTROL, VK_LSHIFT, VK_MENU,
         push_mouse_delta, push_raw_mouse_buttons, raw_modifiers, release_pressed_buttons,
     };
-    use crate::media::{CapturedInput, CapturedInputQueue};
+    use crate::media::{
+        CapturedInput, CapturedInputQueue, StreamShortcutAction, StreamShortcutBindings,
+    };
     use windows_sys::Win32::UI::WindowsAndMessaging::{
         RI_MOUSE_LEFT_BUTTON_DOWN, RI_MOUSE_LEFT_BUTTON_UP, RI_MOUSE_RIGHT_BUTTON_DOWN,
     };
@@ -548,8 +644,36 @@ mod tests {
             enabled: true.into(),
             relative_motion: false.into(),
             pressed_buttons: Default::default(),
+            forward_keyboard: true.into(),
+            pressed_keys: Default::default(),
+            pressed_shortcuts: Default::default(),
+            shortcuts: Default::default(),
             captured_input: Arc::new(CapturedInputQueue::default()),
         }
+    }
+
+    #[test]
+    fn raw_chords_never_reach_the_game() {
+        let state = state();
+        {
+            let mut pressed = state
+                .pressed_keys
+                .lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner);
+            pressed.insert(VK_LCONTROL);
+            pressed.insert(VK_G);
+        }
+        // Ctrl+G is the fixed guide chord ...
+        assert!(super::is_guide_key(VK_G, MOD_CTRL));
+        // ... while Alt+Enter and the configured bindings stay local too.
+        assert!(super::is_alt_enter(VK_RETURN, MOD_ALT));
+        assert!(!super::is_guide_key(VK_G, MOD_CTRL | MOD_SHIFT));
+        // Ctrl+Shift+Q (VK_Q = 0x51) is the default stop-stream binding.
+        assert_eq!(
+            StreamShortcutBindings::default().action(0x51, MOD_CTRL | MOD_SHIFT),
+            Some(StreamShortcutAction::StopStream)
+        );
+        drop(state);
     }
 
     #[test]

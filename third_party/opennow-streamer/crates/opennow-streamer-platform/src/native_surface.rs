@@ -34,6 +34,20 @@ impl NativeSurface {
         self.inner.hide_checked()
     }
 
+    /// Re-place the embedded child after the shell window changed size. This is
+    /// what keeps the game picture filling a maximised window even when the
+    /// host-side surface publish is late or missing.
+    #[cfg(target_os = "windows")]
+    pub(crate) fn resize(&mut self, rect: RenderSurfaceRect) -> Result<bool, String> {
+        self.inner.resize(rect)
+    }
+
+    /// Live client size of the shell window the surface is embedded in.
+    #[cfg(target_os = "windows")]
+    pub(crate) fn parent_client_size(&self) -> Option<(u32, u32)> {
+        self.inner.parent_client_size()
+    }
+
     pub(crate) fn refresh_ordering(&mut self) -> Result<(), String> {
         self.inner.refresh_ordering()
     }
@@ -66,13 +80,14 @@ fn physical_rect(rect: RenderSurfaceRect, _scale: f32) -> (i32, i32, u32, u32) {
 #[cfg(target_os = "windows")]
 mod platform {
     use raw_window_handle::{HasWindowHandle, RawWindowHandle};
-    use windows_sys::Win32::Foundation::{GetLastError, SetLastError};
+    use windows_sys::Win32::Foundation::{GetLastError, RECT, SetLastError};
     use windows_sys::Win32::UI::WindowsAndMessaging::{
-        GWL_EXSTYLE, GWL_STYLE, GetParent, GetWindowLongPtrW, HWND_TOP, SW_HIDE, SWP_FRAMECHANGED,
-        SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SWP_SHOWWINDOW, SetForegroundWindow,
-        SetParent, SetWindowLongPtrW, SetWindowPos, ShowWindow, WS_CAPTION, WS_CHILD,
-        WS_CLIPSIBLINGS, WS_DISABLED, WS_EX_APPWINDOW, WS_EX_NOACTIVATE, WS_EX_TRANSPARENT,
-        WS_MAXIMIZEBOX, WS_MINIMIZEBOX, WS_POPUP, WS_SYSMENU, WS_THICKFRAME, WS_VISIBLE,
+        GWL_EXSTYLE, GWL_STYLE, GetClientRect, GetParent, GetWindowLongPtrW, HWND_TOP, SW_HIDE,
+        SWP_FRAMECHANGED, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SWP_SHOWWINDOW,
+        SetForegroundWindow, SetParent, SetWindowLongPtrW, SetWindowPos, ShowWindow, WS_CAPTION,
+        WS_CHILD, WS_CLIPSIBLINGS, WS_DISABLED, WS_EX_APPWINDOW, WS_EX_NOACTIVATE,
+        WS_EX_TRANSPARENT, WS_MAXIMIZEBOX, WS_MINIMIZEBOX, WS_POPUP, WS_SYSMENU, WS_THICKFRAME,
+        WS_VISIBLE,
     };
 
     use super::*;
@@ -110,6 +125,10 @@ mod platform {
         standalone_style: u32,
         standalone_extended_style: u32,
         shown: bool,
+        /// Geometry last applied to the child, in parent-client pixels. Used to
+        /// make the resize path idempotent, so a parent-size check that finds
+        /// nothing new never calls SetWindowPos.
+        last_rect: (i32, i32, u32, u32),
     }
 
     impl Surface {
@@ -128,6 +147,7 @@ mod platform {
                 standalone_style: unsafe { GetWindowLongPtrW(child, GWL_STYLE) as u32 },
                 standalone_extended_style: unsafe { GetWindowLongPtrW(child, GWL_EXSTYLE) as u32 },
                 shown: false,
+                last_rect: (0, 0, 0, 0),
             })
         }
 
@@ -212,6 +232,7 @@ mod platform {
                 {
                     return Err("failed to position the Qt child video surface".to_owned());
                 }
+                self.last_rect = (x, y, width, height);
                 if !self.shown {
                     // Bring the shell forward, but never take the keyboard away
                     // from its WebView: the engine's keys arrive through Raw
@@ -221,6 +242,59 @@ mod platform {
                 }
             }
             Ok(())
+        }
+
+        /// Re-place the embedded child after the shell window changed size.
+        ///
+        /// The shell publishes a fresh geometry whenever the WebView reports a
+        /// resize, but a maximised (or fullscreen) shell window can grow before
+        /// — or without — that publish landing. Without this the video plane
+        /// keeps its pre-maximise size and the game picture sits in a corner of
+        /// the window. Returns `Ok(true)` when the child actually moved.
+        pub(crate) fn resize(&mut self, rect: RenderSurfaceRect) -> Result<bool, String> {
+            if self.parent.is_null() {
+                return Ok(false);
+            }
+            let (x, y, width, height) = physical_rect(rect, 1.0);
+            if self.last_rect == (x, y, width, height) {
+                return Ok(false);
+            }
+            unsafe {
+                if SetWindowPos(
+                    self.child,
+                    HWND_TOP,
+                    x,
+                    y,
+                    width as i32,
+                    height as i32,
+                    SWP_NOACTIVATE | SWP_SHOWWINDOW,
+                ) == 0
+                {
+                    return Err(format!(
+                        "failed to resize the embedded SDL video surface (win32 error {})",
+                        GetLastError()
+                    ));
+                }
+            }
+            self.last_rect = (x, y, width, height);
+            Ok(true)
+        }
+
+        /// Live client size of the shell window this surface is attached to.
+        pub(crate) fn parent_client_size(&self) -> Option<(u32, u32)> {
+            if self.parent.is_null() {
+                return None;
+            }
+            let mut rect = RECT::default();
+            unsafe {
+                if GetClientRect(self.parent, &mut rect) == 0 {
+                    return None;
+                }
+            }
+            Some((
+                (rect.right - rect.left).max(1) as u32,
+                (rect.bottom - rect.top).max(1) as u32,
+            ))
         }
 
         pub(crate) fn hide_checked(&mut self) -> Result<(), String> {

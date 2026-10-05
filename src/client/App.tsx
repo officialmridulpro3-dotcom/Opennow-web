@@ -368,6 +368,14 @@ export function App(): JSX.Element {
   const nativeStreamingRef = useRef(false);
   const handleStreamShortcutActionRef = useRef<((action: NativeStreamerShortcutAction | "toggleSidebar") => void) | null>(null);
   /**
+   * When the page itself handled a stream shortcut chord. The engine's Raw Input
+   * thread mirrors every key it forwards — it owns the embedded surface's
+   * keyboard — so the very same chord also arrives back as a `native-shortcut`
+   * event. Acting on both would toggle the deck / stats / fullscreen twice,
+   * which looks exactly like the shortcut doing nothing.
+   */
+  const localShortcutHandledAtRef = useRef<Record<string, number>>({});
+  /**
    * Native sessions render gameplay in the engine's own window *above* this
    * page, so the in-page sidebar would be invisible behind the video child
    * window. Ctrl+G / Ctrl+N / Guide arrive here as `native-shortcut` events and
@@ -3983,7 +3991,7 @@ export function App(): JSX.Element {
     t,
   ]);
 
-  const handleStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction | "toggleSidebar"): void => {
+  const applyStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction | "toggleSidebar"): void => {
     // toggleSidebar comes from native overlay-request (Ctrl+G) — open the full React sidebar opaque left
     if ((action as string) === "toggleSidebar") {
       if (streamStatus === "streaming") {
@@ -4040,6 +4048,30 @@ export function App(): JSX.Element {
     }
   }, [handlePromptedStopStream, requestPointerLockCapture, streamStatus, toggleSessionFullscreen]);
 
+  /** Records that this page handled a chord itself, then applies it. */
+  const applyLocalStreamShortcutAction = useCallback(
+    (action: NativeStreamerShortcutAction): void => {
+      localShortcutHandledAtRef.current[action] = performance.now();
+      applyStreamShortcutAction(action);
+    },
+    [applyStreamShortcutAction],
+  );
+
+  /**
+   * Entry point for the engine's `native-shortcut` events. Echoes of a chord the
+   * page already handled are dropped: the engine's Raw Input thread reports
+   * every key even while the WebView holds the focus (that is what lets Ctrl+G
+   * work with the game focused), so without this the deck would open and close
+   * again in the same keypress.
+   */
+  const handleStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction | "toggleSidebar"): void => {
+    const lastLocal = localShortcutHandledAtRef.current[action];
+    if (typeof lastLocal === "number" && performance.now() - lastLocal < 600) {
+      return;
+    }
+    applyStreamShortcutAction(action);
+  }, [applyStreamShortcutAction]);
+
   useEffect(() => {
     handleStreamShortcutActionRef.current = handleStreamShortcutAction;
   }, [handleStreamShortcutAction]);
@@ -4092,7 +4124,7 @@ export function App(): JSX.Element {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
-        handleStreamShortcutAction("toggleStats");
+        applyLocalStreamShortcutAction("toggleStats");
         return;
       }
 
@@ -4100,7 +4132,7 @@ export function App(): JSX.Element {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
-        handleStreamShortcutAction("togglePointerLock");
+        applyLocalStreamShortcutAction("togglePointerLock");
         return;
       }
 
@@ -4109,6 +4141,7 @@ export function App(): JSX.Element {
         e.stopPropagation();
         e.stopImmediatePropagation();
         if (streamStatus === "connecting" || streamStatus === "streaming") {
+          localShortcutHandledAtRef.current["toggleFullscreen"] = performance.now();
           void toggleSessionFullscreen();
         }
         return;
@@ -4118,6 +4151,7 @@ export function App(): JSX.Element {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
+        localShortcutHandledAtRef.current["stopStream"] = performance.now();
         void handlePromptedStopStream();
         return;
       }
@@ -4127,6 +4161,7 @@ export function App(): JSX.Element {
         e.stopPropagation();
         e.stopImmediatePropagation();
         if (streamStatus === "streaming") {
+          localShortcutHandledAtRef.current["toggleAntiAfk"] = performance.now();
           setAntiAfkEnabled((prev) => !prev);
           setAntiAfkAckNonce((n) => n + 1);
         }
@@ -4138,6 +4173,7 @@ export function App(): JSX.Element {
         e.stopPropagation();
         e.stopImmediatePropagation();
         if (streamStatus === "streaming") {
+          localShortcutHandledAtRef.current["toggleMicrophone"] = performance.now();
           clientRef.current?.toggleMicrophone();
         }
       }
@@ -4147,6 +4183,7 @@ export function App(): JSX.Element {
     window.addEventListener("keydown", handleKeyDown, true);
     return () => window.removeEventListener("keydown", handleKeyDown, true);
   }, [
+    applyLocalStreamShortcutAction,
     exitPrompt.open,
     handleExitPromptCancel,
     handleExitPromptConfirm,

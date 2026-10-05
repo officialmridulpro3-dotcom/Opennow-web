@@ -5,13 +5,15 @@ use std::io::Cursor as IoCursor;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering;
 use std::sync::{Arc, Mutex};
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use crate::audio_playout::AudioPlayoutBuffer;
 use base64::Engine as _;
 use base64::engine::general_purpose::STANDARD as BASE64;
 use image::ImageReader;
-use opennow_streamer_protocol::{AudioDevice as PlaybackDevice, AudioOutputDevice, RenderSurface};
+use opennow_streamer_protocol::{
+    AudioDevice as PlaybackDevice, AudioOutputDevice, RenderSurface, RenderSurfaceRect,
+};
 use sdl2::audio::{AudioCallback, AudioDevice, AudioSpecDesired};
 use sdl2::pixels::{Color, PixelFormatEnum};
 use sdl2::rect::Rect;
@@ -2759,6 +2761,15 @@ struct WindowsExternalSdlSurface {
     shell_placement: bool,
     /// The suppression notice is worth exactly one log line per session.
     shell_placement_logged: bool,
+    /// Chrome insets (left, top, right, bottom) of the last published rect,
+    /// measured against the shell window's client area. React keeps its sidebar
+    /// and stats strip there; the insets stay put while the window grows, so a
+    /// parent resize can be followed without waiting for another publish.
+    insets: (i32, i32, i32, i32),
+    /// Client size of the shell window when `insets` was last measured.
+    parent_size: Option<(u32, u32)>,
+    /// Throttle for the parent-size watchdog in `pump`.
+    next_parent_resize_check: Instant,
 }
 
 #[cfg(target_os = "windows")]
@@ -2799,6 +2810,7 @@ impl WindowsExternalSdlSurface {
                 shell_placement_enabled(),
             ) {
                 Ok(controller) => {
+                    controller.set_shortcut_bindings(stream.shortcuts);
                     eprintln!(
                         "Dedicated Windows Raw Input thread ready (mouse{})",
                         if shell_placement_enabled() {
@@ -2864,6 +2876,9 @@ impl WindowsExternalSdlSurface {
             overlay,
             shell_placement: shell_placement_enabled(),
             shell_placement_logged: false,
+            insets: (0, 0, 0, 0),
+            parent_size: None,
+            next_parent_resize_check: Instant::now(),
         })
     }
 
@@ -2906,6 +2921,20 @@ impl WindowsExternalSdlSurface {
         if let Some(raw_input) = self.raw_input.as_ref() {
             raw_input.set_foreground_owner(foreground_owner);
         }
+        // Remember the chrome the host keeps around the video plane — the deck
+        // sidebar on the left, the stats strip at the bottom. Together with the
+        // live client size of the shell window these insets let the plane follow
+        // a maximise or fullscreen toggle without waiting for another publish.
+        if let Some((parent_width, parent_height)) = self.native_surface.parent_client_size() {
+            self.parent_size = Some((parent_width, parent_height));
+            self.insets = (
+                rect.x.max(0),
+                rect.y.max(0),
+                (parent_width as i32 - (rect.x + rect.width as i32)).max(0),
+                (parent_height as i32 - (rect.y + rect.height as i32)).max(0),
+            );
+        }
+        self.next_parent_resize_check = Instant::now() + Duration::from_millis(250);
         self.visible = true;
         self.sync_input_ownership();
         eprintln!(
@@ -2913,6 +2942,51 @@ impl WindowsExternalSdlSurface {
             rect.x, rect.y, rect.width, rect.height
         );
         Ok(())
+    }
+
+    /// Keep the embedded video plane the size of the shell window.
+    ///
+    /// Maximising (or leaving fullscreen and back) resizes the shell window, and
+    /// the host republishes the geometry only after the WebView has relaid out
+    /// and the Surface command has travelled through the backend. If any link of
+    /// that chain is late the plane keeps its old size and the game picture sits
+    /// in a corner of a much larger window. The engine therefore watches the
+    /// window it is embedded in: when the client area changes it re-derives the
+    /// rect from the chrome insets measured on the last publish and re-places the
+    /// child itself, so the picture always fills the window a frame later.
+    fn sync_parent_resize(&mut self) {
+        if !self.embedded || !self.visible {
+            return;
+        }
+        let now = Instant::now();
+        if now < self.next_parent_resize_check {
+            return;
+        }
+        self.next_parent_resize_check = now + Duration::from_millis(250);
+        let Some((parent_width, parent_height)) = self.native_surface.parent_client_size() else {
+            return;
+        };
+        if self.parent_size == Some((parent_width, parent_height)) {
+            return;
+        }
+        self.parent_size = Some((parent_width, parent_height));
+        let (left, top, right, bottom) = self.insets;
+        let rect = RenderSurfaceRect {
+            x: left,
+            y: top,
+            width: (parent_width as i32 - left - right).max(2) as u32,
+            height: (parent_height as i32 - top - bottom).max(2) as u32,
+        };
+        match self.native_surface.resize(rect) {
+            Ok(true) => eprintln!(
+                "Windows external SDL surface: shell window resized to {parent_width}x{parent_height} — video plane now {},{} {}x{}",
+                rect.x, rect.y, rect.width, rect.height
+            ),
+            Ok(false) => {}
+            Err(error) => {
+                eprintln!("Windows external SDL surface: resize failed: {error}");
+            }
+        }
     }
 
     /// Standalone presentation for the desktop sidecar: without an embedding
@@ -3201,6 +3275,7 @@ impl WindowsExternalSdlSurface {
         if let Some(overlay) = self.overlay.as_mut() {
             overlay.tick(&self.window);
         }
+        self.sync_parent_resize();
         self.sync_raw_input();
     }
 

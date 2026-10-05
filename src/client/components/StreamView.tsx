@@ -1253,6 +1253,13 @@ export function StreamView({
     }
   }, [screenshots, selectedScreenshotId]);
 
+  /**
+   * When the page's own Ctrl+G opened the sidebar. The engine mirrors the chord
+   * as `native-shortcut` whenever its Raw Input thread forwards the key, so the
+   * echo has to be ignored — otherwise the deck opens and closes again in one
+   * keypress and Ctrl+G looks dead.
+   */
+  const localSidebarShortcutAtRef = useRef(0);
   const handleToggleSideBar = useCallback(() => {
     setShowSideBar((s) => {
       if (!s && document.pointerLockElement) {
@@ -1441,6 +1448,9 @@ export function StreamView({
   useEffect(() => {
     return addStreamShortcutActionListener((action) => {
       if (action === "toggleSidebar") {
+        if (performance.now() - localSidebarShortcutAtRef.current < 600) {
+          return;
+        }
         handleToggleSideBar();
         return;
       }
@@ -1514,12 +1524,14 @@ export function StreamView({
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
+          localSidebarShortcutAtRef.current = performance.now();
           handleToggleSideBar();
         }
       } else if (event.ctrlKey && !event.altKey && !event.metaKey && key === "g") {
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();
+        localSidebarShortcutAtRef.current = performance.now();
         handleToggleSideBar();
       }
     };

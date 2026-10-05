@@ -105,11 +105,31 @@ Escape) and the cursor working while the game has the mouse. Gameplay keys would
 be invisible to the engine in that arrangement, so the engine's dedicated Raw
 Input thread registers the keyboard too (`RIDEV_INPUTSINK`, same foreground
 check as the mouse) and forwards the samples to the stream; SDL key handling is
-disabled so a key is never delivered twice (`external_keyboard`). Fullscreen is
-the shell's job: F11 / the deck button / the engine's `toggle-fullscreen`
-shortcut all call `set_app_fullscreen` on the Tauri window, and the client
-re-publishes the surface rect as the window resizes, so the video fills the
-screen.
+disabled so a key is never delivered twice (`external_keyboard`). That thread
+therefore has to recognise the stream chords itself — Ctrl+G (guide/deck),
+Alt+Enter and the configured F11 (fullscreen), Ctrl+N (stats), F8, Ctrl+Shift+Q
+and the rest — or they would be typed into the game instead of reaching the
+deck. The shells bindings are handed to the thread with
+`set_shortcut_bindings`, and their key-up is swallowed so the remote game never
+sees half a chord.
+
+Because the Raw Input thread reports those chords even while the WebView holds
+the focus, the page can see the very same physical keypress through its own DOM
+handler and then again as a `native-shortcut` event. The client drops the echo
+when it handled that action within the last few hundred milliseconds, so one
+press can never toggle the deck / stats / fullscreen twice (which looks exactly
+like the shortcut doing nothing).
+
+Fullscreen is the shell's job: F11 / the deck button / the engine's
+`toggle-fullscreen` shortcut all call `set_app_fullscreen` on the Tauri window.
+The client republishes the surface rect as the window resizes *and* the engine
+watches the shell window it is embedded in: every 250 ms it compares the live
+client area with the size it last placed the plane at, re-derives the rect from
+the chrome insets measured on the last publish, and re-places the child itself
+(`Windows external SDL surface: shell window resized …`). A maximised window —
+or a fullscreen toggle — therefore fills with the picture even when the
+host-side publish is late, instead of leaving the game in a corner of the
+window.
 
 Because the engine's plane is drawn *above* the WebView on Windows, the client
 publishes a rect that stops short of the deck's own panels (sidebar column,
