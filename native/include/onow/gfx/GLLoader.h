@@ -1,0 +1,273 @@
+// A dependency-free OpenGL 3.2 core loader.
+//
+// Dear ImGui's OpenGL 3 backend is compiled with IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+// and resolves every entry point through this header, so the client links only
+// against `opengl32` (Windows) or `libGL.so` (Linux) with no GLEW/GLAD package
+// to vendor. Load once with `gl::load()` right after the context is current.
+#pragma once
+
+#include <cstddef>
+
+// The GL typedefs and entry points live at global scope on purpose: ImGui's
+// OpenGL 3 backend is compiled with IMGUI_IMPL_OPENGL_LOADER_CUSTOM and calls
+// `glViewport(...)` and friends directly, so the conventional names have to
+// resolve without a using-declaration at the call site. `onow::gl::VIEWPORT`
+// is a reference to the very same pointer, which is what the platform
+// backends use.
+typedef unsigned int GLenum;
+typedef unsigned char GLboolean;
+typedef unsigned int GLbitfield;
+typedef signed char GLbyte;
+typedef short GLshort;
+typedef int GLint;
+typedef int GLsizei;
+typedef long long GLsizeiptr;
+typedef long long GLintptr;
+typedef unsigned char GLubyte;
+typedef unsigned short GLushort;
+typedef unsigned int GLuint;
+typedef float GLfloat;
+typedef float GLclampf;
+typedef double GLdouble;
+typedef double GLclampd;
+typedef void GLvoid;
+typedef char GLchar;
+
+// Function pointer types for every entry point the ImGui OpenGL 3 backend
+// and the platform backends resolve. Declared here because the build has
+// no GL headers to lean on (IMGUI_IMPL_OPENGL_LOADER_CUSTOM).
+typedef void (*PFNGLVIEWPORTPROC)(GLint, GLint, GLsizei, GLsizei);
+typedef void (*PFNGLSCISSORPROC)(GLint, GLint, GLsizei, GLsizei);
+typedef void (*PFNGLCLEARCOLORPROC)(GLclampf, GLclampf, GLclampf, GLclampf);
+typedef void (*PFNGLCLEARPROC)(GLbitfield);
+typedef void (*PFNGLENABLEPROC)(GLenum);
+typedef void (*PFNGLDISABLEPROC)(GLenum);
+typedef GLboolean (*PFNGLISENABLEDPROC)(GLenum);
+typedef void (*PFNGLGETINTEGERVPROC)(GLenum, GLint*);
+typedef GLenum (*PFNGLGETERRORPROC)();
+typedef void (*PFNGLPIXELSTOREIPROC)(GLenum, GLint);
+typedef void (*PFNGLPOLYGONMODEPROC)(GLenum, GLenum);
+typedef void (*PFNGLBLENDEQUATIONPROC)(GLenum);
+typedef void (*PFNGLBLENDEQUATIONSEPARATEPROC)(GLenum, GLenum);
+typedef void (*PFNGLBLENDFUNCSEPARATEPROC)(GLenum, GLenum, GLenum, GLenum);
+typedef void (*PFNGLCLIPCONTROLPROC)(GLenum, GLenum);
+typedef GLuint (*PFNGLCREATESHADERPROC)(GLenum);
+typedef void (*PFNGLSHADERSOURCEPROC)(GLuint, GLsizei, const GLchar* const*, const GLint*);
+typedef void (*PFNGLCOMPILESHADERPROC)(GLuint);
+typedef void (*PFNGLGETSHADERIVPROC)(GLuint, GLenum, GLint*);
+typedef void (*PFNGLGETSHADERINFOLOGPROC)(GLuint, GLsizei, GLsizei*, GLchar*);
+typedef void (*PFNGLDELETESHADERPROC)(GLuint);
+typedef GLuint (*PFNGLCREATEPROGRAMPROC)();
+typedef void (*PFNGLATTACHSHADERPROC)(GLuint, GLuint);
+typedef void (*PFNGLDETACHSHADERPROC)(GLuint, GLuint);
+typedef void (*PFNGLLINKPROGRAMPROC)(GLuint);
+typedef void (*PFNGLUSEPROGRAMPROC)(GLuint);
+typedef void (*PFNGLGETPROGRAMIVPROC)(GLuint, GLenum, GLint*);
+typedef void (*PFNGLGETPROGRAMINFOLOGPROC)(GLuint, GLsizei, GLsizei*, GLchar*);
+typedef void (*PFNGLDELETEPROGRAMPROC)(GLuint);
+typedef GLboolean (*PFNGLISPROGRAMPROC)(GLuint);
+typedef GLint (*PFNGLGETUNIFORMLOCATIONPROC)(GLuint, const GLchar*);
+typedef void (*PFNGLUNIFORM1IPROC)(GLint, GLint);
+typedef void (*PFNGLUNIFORM1FPROC)(GLint, GLfloat);
+typedef void (*PFNGLUNIFORM2FPROC)(GLint, GLfloat, GLfloat);
+typedef void (*PFNGLUNIFORM4FPROC)(GLint, GLfloat, GLfloat, GLfloat, GLfloat);
+typedef void (*PFNGLUNIFORMMATRIX4FVPROC)(GLint, GLsizei, GLboolean, const GLfloat*);
+typedef GLint (*PFNGLGETATTRIBLOCATIONPROC)(GLuint, const GLchar*);
+typedef void (*PFNGLENABLEVERTEXATTRIBARRAYPROC)(GLuint);
+typedef void (*PFNGLDISABLEVERTEXATTRIBARRAYPROC)(GLuint);
+typedef void (*PFNGLVERTEXATTRIBPOINTERPROC)(GLuint, GLint, GLenum, GLboolean, GLsizei, const void*);
+typedef void (*PFNGLGETVERTEXATTRIBIVPROC)(GLuint, GLenum, GLint*);
+typedef void (*PFNGLGETVERTEXATTRIBPOINTERVPROC)(GLuint, GLenum, void**);
+typedef void (*PFNGLGENBUFFERSPROC)(GLsizei, GLuint*);
+typedef void (*PFNGLBINDBUFFERPROC)(GLenum, GLuint);
+typedef void (*PFNGLBUFFERDATAPROC)(GLenum, GLsizeiptr, const void*, GLenum);
+typedef void (*PFNGLBUFFERSUBDATAPROC)(GLenum, GLintptr, GLsizeiptr, const void*);
+typedef void (*PFNGLDELETEBUFFERSPROC)(GLsizei, const GLuint*);
+typedef void (*PFNGLGENVERTEXARRAYSPROC)(GLsizei, GLuint*);
+typedef void (*PFNGLBINDVERTEXARRAYPROC)(GLuint);
+typedef void (*PFNGLDELETEVERTEXARRAYSPROC)(GLsizei, const GLuint*);
+typedef void (*PFNGLGENTEXTURESPROC)(GLsizei, GLuint*);
+typedef void (*PFNGLBINDTEXTUREPROC)(GLenum, GLuint);
+typedef void (*PFNGLTEXIMAGE2DPROC)(GLenum, GLint, GLint, GLsizei, GLsizei, GLint, GLenum, GLenum, const void*);
+typedef void (*PFNGLTEXPARAMETERIPROC)(GLenum, GLenum, GLint);
+typedef void (*PFNGLDELETETEXTURESPROC)(GLsizei, const GLuint*);
+typedef void (*PFNGLACTIVETEXTUREPROC)(GLenum);
+typedef void (*PFNGLGENSAMPLERSPROC)(GLsizei, GLuint*);
+typedef void (*PFNGLBINDSAMPLERPROC)(GLuint, GLuint);
+typedef void (*PFNGLDELETESAMPLERSPROC)(GLsizei, const GLuint*);
+typedef void (*PFNGLSAMPLERPARAMETERIPROC)(GLuint, GLenum, GLint);
+typedef void (*PFNGLGENERATEMIPMAPPROC)(GLenum);
+typedef void (*PFNGLDRAWELEMENTSPROC)(GLenum, GLsizei, GLenum, const void*);
+typedef void (*PFNGLDRAWELEMENTSBASEVERTEXPROC)(GLenum, GLsizei, GLenum, const void*, GLint);
+typedef const GLubyte* (*PFNGLGETSTRINGPROC)(GLenum);
+typedef const GLubyte* (*PFNGLGETSTRINGIPROC)(GLenum, GLuint);
+
+typedef void (*PFNGLEGLImageTARGETTEXTURE2DOESPROC)(void*, void*, void*);
+
+#define ONOW_GL_DECLARE(name) extern PFNGL##name##PROC gl##name
+
+// Same pointer, reachable as `gl::VIEWPORT` from the platform backends.
+#define ONOW_GL_ALIAS(name) inline PFNGL##name##PROC& name = ::gl##name
+
+// Framebuffer / state
+ONOW_GL_DECLARE(VIEWPORT);
+ONOW_GL_DECLARE(SCISSOR);
+ONOW_GL_DECLARE(CLEARCOLOR);
+ONOW_GL_DECLARE(CLEAR);
+ONOW_GL_DECLARE(ENABLE);
+ONOW_GL_DECLARE(DISABLE);
+ONOW_GL_DECLARE(ISENABLED);
+ONOW_GL_DECLARE(GETINTEGERV);
+ONOW_GL_DECLARE(GETERROR);
+ONOW_GL_DECLARE(PIXELSTOREI);
+ONOW_GL_DECLARE(POLYGONMODE);
+ONOW_GL_DECLARE(BLENDEQUATION);
+ONOW_GL_DECLARE(BLENDEQUATIONSEPARATE);
+ONOW_GL_DECLARE(BLENDFUNCSEPARATE);
+ONOW_GL_DECLARE(CLIPCONTROL);
+
+// Shaders / programs
+ONOW_GL_DECLARE(CREATESHADER);
+ONOW_GL_DECLARE(SHADERSOURCE);
+ONOW_GL_DECLARE(COMPILESHADER);
+ONOW_GL_DECLARE(GETSHADERIV);
+ONOW_GL_DECLARE(GETSHADERINFOLOG);
+ONOW_GL_DECLARE(DELETESHADER);
+ONOW_GL_DECLARE(CREATEPROGRAM);
+ONOW_GL_DECLARE(ATTACHSHADER);
+ONOW_GL_DECLARE(DETACHSHADER);
+ONOW_GL_DECLARE(LINKPROGRAM);
+ONOW_GL_DECLARE(USEPROGRAM);
+ONOW_GL_DECLARE(GETPROGRAMIV);
+ONOW_GL_DECLARE(GETPROGRAMINFOLOG);
+ONOW_GL_DECLARE(DELETEPROGRAM);
+ONOW_GL_DECLARE(ISPROGRAM);
+ONOW_GL_DECLARE(GETUNIFORMLOCATION);
+ONOW_GL_DECLARE(UNIFORM1I);
+ONOW_GL_DECLARE(UNIFORM1F);
+ONOW_GL_DECLARE(UNIFORM2F);
+ONOW_GL_DECLARE(UNIFORM4F);
+ONOW_GL_DECLARE(UNIFORMMATRIX4FV);
+ONOW_GL_DECLARE(GETATTRIBLOCATION);
+ONOW_GL_DECLARE(ENABLEVERTEXATTRIBARRAY);
+ONOW_GL_DECLARE(DISABLEVERTEXATTRIBARRAY);
+ONOW_GL_DECLARE(VERTEXATTRIBPOINTER);
+ONOW_GL_DECLARE(GETVERTEXATTRIBIV);
+ONOW_GL_DECLARE(GETVERTEXATTRIBPOINTERV);
+
+// Buffers
+ONOW_GL_DECLARE(GENBUFFERS);
+ONOW_GL_DECLARE(BINDBUFFER);
+ONOW_GL_DECLARE(BUFFERDATA);
+ONOW_GL_DECLARE(BUFFERSUBDATA);
+ONOW_GL_DECLARE(DELETEBUFFERS);
+
+// Vertex arrays
+ONOW_GL_DECLARE(GENVERTEXARRAYS);
+ONOW_GL_DECLARE(BINDVERTEXARRAY);
+ONOW_GL_DECLARE(DELETEVERTEXARRAYS);
+
+// Textures / samplers
+ONOW_GL_DECLARE(GENTEXTURES);
+ONOW_GL_DECLARE(BINDTEXTURE);
+ONOW_GL_DECLARE(TEXIMAGE2D);
+ONOW_GL_DECLARE(TEXPARAMETERI);
+ONOW_GL_DECLARE(DELETETEXTURES);
+ONOW_GL_DECLARE(ACTIVETEXTURE);
+ONOW_GL_DECLARE(GENSAMPLERS);
+ONOW_GL_DECLARE(BINDSAMPLER);
+ONOW_GL_DECLARE(DELETESAMPLERS);
+ONOW_GL_DECLARE(SAMPLERPARAMETERI);
+ONOW_GL_DECLARE(GENERATEMIPMAP);
+
+// Draw
+ONOW_GL_DECLARE(DRAWELEMENTS);
+ONOW_GL_DECLARE(DRAWELEMENTSBASEVERTEX);
+ONOW_GL_DECLARE(GETSTRING);
+ONOW_GL_DECLARE(GETSTRINGI);
+
+#undef ONOW_GL_DECLARE
+
+namespace onow {
+namespace gl {
+
+ONOW_GL_ALIAS(VIEWPORT);
+ONOW_GL_ALIAS(SCISSOR);
+ONOW_GL_ALIAS(CLEARCOLOR);
+ONOW_GL_ALIAS(CLEAR);
+ONOW_GL_ALIAS(ENABLE);
+ONOW_GL_ALIAS(DISABLE);
+ONOW_GL_ALIAS(ISENABLED);
+ONOW_GL_ALIAS(GETINTEGERV);
+ONOW_GL_ALIAS(GETERROR);
+ONOW_GL_ALIAS(PIXELSTOREI);
+ONOW_GL_ALIAS(POLYGONMODE);
+ONOW_GL_ALIAS(BLENDEQUATION);
+ONOW_GL_ALIAS(BLENDEQUATIONSEPARATE);
+ONOW_GL_ALIAS(BLENDFUNCSEPARATE);
+ONOW_GL_ALIAS(CLIPCONTROL);
+ONOW_GL_ALIAS(CREATESHADER);
+ONOW_GL_ALIAS(SHADERSOURCE);
+ONOW_GL_ALIAS(COMPILESHADER);
+ONOW_GL_ALIAS(GETSHADERIV);
+ONOW_GL_ALIAS(GETSHADERINFOLOG);
+ONOW_GL_ALIAS(DELETESHADER);
+ONOW_GL_ALIAS(CREATEPROGRAM);
+ONOW_GL_ALIAS(ATTACHSHADER);
+ONOW_GL_ALIAS(DETACHSHADER);
+ONOW_GL_ALIAS(LINKPROGRAM);
+ONOW_GL_ALIAS(USEPROGRAM);
+ONOW_GL_ALIAS(GETPROGRAMIV);
+ONOW_GL_ALIAS(GETPROGRAMINFOLOG);
+ONOW_GL_ALIAS(DELETEPROGRAM);
+ONOW_GL_ALIAS(ISPROGRAM);
+ONOW_GL_ALIAS(GETUNIFORMLOCATION);
+ONOW_GL_ALIAS(UNIFORM1I);
+ONOW_GL_ALIAS(UNIFORM1F);
+ONOW_GL_ALIAS(UNIFORM2F);
+ONOW_GL_ALIAS(UNIFORM4F);
+ONOW_GL_ALIAS(UNIFORMMATRIX4FV);
+ONOW_GL_ALIAS(GETATTRIBLOCATION);
+ONOW_GL_ALIAS(ENABLEVERTEXATTRIBARRAY);
+ONOW_GL_ALIAS(DISABLEVERTEXATTRIBARRAY);
+ONOW_GL_ALIAS(VERTEXATTRIBPOINTER);
+ONOW_GL_ALIAS(GETVERTEXATTRIBIV);
+ONOW_GL_ALIAS(GETVERTEXATTRIBPOINTERV);
+ONOW_GL_ALIAS(GENBUFFERS);
+ONOW_GL_ALIAS(BINDBUFFER);
+ONOW_GL_ALIAS(BUFFERDATA);
+ONOW_GL_ALIAS(BUFFERSUBDATA);
+ONOW_GL_ALIAS(DELETEBUFFERS);
+ONOW_GL_ALIAS(GENVERTEXARRAYS);
+ONOW_GL_ALIAS(BINDVERTEXARRAY);
+ONOW_GL_ALIAS(DELETEVERTEXARRAYS);
+ONOW_GL_ALIAS(GENTEXTURES);
+ONOW_GL_ALIAS(BINDTEXTURE);
+ONOW_GL_ALIAS(TEXIMAGE2D);
+ONOW_GL_ALIAS(TEXPARAMETERI);
+ONOW_GL_ALIAS(DELETETEXTURES);
+ONOW_GL_ALIAS(ACTIVETEXTURE);
+ONOW_GL_ALIAS(GENSAMPLERS);
+ONOW_GL_ALIAS(BINDSAMPLER);
+ONOW_GL_ALIAS(DELETESAMPLERS);
+ONOW_GL_ALIAS(SAMPLERPARAMETERI);
+ONOW_GL_ALIAS(GENERATEMIPMAP);
+ONOW_GL_ALIAS(DRAWELEMENTS);
+ONOW_GL_ALIAS(DRAWELEMENTSBASEVERTEX);
+ONOW_GL_ALIAS(GETSTRING);
+ONOW_GL_ALIAS(GETSTRINGI);
+
+#undef ONOW_GL_ALIAS
+
+// Loads every entry point above from the current context's driver. Returns
+// false (with the first missing symbol in `missing`) when the driver is too old.
+bool load(const char** missing = nullptr);
+
+// True once `load()` has succeeded.
+bool ready();
+
+// The GL function the platform layer must expose; see Platform.cpp.
+void* resolve(const char* name);
+
+} // namespace gl
+} // namespace onow

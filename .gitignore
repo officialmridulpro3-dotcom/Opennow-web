@@ -13,3 +13,6 @@ src-tauri/target/
 src-tauri/binaries/
 src-tauri/resources/server.mjs
 src-tauri/gen/
+
+# Native C++ client build artifacts (native/ has its own Makefile/CMake build)
+native/build/
