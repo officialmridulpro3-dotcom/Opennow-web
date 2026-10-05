@@ -5,7 +5,7 @@ use std::io::Cursor as IoCursor;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering;
 use std::sync::{Arc, Mutex};
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use crate::audio_playout::AudioPlayoutBuffer;
 use base64::Engine as _;
@@ -553,6 +553,7 @@ impl LinuxHardwareOutput {
             capture_input,
             external_relative_motion,
             false,
+            false,
             stream.shortcuts,
         );
         input_capture.enable_gamepads(&sdl);
@@ -984,6 +985,10 @@ pub(crate) struct SdlInputCapture {
     relock_on_focus: bool,
     external_relative_motion: bool,
     external_mouse_buttons: bool,
+    /// The dedicated Raw Input thread delivers keyboard samples: the embedded
+    /// video child never holds the focus, so SDL would only see a subset of the
+    /// keys and would double-send the ones it does see.
+    external_keyboard: bool,
     cursor_state: RemoteCursorState,
     cursors: HashMap<(u8, u8), sdl2::mouse::Cursor>,
     game_controller: Option<sdl2::GameControllerSubsystem>,
@@ -1021,6 +1026,7 @@ impl SdlInputCapture {
         enabled: bool,
         external_relative_motion: bool,
         external_mouse_buttons: bool,
+        external_keyboard: bool,
         shortcuts: StreamShortcutBindings,
     ) -> Self {
         Self {
@@ -1035,6 +1041,7 @@ impl SdlInputCapture {
             relock_on_focus: false,
             external_relative_motion,
             external_mouse_buttons,
+            external_keyboard,
             // Do not infer hidden-cursor gameplay before the first server
             // update. GFN sends a distinct predefined cursor ID 0 when the
             // game actually wants locked relative input.
@@ -1246,6 +1253,9 @@ impl SdlInputCapture {
                 repeat: false,
                 ..
             } => {
+                if self.external_keyboard {
+                    return;
+                }
                 if is_native_guide_shortcut(scancode, keymod) {
                     // Match the GeForce NOW desktop client: Ctrl+G belongs to
                     // the local stream menu and must never reach the game.
@@ -1293,6 +1303,9 @@ impl SdlInputCapture {
                 keymod,
                 ..
             } => {
+                if self.external_keyboard {
+                    return;
+                }
                 if self.pressed_shortcuts.remove(&scancode) {
                     return;
                 }
@@ -1700,6 +1713,7 @@ impl SoftwareOutput {
         let mut input_capture = SdlInputCapture::new(
             capture_input,
             external_relative_motion,
+            false,
             false,
             stream.shortcuts,
         );
@@ -2408,10 +2422,6 @@ fn is_native_guide_shortcut(
 /// `surface` command carries the shell's HWND, so a missing/failed handshake
 /// can never leave a second window floating over the app. The standalone
 /// fallback stays available for CLI runs and other shells that do not set it.
-/// How often the embedded surface re-asserts keyboard focus while the game owns
-/// input. The check in between is a single `GetFocus`. 
-const FOCUS_REASSERT_INTERVAL: Duration = Duration::from_millis(200);
-
 fn shell_placement_enabled() -> bool {
     std::env::var("OPENNOW_NATIVE_SHELL_PLACEMENT")
         .map(|value| {
@@ -2749,8 +2759,6 @@ struct WindowsExternalSdlSurface {
     shell_placement: bool,
     /// The suppression notice is worth exactly one log line per session.
     shell_placement_logged: bool,
-    /// Last time the surface asked for the keyboard (throttles the handover).
-    last_focus_assert: Instant,
 }
 
 #[cfg(target_os = "windows")]
@@ -2788,9 +2796,17 @@ impl WindowsExternalSdlSurface {
             match WindowsRawInputController::start(
                 native_surface.window_handle(),
                 Arc::clone(&captured_input),
+                shell_placement_enabled(),
             ) {
                 Ok(controller) => {
-                    eprintln!("Dedicated Windows Raw Input mouse thread ready");
+                    eprintln!(
+                        "Dedicated Windows Raw Input thread ready (mouse{})",
+                        if shell_placement_enabled() {
+                            " + keyboard for the embedded surface"
+                        } else {
+                            ""
+                        }
+                    );
                     Some(controller)
                 }
                 Err(error) => {
@@ -2807,10 +2823,15 @@ impl WindowsExternalSdlSurface {
             "External SDL stream window ready (native keyboard/mouse capture: {capture_input})"
         );
         let external_relative_motion = raw_input.is_some();
+        // With the shell owning placement the embedded video child is
+        // WS_EX_NOACTIVATE, so SDL never owns the keyboard: the Raw Input
+        // thread delivers gameplay keys, the WebView keeps the local shortcuts.
+        let forward_keyboard = shell_placement_enabled();
         let mut input_capture = SdlInputCapture::new(
             capture_input,
             external_relative_motion,
             raw_input.is_some(),
+            raw_input.is_some() && forward_keyboard,
             stream.shortcuts,
         );
         input_capture.enable_gamepads(&sdl);
@@ -2843,7 +2864,6 @@ impl WindowsExternalSdlSurface {
             overlay,
             shell_placement: shell_placement_enabled(),
             shell_placement_logged: false,
-            last_focus_assert: Instant::now(),
         })
     }
 
@@ -3090,7 +3110,6 @@ impl WindowsExternalSdlSurface {
     }
 
     fn pump(&mut self) {
-        self.assert_stream_focus();
         let stream_window_id = self.window.id();
         if let Some(overlay) = self.overlay.as_mut() {
             overlay.set_context(self.fullscreen);
@@ -3199,26 +3218,6 @@ impl WindowsExternalSdlSurface {
         self.sync_input_ownership();
     }
 
-    /// Keep the keyboard on the embedded stream window while the game owns input.
-    ///
-    /// Mouse and gamepad input bypass window focus (dedicated Raw Input thread),
-    /// but keyboard events are WM_KEYDOWN to the focused window — and a child
-    /// window cannot take that focus from another thread on its own. The deck
-    /// takes the keyboard back by pausing input (`input-paused`), which stops
-    /// this re-assertion, so the two never fight.
-    fn assert_stream_focus(&mut self) {
-        if !(self.embedded && self.visible) || self.session_paused {
-            return;
-        }
-        if self.last_focus_assert.elapsed() < FOCUS_REASSERT_INTERVAL {
-            return;
-        }
-        self.last_focus_assert = Instant::now();
-        if let Err(error) = self.native_surface.focus() {
-            eprintln!("External SDL surface focus handover failed: {error}");
-        }
-    }
-
     fn sync_input_ownership(&mut self) {
         let suspended = self.session_paused || !self.visible;
         if suspended == self.input_suspended {
@@ -3227,12 +3226,6 @@ impl WindowsExternalSdlSurface {
         self.input_capture
             .set_input_paused(suspended, &self.sdl, &mut self.window);
         self.input_suspended = suspended;
-        if suspended {
-            // The deck (or a modal) now owns the pointer and the keyboard:
-            // hand the keyboard back to the shell's WebView so its React
-            // shortcuts — Ctrl+G to close the deck, Escape, HUD toggles — work.
-            self.native_surface.release_focus();
-        }
         self.sync_raw_input();
     }
 
@@ -3933,7 +3926,8 @@ mod tests {
 
     #[test]
     fn native_input_capture_waits_for_the_first_server_cursor_mode() {
-        let capture = SdlInputCapture::new(true, false, false, StreamShortcutBindings::default());
+        let capture =
+            SdlInputCapture::new(true, false, false, false, StreamShortcutBindings::default());
         assert!(!capture.focused);
         assert!(!capture.relative_mouse);
         assert_eq!(capture.cursor_state, RemoteCursorState::Unknown);

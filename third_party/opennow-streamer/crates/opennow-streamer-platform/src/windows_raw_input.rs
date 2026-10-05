@@ -13,7 +13,8 @@ use windows_sys::Win32::System::Threading::{
 };
 use windows_sys::Win32::UI::Input::{
     GetRawInputData, HRAWINPUT, MOUSE_MOVE_ABSOLUTE, RAWINPUT, RAWINPUTDEVICE, RAWINPUTHEADER,
-    RID_INPUT, RIDEV_INPUTSINK, RIDEV_REMOVE, RIM_TYPEMOUSE, RegisterRawInputDevices,
+    RID_INPUT, RIDEV_INPUTSINK, RIDEV_REMOVE, RIM_TYPEKEYBOARD, RIM_TYPEMOUSE,
+    RegisterRawInputDevices,
 };
 use windows_sys::Win32::UI::WindowsAndMessaging::{
     CREATESTRUCTW, CreateWindowExW, DefWindowProcW, DestroyWindow, DispatchMessageW, GWLP_USERDATA,
@@ -22,7 +23,8 @@ use windows_sys::Win32::UI::WindowsAndMessaging::{
     RI_MOUSE_BUTTON_5_UP, RI_MOUSE_HWHEEL, RI_MOUSE_LEFT_BUTTON_DOWN, RI_MOUSE_LEFT_BUTTON_UP,
     RI_MOUSE_MIDDLE_BUTTON_DOWN, RI_MOUSE_MIDDLE_BUTTON_UP, RI_MOUSE_RIGHT_BUTTON_DOWN,
     RI_MOUSE_RIGHT_BUTTON_UP, RI_MOUSE_WHEEL, RegisterClassW, SetWindowLongPtrW, TranslateMessage,
-    WM_APP, WM_CLOSE, WM_INPUT, WM_NCCREATE, WM_NCDESTROY, WNDCLASSW,
+    WM_APP, WM_CLOSE, WM_INPUT, WM_KEYDOWN, WM_KEYUP, WM_NCCREATE, WM_NCDESTROY,
+    WM_SYSKEYDOWN, WM_SYSKEYUP, WNDCLASSW,
 };
 
 use crate::media::{CapturedInput, CapturedInputQueue};
@@ -47,11 +49,60 @@ const RAW_INPUT_CLASS: &[u16] = &[
 ];
 const WM_RAW_INPUT_REREGISTER: u32 = WM_APP + 1;
 
+/// Virtual-key codes (Win32 `VK_*`) used for modifier tracking. Spelled out so
+/// this module does not depend on the shape of the windows-sys constants.
+const VK_SHIFT: u16 = 0x10;
+const VK_CONTROL: u16 = 0x11;
+const VK_MENU: u16 = 0x12;
+const VK_LWIN: u16 = 0x5B;
+const VK_RWIN: u16 = 0x5C;
+const VK_LSHIFT: u16 = 0xA0;
+const VK_RSHIFT: u16 = 0xA1;
+const VK_LCONTROL: u16 = 0xA2;
+const VK_RCONTROL: u16 = 0xA3;
+const VK_LMENU: u16 = 0xA4;
+const VK_RMENU: u16 = 0xA5;
+
+/// Modifier bits of the stream input protocol (`CapturedInput::Key`).
+const MOD_SHIFT: u16 = 0x01;
+const MOD_CTRL: u16 = 0x02;
+const MOD_ALT: u16 = 0x04;
+const MOD_GUI: u16 = 0x08;
+
+/// Modifier flags for one key event, mirroring `sdl_modifiers` in `output.rs`:
+/// the bit of the modifier key that is being pressed is left out of its own
+/// event, so a Ctrl+G press reports Ctrl on the G and nothing on the Ctrl.
+fn raw_modifiers(pressed: &HashSet<u16>, own: u16) -> u16 {
+    let down = |keys: &[u16]| keys.iter().any(|key| pressed.contains(key));
+    let mut flags = 0;
+    if !matches!(own, VK_SHIFT | VK_LSHIFT | VK_RSHIFT) && down(&[VK_SHIFT, VK_LSHIFT, VK_RSHIFT])
+    {
+        flags |= MOD_SHIFT;
+    }
+    if !matches!(own, VK_CONTROL | VK_LCONTROL | VK_RCONTROL)
+        && down(&[VK_CONTROL, VK_LCONTROL, VK_RCONTROL])
+    {
+        flags |= MOD_CTRL;
+    }
+    if !matches!(own, VK_MENU | VK_LMENU | VK_RMENU) && down(&[VK_MENU, VK_LMENU, VK_RMENU]) {
+        flags |= MOD_ALT;
+    }
+    if !matches!(own, VK_LWIN | VK_RWIN) && down(&[VK_LWIN, VK_RWIN]) {
+        flags |= MOD_GUI;
+    }
+    flags
+}
+
 struct RawInputState {
     foreground_owner: AtomicIsize,
     enabled: AtomicBool,
     relative_motion: AtomicBool,
     pressed_buttons: Mutex<HashSet<u8>>,
+    /// The embedded shell owns window placement, so the video child never holds
+    /// the keyboard focus and SDL cannot see the keys: this thread reads the
+    /// keyboard itself and forwards the samples to the stream.
+    forward_keyboard: AtomicBool,
+    pressed_keys: Mutex<HashSet<u16>>,
     captured_input: Arc<CapturedInputQueue>,
 }
 
@@ -65,12 +116,15 @@ impl WindowsRawInputController {
     pub(crate) fn start(
         foreground_owner: isize,
         captured_input: Arc<CapturedInputQueue>,
+        forward_keyboard: bool,
     ) -> Result<Self, String> {
         let state = Arc::new(RawInputState {
             foreground_owner: AtomicIsize::new(foreground_owner),
             enabled: AtomicBool::new(false),
             relative_motion: AtomicBool::new(false),
             pressed_buttons: Mutex::new(HashSet::new()),
+            forward_keyboard: AtomicBool::new(forward_keyboard),
+            pressed_keys: Mutex::new(HashSet::new()),
             captured_input,
         });
         let thread_state = Arc::clone(&state);
@@ -119,11 +173,13 @@ impl WindowsRawInputController {
             }
         } else if enabled_changed {
             release_pressed_buttons(&self.state);
+            release_pressed_keys(&self.state);
         }
     }
 
     pub(crate) fn release_buttons(&self) {
         release_pressed_buttons(&self.state);
+        release_pressed_keys(&self.state);
     }
 }
 
@@ -131,6 +187,7 @@ impl Drop for WindowsRawInputController {
     fn drop(&mut self) {
         self.state.enabled.store(false, Ordering::Release);
         release_pressed_buttons(&self.state);
+        release_pressed_keys(&self.state);
         unsafe {
             let _ = PostMessageW(self.message_window as HWND, WM_CLOSE, 0, 0);
         }
@@ -170,9 +227,10 @@ fn run_raw_input_thread(state: Arc<RawInputState>, ready: mpsc::SyncSender<Resul
             let _ = ready.send(Err("failed to create Raw Input message window".to_owned()));
             return;
         }
-        if !register_raw_mouse(hwnd) {
+        let keyboard = state.forward_keyboard.load(Ordering::Acquire);
+        if !register_raw_input(hwnd, keyboard) {
             let _ = DestroyWindow(hwnd);
-            let _ = ready.send(Err("failed to register the Raw Input mouse".to_owned()));
+            let _ = ready.send(Err("failed to register Raw Input devices".to_owned()));
             return;
         }
         let _ = ready.send(Ok(hwnd as isize));
@@ -202,9 +260,14 @@ unsafe extern "system" fn raw_input_window_proc(
     match message {
         WM_RAW_INPUT_REREGISTER => {
             // Internal wake after SDL changes relative mode: reclaim the raw
-            // mouse registration for this dedicated message thread.
+            // device registration for this dedicated message thread.
+            let keyboard = if state_pointer.is_null() {
+                false
+            } else {
+                unsafe { (*state_pointer).forward_keyboard.load(Ordering::Acquire) }
+            };
             unsafe {
-                let _ = register_raw_mouse(hwnd);
+                let _ = register_raw_input(hwnd, keyboard);
             }
             0
         }
@@ -218,7 +281,7 @@ unsafe extern "system" fn raw_input_window_proc(
         }
         WM_CLOSE => {
             unsafe {
-                unregister_raw_mouse();
+                unregister_raw_input();
                 let _ = DestroyWindow(hwnd);
             }
             0
@@ -234,25 +297,43 @@ unsafe extern "system" fn raw_input_window_proc(
     }
 }
 
-unsafe fn register_raw_mouse(hwnd: HWND) -> bool {
-    let device = RAWINPUTDEVICE {
-        usUsagePage: 0x01,
-        usUsage: 0x02,
-        dwFlags: RIDEV_INPUTSINK,
-        hwndTarget: hwnd,
-    };
-    unsafe { RegisterRawInputDevices(&device, 1, size_of::<RAWINPUTDEVICE>() as u32) != 0 }
+/// Register the mouse, and — when the shell owns window placement — the
+/// keyboard too. `RIDEV_INPUTSINK` delivers input to this message-only window
+/// even while another window (the shell's WebView) holds the focus; samples
+/// typed into other applications are filtered out by the foreground check in
+/// `process_raw_input`.
+unsafe fn register_raw_input(hwnd: HWND, keyboard: bool) -> bool {
+    let devices = [
+        RAWINPUTDEVICE {
+            usUsagePage: 0x01,
+            usUsage: 0x02,
+            dwFlags: RIDEV_INPUTSINK,
+            hwndTarget: hwnd,
+        },
+        RAWINPUTDEVICE {
+            usUsagePage: 0x01,
+            usUsage: 0x06,
+            dwFlags: RIDEV_INPUTSINK,
+            hwndTarget: hwnd,
+        },
+    ];
+    let count = if keyboard { 2 } else { 1 };
+    unsafe {
+        RegisterRawInputDevices(devices.as_ptr(), count, size_of::<RAWINPUTDEVICE>() as u32) != 0
+    }
 }
 
-unsafe fn unregister_raw_mouse() {
-    let device = RAWINPUTDEVICE {
-        usUsagePage: 0x01,
-        usUsage: 0x02,
-        dwFlags: RIDEV_REMOVE,
-        hwndTarget: null_mut(),
-    };
-    unsafe {
-        let _ = RegisterRawInputDevices(&device, 1, size_of::<RAWINPUTDEVICE>() as u32);
+unsafe fn unregister_raw_input() {
+    for usage in [0x02u16, 0x06] {
+        let device = RAWINPUTDEVICE {
+            usUsagePage: 0x01,
+            usUsage: usage,
+            dwFlags: RIDEV_REMOVE,
+            hwndTarget: null_mut(),
+        };
+        unsafe {
+            let _ = RegisterRawInputDevices(&device, 1, size_of::<RAWINPUTDEVICE>() as u32);
+        }
     }
 }
 
@@ -275,6 +356,10 @@ unsafe fn process_raw_input(state: &RawInputState, handle: HRAWINPUT) {
         return;
     }
     let raw = unsafe { raw.assume_init() };
+    if raw.header.dwType == RIM_TYPEKEYBOARD {
+        process_raw_keyboard(state, &raw);
+        return;
+    }
     if raw.header.dwType != RIM_TYPEMOUSE {
         return;
     }
@@ -310,6 +395,62 @@ unsafe fn process_raw_input(state: &RawInputState, handle: HRAWINPUT) {
         state.captured_input.push(CapturedInput::MouseWheel {
             delta_x: buttons.usButtonData as i16,
             delta_y: 0,
+        });
+    }
+}
+
+/// Forward one keyboard sample. Windows reports held keys as a stream of make
+/// messages, so repeats (a key that is already down) are dropped — exactly like
+/// the SDL path does, since the remote side generates its own repeat.
+unsafe fn process_raw_keyboard(state: &RawInputState, raw: &RAWINPUT) {
+    if !state.forward_keyboard.load(Ordering::Acquire) {
+        return;
+    }
+    if unsafe { GetForegroundWindow() } as isize != state.foreground_owner.load(Ordering::Acquire) {
+        // Keys typed into another application are none of our business.
+        return;
+    }
+    let keyboard = unsafe { raw.data.keyboard };
+    let key = keyboard.VKey;
+    // 0 is unset and 0xFF is a fake key produced by some KVM/remote tools.
+    if key == 0 || key == u16::from(u8::MAX) {
+        return;
+    }
+    let pressed = keyboard.Message == WM_KEYDOWN || keyboard.Message == WM_SYSKEYDOWN;
+    let modifiers = {
+        let mut pressed_keys = state
+            .pressed_keys
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
+        if !state.enabled.load(Ordering::Acquire) {
+            return;
+        }
+        if pressed {
+            if !pressed_keys.insert(key) {
+                return;
+            }
+        } else if !pressed_keys.remove(&key) {
+            return;
+        }
+        raw_modifiers(&pressed_keys, key)
+    };
+    state.captured_input.push(CapturedInput::Key {
+        virtual_key: key,
+        modifiers,
+        pressed,
+    });
+}
+
+fn release_pressed_keys(state: &RawInputState) {
+    let mut pressed_keys = state
+        .pressed_keys
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
+    for key in pressed_keys.drain() {
+        state.captured_input.push(CapturedInput::Key {
+            virtual_key: key,
+            modifiers: 0,
+            pressed: false,
         });
     }
 }
@@ -392,7 +533,10 @@ mod tests {
     use std::sync::Arc;
     use std::sync::atomic::Ordering;
 
-    use super::{RawInputState, push_mouse_delta, push_raw_mouse_buttons, release_pressed_buttons};
+    use super::{
+        MOD_ALT, MOD_CTRL, MOD_SHIFT, RawInputState, VK_LCONTROL, VK_LSHIFT, VK_MENU,
+        push_mouse_delta, push_raw_mouse_buttons, raw_modifiers, release_pressed_buttons,
+    };
     use crate::media::{CapturedInput, CapturedInputQueue};
     use windows_sys::Win32::UI::WindowsAndMessaging::{
         RI_MOUSE_LEFT_BUTTON_DOWN, RI_MOUSE_LEFT_BUTTON_UP, RI_MOUSE_RIGHT_BUTTON_DOWN,
@@ -406,6 +550,23 @@ mod tests {
             pressed_buttons: Default::default(),
             captured_input: Arc::new(CapturedInputQueue::default()),
         }
+    }
+
+    #[test]
+    fn modifiers_exclude_the_pressed_modifier_key() {
+        let mut pressed = std::collections::HashSet::new();
+        pressed.insert(VK_LCONTROL);
+        pressed.insert(u16::from(b'G'));
+        // Ctrl press: its own bit is not reported on the modifier event.
+        assert_eq!(raw_modifiers(&pressed, VK_LCONTROL), 0);
+        // G press while Ctrl is held: Ctrl is reported, matching sdl_modifiers.
+        assert_eq!(raw_modifiers(&pressed, u16::from(b'G')), MOD_CTRL);
+        pressed.insert(VK_LSHIFT);
+        assert_eq!(raw_modifiers(&pressed, u16::from(b'G')), MOD_CTRL | MOD_SHIFT);
+        pressed.clear();
+        pressed.insert(VK_MENU);
+        assert_eq!(raw_modifiers(&pressed, VK_MENU), 0);
+        assert_eq!(raw_modifiers(&pressed, u16::from(b'A')), MOD_ALT);
     }
 
     #[test]

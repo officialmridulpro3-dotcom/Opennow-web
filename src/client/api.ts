@@ -616,7 +616,24 @@ const bridge: OpenNowApi = {
   downloadUpdate: async () => updaterState,
   installUpdateAndRestart: async () => updaterState,
   onUpdaterStateChanged: () => () => {},
-  setFullscreen: async (value) => { if (value && !document.fullscreenElement) await document.documentElement.requestFullscreen(); else if (!value && document.fullscreenElement) await document.exitFullscreen(); },
+  setFullscreen: async (value) => {
+    // The desktop shell owns a real window and the native video plane is a
+    // child window positioned inside it, so a DOM fullscreen request alone
+    // never grows the OS window. Ask the shell first, then run the DOM path as
+    // the fallback for browsers and shells without that command.
+    const tauriInvoke = (window as unknown as {
+      __TAURI__?: { core?: { invoke?: (command: string, args?: Record<string, unknown>) => Promise<unknown> } };
+    }).__TAURI__?.core?.invoke;
+    if (typeof tauriInvoke === "function") {
+      try {
+        await tauriInvoke("set_app_fullscreen", { fullscreen: value });
+      } catch (error) {
+        console.warn(`Native window fullscreen failed (${value ? "enter" : "exit"}):`, error);
+      }
+    }
+    if (value && !document.fullscreenElement) await document.documentElement.requestFullscreen();
+    else if (!value && document.fullscreenElement) await document.exitFullscreen();
+  },
   toggleFullscreen: async () => { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); },
   togglePointerLock: async () => { if (document.pointerLockElement) document.exitPointerLock(); else await document.documentElement.requestPointerLock(); },
   notifyPointerLockChange: () => {},

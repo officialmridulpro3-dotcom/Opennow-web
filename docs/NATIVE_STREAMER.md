@@ -98,18 +98,18 @@ window) and logged as `External SDL surface attached …` or
 `surfaceAttached`/`surfaceError` on `/api/native/status`, so the deck can fall
 back to opaque chrome with a visible warning instead of showing a dead hole.
 
-Keyboard input needs one more handshake. Mouse and gamepad bypass window focus
-(the engine's Raw Input thread sees them as long as the shell window is in
-front), but key presses are `WM_KEYDOWN` messages to the *focused* window, and
-the embedded surface — a child window living on the engine's thread — cannot
-take focus from the shell's WebView on its own. So while the game owns input the
-engine re-asserts it every 200 ms (`AttachThreadInput` + `SetFocus`, only while
-the shell window is foreground); that is what makes the game receive typing and
-makes `Ctrl+G` reach the engine's guide shortcut. When the deck opens the client
-sends `input-paused`, which stops the re-assertion and hands the keyboard back
-to the WebView, so the deck's own React shortcuts (Ctrl+G to close, Escape)
-keep working. The engine's `F11`/`Alt+Enter` and mouse-lock shortcuts arrive
-through `shortcut-action` events and are applied to the app window by the host.
+Keyboard input takes a different route. The video plane is a child window of the
+shell, kept `WS_EX_NOACTIVATE` so clicking it never takes the keyboard away from
+the WebView — that is what keeps the deck's own shortcuts (Ctrl+G, Ctrl+N, F11,
+Escape) and the cursor working while the game has the mouse. Gameplay keys would
+be invisible to the engine in that arrangement, so the engine's dedicated Raw
+Input thread registers the keyboard too (`RIDEV_INPUTSINK`, same foreground
+check as the mouse) and forwards the samples to the stream; SDL key handling is
+disabled so a key is never delivered twice (`external_keyboard`). Fullscreen is
+the shell's job: F11 / the deck button / the engine's `toggle-fullscreen`
+shortcut all call `set_app_fullscreen` on the Tauri window, and the client
+re-publishes the surface rect as the window resizes, so the video fills the
+screen.
 
 Because the engine's plane is drawn *above* the WebView on Windows, the client
 publishes a rect that stops short of the deck's own panels (sidebar column,

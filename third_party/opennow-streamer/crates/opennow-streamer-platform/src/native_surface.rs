@@ -29,19 +29,6 @@ impl NativeSurface {
         self.inner.hide();
     }
 
-    /// Give the embedded surface the keyboard focus (Windows only; elsewhere the
-    /// host owns focus and the call is unnecessary).
-    #[cfg(target_os = "windows")]
-    pub(crate) fn focus(&mut self) -> Result<(), String> {
-        self.inner.focus()
-    }
-
-    /// Hand the keyboard back to the shell window (Windows only).
-    #[cfg(target_os = "windows")]
-    pub(crate) fn release_focus(&mut self) {
-        self.inner.release_focus();
-    }
-
     #[cfg(target_os = "windows")]
     pub(crate) fn hide_checked(&mut self) -> Result<(), String> {
         self.inner.hide_checked()
@@ -80,11 +67,8 @@ fn physical_rect(rect: RenderSurfaceRect, _scale: f32) -> (i32, i32, u32, u32) {
 mod platform {
     use raw_window_handle::{HasWindowHandle, RawWindowHandle};
     use windows_sys::Win32::Foundation::{GetLastError, SetLastError};
-    use windows_sys::Win32::System::Threading::GetCurrentThreadId;
-    use windows_sys::Win32::UI::Input::KeyboardAndMouse::{AttachThreadInput, GetFocus, SetFocus};
     use windows_sys::Win32::UI::WindowsAndMessaging::{
-        GWL_EXSTYLE, GWL_STYLE, GetForegroundWindow, GetParent, GetWindowLongPtrW,
-        GetWindowThreadProcessId, HWND_TOP, SW_HIDE, SWP_FRAMECHANGED,
+        GWL_EXSTYLE, GWL_STYLE, GetParent, GetWindowLongPtrW, HWND_TOP, SW_HIDE, SWP_FRAMECHANGED,
         SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SWP_SHOWWINDOW, SetForegroundWindow,
         SetParent, SetWindowLongPtrW, SetWindowPos, ShowWindow, WS_CAPTION, WS_CHILD,
         WS_CLIPSIBLINGS, WS_DISABLED, WS_EX_APPWINDOW, WS_EX_NOACTIVATE, WS_EX_TRANSPARENT,
@@ -112,7 +96,12 @@ mod platform {
     }
 
     fn child_extended_style(style: u32) -> u32 {
-        style & !(WS_EX_APPWINDOW | WS_EX_NOACTIVATE | WS_EX_TRANSPARENT)
+        // WS_EX_NOACTIVATE keeps the video child from stealing the keyboard when
+        // it is clicked: in the embedded design the shell's WebView stays the
+        // focused window (React handles Ctrl+G / Ctrl+N / F11 and the deck's
+        // inputs), while gameplay keys are delivered by the engine's dedicated
+        // Raw Input thread, which does not need the focus at all.
+        (style & !(WS_EX_APPWINDOW | WS_EX_TRANSPARENT)) | WS_EX_NOACTIVATE
     }
 
     pub(crate) struct Surface {
@@ -224,62 +213,14 @@ mod platform {
                     return Err("failed to position the Qt child video surface".to_owned());
                 }
                 if !self.shown {
+                    // Bring the shell forward, but never take the keyboard away
+                    // from its WebView: the engine's keys arrive through Raw
+                    // Input, and React's stream shortcuts live in the page.
                     let _ = SetForegroundWindow(parent);
-                    let _ = SetFocus(self.child);
                     self.shown = true;
                 }
             }
             Ok(())
-        }
-
-        /// Hand the keyboard focus to the embedded surface.
-        ///
-        /// A child window can only take focus from the thread that owns it, and
-        /// the embedded surface lives on the engine's thread while the shell's
-        /// WebView normally owns the focus. Attaching to the window that holds
-        /// the focus is the only way across that boundary; the attachment is
-        /// undone immediately so the two input queues stay independent. Without
-        /// this the game never receives a key press and neither does the
-        /// engine's own Ctrl+G menu shortcut.
-        pub(crate) fn focus(&mut self) -> Result<(), String> {
-            if self.parent.is_null() || self.child.is_null() {
-                return Ok(());
-            }
-            unsafe {
-                // Never steal focus while another app is in front: that would
-                // fight alt-tab and would put keys into a background game.
-                if GetForegroundWindow() != self.parent {
-                    return Ok(());
-                }
-                if GetFocus() == self.child {
-                    return Ok(());
-                }
-                let child_thread = GetWindowThreadProcessId(self.child, std::ptr::null_mut());
-                let this_thread = GetCurrentThreadId();
-                if child_thread == this_thread {
-                    let _ = SetFocus(self.child);
-                    return Ok(());
-                }
-                if AttachThreadInput(this_thread, child_thread, 1) == 0 {
-                    return Err("could not attach to the shell's input thread".to_owned());
-                }
-                let _ = SetFocus(self.child);
-                let _ = AttachThreadInput(this_thread, child_thread, 0);
-            }
-            Ok(())
-        }
-
-        /// Give the shell's window — and therefore its WebView — the keyboard
-        /// back. Called when input is paused for the deck, so the deck's own
-        /// React shortcuts (Ctrl+G to close, Escape) keep working while the
-        /// game's keys are held back.
-        pub(crate) fn release_focus(&mut self) {
-            if self.parent.is_null() {
-                return;
-            }
-            unsafe {
-                let _ = SetForegroundWindow(self.parent);
-            }
         }
 
         pub(crate) fn hide_checked(&mut self) -> Result<(), String> {

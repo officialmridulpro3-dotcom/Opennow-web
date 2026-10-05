@@ -109,6 +109,20 @@ fn get_window_handle(window: tauri::Window) -> Result<String, String> {
     native_window_handle(&window)
 }
 
+/// Real-window fullscreen for the in-app player.
+///
+/// The native (NVST) video plane is a child window positioned over this
+/// window's client area, so a DOM fullscreen request alone would only fill the
+/// WebView — the OS window (and therefore the video surface) would stay
+/// windowed. F11 in the stream, the deck's fullscreen button and the engine's
+/// `toggle-fullscreen` shortcut all end up here.
+#[tauri::command]
+fn set_app_fullscreen(window: tauri::Window, fullscreen: bool) -> Result<(), String> {
+    window
+        .set_fullscreen(fullscreen)
+        .map_err(|error| error.to_string())
+}
+
 /// Win32 handle of a shell window as a decimal string, `"0"` elsewhere.
 fn native_window_handle<H>(window: &H) -> Result<String, String>
 where
@@ -175,6 +189,7 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_window_handle,
+            set_app_fullscreen,
             native_overlay::native_overlay_command,
             native_overlay::native_overlay_state,
             native_overlay::native_overlay_action,

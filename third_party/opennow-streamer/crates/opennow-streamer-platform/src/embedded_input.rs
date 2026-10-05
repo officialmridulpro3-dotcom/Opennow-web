@@ -155,6 +155,7 @@ impl EmbeddedInputCapture {
                 match crate::windows_raw_input::WindowsRawInputController::start(
                     window_handle as isize,
                     Arc::clone(&self.queue),
+                    false,
                 ) {
                     Ok(controller) => *raw = Some(controller),
                     Err(error) => eprintln!("Embedded Raw Input capture unavailable: {error}"),
