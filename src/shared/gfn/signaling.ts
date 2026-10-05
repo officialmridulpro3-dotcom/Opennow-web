@@ -144,6 +144,8 @@ export type MainToRendererSignalingEvent =
   | { type: "native-shortcut"; action: NativeStreamerShortcutAction }
   | { type: "native-clipboard-paste" }
   | { type: "native-input-capture-changed"; captured: boolean }
+  /** The engine fullscreened (or restored) the window the stream is clipped in. */
+  | { type: "native-fullscreen-state"; fullscreen: boolean }
   | { type: "native-stream-started"; message?: string }
   | { type: "native-stream-stopped"; reason?: string }
   | { type: "native-stream-stats"; stats: NativeStreamStats }

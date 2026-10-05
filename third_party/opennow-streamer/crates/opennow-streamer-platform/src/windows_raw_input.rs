@@ -118,6 +118,10 @@ struct RawInputState {
     /// itself: otherwise every local shortcut would be typed into the game
     /// instead of reaching the deck.
     shortcuts: Mutex<StreamShortcutBindings>,
+    /// Flagged when a left click lands in the game while the plane is embedded.
+    /// The embedded child never takes the focus, so SDL never sees those clicks;
+    /// the output thread turns the flag into mouse-look.
+    lock_on_click: Option<Arc<AtomicBool>>,
     captured_input: Arc<CapturedInputQueue>,
 }
 
@@ -132,6 +136,7 @@ impl WindowsRawInputController {
         foreground_owner: isize,
         captured_input: Arc<CapturedInputQueue>,
         forward_keyboard: bool,
+        lock_on_click: Option<Arc<AtomicBool>>,
     ) -> Result<Self, String> {
         let state = Arc::new(RawInputState {
             foreground_owner: AtomicIsize::new(foreground_owner),
@@ -142,6 +147,7 @@ impl WindowsRawInputController {
             pressed_keys: Mutex::new(HashSet::new()),
             pressed_shortcuts: Mutex::new(HashSet::new()),
             shortcuts: Mutex::new(StreamShortcutBindings::default()),
+            lock_on_click,
             captured_input,
         });
         let thread_state = Arc::clone(&state);
@@ -403,6 +409,14 @@ unsafe fn process_raw_input(state: &RawInputState, handle: HRAWINPUT) {
     }
 
     let buttons = unsafe { mouse.Anonymous.Anonymous };
+    if owns_foreground
+        && u32::from(buttons.usButtonFlags) & RI_MOUSE_LEFT_BUTTON_DOWN != 0
+        && let Some(flag) = state.lock_on_click.as_ref()
+    {
+        // The plane is embedded and never focused, so this thread — not SDL —
+        // is what sees the click. Ask the output thread for mouse-look.
+        flag.store(true, Ordering::Release);
+    }
     let button_flags = if owns_foreground {
         buttons.usButtonFlags
     } else {
@@ -657,6 +671,7 @@ mod tests {
             pressed_keys: Default::default(),
             pressed_shortcuts: Default::default(),
             shortcuts: Default::default(),
+            lock_on_click: None,
             captured_input: Arc::new(CapturedInputQueue::default()),
         }
     }

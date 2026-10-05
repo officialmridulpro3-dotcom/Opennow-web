@@ -14,7 +14,8 @@ OpenNOW.exe (Tauri shell)
 │   always-on-top, click-through; see NATIVE_OVERLAY.md)
 ├── opennow-server — auth / catalog / CloudMatch (existing Node backend)
 │   └── NEW: /api/native-session → SessionContext JSON for the engine
-│   └── NEW: /api/native/command → whitelisted deck actions (mic, recording)
+│   └── NEW: /api/native/command → whitelisted deck actions (mic, recording,
+│       input pause, shell fullscreen, pointer lock)
 └── opennow-nvst.exe (NEW sidecar: third_party/opennow-streamer standalone)
     └── own D3D11 window, native input + audio; JSON-lines over stdio
 ```
@@ -129,11 +130,22 @@ chord marks it, and the other side drops the same press within a few hundred
 milliseconds, so one press can never toggle the deck / stats / fullscreen twice
 (which looks exactly like the shortcut doing nothing).
 
-Fullscreen is the shell's job: F11 / the deck button / the engine's
-`toggle-fullscreen` shortcut all call `set_app_fullscreen` on the Tauri window,
-and the shell command is authoritative — the in-page fullscreen API is only the
-fallback for browsers, because fullscreening the WebView inside a windowed shell
-would leave the video plane its old size.
+Fullscreen in a native session belongs to the engine, because the window that
+has to grow is the one the plane is clipped in — an ordinary maximise leaves the
+frame, the taskbar and the shell's rounded corners in place, and the in-page
+fullscreen API only stretches the WebView inside a windowed shell. While a
+native session owns the window, the deck's Full screen button and F11 post
+`shell-fullscreen` with the explicit state the button shows; the engine saves the
+shell window's style, rectangle and zoomed flag, strips
+`WS_CAPTION|WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SYSMENU`, adds
+`WS_POPUP`, sizes it to the monitor's full bounds and then reports the resulting
+state back as a `native-fullscreen-state` event, so the button, the deck and the
+window cannot drift apart (`Shell window fullscreen: on/off`). Toggling back
+restores the saved placement exactly, including a window that was maximised, and
+`hide_checked` unwinds it when the plane disappears so a stopped stream never
+leaves an unmovable frameless window behind. Non-native sessions keep using
+`set_app_fullscreen` on the Tauri window; the in-page fullscreen API stays the
+browser fallback.
 The client republishes the surface rect as the window resizes *and* the engine
 watches the shell window it is embedded in: every 250 ms it compares the live
 client area with the size it last placed the plane at, re-derives the rect from
@@ -160,12 +172,20 @@ stream is not maximised". Only the standalone fallback window is transparent
 nowhere — it keeps the plain deck background.
 
 Cursor: the server sends cursor *shapes* and expects the client to draw the
-pointer, so in an embedded session the OS pointer stays visible and is redrawn
-from that data (`GFN cursor applied …`); SDL's relative mode — which hides and
-clips the pointer — is only used by the standalone SDL window, where locking
-the pointer inside the game is what you want. The pointer is re-asserted on
-every pump while the remote cursor reads visible, because SDL hides it on focus
-changes and never brings it back on its own.
+pointer, but the client still has to own the pointer while the game plays: a
+shooter reads relative deltas, and an unclipped OS pointer walks off to a second
+monitor or the taskbar. A native session therefore behaves like the vendor
+client — a left click in the picture is what takes the pointer (the Raw Input
+thread sees it; the `WS_EX_NOACTIVATE` plane never gets SDL's focus), upon which
+the engine grabs the mouse, hides the OS pointer and switches to relative motion
+(`External SDL mouse control mode: locked relative (mouse-look)`). The game's own
+cursor messages release it again for menus (`GFN cursor applied …` →
+`absolute cursor`), F8 / the deck's control toggles it explicitly through the
+`pointer-lock-toggle` command, and opening the deck pauses input, which always
+releases. Relative motion itself travels on the Raw Input thread; the pump only
+keeps SDL's pointer visibility in step with the lock state, so a stray SDL focus
+change cannot leave the user without a cursor in a menu or with one flying out of
+the game.
 
 The mode drives the claim (`clientMode`/`transportMode`) and the attach path on
 launch, resume and recovery (`startNativeFromClaim` vs. opening the signaling

@@ -991,13 +991,6 @@ pub(crate) struct SdlInputCapture {
     /// video child never holds the focus, so SDL would only see a subset of the
     /// keys and would double-send the ones it does see.
     external_keyboard: bool,
-    /// Embedded (shell-placement) sessions keep the OS pointer visible: the
-    /// game's cursor *is* that pointer (the server only sends shapes to draw),
-    /// and a windowed client whose pointer vanishes the moment a game grabs the
-    /// mouse is unusable. Only the standalone SDL window uses the hidden
-    /// mouselook behaviour, where locking the pointer is right. Enabled once
-    /// the plane really embedded inside the shell window.
-    keep_pointer_visible: bool,
     cursor_state: RemoteCursorState,
     cursors: HashMap<(u8, u8), sdl2::mouse::Cursor>,
     game_controller: Option<sdl2::GameControllerSubsystem>,
@@ -1051,7 +1044,6 @@ impl SdlInputCapture {
             external_relative_motion,
             external_mouse_buttons,
             external_keyboard,
-            keep_pointer_visible: false,
             // Do not infer hidden-cursor gameplay before the first server
             // update. GFN sends a distinct predefined cursor ID 0 when the
             // game actually wants locked relative input.
@@ -1406,21 +1398,6 @@ impl SdlInputCapture {
 
     fn enable_relative_mouse(&mut self, sdl: &sdl2::Sdl, window: &mut sdl2::video::Window) {
         if self.focused && !self.relative_mouse {
-            // SDL's relative mode hides and clips the OS pointer, and the
-            // embedded surface has no cursor of its own to replace it with: the
-            // server sends cursor *shapes* and expects the client to draw the
-            // pointer. Relative motion is owned by the Raw Input thread anyway,
-            // so the embedded client only flips the ownership flag and keeps the
-            // pointer on screen.
-            if self.keep_pointer_visible {
-                self.relative_mouse = true;
-                window.set_mouse_grab(false);
-                sdl.mouse().show_cursor(true);
-                eprintln!(
-                    "External SDL mouse control mode: relative motion, OS pointer kept visible (embedded)"
-                );
-                return;
-            }
             window.set_mouse_grab(true);
             sdl.mouse().set_relative_mouse_mode(true);
             sdl.mouse().show_cursor(false);
@@ -1434,9 +1411,9 @@ impl SdlInputCapture {
             sdl.mouse().set_relative_mouse_mode(false);
             window.set_mouse_grab(false);
             self.relative_mouse = false;
-            if self.keep_pointer_visible {
-                sdl.mouse().show_cursor(true);
-            }
+            // Releasing mouse-look always gives the pointer back, whichever side
+            // asked for it.
+            sdl.mouse().show_cursor(true);
             eprintln!("External SDL mouse control mode: absolute cursor");
         }
     }
@@ -1467,7 +1444,11 @@ impl SdlInputCapture {
             self.cursor_state = RemoteCursorState::Visible;
             sdl.mouse().show_cursor(true);
         } else {
-            self.enable_relative_mouse(sdl, window);
+            // The explicit "lock mouse" path (F8 / the deck's control) has to
+            // work before the first click too, and in the embedded arrangement
+            // the plane never receives SDL focus: engage through the click
+            // path, which does not wait for it.
+            self.lock_pointer(sdl, window);
         }
     }
 
@@ -1500,9 +1481,7 @@ impl SdlInputCapture {
         }
         self.disable_relative_mouse(sdl, window);
         if !native_cursor_overlay_enabled() {
-            // Only the standalone window may hide the pointer; the embedded
-            // client would be left with no cursor at all.
-            sdl.mouse().show_cursor(self.keep_pointer_visible);
+            sdl.mouse().show_cursor(false);
             return;
         }
         let cursor_key = (message_type, cursor_id);
@@ -1577,16 +1556,29 @@ impl SdlInputCapture {
         sdl.mouse().show_cursor(true);
     }
 
-    /// Whether the server currently wants the game's own cursor hidden (FPS
-    /// mouse-look). Everything else draws with the OS pointer in embedded mode.
-    pub(crate) fn remote_cursor_hidden(&self) -> bool {
-        self.cursor_state == RemoteCursorState::Hidden
+    /// Whether the server says a game cursor is on screen right now. Until it
+    /// says anything the cursor is unknown, which the embedded plane treats as
+    /// "the game wants the pointer" so a click can never trap the user.
+    pub(crate) fn remote_cursor_visible(&self) -> bool {
+        self.cursor_state == RemoteCursorState::Visible
     }
 
-    /// Adopt the embedded pointer policy (see `keep_pointer_visible`). The
-    /// pointer is re-asserted the next time the plane is pumped.
-    pub(crate) fn set_keep_pointer_visible(&mut self, keep: bool) {
-        self.keep_pointer_visible = keep;
+    /// Engage mouse-look: the pointer is hidden and relative motion (owned by
+    /// the Raw Input thread) drives the game. Unlike `enable_relative_mouse`
+    /// this does not wait for SDL's idea of focus: in the embedded arrangement
+    /// the plane is a `WS_EX_NOACTIVATE` child and never holds it, so the click
+    /// that the Raw Input thread saw is the evidence that the game has the
+    /// mouse.
+    pub(crate) fn lock_pointer(&mut self, sdl: &sdl2::Sdl, window: &mut sdl2::video::Window) {
+        if self.relative_mouse || !self.enabled {
+            return;
+        }
+        self.focused = true;
+        window.set_mouse_grab(true);
+        sdl.mouse().set_relative_mouse_mode(true);
+        sdl.mouse().show_cursor(false);
+        self.relative_mouse = true;
+        eprintln!("External SDL mouse control mode: locked relative (mouse-look)");
     }
 
     pub(crate) fn take(&mut self) -> Vec<CapturedInput> {
@@ -2495,6 +2487,9 @@ pub(crate) enum ActiveOutput {
 pub(crate) enum OutputControl {
     PointerLock,
     Fullscreen,
+    /// Explicit fullscreen state, so the host can drive the exact state its
+    /// button shows instead of relying on a toggle.
+    ShellFullscreen(bool),
     Menu,
     Stats,
 }
@@ -2676,7 +2671,7 @@ impl ActiveOutput {
                     Ok(())
                 }
                 // Software presentation follows the host window; nothing to toggle.
-                OutputControl::Fullscreen => Ok(()),
+                OutputControl::Fullscreen | OutputControl::ShellFullscreen(_) => Ok(()),
                 // Standalone menu is implemented for the Windows game window.
                 OutputControl::Menu => Ok(()),
                 // Standalone stats are implemented for the Windows game window.
@@ -2699,6 +2694,9 @@ impl ActiveOutput {
                         surface.toggle_fullscreen();
                         Ok(())
                     }
+                    OutputControl::ShellFullscreen(on) => {
+                        surface.set_shell_fullscreen(on)
+                    }
                     OutputControl::Menu => {
                         surface.toggle_overlay_menu();
                         Ok(())
@@ -2719,7 +2717,7 @@ impl ActiveOutput {
                 }
                 // Standalone fullscreen is implemented for the Windows game
                 // window; embedded hosts keep owning placement here.
-                OutputControl::Fullscreen => Ok(()),
+                OutputControl::Fullscreen | OutputControl::ShellFullscreen(_) => Ok(()),
                 // Standalone menu is implemented for the Windows game window.
                 OutputControl::Menu => Ok(()),
                 // Standalone stats are implemented for the Windows game window.
@@ -2810,6 +2808,15 @@ struct WindowsExternalSdlSurface {
     parent_size: Option<(u32, u32)>,
     /// Throttle for the parent-size watchdog in `pump`.
     next_parent_resize_check: Instant,
+    /// Whether the shell window is currently fullscreened by the engine.
+    shell_fullscreen: bool,
+    /// Window handle of the shell window the plane is embedded in, as an isize
+    /// so it travels with the surface without borrowing the string.
+    parent_hwnd: isize,
+    /// Set by the Raw Input thread when a left click lands in the game; the
+    /// pump turns it into mouse-look. The SDL event pump cannot see those clicks
+    /// because the embedded child never takes the focus.
+    lock_on_click: Option<Arc<AtomicBool>>,
 }
 
 #[cfg(target_os = "windows")]
@@ -2843,11 +2850,22 @@ impl WindowsExternalSdlSurface {
             .event_pump()
             .map_err(|error| format!("external SDL event pump creation failed: {error}"))?;
         let capture_input = native_input_capture_enabled();
+        // Clicks inside the game must be able to engage mouse-look even though
+        // SDL never sees them (the plane is a WS_EX_NOACTIVATE child): the Raw
+        // Input thread flags the click and the pump applies it. Only sessions
+        // whose shell owns placement use it — a standalone window has SDL focus
+        // and its own click handling.
+        let lock_on_click = Some(Arc::new(AtomicBool::new(shell_placement_enabled())));
         let raw_input = if capture_input {
             match WindowsRawInputController::start(
                 native_surface.window_handle(),
                 Arc::clone(&captured_input),
                 shell_placement_enabled(),
+                if shell_placement_enabled() {
+                    lock_on_click.clone()
+                } else {
+                    None
+                },
             ) {
                 Ok(controller) => {
                     controller.set_shortcut_bindings(stream.shortcuts);
@@ -2919,6 +2937,9 @@ impl WindowsExternalSdlSurface {
             insets: (0, 0, 0, 0),
             parent_size: None,
             next_parent_resize_check: Instant::now(),
+            shell_fullscreen: false,
+            parent_hwnd: 0,
+            lock_on_click,
         })
     }
 
@@ -2933,7 +2954,6 @@ impl WindowsExternalSdlSurface {
         let Some(rect) = surface.rect.filter(|_| surface.visible) else {
             // visible=false — hide native surface, but don't mark embedded yet so standalone can show as fallback
             self.visible = false;
-            self.input_capture.set_keep_pointer_visible(false);
             self.sync_input_ownership();
             let _ = self.native_surface.hide_checked();
             return Ok(());
@@ -2945,11 +2965,8 @@ impl WindowsExternalSdlSurface {
         };
         // Now we have handle — this is embedded mode
         self.embedded = true;
-        // The plane now lives inside the app window, so the OS pointer becomes
-        // the game's cursor (see `keep_pointer_visible`).
-        self.input_capture
-            .set_keep_pointer_visible(shell_placement_enabled());
         let foreground_owner = parse_windows_handle(parent_handle)?.get();
+        self.parent_hwnd = foreground_owner;
         if let Err(error) = self.native_surface.attach_and_show(
             parent_handle,
             rect,
@@ -3200,10 +3217,57 @@ impl WindowsExternalSdlSurface {
         }
     }
 
-    /// Borderless-desktop fullscreen toggle (F11). The D3D present loop
-    /// resizes the swapchain to the window on the next frame, so video
-    /// follows both this toggle and manual windowed resizes.
+    /// Put the window the game is shown in into (or out of) borderless
+    /// fullscreen: the shell window when the plane is embedded in it, the SDL
+    /// window itself for a standalone session.
+    fn set_shell_fullscreen(&mut self, on: bool) -> Result<(), String> {
+        if self.embedded && self.parent_hwnd != 0 {
+            self.native_surface.set_shell_fullscreen(on)?;
+            // Read the surface back: it owns the saved placement and is what
+            // actually knows whether the shell window is fullscreen now.
+            self.shell_fullscreen = self.native_surface.shell_fullscreen();
+        } else {
+            let kind = if on {
+                sdl2::video::FullscreenType::Desktop
+            } else {
+                sdl2::video::FullscreenType::Off
+            };
+            self.window
+                .set_fullscreen(kind)
+                .map_err(|error| format!("SDL fullscreen failed: {error}"))?;
+            self.fullscreen = on;
+            if on {
+                self.window.raise();
+            }
+            eprintln!(
+                "External SDL stream window fullscreen: {}",
+                if on { "on" } else { "off" }
+            );
+        }
+        // The chrome the deck keeps around the picture is measured against the
+        // *client area*, which just changed: re-derive the plane's rect
+        // immediately instead of waiting for the next publish.
+        self.insets = (0, 0, 0, 0);
+        self.parent_size = None;
+        Ok(())
+    }
+
+    /// Fullscreen toggle (F11 / Alt+Enter / the deck's button).
+    ///
+    /// Embedded sessions fullscreen the *shell* window the plane is clipped in
+    /// — that is the window the game actually fills, and a maximised shell still
+    /// leaves the taskbar and frame in place. Standalone sessions keep the old
+    /// behaviour of fullscreening their own SDL window. The picture follows
+    /// either way: the parent-size watchdog re-places the plane, and the shell's
+    /// own resize is picked up by the client's republish.
     fn toggle_fullscreen(&mut self) {
+        if self.embedded && self.parent_hwnd != 0 {
+            let next = !self.shell_fullscreen;
+            if let Err(error) = self.set_shell_fullscreen(next) {
+                eprintln!("Shell window fullscreen toggle failed: {error}");
+            }
+            return;
+        }
         self.fullscreen = !self.fullscreen;
         let fullscreen_type = if self.fullscreen {
             sdl2::video::FullscreenType::Desktop
@@ -3321,19 +3385,34 @@ impl WindowsExternalSdlSurface {
             overlay.tick(&self.window);
         }
         self.sync_parent_resize();
-        // SDL hides the pointer behind its back (focus loss, a stray relative
-        // mode) and never re-shows it. The embedded plane draws the game cursor
-        // with the OS pointer, so re-assert it once per pump while the session
-        // reads a visible cursor; SDL's show_cursor is a no-op when unchanged.
-        if self.input_capture.keep_pointer_visible && !self.input_capture.remote_cursor_hidden() {
-            self.sdl.mouse().show_cursor(true);
+        let clicked_in_picture = self
+            .lock_on_click
+            .as_ref()
+            .is_some_and(|flag| flag.swap(false, Ordering::AcqRel));
+        if clicked_in_picture
+            && !self.input_suspended
+            && !self.input_capture.remote_cursor_visible()
+        {
+            // A click in the picture is the user taking control of the game:
+            // trap the pointer exactly like the vendor client does. The game's
+            // own cursor messages release it again (menus), and F8 or the deck
+            // always can.
+            self.input_capture.lock_pointer(&self.sdl, &mut self.window);
+            self.sync_raw_input();
         }
+        // SDL hides the pointer behind its back (focus loss, a stray relative
+        // mode) and never re-shows it: re-assert the state mouse-look asks for,
+        // once per pump. `show_cursor` is a no-op when nothing changed.
+        self.sdl
+            .mouse()
+            .show_cursor(!self.input_capture.relative_mouse_enabled());
         self.sync_raw_input();
     }
 
     fn release(&mut self) -> Result<(), String> {
         self.visible = false;
-        self.input_capture.set_keep_pointer_visible(false);
+        // `hide_checked` restores the window; keep the cached state truthful.
+        self.shell_fullscreen = false;
         if let Some(overlay) = self.overlay.as_mut() {
             overlay.hide_all();
         }

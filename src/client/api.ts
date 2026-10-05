@@ -280,6 +280,22 @@ function routeSignalingFrame(data: unknown): void {
   }
 }
 
+/**
+ * Whether a native (NVST) stream is running right now. The API layer cannot
+ * read React state, so the app publishes it here; without it the deck's
+ * fullscreen button would keep calling the shell command, which a maximised
+ * window answers by staying windowed.
+ */
+let nativeEngineRunning = false;
+
+export function setNativeEngineRunning(running: boolean): void {
+  nativeEngineRunning = running;
+}
+
+function nativeEngineRunningForFullscreen(): boolean {
+  return nativeEngineRunning;
+}
+
 async function connectSignaling(payload: SignalingConnectRequest): Promise<void> {
   socket?.close();
   // The native event channel is a passive socket on the same endpoint; the
@@ -548,6 +564,26 @@ const bridge: OpenNowApi = {
   sendAnswer: (payload: SendAnswerRequest) => sendSignal("answer", payload),
   sendIceCandidate: (payload: IceCandidatePayload) => sendSignal("ice", payload),
   sendNativeInput: () => {},
+  setNativeFullscreen: (fullscreen: boolean) => {
+    // The engine owns the window the stream is clipped in, so the deck asks it
+    // to fullscreen (frameless, monitor-sized) or restore it. The engine
+    // reports the state back over the native event channel.
+    void api<NativeSidecarStatus>("/api/native/command", {
+      method: "POST",
+      body: JSON.stringify({ type: "shell-fullscreen", fullscreen }),
+    }).catch((error) => {
+      console.warn(`Native fullscreen (${fullscreen ? "enter" : "exit"}) failed:`, error);
+    });
+  },
+  toggleNativePointerLock: () => {
+    // F8 / the deck's mouse-lock control: the engine's Raw Input thread owns the
+    // pointer in an embedded session, so it is the only side that can hand it
+    // over and take it back.
+    void api<NativeSidecarStatus>("/api/native/command", {
+      method: "POST",
+      body: JSON.stringify({ type: "pointer-lock-toggle" }),
+    }).catch(() => {});
+  },
   setNativeInputPaused: (paused: boolean) => {
     // The engine owns raw input in native sessions: pausing it releases the
     // mouse so the React deck can be clicked, and resuming hands it back.
@@ -685,7 +721,17 @@ const bridge: OpenNowApi = {
   downloadUpdate: async () => updaterState,
   installUpdateAndRestart: async () => updaterState,
   onUpdaterStateChanged: () => () => {},
+  /**
+   * Fullscreen for the current session. A native (NVST) session routes this to
+   * the engine, which owns the shell window the plane is clipped in and can
+   * make it frameless and monitor-sized — something the shell's own
+   * `set_app_fullscreen` (and a maximise) cannot do.
+   */
   setFullscreen: async (value) => {
+    if (nativeEngineRunningForFullscreen()) {
+      window.openNow?.setNativeFullscreen?.(value);
+      return;
+    }
     // The desktop shell owns a real window and the native video plane is a
     // child window positioned inside it, so a DOM fullscreen request alone
     // never grows the OS window. Ask the shell first, then run the DOM path as

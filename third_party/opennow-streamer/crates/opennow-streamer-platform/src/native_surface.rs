@@ -48,6 +48,19 @@ impl NativeSurface {
         self.inner.parent_client_size()
     }
 
+    /// Borderless-fullscreen (or restore) the shell window this plane lives in.
+    /// Unsupported platforms and standalone windows report an error, and the
+    /// caller keeps them on the host-driven path.
+    #[cfg(target_os = "windows")]
+    pub(crate) fn set_shell_fullscreen(&mut self, on: bool) -> Result<(), String> {
+        self.inner.set_shell_fullscreen(on)
+    }
+
+    #[cfg(target_os = "windows")]
+    pub(crate) fn shell_fullscreen(&self) -> bool {
+        self.inner.shell_fullscreen()
+    }
+
     pub(crate) fn refresh_ordering(&mut self) -> Result<(), String> {
         self.inner.refresh_ordering()
     }
@@ -81,8 +94,12 @@ fn physical_rect(rect: RenderSurfaceRect, _scale: f32) -> (i32, i32, u32, u32) {
 mod platform {
     use raw_window_handle::{HasWindowHandle, RawWindowHandle};
     use windows_sys::Win32::Foundation::{GetLastError, RECT, SetLastError};
+    use windows_sys::Win32::Graphics::Gdi::{
+        GetMonitorInfoW, MONITOR_DEFAULTTONEAREST, MONITORINFO, MonitorFromWindow,
+    };
     use windows_sys::Win32::UI::WindowsAndMessaging::{
-        GWL_EXSTYLE, GWL_STYLE, GetClientRect, GetParent, GetWindowLongPtrW, HWND_TOP, SW_HIDE,
+        GWL_EXSTYLE, GWL_STYLE, GetClientRect, GetParent, GetWindowLongPtrW, GetWindowRect,
+        HWND_NOTOPMOST, HWND_TOP, HWND_TOPMOST, IsZoomed, SW_HIDE, SW_MAXIMIZE, SW_RESTORE,
         SWP_FRAMECHANGED, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SWP_SHOWWINDOW,
         SetForegroundWindow, SetParent, SetWindowLongPtrW, SetWindowPos, ShowWindow, WS_CAPTION,
         WS_CHILD, WS_CLIPSIBLINGS, WS_DISABLED, WS_EX_APPWINDOW, WS_EX_NOACTIVATE,
@@ -119,6 +136,14 @@ mod platform {
         (style & !(WS_EX_APPWINDOW | WS_EX_TRANSPARENT)) | WS_EX_NOACTIVATE
     }
 
+    /// The shell window as it was before a fullscreen toggle, so leaving it
+    /// restores exactly the placement the user had.
+    struct SavedShellWindow {
+        style: isize,
+        rect: RECT,
+        zoomed: bool,
+    }
+
     pub(crate) struct Surface {
         child: windows_sys::Win32::Foundation::HWND,
         parent: windows_sys::Win32::Foundation::HWND,
@@ -129,6 +154,8 @@ mod platform {
         /// make the resize path idempotent, so a parent-size check that finds
         /// nothing new never calls SetWindowPos.
         last_rect: (i32, i32, u32, u32),
+        /// Placement the shell window had before the engine fullscreened it.
+        saved_shell: Option<SavedShellWindow>,
     }
 
     impl Surface {
@@ -148,6 +175,7 @@ mod platform {
                 standalone_extended_style: unsafe { GetWindowLongPtrW(child, GWL_EXSTYLE) as u32 },
                 shown: false,
                 last_rect: (0, 0, 0, 0),
+                saved_shell: None,
             })
         }
 
@@ -280,6 +308,133 @@ mod platform {
             Ok(true)
         }
 
+        /// Borderless-fullscreen the shell window the plane is embedded in.
+        ///
+        /// This is the "full screen" the streaming view offers: a maximised
+        /// window still leaves the taskbar and its own frame in place, and the
+        /// video plane can only ever cover the shell's client area. Covering the
+        /// monitor with a frameless window (the same thing SDL does for its own
+        /// window) gives the game the whole screen. The window's style and
+        /// placement are remembered the first time so leaving fullscreen puts
+        /// everything back, including a window that was maximised before.
+        pub(crate) fn set_shell_fullscreen(&mut self, on: bool) -> Result<(), String> {
+            if self.parent.is_null() {
+                return Err("the stream surface is not embedded in a shell window".to_owned());
+            }
+            unsafe {
+                if on {
+                    if self.saved_shell.is_none() {
+                        let mut rect = RECT::default();
+                        if GetWindowRect(self.parent, &mut rect) == 0 {
+                            return Err(format!(
+                                "failed to read the shell window rectangle (win32 error {})",
+                                GetLastError()
+                            ));
+                        }
+                        self.saved_shell = Some(SavedShellWindow {
+                            style: GetWindowLongPtrW(self.parent, GWL_STYLE),
+                            rect,
+                            zoomed: IsZoomed(self.parent) != 0,
+                        });
+                        let style = GetWindowLongPtrW(self.parent, GWL_STYLE) as u32;
+                        let frameless = (style
+                            & !(WS_CAPTION
+                                | WS_THICKFRAME
+                                | WS_MINIMIZEBOX
+                                | WS_MAXIMIZEBOX
+                                | WS_SYSMENU)
+                            | WS_POPUP) as isize;
+                        SetLastError(0);
+                        if SetWindowLongPtrW(self.parent, GWL_STYLE, frameless) == 0
+                            && GetLastError() != 0
+                        {
+                            // Nothing has moved yet: forget the saved placement
+                            // so `shell_fullscreen()` keeps telling the truth.
+                            self.saved_shell = None;
+                            return Err(format!(
+                                "failed to make the shell window frameless (win32 error {})",
+                                GetLastError()
+                            ));
+                        }
+                        let mut info = MONITORINFO {
+                            cbSize: std::mem::size_of::<MONITORINFO>() as u32,
+                            rcMonitor: RECT::default(),
+                            rcWork: RECT::default(),
+                            dwFlags: 0,
+                        };
+                        let monitor = MonitorFromWindow(self.parent, MONITOR_DEFAULTTONEAREST);
+                        if GetMonitorInfoW(monitor, &mut info) == 0 {
+                            // Fall back to the window's own rectangle rather than
+                            // leaving a frameless window in place.
+                            info.rcMonitor = self
+                                .saved_shell
+                                .as_ref()
+                                .map(|saved| saved.rect)
+                                .unwrap_or_default();
+                        }
+                        let width = info.rcMonitor.right - info.rcMonitor.left;
+                        let height = info.rcMonitor.bottom - info.rcMonitor.top;
+                        if SetWindowPos(
+                            self.parent,
+                            HWND_TOPMOST,
+                            info.rcMonitor.left,
+                            info.rcMonitor.top,
+                            width,
+                            height,
+                            SWP_FRAMECHANGED | SWP_SHOWWINDOW,
+                        ) == 0
+                        {
+                            // Leave no half-applied state behind: a frameless
+                            // window at its old size is worse than not
+                            // fullscreening at all.
+                            let saved = self.saved_shell.take();
+                            if let Some(saved) = saved {
+                                SetWindowLongPtrW(self.parent, GWL_STYLE, saved.style);
+                            }
+                            return Err(format!(
+                                "failed to fullscreen the shell window (win32 error {})",
+                                GetLastError()
+                            ));
+                        }
+                        SetForegroundWindow(self.parent);
+                        eprintln!("Shell window fullscreen: on ({width}x{height} frameless)");
+                    }
+                    return Ok(());
+                }
+                let Some(saved) = self.saved_shell.take() else {
+                    return Ok(());
+                };
+                SetWindowLongPtrW(self.parent, GWL_STYLE, saved.style);
+                if SetWindowPos(
+                    self.parent,
+                    HWND_NOTOPMOST,
+                    saved.rect.left,
+                    saved.rect.top,
+                    saved.rect.right - saved.rect.left,
+                    saved.rect.bottom - saved.rect.top,
+                    SWP_FRAMECHANGED | SWP_SHOWWINDOW,
+                ) == 0
+                {
+                    eprintln!(
+                        "Shell window fullscreen off failed (win32 error {})",
+                        GetLastError()
+                    );
+                }
+                if saved.zoomed {
+                    ShowWindow(self.parent, SW_MAXIMIZE);
+                } else {
+                    ShowWindow(self.parent, SW_RESTORE);
+                }
+                eprintln!("Shell window fullscreen: off");
+            }
+            Ok(())
+        }
+
+        /// Whether the shell window is currently fullscreened by the engine.
+        pub(crate) fn shell_fullscreen(&self) -> bool {
+            self.saved_shell.is_some()
+        }
+
         /// Live client size of the shell window this surface is attached to.
         pub(crate) fn parent_client_size(&self) -> Option<(u32, u32)> {
             if self.parent.is_null() {
@@ -298,6 +453,10 @@ mod platform {
         }
 
         pub(crate) fn hide_checked(&mut self) -> Result<(), String> {
+            // Leaving the shell window frameless after the stream stopped would
+            // strand the user with an unmovable window, so fullscreen is undone
+            // before the plane disappears.
+            let _ = self.set_shell_fullscreen(false);
             unsafe {
                 ShowWindow(self.child, SW_HIDE);
                 if !self.parent.is_null() {

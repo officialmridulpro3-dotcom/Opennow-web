@@ -497,7 +497,7 @@ class NativeSidecarManager {
    * is deliberately small — anything that changes transport, session or capture
    * shape stays with the engine, the shell or the launch flow.
    */
-  command(type: string, options: { paused?: boolean } = {}): NativeSidecarStatus {
+  command(type: string, options: { paused?: boolean; fullscreen?: boolean } = {}): NativeSidecarStatus {
     if (!this.child) throw httpError("No native stream is running.", 409);
     switch (type) {
       case "recording-toggle":
@@ -511,7 +511,18 @@ class NativeSidecarManager {
         break;
       case "microphone-toggle":
       case "fullscreen-toggle":
+      case "pointer-lock-toggle":
         this.send({ id: this.nextId(type), type });
+        break;
+      case "shell-fullscreen":
+        // The engine fullscreens the window the stream is clipped in (frameless
+        // and monitor-sized, unlike a maximise), and reports the resulting state
+        // back so the deck's button and the window cannot drift apart.
+        this.send({
+          id: this.nextId(type),
+          type,
+          fullscreen: options.fullscreen === true,
+        });
         break;
       case "input-paused":
         // Engine-side capture toggle: the styled deck releases the mouse while
@@ -670,8 +681,18 @@ class NativeSidecarManager {
       return;
     }
     if (type === "shortcut-action" && message.action === "toggle-pointer-lock") {
+      // The engine's Raw Input thread saw F8 while it owns the keyboard; the
+      // deck applies the toggle (and drops it when the page already did).
       console.log("[NVST] engine shortcut toggle-pointer-lock");
       emitNativeEvent({ type: "native-shortcut", action: "togglePointerLock" });
+      return;
+    }
+    if (type === "fullscreen-state") {
+      // The engine just fullscreened (or restored) the shell window — e.g. the
+      // F11 chord, which no browser handles. Mirror the state into the deck.
+      const fullscreen = message.fullscreen === true;
+      console.log(`[NVST] shell window fullscreen ${fullscreen ? "on" : "off"}`);
+      emitNativeEvent({ type: "native-fullscreen-state", fullscreen });
       return;
     }
     // F12 / Ctrl+G "Recording" row: the engine only reports the toggle — the

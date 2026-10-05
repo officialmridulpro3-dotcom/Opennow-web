@@ -156,6 +156,7 @@ impl EmbeddedInputCapture {
                     window_handle as isize,
                     Arc::clone(&self.queue),
                     false,
+                    None,
                 ) {
                     Ok(controller) => *raw = Some(controller),
                     Err(error) => eprintln!("Embedded Raw Input capture unavailable: {error}"),

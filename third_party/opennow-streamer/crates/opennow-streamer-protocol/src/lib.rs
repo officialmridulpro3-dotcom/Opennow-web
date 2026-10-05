@@ -84,6 +84,9 @@ pub struct Command {
     pub enabled: Option<bool>,
     #[serde(default)]
     pub microphone_enabled: Option<bool>,
+    /// Explicit shell-window fullscreen state (`shell-fullscreen` command).
+    #[serde(default)]
+    pub fullscreen: Option<bool>,
     #[serde(default)]
     pub surface: Option<RenderSurface>,
     #[serde(default)]

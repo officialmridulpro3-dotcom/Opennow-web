@@ -28,6 +28,8 @@ const MICROPHONE_HOST_POLL_INTERVAL: Duration = Duration::from_millis(20);
 pub enum MediaRuntimeControl {
     PointerLock,
     Fullscreen,
+    /// Explicit shell-window fullscreen state (the host's Full screen button).
+    ShellFullscreen(bool),
     Menu,
     Stats,
 }
@@ -748,6 +750,9 @@ impl MainThreadHost {
                     let output_control = match control {
                         MediaRuntimeControl::PointerLock => OutputControl::PointerLock,
                         MediaRuntimeControl::Fullscreen => OutputControl::Fullscreen,
+                        MediaRuntimeControl::ShellFullscreen(on) => {
+                            OutputControl::ShellFullscreen(on)
+                        }
                         MediaRuntimeControl::Menu => OutputControl::Menu,
                         MediaRuntimeControl::Stats => OutputControl::Stats,
                     };

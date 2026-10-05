@@ -35,7 +35,7 @@ import {
 import { FALLBACK_RELAY_ICE_SERVERS, GfnWebRtcClient, probeWebRtcEnvironment } from "./platforms/gfn/webrtcClient";
 import { getCachedNativeSidecarSupport, getNativeStatus, isNativeSurfaceAttached, sendNativeCommand, startNativeStream, stopNativeStream, syncNativeSurfaceAttached } from "./api";
 import type { NativeSidecarStatus } from "./api";
-import { clientLog } from "./api";
+import { clientLog, setNativeEngineRunning } from "./api";
 import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut } from "./shortcuts";
 import { dispatchStreamShortcutAction } from "./streamShortcutActions";
 import {
@@ -849,6 +849,10 @@ export function App(): JSX.Element {
    * passive socket open for as long as the engine runs.
    */
   useEffect(() => {
+    // The API layer cannot read React state, so it is told whether the engine
+    // owns the window: that decides whether fullscreen goes to the engine
+    // (frameless + monitor-sized) or to the shell's own window command.
+    setNativeEngineRunning(nativeEngineActive);
     if (!nativeEngineActive && !nativeStarting) return undefined;
     window.openNow.openNativeEventChannel?.();
     return () => {
@@ -1398,6 +1402,15 @@ export function App(): JSX.Element {
   }, [nativeStreamerShortcuts, session, streamStatus]);
 
   const setSessionFullscreen = useCallback(async (nextFullscreen: boolean) => {
+    // A native session's window belongs to the engine, so it fullscreens the
+    // window the game is clipped in and the shell command is skipped. The ref is
+    // checked too: `nativeEngineActive` comes from the status poll and can lag
+    // behind the session that is already on screen.
+    if (nativeEngineActive || nativeStreamingRef.current) {
+      window.openNow.setNativeFullscreen?.(nextFullscreen);
+      setSessionFullscreenState(nextFullscreen);
+      return;
+    }
     const canUseNativeFullscreen = typeof window.openNow?.setFullscreen === "function";
     if (document.pointerLockElement) {
       clientRef.current?.suppressNextSyntheticEscapeOnPointerLockLoss();
@@ -1436,11 +1449,11 @@ export function App(): JSX.Element {
     } catch {}
 
     setSessionFullscreenState(!!document.fullscreenElement);
-  }, []);
+  }, [nativeEngineActive]);
 
   const toggleSessionFullscreen = useCallback(async () => {
     await setSessionFullscreen(!(sessionFullscreen || document.fullscreenElement));
-  }, [sessionFullscreen, setSessionFullscreen]);
+  }, [nativeEngineActive, sessionFullscreen, setSessionFullscreen]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -2531,6 +2544,10 @@ export function App(): JSX.Element {
           if (nativeStreamingRef.current || sessionRef.current) {
             activateNativeInputForCurrentSession(event.protocolVersion);
           }
+        } else if (event.type === "native-fullscreen-state") {
+          // The engine fullscreened (or restored) the window the game is
+          // clipped in — e.g. the F11 chord, which no browser delivers.
+          setSessionFullscreenState(event.fullscreen === true);
         } else if (event.type === "native-shortcut") {
           if (!forwardNativeShortcutToOverlayRef.current?.(event.action)) {
             handleStreamShortcutActionRef.current?.(event.action);
@@ -4029,7 +4046,10 @@ export function App(): JSX.Element {
         return;
       case "togglePointerLock":
         if (nativeStreamingRef.current) {
-          // Native streamer toggles OS input capture locally in the renderer window.
+          // The engine owns the pointer while the game is clipped in this
+          // window: it traps it on a click in the picture, releases it when the
+          // game shows a cursor, and this is the explicit hand-over/take-back.
+          window.openNow.toggleNativePointerLock?.();
           return;
         }
         {

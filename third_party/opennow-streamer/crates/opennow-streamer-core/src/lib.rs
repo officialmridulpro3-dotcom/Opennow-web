@@ -333,6 +333,8 @@ impl Engine {
             "start" => self.start(command),
             "input-paused" => self.set_paused(command),
             "surface" => self.update_surface(command),
+            "pointer-lock-toggle" => self.pointer_lock(command),
+            "shell-fullscreen" => self.shell_fullscreen(command),
             "stats-toggle" => Ok(vec![
                 response(id, "ok"),
                 event(
@@ -1136,6 +1138,51 @@ impl Engine {
         Ok(vec![response(command.id, "ok")])
     }
 
+    /// F8 / the deck's "release mouse / lock mouse" control. The engine owns
+    /// the pointer in an embedded session (the shell's WebView never takes it
+    /// back), so this is the only way to hand the pointer over and take it back
+    /// without opening the deck.
+    fn pointer_lock(&self, command: Command) -> Result<Vec<Value>, Value> {
+        let Some(runtime) = self.media_runtime.as_ref() else {
+            return Err(error(
+                Some(&command.id),
+                "unsupported-command",
+                "Native streamer has no media runtime for pointer lock",
+            ));
+        };
+        runtime
+            .control(MediaRuntimeControl::PointerLock)
+            .map_err(|message| error(Some(&command.id), "media-host-unavailable", message))?;
+        Ok(vec![response(command.id, "ok")])
+    }
+
+    /// Explicit fullscreen state for the window the stream is clipped in (the
+    /// deck's Full screen button, and the shell's own F11 handling). The engine
+    /// applies it to the *shell* window: a maximised shell still leaves the
+    /// frame and taskbar in place, so only a frameless, monitor-sized window
+    /// gives the game the whole screen. The host owns the state and passes the
+    /// value it wants, which keeps the button and the window in step.
+    fn shell_fullscreen(&self, command: Command) -> Result<Vec<Value>, Value> {
+        let Some(runtime) = self.media_runtime.as_ref() else {
+            return Err(error(
+                Some(&command.id),
+                "unsupported-command",
+                "Native streamer has no media runtime for fullscreen",
+            ));
+        };
+        let fullscreen = command.fullscreen.unwrap_or(false);
+        runtime
+            .control(MediaRuntimeControl::ShellFullscreen(fullscreen))
+            .map_err(|message| error(Some(&command.id), "media-host-unavailable", message))?;
+        Ok(vec![
+            response(command.id, "ok"),
+            event(
+                "fullscreen-state",
+                json!({"fullscreen": fullscreen, "source": "command"}),
+            ),
+        ])
+    }
+
     fn stop(&mut self, reason: &str) {
         opennow_streamer_transport::clear_session_feedback();
         self.clip_cancelled.store(true, Ordering::Release);
@@ -1604,6 +1651,11 @@ fn forward_shortcut_action(
     action: StreamShortcutAction,
 ) {
     let host_owned = runtime.is_some_and(MediaRuntime::is_embedded) || host_overlay_enabled();
+    // Pointer lock stays with the host that renders the chrome: this event is
+    // what its F8/Deck control answers, and the host de-duplicates a chord it
+    // already applied itself (see `runPageStreamShortcut`). The engine must not
+    // apply the toggle here as well — two toggles cancel out and the pointer
+    // never moves.
     if action == StreamShortcutAction::TogglePointerLock && host_owned {
         let _ = output.send(event(
             "shortcut-action",

@@ -139,6 +139,14 @@ export interface OpenNowApi {
    */
   openNativeEventChannel(): void;
   closeNativeEventChannel(): void;
+  /**
+   * Fullscreen the window the native stream is clipped in. The engine owns that
+   * window, so it makes it frameless and monitor-sized (a maximise cannot) and
+   * reports the resulting state back as a `native-fullscreen-state` event.
+   */
+  setNativeFullscreen(fullscreen: boolean): void;
+  /** Hand the pointer over / take it back while the engine owns it (F8). */
+  toggleNativePointerLock(): void;
   /** Listen for F11 fullscreen toggle from main process */
   onToggleFullscreen(listener: () => void): () => void;
   onExitFullscreen(listener: () => void): () => void;
