@@ -1115,15 +1115,17 @@ export function StreamView({
     // while it comes up.
     const retries: number[] = [];
     let settle: number | null = null;
-    if (nativeInternalHole) {
+    if (nativeRunning || nativeRendererActive || gstreamerEnabled) {
       // Covers the engine's attach (its first surface commands can land before
       // the sidecar accepts them) and the sidebar/HUD open transitions.
       for (const delay of [80, 200, 400, 900, 1800, 3200]) {
         retries.push(window.setTimeout(schedule, delay));
       }
       // The title pill auto-hides and the sidebar animates, so insets change
-      // without a React render. Re-measuring is a no-op unless the rect moved.
-      settle = window.setInterval(schedule, 500);
+      // without a React render; the handle lookup also needs a retry path when
+      // the shell had not published its HWND yet. Both are no-ops unless
+      // something actually changed.
+      settle = window.setInterval(schedule, nativeInternalHole ? 500 : 1000);
     }
 
     return () => {
@@ -1149,7 +1151,16 @@ export function StreamView({
         showStats: false,
       });
     };
-  }, [exitPrompt.open, nativeInternalHole, showNativeStats, showSideBar, showStats]);
+  }, [
+    exitPrompt.open,
+    gstreamerEnabled,
+    nativeInternalHole,
+    nativeRendererActive,
+    nativeRunning,
+    showNativeStats,
+    showSideBar,
+    showStats,
+  ]);
 
   useEffect(() => {
     const handlePointerLockChange = () => {
