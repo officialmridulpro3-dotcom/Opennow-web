@@ -42,12 +42,8 @@ export interface NativeSidecarStatus {
   phase?: "handshake" | "starting";
   /** True once the engine logs its first inbound video datagram or decoded frame. */
   firstFrame?: boolean;
-  /** Active native MKV recording (engine Ctrl+G menu / F12), if any. */
+  /** Active native MKV recording (F12), if any. */
   recording?: { path: string; startedAtMs: number };
-  /** Engine confirmed it embedded its surface inside the app window. */
-  surfaceAttached?: boolean;
-  /** Engine marker explaining a failed embed (see `server/nativeStream.ts`). */
-  surfaceError?: string;
 }
 
 let cachedNativeSidecarSupport: boolean | null = null;
@@ -99,45 +95,7 @@ export function startNativeStream(sessionId: string, context: unknown, gameTitle
 }
 
 export function stopNativeStream(): Promise<NativeSidecarStatus> {
-  setNativeSurfaceAttached(false);
   return api<NativeSidecarStatus>("/api/native/stop", { method: "POST" });
-}
-
-/**
- * True once a native surface update actually carried this window's HWND to the
- * engine, i.e. the engine presents into a child surface clipped inside the app
- * window instead of a window of its own. The stream UI uses it to decide
- * whether React chrome can be drawn on top of the native video plane.
- */
-let nativeSurfaceAttached = false;
-const nativeSurfaceListeners = new Set<() => void>();
-
-export function isNativeSurfaceAttached(): boolean {
-  return nativeSurfaceAttached;
-}
-
-/** Re-render hook for components whose layout depends on the embed state. */
-export function subscribeNativeSurfaceAttached(listener: () => void): () => void {
-  nativeSurfaceListeners.add(listener);
-  return () => {
-    nativeSurfaceListeners.delete(listener);
-  };
-}
-
-export function setNativeSurfaceAttached(attached: boolean): void {
-  if (nativeSurfaceAttached === attached) return;
-  nativeSurfaceAttached = attached;
-  for (const listener of [...nativeSurfaceListeners]) listener();
-}
-
-/**
- * Adopt the engine's verdict once it reports one. `undefined` (no report yet)
- * keeps the optimistic value written when the handle was sent — the engine only
- * logs after it processed the command, so silence means "in flight", not
- * "failed".
- */
-export function syncNativeSurfaceAttached(reported: boolean | undefined): void {
-  if (typeof reported === "boolean") setNativeSurfaceAttached(reported);
 }
 
 /**
@@ -145,13 +103,6 @@ export function syncNativeSurfaceAttached(reported: boolean | undefined): void {
  * "microphone-toggle", …). The backend keeps a whitelist; unsupported types are
  * rejected with 400.
  */
-export function sendNativeCommand(type: string): Promise<NativeSidecarStatus> {
-  return api<NativeSidecarStatus>("/api/native/command", {
-    method: "POST",
-    body: JSON.stringify({ type }),
-  });
-}
-
 /**
  * Forward browser-side stream diagnostics to the server console so a single
  * server log shows both sides of the signaling/ICE handshake. Fire-and-forget,
@@ -224,7 +175,7 @@ function readSettings(): Settings {
       ...WEB_DEFAULT_SETTINGS,
       ...stored,
       showNativeStreamerStats: false,
-      nativeExternalRenderer: false,
+      nativeExternalRenderer: true,
     };
     // One-time provision of the live stats HUD (GFN-style overlay). Existing
     // sessions predate the default-on change; respect explicit toggles made
@@ -317,14 +268,10 @@ async function connectSignaling(payload: SignalingConnectRequest): Promise<void>
 }
 
 /**
- * Native (NVST) sessions get every engine-initiated event — Ctrl+G/Ctrl+N/F11
- * chords, clipboard-paste requests, live counters — over the same
- * `/api/signaling` socket the WebRTC player uses. A native session never opens
- * that socket (there is no SDP to negotiate), so without this the engine's
- * events have nowhere to go and the deck's shortcuts only worked when the
- * WebView itself happened to see the key — which it does not for the chords
- * WebView2 treats as browser accelerators (Ctrl+N, F11). Open a passive socket
- * (no `connect` frame) for the lifetime of the native session.
+ * Native (NVST) sessions use a passive `/api/signaling` socket for engine
+ * events such as F10 fullscreen, F8 pointer lock, clipboard paste and telemetry.
+ * Ctrl+G/Ctrl+N overlay requests are intentionally discarded by the backend.
+ * No SDP negotiation is needed, so this socket stays passive for the session.
  */
 function openNativeEventChannel(): void {
   nativeChannelWanted = true;
@@ -565,9 +512,8 @@ const bridge: OpenNowApi = {
   sendIceCandidate: (payload: IceCandidatePayload) => sendSignal("ice", payload),
   sendNativeInput: () => {},
   setNativeFullscreen: (fullscreen: boolean) => {
-    // The engine owns the window the stream is clipped in, so the deck asks it
-    // to fullscreen (frameless, monitor-sized) or restore it. The engine
-    // reports the state back over the native event channel.
+    // Fullscreen the standalone SDL gameplay window, not the launcher. The
+    // engine reports the resulting state over the native event channel.
     void api<NativeSidecarStatus>("/api/native/command", {
       method: "POST",
       body: JSON.stringify({ type: "shell-fullscreen", fullscreen }),
@@ -576,140 +522,13 @@ const bridge: OpenNowApi = {
     });
   },
   toggleNativePointerLock: () => {
-    // F8 / the deck's mouse-lock control: the engine's Raw Input thread owns the
-    // pointer in an embedded session, so it is the only side that can hand it
-    // over and take it back.
+    // F8 / the launcher's mouse-lock control: native Raw Input owns capture, so
+    // the sidecar is the only side that can hand it over and take it back.
     void api<NativeSidecarStatus>("/api/native/command", {
       method: "POST",
       body: JSON.stringify({ type: "pointer-lock-toggle" }),
     }).catch(() => {});
   },
-  setNativeInputPaused: (paused: boolean) => {
-    // The engine owns raw input in native sessions: pausing it releases the
-    // mouse so the React deck can be clicked, and resuming hands it back.
-    // Without a native session the backend answers 409 and nothing happens.
-    void api<NativeSidecarStatus>("/api/native/command", {
-      method: "POST",
-      body: JSON.stringify({ type: "input-paused", paused }),
-    }).catch(() => {});
-  },
-  updateNativeRenderSurface: (() => {
-    let cachedHandle: string | null = null;
-    let lastRect: { x: number; y: number; width: number; height: number } | null = null;
-    let lastVisible = false;
-    let lastHandle: string | null = null;
-    let pendingHandleFetch = false;
-    return (input: { rect: { x: number; y: number; width: number; height: number } | null; visible: boolean; deviceScaleFactor: number; showStats?: boolean; windowHandle?: string; screenRect?: { x: number; y: number; width: number; height: number } | null }) => {
-      const tauri = (window as any).__TAURI__ as { core?: { invoke?: (cmd: string, args?: any) => Promise<any> } } | undefined;
-      const invoke = tauri?.core?.invoke?.bind(tauri.core);
-      // The shell's breadcrumb (written to the app data dir on launch) is the
-      // fallback for resolving this window's HWND: the Tauri IPC bridge is only
-      // available when a capability grants the loopback origin, and without a
-      // handle the engine opens a window of its own.
-      let shellHandleFetch: Promise<string | undefined> | null = null;
-      const fetchShellHandle = (): Promise<string | undefined> => {
-        if (!shellHandleFetch) {
-          shellHandleFetch = api<{ handle?: string | null }>("/api/native/surface-handle")
-            .then((result) => {
-              const handle =
-                typeof result?.handle === "string" && result.handle !== "0" ? result.handle : undefined;
-              // The shell may not have published yet (backend boots first):
-              // forget the miss so the next publish re-asks.
-              if (!handle) shellHandleFetch = null;
-              return handle;
-            })
-            .catch(() => {
-              shellHandleFetch = null;
-              return undefined;
-            });
-        }
-        return shellHandleFetch;
-      };
-      const doSend = (handle?: string) => {
-        const rectKey = input.rect ? `${input.rect.x},${input.rect.y},${input.rect.width},${input.rect.height}` : "null";
-        const visibleKey = input.visible;
-        // Don't spam identical rect without handle, but always send if we have handle
-        const handleKey = handle ?? input.windowHandle ?? cachedHandle ?? null;
-        if (
-          lastRect &&
-          `${lastRect.x},${lastRect.y},${lastRect.width},${lastRect.height}` === rectKey &&
-          lastVisible === visibleKey &&
-          lastHandle === handleKey
-        ) {
-          return;
-        }
-        lastRect = input.rect ? { ...input.rect } : null;
-        lastVisible = visibleKey;
-        lastHandle = handleKey;
-        const finalHandle = handle || input.windowHandle || cachedHandle || undefined;
-        // If visible and no handle, we must still try to get handle — don't send without handle for visible=true
-        // because backend errors "missing Qt window handle" and shows black screen
-        if (input.visible && !finalHandle) {
-          // Trigger handle fetch and retry
-          if (invoke && !pendingHandleFetch) {
-            pendingHandleFetch = true;
-            void invoke("get_window_handle").then((h: string) => {
-              pendingHandleFetch = false;
-              if (h && h !== "0") {
-                cachedHandle = h;
-                doSend(h);
-              }
-            }).catch(() => {
-              pendingHandleFetch = false;
-            });
-          }
-          // Don't send visible=true without handle yet — wait for handle
-          return;
-        }
-        const body = {
-          rect: input.rect,
-          visible: input.visible,
-          deviceScaleFactor: input.deviceScaleFactor,
-          showStats: input.showStats ?? false,
-          windowHandle: finalHandle,
-          screenRect: input.screenRect || input.rect,
-        };
-        if (input.visible && finalHandle) {
-          setNativeSurfaceAttached(true);
-        }
-        void api("/api/native/surface", { method: "POST", body: JSON.stringify(body) }).catch(() => {});
-      };
-      if (invoke) {
-        if (cachedHandle) {
-          doSend(cachedHandle);
-        } else if (!pendingHandleFetch) {
-          pendingHandleFetch = true;
-          void invoke("get_window_handle").then((h: string) => {
-            pendingHandleFetch = false;
-            if (h && h !== "0") {
-              cachedHandle = h;
-              doSend(h);
-              return;
-            }
-            void fetchShellHandle().then((shellHandle) => {
-              if (shellHandle) cachedHandle = shellHandle;
-              doSend(shellHandle);
-            });
-          }).catch(() => {
-            pendingHandleFetch = false;
-            void fetchShellHandle().then((shellHandle) => {
-              if (shellHandle) cachedHandle = shellHandle;
-              doSend(shellHandle);
-            });
-          });
-        } else {
-          // Handle fetch pending, but if we have input.windowHandle, send it
-          if (input.windowHandle) doSend(input.windowHandle);
-        }
-      } else {
-        // No Tauri bridge in this page (browser session, or IPC not granted for
-        // the loopback origin). Ask the backend for the shell's breadcrumb.
-        void fetchShellHandle().then((shellHandle) => {
-          doSend(input.windowHandle || shellHandle || undefined);
-        });
-      }
-    };
-  })(),
   updateNativeShortcuts: () => {},
   requestKeyframe: (payload: KeyframeRequest) => sendSignal("keyframe", payload),
   onSignalingEvent: (listener) => { signalingListeners.add(listener); return () => signalingListeners.delete(listener); },
@@ -722,20 +541,16 @@ const bridge: OpenNowApi = {
   installUpdateAndRestart: async () => updaterState,
   onUpdaterStateChanged: () => () => {},
   /**
-   * Fullscreen for the current session. A native (NVST) session routes this to
-   * the engine, which owns the shell window the plane is clipped in and can
-   * make it frameless and monitor-sized — something the shell's own
-   * `set_app_fullscreen` (and a maximise) cannot do.
+   * Fullscreen for the current session. Native NVST routes to the standalone
+   * SDL game window; WebRTC routes to the launcher/browser window.
    */
   setFullscreen: async (value) => {
     if (nativeEngineRunningForFullscreen()) {
       window.openNow?.setNativeFullscreen?.(value);
       return;
     }
-    // The desktop shell owns a real window and the native video plane is a
-    // child window positioned inside it, so a DOM fullscreen request alone
-    // never grows the OS window. Ask the shell first, then run the DOM path as
-    // the fallback for browsers and shells without that command.
+    // WebRTC runs inside the Tauri launcher, so fullscreen the OS window first;
+    // plain browsers use the DOM fullscreen API below.
     const tauriCore = (window as unknown as {
       __TAURI__?: { core?: { invoke?: (command: string, args?: Record<string, unknown>) => Promise<unknown> } };
     }).__TAURI__?.core;
@@ -743,14 +558,10 @@ const bridge: OpenNowApi = {
     if (tauriInvoke) {
       try {
         await tauriInvoke("set_app_fullscreen", { fullscreen: value });
-        clientLog(`[Native] shell window fullscreen ${value ? "on" : "off"}`);
-        // The OS window (and with it the embedded video plane) is what had to
-        // grow, and it just did. The in-page fullscreen API would only
-        // fullscreen the WebView inside that window — and it is the call that
-        // can reject, which used to abort the state update below.
+        clientLog(`[Native] launcher window fullscreen ${value ? "on" : "off"}`);
         return;
       } catch (error) {
-        clientLog(`[Native] shell window fullscreen failed (${value ? "enter" : "exit"}): ${String(error)}`);
+        clientLog(`[Native] launcher fullscreen failed (${value ? "enter" : "exit"}): ${String(error)}`);
         console.warn(`Native window fullscreen failed (${value ? "enter" : "exit"}):`, error);
       }
     }

@@ -428,8 +428,8 @@ export class GfnWebRtcClient {
   private nativeInputActive = false;
   /**
    * When true, Electron captures keyboard/mouse/gamepad and forwards packets to
-   * the native streamer over IPC (internal child-surface renderer).
-   * When false, the floating external GStreamer window owns OS-level input.
+   * the native streamer over IPC. When false, the standalone native window owns
+   * OS-level input and Electron keeps only the host-side shortcut route active.
    */
   private nativeElectronInputBridge = false;
   private remoteIceEndpoint: SessionInfo["mediaConnectionInfo"] | null = null;
@@ -1916,7 +1916,7 @@ export class GfnWebRtcClient {
     if (this.nativeElectronInputBridge) {
       // Native mode never runs handleOffer() in the renderer, so input listeners
       // were never installed. Re-attach capture and forward via sendNativeInput.
-      // Defer one frame so the StreamView native-hole DOM is painted and focusable.
+      // Defer one frame so the StreamView player surface is mounted and focusable.
       this.installInputCapture(this.options.videoElement);
       this.setupGamepadPolling();
       const video = this.options.videoElement;
@@ -1937,10 +1937,10 @@ export class GfnWebRtcClient {
       );
     } else {
       this.detachInputCapture();
-      // Overlay Meta/Home detection only; gamepad state is owned by the floating window.
+      // Keep only host shortcut detection active; the standalone window owns gamepad input.
       this.setupGamepadPolling();
       this.log(
-        `Native external-window input active (protocol v${nativeProtocolVersion}); OS capture handled by streamer, Electron overlay shortcuts only.`,
+        `Native external-window input active (protocol v${nativeProtocolVersion}); OS capture handled by streamer, host shortcut routing active.`,
       );
     }
   }

@@ -38,16 +38,8 @@ export interface NativeSidecarStatus {
   phase?: "handshake" | "starting";
   /** True once the engine logs its first inbound video datagram or decoded frame. */
   firstFrame?: boolean;
-  /** Active engine-side MKV recording (Ctrl+G menu / F12 toggle), if any. */
+  /** Active engine-side MKV recording (F12 toggle), if any. */
   recording?: { path: string; startedAtMs: number };
-  /**
-   * Whether the engine presents into a child surface clipped inside the app
-   * window. `undefined` until the engine reports; `false` means it fell back to
-   * a window of its own.
-   */
-  surfaceAttached?: boolean;
-  /** Engine log marker explaining a `surfaceAttached: false` verdict. */
-  surfaceError?: string;
 }
 
 interface ActiveNativeRecording {
@@ -69,34 +61,24 @@ function sidecarPath(): string | null {
 }
 
 /**
- * Environment for the sidecar process. The engine only opens its own visible
- * game window when OPENNOW_NATIVE_EXTERNAL_RENDERER=1 — otherwise it renders
- * to a hidden 2x2 surface (embedded/Qt-host mode) and native launches show
- * nothing. We have no Qt host, so external is the only working mode: force on.
- * Input capture is likewise engine-side: OPENNOW_NATIVE_INPUT_OWNER=native
- * arms the sidecar's SDL + Raw Input capture (keyboard, mouse, gamepad).
- * Without it the game window renders but ignores all input.
+ * Run gameplay in its own native SDL window while keeping the Tauri process as
+ * a separate launcher. The engine owns native input, decode and presentation;
+ * the host suppresses its stream-deck shortcuts instead of creating any UI
+ * over the game window.
  */
 export function buildSidecarEnv(gameTitle?: string): NodeJS.ProcessEnv {
-  // FIX black screen: Windows embedded in-app requires external_renderer=true
-  // When false, sidecar uses hidden 2x2 window and no video shows (black).
-  // When true, WindowsExternalSdlSurface is created and can operate as:
-  // - embedded child (when surface command with Tauri HWND arrives) → in-app
-  // - standalone top-level (when no surface command) → separate window
-  // We always want true, and we send surface commands to make it embedded.
-  // User wants no WebRTC black screen, in-app native with GFN sidebar.
   return {
     ...process.env,
     OPENNOW_NATIVE_EXTERNAL_RENDERER: "1",
     OPENNOW_NATIVE_INPUT_OWNER: "native",
-    // The shell owns the window layout: the engine must never reveal a
-    // top-level window of its own, it waits (hidden) for the surface command
-    // that carries this window's HWND.
-    OPENNOW_NATIVE_SHELL_PLACEMENT: "1",
-    // Ctrl+G / Ctrl+N / Guide belong to the styled overlay window instead of
-    // the engine's built-in GDI panel, and the engine publishes its live
-    // counters as `native-stream-stats` lines for the overlay HUD.
+    // No HWND is passed to the engine: keep the game in its own maximized OS window.
+    OPENNOW_NATIVE_SHELL_PLACEMENT: "0",
+    // Route fullscreen/pointer-lock shortcuts to the launcher; its Ctrl+G and
+    // Ctrl+N handlers intentionally do nothing during native play.
     OPENNOW_NATIVE_HOST_OVERLAY: "1",
+    // Avoid allocating the engine's GDI menu/stats overlay. The launcher has
+    // its own minimal fullscreen control, and F10 is available in-game.
+    OPENNOW_NATIVE_DISABLE_OVERLAY: "1",
     ...(gameTitle?.trim() ? { OPENNOW_GAME_TITLE: gameTitle.trim() } : {}),
   };
 }
@@ -234,23 +216,6 @@ interface PendingStart {
  */
 const FIRST_FRAME_MARKERS = ["inbound first datagram", "first H264 access unit", "first H265 access unit", "first AV1 access unit"];
 
-/**
- * Engine markers for the in-app surface handshake, in the order they matter.
- *
- * The engine presents into a child window of the shell only after a `surface`
- * command carrying the shell HWND reaches it. When that never happens it falls
- * back to a window of its own — the bug this handshake exists to prevent — so
- * the host watches the engine's stderr for the verdict and reports it to the
- * client instead of assuming the embed worked.
- */
-const SURFACE_ATTACHED_MARKER = "External SDL surface attached";
-const SURFACE_FAILURE_MARKERS = [
-  "External SDL surface attach failed",
-  "external SDL surface: visible rect but no window handle",
-  "shell-placement: standalone window suppressed",
-];
-
-
 class NativeSidecarManager {
   private child: ChildProcess | null = null;
   private sessionId: string | undefined;
@@ -262,9 +227,6 @@ class NativeSidecarManager {
   private commandId = 0;
   private phase: "handshake" | "starting" | undefined;
   private firstFrame = false;
-  /** `undefined` until the engine reports on the surface handshake. */
-  private surfaceAttached: boolean | undefined;
-  private surfaceError: string | undefined;
   private recording: ActiveNativeRecording | null = null;
   /**
    * Stream shape taken from the launch context. The engine's once-per-second
@@ -290,8 +252,6 @@ class NativeSidecarManager {
       capabilities: this.capabilities,
       phase: this.child !== null ? this.phase : undefined,
       firstFrame: this.firstFrame || undefined,
-      surfaceAttached: this.surfaceAttached,
-      surfaceError: this.surfaceError,
       recording: this.recording ? { path: this.recording.path, startedAtMs: this.recording.startedAtMs } : undefined,
     };
   }
@@ -308,8 +268,6 @@ class NativeSidecarManager {
     this.capabilities = undefined;
     this.stdoutBuffer = "";
     this.firstFrame = false;
-    this.surfaceAttached = undefined;
-    this.surfaceError = undefined;
     this.streamProfile = readStreamProfile(context);
 
     const child = spawn(exe, [], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true, env: buildSidecarEnv(gameTitle) });
@@ -327,18 +285,6 @@ class NativeSidecarManager {
       if (!this.firstFrame && FIRST_FRAME_MARKERS.some((marker) => text.includes(marker))) {
         this.firstFrame = true;
         console.log(`[NVST:${child.pid}] first video frame observed`);
-      }
-      if (text.includes(SURFACE_ATTACHED_MARKER)) {
-        this.surfaceAttached = true;
-        this.surfaceError = undefined;
-        console.log(`[NVST:${child.pid}] in-app surface attached to the shell window`);
-      } else {
-        const failure = SURFACE_FAILURE_MARKERS.find((marker) => text.includes(marker));
-        if (failure) {
-          this.surfaceAttached = false;
-          this.surfaceError = failure;
-          console.log(`[NVST:${child.pid}] in-app surface NOT attached: ${failure}`);
-        }
       }
       console.log(`[NVST:${child.pid}] ${text.slice(0, 2000)}`);
     });
@@ -447,39 +393,6 @@ class NativeSidecarManager {
     return this.status();
   }
 
-  updateSurface(surface: {
-    rect: { x: number; y: number; width: number; height: number } | null;
-    visible: boolean;
-    deviceScaleFactor: number;
-    showStats?: boolean;
-    windowHandle?: string;
-    screenRect?: { x: number; y: number; width: number; height: number } | null;
-  }): void {
-    if (!this.child) return;
-    try {
-      // Protocol expects surface command with window_handle as string (HWND)
-      // and rect in physical pixels. This drives WindowsExternalSdlSurface::update
-      // which attaches SDL child window to Tauri parent.
-      console.log(
-        `[NVST] surface rect ${surface.rect ? `${surface.rect.x},${surface.rect.y} ${surface.rect.width}x${surface.rect.height}` : "none"} visible=${surface.visible} handle=${surface.windowHandle ?? "-"}`,
-      );
-      this.send({
-        id: this.nextId("surface"),
-        type: "surface",
-        surface: {
-          rect: surface.rect,
-          visible: surface.visible,
-          deviceScaleFactor: surface.deviceScaleFactor,
-          showStats: surface.showStats ?? false,
-          windowHandle: surface.windowHandle,
-          screenRect: surface.screenRect ?? surface.rect,
-        },
-      });
-    } catch (error) {
-      console.log(`[NVST] surface update failed: ${(error as Error).message}`);
-    }
-  }
-
   private nextId(prefix: string): string {
     this.commandId += 1;
     return `${prefix}-${this.commandId}`;
@@ -493,11 +406,10 @@ class NativeSidecarManager {
   }
 
   /**
-   * Whitelisted engine commands the styled overlay deck may trigger. The list
-   * is deliberately small — anything that changes transport, session or capture
-   * shape stays with the engine, the shell or the launch flow.
+   * Whitelisted commands the launcher may send to the standalone stream
+   * window. Transport and session shape stay with the launch flow.
    */
-  command(type: string, options: { paused?: boolean; fullscreen?: boolean } = {}): NativeSidecarStatus {
+  command(type: string, options: { fullscreen?: boolean } = {}): NativeSidecarStatus {
     if (!this.child) throw httpError("No native stream is running.", 409);
     switch (type) {
       case "recording-toggle":
@@ -507,7 +419,7 @@ class NativeSidecarManager {
         this.startRecording();
         break;
       case "recording-stop":
-        this.stopRecording("deck");
+        this.stopRecording("launcher");
         break;
       case "microphone-toggle":
       case "fullscreen-toggle":
@@ -515,19 +427,13 @@ class NativeSidecarManager {
         this.send({ id: this.nextId(type), type });
         break;
       case "shell-fullscreen":
-        // The engine fullscreens the window the stream is clipped in (frameless
-        // and monitor-sized, unlike a maximise), and reports the resulting state
-        // back so the deck's button and the window cannot drift apart.
+        // The engine fullscreens its standalone SDL window and reports the
+        // resulting state so F10 and the launcher's fullscreen button stay in sync.
         this.send({
           id: this.nextId(type),
           type,
           fullscreen: options.fullscreen === true,
         });
-        break;
-      case "input-paused":
-        // Engine-side capture toggle: the styled deck releases the mouse while
-        // it is open and hands it back when it closes.
-        this.send({ id: this.nextId(type), type, paused: options.paused === true });
         break;
       default:
         throw httpError(`Unsupported native command: ${type || "(empty)"}`, 400);
@@ -652,13 +558,11 @@ class NativeSidecarManager {
       this.pending = null;
       return;
     }
-    // Engine-initiated session controls. Ctrl+Shift+Q (stop-stream) quits the
-    // native session from the keyboard. Ctrl+G (Guide) in embedded mode now
-    // opens the React full sidebar (opaque left, fully functional) instead of
-    // the old GDI box. Ctrl+N toggles compact stats (340x520 GeForce style).
+    // Engine-initiated session controls. Ctrl+Shift+Q stops the session. Ctrl+G
+    // and Guide are consumed without opening a menu so native gameplay stays
+    // clean; stats are likewise kept out of the game window.
     if (type === "overlay-request") {
-      console.log("[NVST] engine overlay-request (embedded host menu request) -> React sidebar");
-      emitNativeEvent({ type: "native-shortcut", action: "toggleSidebar" });
+      console.log("[NVST] stream-deck overlay request suppressed (Ctrl+G / Guide disabled)");
       return;
     }
     if (type === "shortcut-action" && message.action === "stop-stream") {
@@ -667,37 +571,33 @@ class NativeSidecarManager {
       return;
     }
     if (type === "shortcut-action" && message.action === "toggle-stats") {
-      console.log("[NVST] engine shortcut toggle-stats (embedded host stats request)");
-      emitNativeEvent({ type: "native-shortcut", action: "toggleStats" });
+      console.log("[NVST] native stats overlay request suppressed");
       return;
     }
-    // F11 / Alt+Enter and the mouse-lock binding are handled by the engine while
-    // it owns the keyboard (the game has the focus, not the web page), so the
-    // host has to apply them to the app window — otherwise fullscreen would be
-    // unreachable exactly when a game is running.
+    // F10 / Alt+Enter arrive from the engine while the game owns the keyboard.
+    // The launcher sends an explicit fullscreen state back to the standalone
+    // SDL window so its UI control and native window stay synchronized.
     if (type === "shortcut-action" && message.action === "toggle-fullscreen") {
-      console.log("[NVST] engine shortcut toggle-fullscreen; toggling the app window");
+      console.log("[NVST] engine fullscreen shortcut; toggling the standalone stream window");
       emitNativeEvent({ type: "native-shortcut", action: "toggleFullscreen" });
       return;
     }
     if (type === "shortcut-action" && message.action === "toggle-pointer-lock") {
-      // The engine's Raw Input thread saw F8 while it owns the keyboard; the
-      // deck applies the toggle (and drops it when the page already did).
+      // The engine's Raw Input thread saw F8; ask the engine to toggle capture
+      // and mirror state to the separate launcher UI.
       console.log("[NVST] engine shortcut toggle-pointer-lock");
       emitNativeEvent({ type: "native-shortcut", action: "togglePointerLock" });
       return;
     }
     if (type === "fullscreen-state") {
-      // The engine just fullscreened (or restored) the shell window — e.g. the
-      // F11 chord, which no browser handles. Mirror the state into the deck.
+      // Mirror fullscreen state for the standalone SDL game window.
       const fullscreen = message.fullscreen === true;
       console.log(`[NVST] shell window fullscreen ${fullscreen ? "on" : "off"}`);
       emitNativeEvent({ type: "native-fullscreen-state", fullscreen });
       return;
     }
-    // F12 / Ctrl+G "Recording" row: the engine only reports the toggle — the
-    // MKV worker itself is driven through recording-start/stop commands here
-    // so clips land next to the other desktop data with a stable file name.
+    // F12 toggles recording in the native window. The engine reports the
+    // shortcut; the backend owns the MKV worker and stable output path.
     if (type === "shortcut-action" && message.action === "toggle-recording") {
       console.log("[NVST] engine shortcut toggle-recording; toggling native MKV recording");
       this.toggleRecording();

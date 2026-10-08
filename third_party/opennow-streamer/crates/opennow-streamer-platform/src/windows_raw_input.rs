@@ -112,7 +112,7 @@ struct RawInputState {
     /// VKs of shortcut chords currently held down. Their key-up is swallowed so
     /// the remote game never receives half of a local shortcut.
     pressed_shortcuts: Mutex<HashSet<u16>>,
-    /// Stream shortcut bindings configured by the shell (Ctrl+N / F8 / F11 /
+    /// Stream shortcut bindings configured by the shell (Ctrl+N / F8 / F10 /
     /// Ctrl+Shift+Q / ...). The Raw Input thread owns the keyboard whenever the
     /// embedded surface cannot hold focus, so it has to recognise the chords
     /// itself: otherwise every local shortcut would be typed into the game
@@ -477,7 +477,7 @@ unsafe fn process_raw_keyboard(state: &RawInputState, raw: &RAWINPUT) {
     };
     // Local stream chords are recognised here, exactly like the SDL event path
     // does when the window holds the focus: Ctrl+G opens the deck, Alt+Enter or
-    // the configured F11 toggle fullscreen, Ctrl+N the stats strip, and so on.
+    // the configured F10 toggle fullscreen, Ctrl+N the stats strip, and so on.
     // Everything else is gameplay input.
     if pressed {
         if is_guide_key(key, modifiers) {
@@ -567,7 +567,7 @@ fn is_guide_key(key: u16, modifiers: u16) -> bool {
 }
 
 /// Alt+Enter is the universal game-fullscreen chord and must stay local even
-/// where the configured binding only lists F11 (Fn-lock laptops).
+/// where the configured binding only lists F10 (Fn-lock laptops).
 fn is_alt_enter(key: u16, modifiers: u16) -> bool {
     key == VK_RETURN && modifiers & MOD_ALT != 0
 }

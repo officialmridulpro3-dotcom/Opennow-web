@@ -1,10 +1,9 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Capabilities for the OpenNOW windows: `main` (the unmodified web client) and `overlay` (the transparent native-stream overlay). The renderer only needs the opener plugin so external links (NVIDIA sign-in, store pages) open in the system browser.",
+  "description": "Capabilities for the OpenNOW launcher window. The renderer uses the opener plugin for external links (NVIDIA sign-in, store pages). Native gameplay is rendered in a separate SDL window.",
   "windows": [
-    "main",
-    "overlay"
+    "main"
   ],
   "permissions": [
     "core:default",

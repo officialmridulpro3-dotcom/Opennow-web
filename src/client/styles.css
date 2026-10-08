@@ -1,19 +1,18 @@
-/* ---------- Design tokens — cyberpunk deck, dark only ----------
-   Six colours, four typefaces, one shadow, chamfers instead of pills.
-   The light theme is retired: `data-theme` is pinned to "dark" and the
-   deck ground is the only ground. Values mirror the queue screen's
-   `--qs-*` tokens so both halves of the app speak the same language. */
+/* ---------- OpenNOW gaming design system ----------
+   A high-contrast midnight base, electric cyan/violet, and a restrained
+   neon-lime accent. Shared tokens keep Home, Library, Settings, dialogs,
+   queue and stream controls visually consistent without costly effects. */
 :root {
   color-scheme: dark;
   --game-poster-scale: 1.05;
 
-  /* Palette — the six approved colours, and nothing else */
-  --color-void: #000000;
-  --color-ultra: #0000ee;
-  --color-steel: #9b99ad;
-  --color-azure: #00a3ff;
-  --color-neon: #76ff3b;
-  --color-light: #ffffff;
+  /* Midnight base and a compact electric gaming palette */
+  --color-void: #070b12;
+  --color-ultra: #6574ff;
+  --color-steel: #9aabc5;
+  --color-azure: #42d8ff;
+  --color-neon: #b5f66c;
+  --color-light: #f4f7ff;
 
   /* Ground — layered blue-black, never flat */
   --bg-a: var(--color-void);
@@ -34,38 +33,38 @@
   --ink-soft: var(--color-steel);
   --ink-muted: color-mix(in srgb, var(--color-steel) 80%, var(--color-light));
 
-  /* Accent — neon by default; settings can switch it to azure, white or steel */
-  --accent-rgb: 118, 255, 59;
-  --accent: var(--color-neon);
-  --accent-hover: color-mix(in srgb, var(--color-neon) 82%, var(--color-light));
-  --accent-press: color-mix(in srgb, var(--color-neon) 82%, var(--color-void));
-  --accent-glow: rgba(var(--accent-rgb), 0.25);
+  /* Cyan is the default; users can switch to lime, violet, amber or rose. */
+  --accent-rgb: 66, 216, 255;
+  --accent: var(--color-azure);
+  --accent-hover: color-mix(in srgb, var(--color-azure) 84%, var(--color-light));
+  --accent-press: color-mix(in srgb, var(--color-azure) 84%, var(--color-void));
+  --accent-glow: rgba(var(--accent-rgb), 0.14);
   --accent-surface: rgba(var(--accent-rgb), 0.08);
-  --accent-surface-strong: rgba(var(--accent-rgb), 0.14);
+  --accent-surface-strong: rgba(var(--accent-rgb), 0.16);
   --accent-on: var(--color-void);
 
-  /* Semantic — the palette carries no red, so attention is azure, good is neon */
-  --error: var(--color-azure);
-  --error-bg: color-mix(in srgb, var(--color-azure) 10%, transparent);
-  --error-border: color-mix(in srgb, var(--color-azure) 32%, transparent);
-  --warning: var(--color-azure);
+  /* Semantic colors remain distinct from the decorative gaming accents. */
+  --error: #ff627f;
+  --error-bg: rgba(255, 98, 127, 0.11);
+  --error-border: rgba(255, 98, 127, 0.32);
+  --warning: #ffc45e;
   --info: var(--color-azure);
   --success: var(--color-neon);
 
-  /* Radii — the detected set; chamfered clip-paths carry the deck shapes */
-  --r-sm: 4px;
-  --r-md: 5px;
-  --r-lg: 10px;
-  --r-xl: 10px;
-  --r-2xl: 10px;
+  /* Soft corners keep the dense desktop UI readable and current. */
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-2xl: 20px;
   --r-full: 50%;
   --r-pill: 9999px;
 
-  /* Elevation — the one extracted shadow, plus accent light */
-  --shadow-sm: 6px 5px 12px 3px rgba(29, 28, 28, 0.21);
-  --shadow-md: 6px 5px 12px 3px rgba(29, 28, 28, 0.21);
-  --shadow-lg: 6px 5px 12px 3px rgba(29, 28, 28, 0.21);
-  --shadow-glow: 0 0 20px var(--accent-glow);
+  /* Single-pass elevation; keep glow faint to avoid layered GPU blur. */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.34);
+  --shadow-glow: 0 0 12px var(--accent-glow);
 
   /* Motion — interactions stay inside 0.2-0.8s; ambient loops are separate */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -7015,68 +7014,6 @@ button.game-card-store-chip.owned.active:hover {
   box-shadow: none;
 }
 
-/* Transparent hole so the streamer-owned child HWND/NSView/X11 surface shows
-   through Chromium while React overlays (sidebar, HUD) stay above. */
-.sv--native-hole {
-  /* The engine's video plane is a child window drawn *above* this WebView, so
-     the deck only has to look right where the plane does not cover: the sidebar
-     column, the strip reserved for the stats HUD / title pill and the edges.
-     It used to be transparent so the surface could show through from behind
-     WebView2; with the plane on top that only let the desktop (or the app page
-     behind the window) bleed through, which reads as "the stream is not
-     maximised". Paint the deck's own chrome instead. */
-  background: #05070a !important;
-  background-image: var(--deck-ground, none) !important;
-  /* Ensure the stream root remains the focus/pointer-lock target. */
-  pointer-events: auto;
-}
-
-/* Native mode reserves as little of the picture as possible: the stats HUD is
-   the only chrome in the strip, and the game title pill (which the deck shows
-   anyway once Ctrl+G is pressed) is hidden rather than reserving ~100px of the
-   window just to float a pill over the game. */
-.sv--native-hole .sv-title-bar {
-  display: none !important;
-}
-
-.sv--native-hole .sv-stats--hints {
-  /* The keyboard-hint list is hidden in native mode (it would eat the strip);
-     keep the HUD in the strip rather than jumping it 118px up. */
-  bottom: 14px !important;
-}
-
-.sv--native-hole .sv-hints {
-  display: none !important;
-}
-
-.sv--native-hole.sv--bare,
-.sv--native-hole .sv-empty,
-.sv--native-hole .sv-empty--bare,
-.sv--native-hole .sv-empty-grad,
-.sv--native-hole .sv-empty-grad--bare,
-.sv--native-hole .sv-video {
-  background: transparent !important;
-}
-
-/* Make entire page transparent when native hole active so SDL child behind WebView2 shows through */
-html:has(.sv--native-hole),
-body:has(.sv--native-hole),
-#root:has(.sv--native-hole),
-html:has(.sv--native-hole) body,
-body:has(.sv--native-hole) #root {
-  background: #05070a !important;
-  background-color: #05070a !important;
-  background-image: var(--deck-ground, none) !important;
-}
-
-.sv-video--native-hole {
-  background: transparent !important;
-  /* Keep a tiny opacity so Chromium still hit-tests the element for mouse/keyboard
-     while the native child HWND paints underneath (HWND_BOTTOM + clip styles). */
-  opacity: 0.01 !important;
-  pointer-events: auto;
-}
-
 .sv-video:focus,
 .sv-video:focus-visible,
 .sv-video:focus-within {
@@ -8075,37 +8012,6 @@ body:has(.sv--native-hole) #root {
 }
 
 /* Game title toast */
-/* Engine could not embed its surface: the deck is opaque and the game sits in
-   a foreign window, so say so instead of leaving a dead video hole. */
-.sv-native-surface-warning {
-  position: fixed;
-  left: 50%;
-  bottom: 20px;
-  transform: translateX(-50%);
-  z-index: 1002;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-width: min(92vw, 560px);
-  padding: 10px 16px;
-  border: 1px solid color-mix(in srgb, var(--warning, #ffb020) 42%, transparent);
-  border-radius: var(--r-sm);
-  background: color-mix(in srgb, #1a1204 88%, transparent);
-  color: var(--ink);
-  font-size: 0.82rem;
-  line-height: 1.35;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-}
-
-.sv-native-surface-warning strong {
-  font-size: 0.86rem;
-  font-weight: 700;
-}
-
-.sv-native-surface-warning span {
-  color: var(--ink-muted, rgba(255, 255, 255, 0.72));
-}
-
 .sv-title-bar {
   position: fixed;
   bottom: 68px;
@@ -20887,9 +20793,9 @@ body:has(.sv--native-hole) #root {
   font-variant-numeric: tabular-nums;
 }
 
-/* Automatically enabled on machines with four or fewer logical cores, up to
-   4 GB reported memory, or browser data-saver enabled. Keep the typography,
-   contrast and layout; shed only expensive ambient layers and filters. */
+/* Always enabled in the desktop WebView, and automatically enabled in browsers
+   with four or fewer logical cores, up to 4 GB reported memory, or data-saver.
+   Keep typography, contrast and layout; shed expensive decoration only. */
 :root[data-ui-performance="lite"] {
   --deck-glow: none;
 }
@@ -20919,26 +20825,36 @@ body:has(.sv--native-hole) #root {
   mix-blend-mode: normal !important;
 }
 
+:root[data-ui-performance="lite"] .sload-spin {
+  animation-name: spin !important;
+  animation-duration: 1s !important;
+  animation-iteration-count: infinite !important;
+}
+
 /* =====================================================================
-   OPENNOW UI REFRESH — clearer navigation, calmer surfaces, less paint
-   Full labels on desktop, familiar compact rail on smaller windows. The
-   redesign keeps the game art prominent while dropping blurred backdrops,
-   scan meshes, hover zooms and decorative glow layers.
+   OPENNOW GAMING SHELL — shared by every launcher screen
+   Full-width desktop navigation, crisp solid surfaces and a restrained
+   cyan-violet atmosphere. No blur, mesh, or continuously animated paint.
    ===================================================================== */
 .app-shell:not(.app-container--controller) {
-  --rail-w: 220px;
-  --ui-bg: #0b1014;
-  --ui-sidebar: #0e151a;
-  --ui-surface: #111a20;
-  --ui-surface-raised: #162129;
-  --ui-border: #293840;
-  --ui-text: #edf3f5;
-  --ui-muted: #9baab1;
+  --rail-w: 232px;
+  --ui-bg: #080d17;
+  --ui-sidebar: #0b1220;
+  --ui-surface: #101a2a;
+  --ui-surface-raised: #16243a;
+  --ui-border: #263650;
+  --ui-text: #f2f6ff;
+  --ui-muted: #9aabc5;
+  --ui-cyan: #42d8ff;
+  --ui-violet: #8e8bff;
+  --ui-lime: #b5f66c;
   --deck-glow: none;
+  --accent-glow: rgba(var(--accent-rgb), 0.12);
   background: var(--ui-bg);
   background-image:
-    radial-gradient(920px 580px at 76% -18%, rgba(var(--accent-rgb), 0.045), transparent 72%),
-    linear-gradient(180deg, #0c1216 0%, #090e11 100%);
+    radial-gradient(820px 520px at 83% -24%, rgba(66, 216, 255, 0.08), transparent 72%),
+    radial-gradient(740px 460px at 8% 110%, rgba(101, 116, 255, 0.055), transparent 74%),
+    linear-gradient(180deg, #0b1220 0%, #080d17 100%);
 }
 
 .app-shell:not(.app-container--controller)::before,
@@ -21894,4 +21810,33 @@ body:has(.sv--native-hole) #root {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+}
+
+/* Minimal launcher-side fullscreen control; gameplay itself stays in SDL. */
+.sv--native-deck .sv-fs {
+  width: 38px;
+  height: 38px;
+  border: 1px solid color-mix(in srgb, var(--ui-cyan, var(--color-azure)) 34%, var(--ui-border, var(--panel-border)));
+  border-radius: 10px;
+  clip-path: none;
+  background: rgba(10, 16, 28, 0.88);
+  color: var(--ui-text, var(--ink));
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.28);
+  opacity: 0.78;
+  transform: translateY(0);
+  transition: opacity 140ms ease, transform 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.sv--native-deck .sv-fs:hover,
+.sv--native-deck .sv-fs:focus-visible {
+  border-color: var(--ui-cyan, var(--color-azure));
+  color: var(--ui-cyan, var(--color-azure));
+  background: rgba(14, 24, 40, 0.96);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.28);
+}
+
+.sv--native-deck .sv-fs--hidden {
+  opacity: 0;
+  transform: translateY(5px);
+  pointer-events: none;
 }

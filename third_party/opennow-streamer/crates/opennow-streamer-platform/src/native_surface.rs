@@ -128,11 +128,10 @@ mod platform {
     }
 
     fn child_extended_style(style: u32) -> u32 {
-        // WS_EX_NOACTIVATE keeps the video child from stealing the keyboard when
-        // it is clicked: in the embedded design the shell's WebView stays the
-        // focused window (React handles Ctrl+G / Ctrl+N / F11 and the deck's
-        // inputs), while gameplay keys are delivered by the engine's dedicated
-        // Raw Input thread, which does not need the focus at all.
+        // WS_EX_NOACTIVATE keeps the video child from stealing the keyboard
+        // when clicked. Embedding hosts keep their UI window focused, while the
+        // engine's dedicated Raw Input thread delivers gameplay keys without
+        // requiring focus on the child surface.
         (style & !(WS_EX_APPWINDOW | WS_EX_TRANSPARENT)) | WS_EX_NOACTIVATE
     }
 

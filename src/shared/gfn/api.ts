@@ -51,7 +51,6 @@ import type {
   KeyframeRequest,
   MainToRendererSignalingEvent,
   NativeInputPacket,
-  NativeRenderSurfaceUpdate,
   NativeStreamerShortcutBindings,
   SendAnswerRequest,
   SignalingConnectRequest,
@@ -126,28 +125,21 @@ export interface OpenNowApi {
   sendAnswer(input: SendAnswerRequest): Promise<void>;
   sendIceCandidate(input: IceCandidatePayload): Promise<void>;
   sendNativeInput(input: NativeInputPacket): void;
-  setNativeInputPaused(paused: boolean): void;
-  updateNativeRenderSurface(input: NativeRenderSurfaceUpdate): void;
   updateNativeShortcuts(shortcuts: NativeStreamerShortcutBindings): void;
   requestKeyframe(input: KeyframeRequest): Promise<void>;
   onSignalingEvent(listener: (event: MainToRendererSignalingEvent) => void): () => void;
   /**
-   * Keep a passive connection to the backend open for the lifetime of a native
-   * (NVST) session. Engine-initiated events — the Ctrl+G/Ctrl+N/F11 chords, the
-   * clipboard-paste request and the live counters — are delivered over that
-   * socket, and a native session has no WebRTC signaling socket of its own.
+   * Keep a passive backend connection open for native NVST events such as F10
+   * fullscreen, F8 pointer lock, clipboard paste and telemetry. Overlay requests
+   * are suppressed during standalone native playback.
    */
   openNativeEventChannel(): void;
   closeNativeEventChannel(): void;
-  /**
-   * Fullscreen the window the native stream is clipped in. The engine owns that
-   * window, so it makes it frameless and monitor-sized (a maximise cannot) and
-   * reports the resulting state back as a `native-fullscreen-state` event.
-   */
+  /** Fullscreen the separate native SDL game window and report its state. */
   setNativeFullscreen(fullscreen: boolean): void;
   /** Hand the pointer over / take it back while the engine owns it (F8). */
   toggleNativePointerLock(): void;
-  /** Listen for F11 fullscreen toggle from main process */
+  /** Listen for F10 fullscreen toggle from main process */
   onToggleFullscreen(listener: () => void): () => void;
   onExitFullscreen(listener: () => void): () => void;
   quitApp(): Promise<void>;

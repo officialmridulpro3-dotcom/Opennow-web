@@ -13,7 +13,6 @@ import { getLoginProviders } from "./webAuth";
 import { getSession } from "./sessionStore";
 import { getPlaytimeSummary, importLegacyPlaytime, recordPlaytimeSession, resetPlaytime } from "./playtimeStore";
 import { finalizeNativeContext, nativeSidecar, resolveLaunchTransportMode, resolveNativeMediaPeer } from "./nativeStream";
-import { readShellWindowHandle } from "./shellWindowHandle";
 import { formatUdpPreflight, runUdpPreflight } from "./udpPreflight";
 
 function asyncRoute(handler: (request: Request, response: Response) => Promise<void>) {
@@ -292,18 +291,6 @@ export function registerApi(app: Express): void {
     response.json(nativeSidecar.status());
   });
 
-  // Main-window handle breadcrumb written by the desktop shell. The web client
-  // normally asks Tauri directly (`get_window_handle`), but the shell serves
-  // this page from the loopback origin — a remote origin for Tauri — so IPC can
-  // be unavailable. The native engine needs this handle to embed its video
-  // surface inside the app window instead of opening a window of its own.
-  app.get("/api/native/surface-handle", asyncRoute(async (request, response) => {
-    const state = getSession(request, response);
-    await state.requireAuth();
-    const shell = readShellWindowHandle();
-    response.json({ handle: shell?.handle ?? null, pid: shell?.pid ?? null });
-  }));
-
   app.post("/api/native/start", asyncRoute(async (request, response) => {
     const state = getSession(request, response);
     await state.requireAuth();
@@ -339,46 +326,20 @@ export function registerApi(app: Express): void {
     response.json(await nativeSidecar.stop());
   }));
 
-  // In-app native surface — embedded mode: client sends video element rect + Tauri HWND
-  // so sidecar can attach SDL child window inside the app window (no black screen, no external popup)
-  app.post("/api/native/surface", asyncRoute(async (request, response) => {
-    const state = getSession(request, response);
-    await state.requireAuth();
-    const input = (request.body ?? {}) as {
-      rect?: { x: number; y: number; width: number; height: number } | null;
-      visible?: boolean;
-      deviceScaleFactor?: number;
-      showStats?: boolean;
-      windowHandle?: string;
-      screenRect?: { x: number; y: number; width: number; height: number } | null;
-    };
-    nativeSidecar.updateSurface({
-      rect: input.rect ?? null,
-      visible: input.visible ?? false,
-      deviceScaleFactor: input.deviceScaleFactor ?? (typeof window !== "undefined" ? (window as any).devicePixelRatio : 1) ?? 1,
-      showStats: input.showStats ?? false,
-      windowHandle: input.windowHandle,
-      screenRect: input.screenRect ?? input.rect ?? null,
-    });
-    response.json({ ok: true });
-  }));
-
-  // Deck actions from the styled overlay window. Whitelisted in the sidecar so
-  // the web layer can only touch microphone/recording/fullscreen, never the
-  // transport or session shape.
+  // Launcher controls for an active native session. Whitelisted in the sidecar
+  // so the web layer can only request supported actions, never change transport
+  // or session shape.
   app.post("/api/native/command", asyncRoute(async (request, response) => {
     const state = getSession(request, response);
     await state.requireAuth();
     const input = (request.body ?? {}) as {
       type?: unknown;
-      paused?: unknown;
       fullscreen?: unknown;
     };
     const type = typeof input.type === "string" ? input.type : "";
     try {
       response.json(
         nativeSidecar.command(type, {
-          paused: typeof input.paused === "boolean" ? input.paused : undefined,
           fullscreen: typeof input.fullscreen === "boolean" ? input.fullscreen : undefined,
         }),
       );

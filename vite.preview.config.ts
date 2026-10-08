@@ -10,11 +10,8 @@ export default defineConfig({
       name: "preview-root-rewrite",
       configureServer(server) {
         server.middlewares.use((req, _res, next) => {
-          // `/` opens the native stream overlay preview (the thing most people
-          // come here to look at); `/ui` keeps the library/UI preview.
-          if (req.url === "/" || req.url === "/index.html") {
-            req.url = "/native-overlay-preview.html";
-          } else if (req.url === "/ui") {
+          // The preview is the full launcher UI, not the retired native overlay.
+          if (req.url === "/" || req.url === "/index.html" || req.url === "/ui") {
             req.url = "/preview.html";
           }
           next();

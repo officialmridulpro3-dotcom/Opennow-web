@@ -1,237 +1,122 @@
-# Native (NVST) streaming plan
+# Native (NVST) streaming
 
-Goal: play GeForce NOW sessions through upstream OpenNOW's native Rust NVST
-engine (real RTSPS/SRTP/SCTP wire protocol) instead of browser WebRTC,
-launched from this repo's Tauri desktop shell. WebRTC stays as the browser
-fallback.
+OpenNOW Desktop can hand a GeForce NOW session to the native Rust NVST engine
+instead of decoding it in browser WebRTC. The native game runs in a separate,
+maximized SDL/OS window; the Tauri window remains the OpenNOW launcher and
+session controller. WebRTC remains available for browsers and machines where
+the native sidecar is unavailable.
 
 ## Architecture
 
 ```text
-OpenNOW.exe (Tauri shell)
-├── WebView2 window — library / settings / account (existing web client)
-├── WebView2 overlay window — styled stream deck + live stats (transparent,
-│   always-on-top, click-through; see NATIVE_OVERLAY.md)
-├── opennow-server — auth / catalog / CloudMatch (existing Node backend)
-│   └── NEW: /api/native-session → SessionContext JSON for the engine
-│   └── NEW: /api/native/command → whitelisted deck actions (mic, recording,
-│       input pause, shell fullscreen, pointer lock)
-└── opennow-nvst.exe (NEW sidecar: third_party/opennow-streamer standalone)
-    └── own D3D11 window, native input + audio; JSON-lines over stdio
+OpenNOW.exe (Tauri 2 launcher, opaque and maximized)
+├── WebView2 — library, account, settings and session controls
+└── opennow-server — auth, catalog, CloudMatch and signaling
+    └── opennow-nvst.exe — native NVST transport, decode, input and SDL window
 ```
 
-Flow: Play → backend allocates CloudMatch session → shell spawns the sidecar,
-writes `{"type":"hello","protocolVersion":7}` + `{"type":"start","context":…}`
-to its stdin → gameplay in the native window → sidecar exit returns to library.
+Flow: Play allocates a CloudMatch session, the backend spawns the sidecar and
+writes `hello` + `start` JSON-lines messages to stdin, and the sidecar opens its
+own maximized game window when the first frame is ready. Stopping the session
+closes that window and returns the user to the launcher.
 
-## Why the sidecar shape
+There is no native video surface embedded in the WebView, no transparent video
+hole, no HWND handoff, and no second Tauri overlay WebView. The renderer's
+`/api/native/surface` and shell-window-handle routes have been removed so the
+native game cannot accidentally attach to the launcher.
 
-- The standalone engine owns its window, input capture (raw input), audio
-  (WASAPI), decode (Media Foundation/DXVA), and presentation (D3D11 swapchain).
-- No FFI/GPU-interop work: the Qt-embedded texture-sharing path is unnecessary.
-- The Windows standalone presenter supports feature levels down to **10.0**,
-  so DirectX 10-class GPUs work (H.264 only — no H.265/AV1 on that hardware).
+## Clean native window and controls
 
-## Phases
+The sidecar runs with these desktop settings:
 
-- [x] **Phase 0 — Spike.** Upstream engine evaluated (protocol, Windows
-  FL10 path, sidecar shape, SessionContext contract). Verdict: viable.
-- [x] **Phase 1 — Vendor + CI sidecar build.** `third_party/opennow-streamer`
-  pinned at upstream `v1.0.1`; `nvst-sidecar` CI job builds
-  `opennow-streamer.exe` on Windows and smoke-tests the `hello` handshake.
-- [x] **Phase 2 — Session bridge.** The client builds the engine
-  `SessionContext` via the shared `buildNativeStreamerSessionContext`; the
-  backend (`POST /api/native/start`) validates the allocation fields and
-  forces `settings.transportMode = "nvst"` before handing it to the engine.
-- [x] **Phase 3 — Shell lifecycle + Play UI.** The backend spawns, pipes, and
-  supervises the sidecar (`src/server/nativeStream.ts`); the shell resolves
-  the bundled binary and passes `OPENNOW_NVST_SIDECAR`; StreamView shows a
-  "Play in native window" card that tears down WebRTC media so only one
-  transport burns CPU. The sidecar ships in the installer (`externalBin`)
-  and the portable ZIP.
-- [ ] **Phase 4 — Test loop.** Iterate on real hardware (no NVIDIA account/GPU
-  in CI) until playback is smooth.
-- [x] **Phase 5 — Styled overlay.** The stream deck and live stats left the
-  engine's GDI panel and became a React/CSS overlay window floated above the
-  video plane: transparent, always-on-top, click-through unless the deck is
-  open, driven from the main window over Tauri IPC, with the engine's telemetry
-  line feeding real numbers into the HUD. See
-  [NATIVE_OVERLAY.md](NATIVE_OVERLAY.md). Preview with `npm run preview:overlay`.
+- `OPENNOW_NATIVE_EXTERNAL_RENDERER=1` — create a visible SDL game window.
+- `OPENNOW_NATIVE_SHELL_PLACEMENT=0` — keep it top-level and independent of the launcher.
+- `OPENNOW_NATIVE_INPUT_OWNER=native` — use native keyboard, mouse and gamepad capture.
+- `OPENNOW_NATIVE_DISABLE_OVERLAY=1` — do not allocate the engine's menu/stats overlay.
+- `OPENNOW_NATIVE_HOST_OVERLAY=1` — route host-owned shortcuts through the session controller.
 
-## Choosing the player (stream mode)
+Ctrl+G / Guide and Ctrl+N are consumed without opening a menu or stats overlay.
+The SDL overlay manager is not initialized for OpenNOW native sessions. The
+launcher remains a separate window and provides a minimal fullscreen control
+that auto-hides when idle; its control acts on the native game window.
 
-`Settings → Stream → Native streaming` stores `settings.streamClientMode`:
+**F10 toggles fullscreen** in the standalone native window. It is the default
+`shortcutToggleFullscreen` binding in client settings and the sidecar's fallback
+binding. The sidecar forwards F10 to the launcher over a passive backend event
+channel; the launcher then sends an explicit fullscreen state back to the SDL
+window and mirrors the acknowledgement in its own UI. Alt+Enter remains a
+native fullscreen chord. F8 toggles native mouse capture, and Ctrl+Shift+Q
+stops the session.
 
-| Mode | Player | Stream chrome |
+The game window is maximized on first presentation. F10 switches it to and from
+borderless desktop fullscreen; restoring fullscreen returns to the maximized
+window. The launcher itself also starts maximized, but remains opaque and
+separate from gameplay.
+
+## Choosing the player
+
+`Settings → Stream → Native Streaming` stores `settings.streamClientMode`:
+
+| Mode | Playback | Window |
 | --- | --- | --- |
-| **Native engine** (default) | NVST sidecar (RTSPS/SRTP/SCTP, D3D11 present, DXVA decode) painting into a child surface clipped inside the app window, with the engine owning raw mouse/keyboard input | React/CSS deck in the app window over the native plane (the page goes transparent only where the video shows) |
-| **In-app player** | Browser WebRTC into the in-app `<video>` element | React/CSS deck in the app window (sidebar, live stats HUD, video filters) |
+| **Native engine** (default when bundled) | NVST over RTSPS/SRTP/SCTP; native D3D11 presentation and hardware decode | Separate maximized SDL game window; launcher stays available |
+| **In-app player** | Browser WebRTC in the `<video>` element | Gameplay and controls stay in the launcher window |
 
-The native surface handshake is what keeps the engine inside the app window: the
-client posts the video rect plus the Tauri HWND to `/api/native/surface`, and the
-CLI re-posts it when the sidecar comes up (the first command can arrive before
-the engine accepts commands, and then the engine would keep a window of its
-own). While the deck is open the client sends `input-paused`, which releases the
-engine's raw-input capture so the deck can be clicked, and clears it again when
-the deck closes. If the shell never hands over a valid HWND the engine falls back
-to a standalone window and the transparent overlay window from
-[NATIVE_OVERLAY.md](NATIVE_OVERLAY.md) carries the chrome instead.
+The sidecar owns its media, input and presentation path, so the WebRTC video
+client is disposed when a native session takes over; this avoids running two
+video decode/composition paths on a low-resource PC. Desktop WebView UI also
+starts in the low-effects profile to reduce decoration and background work.
 
-Two independent paths deliver that HWND, because the handshake is the one thing
-everything else depends on:
+## Session and input routing
 
-* `invoke("get_window_handle")` — direct Tauri IPC. The shell serves this page
-  from `http://127.0.0.1:<port>`, which Tauri treats as a *remote* origin: the
-  IPC bridge only exists when a capability lists the origin, which is what
-  `src-tauri/capabilities/remote-backend.json` does.
-* `<app-data>/window-handle.json` — the shell writes its main-window handle at
-  launch (and deletes it on exit); the client reads it through
-  `GET /api/native/surface-handle` whenever IPC is missing or denied. The
-  backend refuses stale entries and handles whose owning process is gone.
+The client builds the engine `SessionContext` through the shared
+`buildNativeStreamerSessionContext`; the backend (`POST /api/native/start`)
+validates it and forces `settings.transportMode = "nvst"`. The backend spawns,
+pipes and supervises the sidecar in `src/server/nativeStream.ts`. The Tauri
+launcher resolves the bundled executable and passes its path as
+`OPENNOW_NVST_SIDECAR`; the installer and portable ZIP both include it.
 
-The shell also passes `OPENNOW_NATIVE_SHELL_PLACEMENT=1`, so the engine never
-reveals a window of its own while it waits for that handle: the surface stays
-hidden and the engine logs
-`shell-placement: standalone window suppressed (waiting for the shell HWND)`
-instead. Each attach attempt is verified (`GetParent` must return the shell
-window) and logged as `External SDL surface attached …` or
-`… attach failed: <reason>`; the backend turns those markers into
-`surfaceAttached`/`surfaceError` on `/api/native/status`, so the deck can fall
-back to opaque chrome with a visible warning instead of showing a dead hole.
+With no parent window to embed into, the SDL game window receives focus and
+keyboard input directly. Native Raw Input / SDL capture sends gameplay input to
+the stream. Shortcut bindings are passed in the session context, including the
+F10 fullscreen default. The launcher keeps a passive WebSocket open for native
+fullscreen, pointer-lock, clipboard and telemetry events; it does not open a
+WebRTC negotiation on that socket.
 
-Keyboard input takes a different route. The video plane is a child window of the
-shell, kept `WS_EX_NOACTIVATE` so clicking it never takes the keyboard away from
-the WebView — that is what keeps the deck's own shortcuts (Ctrl+G, Ctrl+N, F11,
-Escape) and the cursor working while the game has the mouse. Gameplay keys would
-be invisible to the engine in that arrangement, so the engine's dedicated Raw
-Input thread registers the keyboard too (`RIDEV_INPUTSINK`, same foreground
-check as the mouse) and forwards the samples to the stream; SDL key handling is
-disabled so a key is never delivered twice (`external_keyboard`). That thread
-therefore has to recognise the stream chords itself — Ctrl+G (guide/deck),
-Alt+Enter and the configured F11 (fullscreen), Ctrl+N (stats), F8, Ctrl+Shift+Q
-and the rest — or they would be typed into the game instead of reaching the
-deck. The shells bindings are handed to the thread with
-`set_shortcut_bindings`, and their key-up is swallowed so the remote game never
-sees half a chord.
+The separate launcher view can still end the session and expose its minimal
+fullscreen control. It does not render over the game window. Native Ctrl+G and
+Ctrl+N requests are discarded, while WebRTC's in-app sidebar remains available
+when the WebRTC player is selected.
 
-Those chords reach the page as `native-shortcut` events, which travel over the
-same `/api/signaling` socket the WebRTC player negotiates on. A native session
-never opens it on its own — there is no SDP to exchange — so the client keeps a
-passive socket (no `connect` frame) open for the lifetime of the engine session
-(`openNativeEventChannel`). Without it the engine's shortcuts, the clipboard
-request and the live counters have nowhere to arrive, and F11/Ctrl+N only worked
-when the WebView itself saw the key — which it does not, because WebView2 treats
-those as browser accelerators.
+## Build and validation
 
-Because the Raw Input thread reports those chords even while the WebView holds
-the focus, the page can see the very same physical keypress through its own DOM
-handler and then again as a `native-shortcut` event. Whichever side applies a
-chord marks it, and the other side drops the same press within a few hundred
-milliseconds, so one press can never toggle the deck / stats / fullscreen twice
-(which looks exactly like the shortcut doing nothing).
+The sidecar lives in `third_party/opennow-streamer` and is built for Windows x64
+by the `nvst-sidecar` job in `.github/workflows/desktop-build.yml`. The Windows
+job packages both an NSIS installer and a portable ZIP, then publishes them to
+the branch's rolling GitHub Release. CI smoke-tests the JSON-lines `hello`
+handshake, but cannot validate CloudMatch allocation, GPU decode or real-time
+input without an NVIDIA account and Windows hardware.
 
-Fullscreen in a native session belongs to the engine, because the window that
-has to grow is the one the plane is clipped in — an ordinary maximise leaves the
-frame, the taskbar and the shell's rounded corners in place, and the in-page
-fullscreen API only stretches the WebView inside a windowed shell. While a
-native session owns the window, the deck's Full screen button and F11 post
-`shell-fullscreen` with the explicit state the button shows; the engine saves the
-shell window's style, rectangle and zoomed flag, strips
-`WS_CAPTION|WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SYSMENU`, adds
-`WS_POPUP`, sizes it to the monitor's full bounds and then reports the resulting
-state back as a `native-fullscreen-state` event, so the button, the deck and the
-window cannot drift apart (`Shell window fullscreen: on/off`). Toggling back
-restores the saved placement exactly, including a window that was maximised, and
-`hide_checked` unwinds it when the plane disappears so a stopped stream never
-leaves an unmovable frameless window behind. Non-native sessions keep using
-`set_app_fullscreen` on the Tauri window; the in-page fullscreen API stays the
-browser fallback.
-The desktop shell opens its main window maximized so a native session starts
-with the largest available client area. The client republishes the surface rect
-as the window resizes *and* the engine watches the shell window it is embedded
-in: every 250 ms it compares the live client area with the size it last placed
-the plane at, re-derives the rect from the chrome insets measured on the last
-publish, and re-places the child itself (`Windows external SDL surface: shell
-window resized …`). A maximised window — or a fullscreen toggle — therefore
-fills with the picture even when the host-side publish is late, instead of
-leaving the game in a corner of the window.
+## Provisioning
 
-Because the engine's plane is drawn *above* the WebView on Windows, the client
-publishes a rect that stops short of the deck's own panels (sidebar column and
-stats HUD, measured from the DOM and scaled by devicePixelRatio), and hides the
-surface entirely while a centred modal is open. Without that the React chrome
-would be visible only until the first frame arrived. The reservation is kept as
-small as possible — the title pill is hidden in this mode and the keyboard-hint
-list too, and hidden chrome reserves nothing — so with the stats HUD off the
-plane covers the whole window.
+CloudMatch fixes transport at allocation time. Native launches use the
+reference native client's provisioning (`secureRTSPSupported: true`,
+`enhancedStreamMode: 0`, `transport: null`, and no `GSStreamerType=WebRTC` entry)
+and echo it on resume claims. The server honors `nvst` only when a bundled
+sidecar exists; web deployments always fall back to WebRTC.
 
-The plane being *on top* also means the page never has to be transparent: the
-deck paints its own chrome (`.sv--native-hole`) everywhere the plane does not
-cover. While the page was transparent, every reserved pixel showed the desktop
-(or the app page behind the window) straight through, which reads as "the
-stream is not maximised". Only the standalone fallback window is transparent
-nowhere — it keeps the plain deck background.
+Native seats also configure their encoder from `requestedStreamingFeatures`
+rather than WebRTC SDP. Native creates send the reference codec, bitrate, vsync,
+audio-channel and client-identity values; resume claims echo the same values.
 
-Cursor: the server sends cursor *shapes* and expects the client to draw the
-pointer, but the client still has to own the pointer while the game plays: a
-shooter reads relative deltas, and an unclipped OS pointer walks off to a second
-monitor or the taskbar. A native session therefore behaves like the vendor
-client — a left click in the picture is what takes the pointer (the Raw Input
-thread sees it; the `WS_EX_NOACTIVATE` plane never gets SDL's focus), upon which
-the engine grabs the mouse, hides the OS pointer and switches to relative motion
-(`External SDL mouse control mode: locked relative (mouse-look)`). The game's own
-cursor messages release it again for menus (`GFN cursor applied …` →
-`absolute cursor`), F8 / the deck's control toggles it explicitly through the
-`pointer-lock-toggle` command, and opening the deck pauses input, which always
-releases. Relative motion itself travels on the Raw Input thread; the pump only
-keeps SDL's pointer visibility in step with the lock state, so a stray SDL focus
-change cannot leave the user without a cursor in a menu or with one flying out of
-the game.
+## Startup hardening and constraints
 
-The mode drives the claim (`clientMode`/`transportMode`) and the attach path on
-launch, resume and recovery (`startNativeFromClaim` vs. opening the signaling
-bridge for the in-app player), so the seat's transport always matches the
-player. While the sidecar runs, StreamView reduces the app window to a
-transparent hole for the engine's surface; when it is idle the app window keeps
-the video and the styled deck.
+Every sidecar wait is bounded: hello 30 seconds, start acknowledgement 120
+seconds, and client fetch 150 seconds. The hello/start budgets can be tuned via
+`OPENNOW_NVST_{HELLO,START}_TIMEOUT_MS`; `status.phase` (`handshake` or
+`starting`) drives launcher progress.
 
-Until a mode is picked in Settings (`streamModeChosen`) the shipped default owns
-`streamClientMode`, so upgrades follow the default instead of a mode an older
-build happened to persist.
-
-## Provisioning (HTTP 501 lesson)
-
-The seat's transport locks at CloudMatch allocation: `GSStreamerType=WebRTC`
-metaData (+ `secureRTSPSupported: false`) provisions the WebRTC stack, and the
-seat's RTSPS endpoint then answers the NVST control-channel upgrade with
-HTTP 501. Native launches therefore send the reference native client's
-provisioning — no `GSStreamerType` entry, `secureRTSPSupported: true`,
-`enhancedStreamMode: 0`, `transport: null` — selected by
-`settings.transportMode === "nvst"` and echoed on resume claims. The server
-honors `nvst` only when a sidecar binary is present
-(`resolveLaunchTransportMode`), so web deployments always stay on WebRTC.
-
-## Hang hardening
-
-Every sidecar wait is bounded so a silent engine surfaces as an error with a
-retry instead of an infinite spinner: hello 30s, start-ack 120s (tunable via
-`OPENNOW_NVST_{HELLO,START}_TIMEOUT_MS`), client fetch 150s. `status.phase`
-(`handshake` | `starting`) drives the card's progress line while starting.
-
-## Stream provisioning (stuck-in-setup lesson)
-
-Transport provisioning alone left native seats parked in setup forever: unlike
-WebRTC (codec via SDP), the native seat configures its encoder purely from
-`requestedStreamingFeatures`, so native creates send the full reference set
-(`codec`, `maxBitrateKbps`, `vsync`, `audioChannelCount`, …) plus the reference
-client-identity fields (`sdkVersion "2.0"`, `streamerVersion "14"`,
-`clientPlatformName "Windows"`, controllers `[2]`, numeric `appId`, …). Resume
-claims echo the same values. A native-only poll backstop fails loudly if the
-seat never leaves setup once out of queue.
-
-## Constraints / risks
-
-- Upstream engine is young: pin stable tags, expect GPU/driver-specific bugs.
-- H.264-only on DirectX 10 hardware; needs WDDM 1.1+ vendor drivers for DXVA.
-- Network/region problems affect native and WebRTC equally (same servers).
-- Vendored tree must stay byte-identical to upstream (see third_party/README).
+The upstream engine is young and can expose GPU/driver-specific issues. H.264
+is the broadly supported path on DirectX 10-class hardware; newer codecs depend
+on the available decoder and driver. Full playback validation still requires a
+real account and Windows machine.

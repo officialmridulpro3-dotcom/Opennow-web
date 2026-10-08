@@ -939,7 +939,7 @@ export function SettingsStreamSection({
           </span>
         </div>
 
-        {/* Streaming client — in-app WebRTC player or the native NVST engine */}
+        {/* Streaming client — native standalone window or in-app WebRTC */}
         <div className="settings-row settings-row--column">
           <div className="settings-row-top settings-row-top--compact">
             <label className="settings-label settings-label--wrap">
@@ -966,10 +966,9 @@ export function SettingsStreamSection({
             />
           </div>
           <span className="settings-subtle-hint">
-            Native engine plays through the bundled NVST engine: it decodes with Media Foundation/DXVA, presents over
-            D3D11 and owns raw mouse/keyboard input, so the cursor and input feel like a local game. Its video plane is
-            clipped inside this window and the OpenNOW deck is drawn on top of it (no separate window, no GDI chrome).
-            In-app player uses browser WebRTC instead — pick it if the engine cannot run on this machine.
+            Native play opens a separate maximized game window using hardware decode and native input, leaving this
+            launcher window available. Press F10 in the game window to toggle fullscreen; Ctrl+G overlays are disabled.
+            Choose the in-app WebRTC player if the native engine cannot run on this machine.
           </span>
         </div>
         {/* Video filters (client-side GPU shaders) */}

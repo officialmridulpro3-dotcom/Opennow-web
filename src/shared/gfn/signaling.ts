@@ -109,27 +109,6 @@ export interface NativeInputPacket {
   partiallyReliable?: boolean;
 }
 
-export interface NativeRenderSurfaceRect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-export interface NativeRenderSurfaceUpdate {
-  rect: NativeRenderSurfaceRect | null;
-  visible: boolean;
-  deviceScaleFactor: number;
-  showStats?: boolean;
-  windowHandle?: string;
-  screenRect?: NativeRenderSurfaceRect | null;
-}
-
-export interface NativeRenderSurface extends NativeRenderSurfaceUpdate {
-  windowHandle?: string;
-  screenRect?: NativeRenderSurfaceRect | null;
-}
-
 export interface KeyframeRequest {
   reason: string;
   backlogFrames: number;
@@ -144,7 +123,7 @@ export type MainToRendererSignalingEvent =
   | { type: "native-shortcut"; action: NativeStreamerShortcutAction }
   | { type: "native-clipboard-paste" }
   | { type: "native-input-capture-changed"; captured: boolean }
-  /** The engine fullscreened (or restored) the window the stream is clipped in. */
+  /** The engine fullscreened (or restored) the active native game window. */
   | { type: "native-fullscreen-state"; fullscreen: boolean }
   | { type: "native-stream-started"; message?: string }
   | { type: "native-stream-stopped"; reason?: string }

@@ -185,22 +185,15 @@ Generated at build time (gitignored): `src-tauri/resources/server.mjs`,
 
 ## Native game window keys
 
-The standalone game window owns its own input; these engine shortcuts work
-while it is focused (defaults, configurable per launch via the START
-context's `shortcuts` map):
+The standalone, maximized SDL game window owns its own input. OpenNOW Desktop
+uses these defaults (the shortcut bindings remain configurable per launch):
 
-- **F11** — toggle borderless fullscreen (video follows the window size, so
-  manual windowed resizes scale the picture too). **Alt+Enter** works as well
-  (handy on Fn-lock laptops where F11 needs the Fn key).
-- **Ctrl+G** — open the GFN-style sidebar menu: Resume, Fullscreen,
-  Statistics, Quit game. Navigate with the mouse or ↑↓ + Enter; Esc closes.
-  The game keeps running while the menu is open and menu input never reaches
-  the game. (If the overlay fails to initialize, a native dialog menu is used
-  as fallback.)
-- **F8** — toggle mouse pointer lock (also re-syncs a stuck-hidden cursor to
-  visible so menu motion flows again; the game re-asserts its cursor state
-  on its next update).
-- **Ctrl+Shift+Q** — quit the native session from the keyboard.
-- **Ctrl+N** — toggle the live statistics strip (video format, bitrate/fps,
-  RTT/loss, frames/recoveries, decoder, window size). The strip is
-  click-through: the game keeps receiving all mouse input beneath it.
+- **F10** — toggle fullscreen for the game window. **Alt+Enter** also works.
+- **F8** — toggle native mouse capture.
+- **Ctrl+Shift+Q** — stop the native stream session.
+- **Ctrl+G / Guide** and **Ctrl+N** — consumed without opening a menu or stats
+  overlay, keeping native gameplay unobstructed.
+
+The separate OpenNOW launcher stays opaque and available for session controls;
+its minimal fullscreen button also targets the native game window and hides
+when idle. WebRTC sessions continue to use the in-app stream controls.

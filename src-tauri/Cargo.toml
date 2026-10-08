@@ -18,7 +18,6 @@ tauri-plugin-dialog = "2"
 tauri-plugin-opener = "2"
 tauri-plugin-single-instance = "2"
 raw-window-handle = "0.6"
-# Overlay window IPC payloads and the commands' events are plain JSON values.
 serde_json = "1"
 
 [profile.release]

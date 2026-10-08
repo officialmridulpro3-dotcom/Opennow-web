@@ -47,7 +47,7 @@ export function attachSignalingBridge(server: HttpServer): void {
       if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(payload));
     };
 
-    // Forward native sidecar events (overlay-request -> toggleSidebar, toggle-stats) to the web client
+    // Forward native runtime status and supported shortcut/fullscreen events to the web client; overlay requests are filtered by the sidecar supervisor.
     const unsubscribeNative = onNativeEvent((event) => {
       send({ type: "event", payload: event });
     });

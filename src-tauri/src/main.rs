@@ -29,14 +29,6 @@ use std::time::{Duration, Instant};
 use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_dialog::DialogExt;
 
-/// Transparent, always-on-top overlay window carrying the styled stream
-/// chrome (deck, live stats, toasts) above the native video plane.
-mod native_overlay;
-/// Main-window handle breadcrumb shared with the backend (see
-/// `publish_window_handle`). Lives in the app data directory, next to
-/// `server.log`.
-const WINDOW_HANDLE_FILE: &str = "window-handle.json";
-
 /// WebView2 command-line switches for the main window.
 ///
 /// `--ignore-gpu-blocklist` is the critical one for DirectX 10-class GPUs:
@@ -104,18 +96,8 @@ struct BackendProcess {
     child: Mutex<Option<Child>>,
 }
 
-#[tauri::command]
-fn get_window_handle(window: tauri::Window) -> Result<String, String> {
-    native_window_handle(&window)
-}
-
-/// Real-window fullscreen for the in-app player.
-///
-/// The native (NVST) video plane is a child window positioned over this
-/// window's client area, so a DOM fullscreen request alone would only fill the
-/// WebView — the OS window (and therefore the video surface) would stay
-/// windowed. F11 in the stream, the deck's fullscreen button and the engine's
-/// `toggle-fullscreen` shortcut all end up here.
+/// Real-window fullscreen for the in-app WebRTC player. Native NVST sessions
+/// fullscreen their separate SDL game window through the sidecar instead.
 #[tauri::command]
 fn set_app_fullscreen(window: tauri::Window, fullscreen: bool) -> Result<(), String> {
     window
@@ -123,80 +105,9 @@ fn set_app_fullscreen(window: tauri::Window, fullscreen: bool) -> Result<(), Str
         .map_err(|error| error.to_string())
 }
 
-/// Win32 handle of a shell window as a decimal string, `"0"` elsewhere.
-fn native_window_handle<H>(window: &H) -> Result<String, String>
-where
-    H: raw_window_handle::HasWindowHandle,
-{
-    #[cfg(target_os = "windows")]
-    {
-        use raw_window_handle::RawWindowHandle;
-        let handle = window.window_handle().map_err(|e| e.to_string())?;
-        match handle.as_raw() {
-            RawWindowHandle::Win32(h) => Ok(format!("{}", h.hwnd.get() as usize)),
-            _ => Err("Not a Win32 window".into()),
-        }
-    }
-    #[cfg(not(target_os = "windows"))]
-    {
-        let _ = window;
-        Ok("0".into())
-    }
-}
-
-/// Breadcrumb the backend reads when the web client asks for the main window's
-/// handle. The Tauri IPC bridge (`get_window_handle`) is the fast path, but a
-/// page loaded from the loopback backend origin is a *remote* origin for Tauri,
-/// so IPC can be unavailable — without this file the native engine would never
-/// be told where to embed and would fall back to a separate window.
-fn publish_window_handle(app: &tauri::AppHandle) {
-    let Some(window) = app.get_webview_window("main") else {
-        eprintln!("[OpenNOW] main window missing — native surface embedding has no handle");
-        return;
-    };
-    let handle = match native_window_handle(&window) {
-        Ok(handle) if handle != "0" => handle,
-        Ok(_) => return,
-        Err(error) => {
-            eprintln!("[OpenNOW] could not resolve the main window handle: {error}");
-            return;
-        }
-    };
-    let Ok(data_dir) = app.path().app_data_dir() else {
-        return;
-    };
-    let written_at_ms = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|elapsed| elapsed.as_millis())
-        .unwrap_or_default();
-    let payload = format!(
-        "{{\"handle\":\"{handle}\",\"pid\":{},\"writtenAtMs\":{written_at_ms}}}\n",
-        std::process::id()
-    );
-    if let Err(error) = std::fs::write(simplified(&data_dir).join(WINDOW_HANDLE_FILE), payload) {
-        eprintln!("[OpenNOW] could not publish the main window handle: {error}");
-    }
-}
-
-/// The handle file is only meaningful while the shell that wrote it is alive.
-fn remove_window_handle_file(app: &tauri::AppHandle) {
-    if let Ok(data_dir) = app.path().app_data_dir() {
-        let _ = std::fs::remove_file(simplified(&data_dir).join(WINDOW_HANDLE_FILE));
-    }
-}
-
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![
-            get_window_handle,
-            set_app_fullscreen,
-            native_overlay::native_overlay_command,
-            native_overlay::native_overlay_state,
-            native_overlay::native_overlay_action,
-            native_overlay::native_overlay_push,
-            native_overlay::native_overlay_ready,
-            native_overlay::native_overlay_hide,
-        ])
+        .invoke_handler(tauri::generate_handler![set_app_fullscreen])
         // Must stay the first registered plugin.
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             if let Some(window) = app.get_webview_window("main") {
@@ -223,7 +134,6 @@ fn main() {
         .expect("error while building the OpenNOW desktop shell")
         .run(|app_handle, event| {
             if let tauri::RunEvent::Exit = event {
-                remove_window_handle_file(app_handle);
                 terminate_backend(app_handle);
             }
         });
@@ -242,17 +152,6 @@ fn startup(app: &tauri::AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let origin = start_backend(app)?;
 
     open_main_window(app, &origin)?;
-    publish_window_handle(app);
-
-    // The overlay window is intentionally created even when the user never
-    // opens the deck: it boots once (a few MB, no rendering while hidden) and
-    // is then instantly available for Ctrl+G / Ctrl+N / guide-button requests
-    // coming from the native engine. A failure here is not fatal — WebRTC and
-    // native playback both keep working.
-    if let Err(error) = native_overlay::setup(app, &origin) {
-        eprintln!("[OpenNOW] styled stream overlay unavailable, engine menu stays in use: {error}");
-    }
-
     Ok(())
 }
 
@@ -393,21 +292,15 @@ fn open_main_window(
     origin: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let url: tauri::Url = origin.parse()?;
-    // In-app native stream: SDL child window is embedded inside Tauri window via Win32 SetParent.
-    // WebView background must be transparent where video hole is, so native surface shows through
-    // (no black WebRTC screen). Use transparent window + transparent WebView.
-    // Black background in CSS will still paint, but hole area (opacity 0.01) lets SDL child show through.
+    // The launcher is an opaque, maximized app window. Native NVST gameplay
+    // opens in its own maximized SDL window and never needs a transparent hole.
     let mut builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(url))
         .title("OpenNOW")
-        .inner_size(1280.0, 800.0)
+        .inner_size(1400.0, 900.0)
         .min_inner_size(1000.0, 640.0)
         .resizable(true)
-        // Native NVST video is clipped into this shell window. Start the host
-        // maximized so the first surface rect covers the available screen
-        // instead of leaving the embedded stream in a centered 1280x800 window.
         .maximized(true)
-        .transparent(true)
-        .background_color(tauri::window::Color(0, 0, 0, 0))
+        .background_color(tauri::window::Color(8, 13, 23, 255))
         .initialization_script(EXTERNAL_LINK_SCRIPT);
 
     #[cfg(target_os = "windows")]

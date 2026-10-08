@@ -6,26 +6,18 @@ export interface AccentColorOption {
   hex: `#${string}`;
 }
 
-/**
- * Accent picks are the palette's own lights: neon, azure, white and steel.
- * The stored ids keep their historical names so existing settings files and
- * server defaults stay valid.
- */
+/** High-contrast accent presets tuned for the dark, gaming-focused shell. */
 const ACCENT_COLOR_OPTIONS: readonly AccentColorOption[] = [
-  { value: "green", labelKey: "settings.interface.accentColorNeon", hex: "#76ff3b" },
-  { value: "blue", labelKey: "settings.interface.accentColorAzure", hex: "#00a3ff" },
-  { value: "amber", labelKey: "settings.interface.accentColorWhite", hex: "#ffffff" },
-  { value: "violet", labelKey: "settings.interface.accentColorSteel", hex: "#9b99ad" },
+  { value: "green", labelKey: "settings.interface.accentColorNeon", hex: "#b5f66c" },
+  { value: "blue", labelKey: "settings.interface.accentColorAzure", hex: "#42d8ff" },
+  { value: "violet", labelKey: "settings.interface.accentColorViolet", hex: "#a78bfa" },
+  { value: "amber", labelKey: "settings.interface.accentColorAmber", hex: "#ffc45e" },
+  { value: "rose", labelKey: "settings.interface.accentColorRose", hex: "#ff72b6" },
 ] as const;
 
 const ACCENT_COLOR_MAP = new Map<AppAccentColor, AccentColorOption>(
   ACCENT_COLOR_OPTIONS.map((option) => [option.value, option]),
 );
-
-/** Retired accents fold onto the nearest deck light instead of going missing. */
-const LEGACY_ACCENT_FALLBACKS: Partial<Record<AppAccentColor, AppAccentColor>> = {
-  rose: "blue",
-};
 
 interface RgbColor {
   r: number;
@@ -93,9 +85,7 @@ export function getAccentColorOptions(): readonly AccentColorOption[] {
 }
 
 export function getAccentColorOption(accentColor: AppAccentColor): AccentColorOption {
-  const resolved = ACCENT_COLOR_MAP.get(accentColor)
-    ?? ACCENT_COLOR_MAP.get(LEGACY_ACCENT_FALLBACKS[accentColor] ?? accentColor);
-  return resolved ?? ACCENT_COLOR_OPTIONS[0];
+  return ACCENT_COLOR_MAP.get(accentColor) ?? ACCENT_COLOR_OPTIONS[0];
 }
 
 export function applyAccentColor(accentColor: AppAccentColor, root: HTMLElement | null = null): void {
@@ -109,9 +99,9 @@ export function applyAccentColor(accentColor: AppAccentColor, root: HTMLElement 
   target.style.setProperty("--accent-hover", rgbToHex(hoverRgb));
   target.style.setProperty("--accent-press", rgbToHex(pressRgb));
   target.style.setProperty("--accent-rgb", `${baseRgb.r}, ${baseRgb.g}, ${baseRgb.b}`);
-  target.style.setProperty("--accent-glow", `rgba(${baseRgb.r}, ${baseRgb.g}, ${baseRgb.b}, 0.25)`);
+  target.style.setProperty("--accent-glow", `rgba(${baseRgb.r}, ${baseRgb.g}, ${baseRgb.b}, 0.14)`);
   target.style.setProperty("--accent-surface", `rgba(${baseRgb.r}, ${baseRgb.g}, ${baseRgb.b}, 0.08)`);
-  target.style.setProperty("--accent-surface-strong", `rgba(${baseRgb.r}, ${baseRgb.g}, ${baseRgb.b}, 0.14)`);
+  target.style.setProperty("--accent-surface-strong", `rgba(${baseRgb.r}, ${baseRgb.g}, ${baseRgb.b}, 0.16)`);
   target.style.setProperty("--accent-on", getContrastColor(baseRgb));
 }
 

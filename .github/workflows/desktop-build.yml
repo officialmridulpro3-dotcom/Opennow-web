@@ -95,9 +95,9 @@ jobs:
           path: portable/OpenNOW-portable-windows-x64.zip
           if-no-files-found: error
 
-  # Phase 1 of docs/NATIVE_STREAMER.md: compile upstream's native NVST engine
-  # (vendored at third_party/opennow-streamer) as a standalone Windows binary
-  # and smoke-test its JSON-lines handshake. Not yet wired into the app.
+  # Compile the NVST engine (vendored at third_party/opennow-streamer) as a
+  # standalone Windows binary and smoke-test its JSON-lines handshake. The
+  # packaged app runs it in a separate maximized SDL window.
   nvst-sidecar:
     name: Build NVST sidecar (Windows x64)
     runs-on: windows-latest

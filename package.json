@@ -20,7 +20,6 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:load": "node scripts/load-test.mjs",
-    "preview:overlay": "vite --config vite.preview.config.ts --port 5173",
     "preview:ui": "vite --config vite.preview.config.ts --port 5173",
     "desktop:prepare": "node scripts/prepare-desktop.mjs",
     "desktop:dev": "tauri dev",

@@ -14,7 +14,7 @@ The client UI is the official OpenNOW renderer copied from `OpenNOW/opennow-stab
 - Region latency is measured from each visitor's browser with bounded HTTPS checks; unreachable regions remain selectable and show a neutral unavailable state.
 - NVIDIA signaling is relayed through an ownership-checked same-origin WebSocket.
 - Electron updates, native streaming, local media recording, Discord RPC, and desktop window controls are not part of the web app.
-- The UI uses a labeled, full-width desktop navigation rail and flatter high-contrast surfaces; it avoids continuous ambient animation, blurred duplicate library artwork, poster hover transforms, and non-functional decoration. The home screen mounts eight cards per shelf (twelve in the all-games preview), with full shelves still one click away; constrained devices automatically use a low-effects profile, and large libraries render in small batches to reduce startup work and memory use.
+- The UI uses a labeled desktop navigation rail, a midnight/cyan/lime gaming palette, solid high-contrast surfaces, and restrained motion. It avoids continuous ambient animation, blurred duplicate artwork, and unnecessary hover effects. The home screen mounts eight cards per shelf (twelve in the all-games preview); Tauri desktop and constrained browser devices automatically use a low-effects profile, and large libraries render in small batches to reduce startup work and memory use.
 
 ## Development
 
@@ -70,18 +70,16 @@ architecture, builds (CI artifacts or local), and troubleshooting.
 ```bash
 npm run desktop:dev      # native window around the dev stack
 npm run desktop:build    # Windows installer + portable exe
-npm run preview:overlay  # browser preview of the native-stream deck + live stats
+npm run preview:ui       # browser preview of the full launcher UI
 ```
 
-The stream chrome for native sessions (deck, live stats, toasts) is a
-transparent React/CSS overlay window floated above the engine's D3D11 video
-plane — see [docs/NATIVE_OVERLAY.md](docs/NATIVE_OVERLAY.md).
-
 **Stream mode** (`Settings → Stream`) picks the player: **Native engine**
-(default) runs the bundled NVST engine with its surface clipped inside the app
-window and raw-input capture, so the styled React deck draws directly over it
-with no GDI chrome and no browser input path; **In-app player** uses browser
-WebRTC instead. See [docs/NATIVE_STREAMER.md](docs/NATIVE_STREAMER.md).
+(default when bundled) runs the NVST sidecar in its own maximized SDL game
+window, leaving the opaque OpenNOW launcher separate. Press F10 in the game
+window to toggle fullscreen; Ctrl+G / Guide overlays are disabled during native
+play. **In-app player** uses browser WebRTC inside the launcher. See
+[docs/NATIVE_STREAMER.md](docs/NATIVE_STREAMER.md) and the
+[overlay retirement note](docs/NATIVE_OVERLAY.md).
 
 ## Checks
 

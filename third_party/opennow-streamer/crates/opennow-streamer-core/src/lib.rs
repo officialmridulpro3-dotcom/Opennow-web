@@ -1156,12 +1156,10 @@ impl Engine {
         Ok(vec![response(command.id, "ok")])
     }
 
-    /// Explicit fullscreen state for the window the stream is clipped in (the
-    /// deck's Full screen button, and the shell's own F11 handling). The engine
-    /// applies it to the *shell* window: a maximised shell still leaves the
-    /// frame and taskbar in place, so only a frameless, monitor-sized window
-    /// gives the game the whole screen. The host owns the state and passes the
-    /// value it wants, which keeps the button and the window in step.
+    /// Explicit fullscreen state for the active stream window. Standalone
+    /// sessions apply it to their SDL game window; embedding hosts may direct it
+    /// to a parent shell. The host passes the requested state so its control and
+    /// the native window stay synchronized.
     fn shell_fullscreen(&self, command: Command) -> Result<Vec<Value>, Value> {
         let Some(runtime) = self.media_runtime.as_ref() else {
             return Err(error(
@@ -1628,14 +1626,13 @@ fn lock_lifecycle(lifecycle: &Mutex<Lifecycle>) -> MutexGuard<'_, Lifecycle> {
         .unwrap_or_else(|poisoned| poisoned.into_inner())
 }
 
-/// True when the host shell asked for the *styled* stream chrome.
+/// True when the host shell owns handling for stream overlay shortcuts.
 ///
-/// OpenNOW Desktop renders the stream menu and the live-stats HUD in a
-/// transparent web view of its own (see `src-tauri/src/native_overlay.rs`).
-/// Those surfaces are DOM/CSS rather than Win32 draws, so the shortcuts that
-/// would otherwise open the engine's built-in panel are forwarded to the host
-/// as events instead. Upstream behaviour is unchanged when the variable is
-/// unset — the built-in panel stays in charge.
+/// The legacy environment-variable name is kept for compatibility. The
+/// OpenNOW desktop launcher routes fullscreen and pointer-lock to its session
+/// controller, while deliberately suppressing menu/stats requests so the
+/// standalone game window stays clean. Unset hosts keep the engine's built-in
+/// panel behavior.
 fn host_overlay_enabled() -> bool {
     std::env::var("OPENNOW_NATIVE_HOST_OVERLAY")
         .map(|value| {
@@ -1651,11 +1648,9 @@ fn forward_shortcut_action(
     action: StreamShortcutAction,
 ) {
     let host_owned = runtime.is_some_and(MediaRuntime::is_embedded) || host_overlay_enabled();
-    // Pointer lock stays with the host that renders the chrome: this event is
-    // what its F8/Deck control answers, and the host de-duplicates a chord it
-    // already applied itself (see `runPageStreamShortcut`). The engine must not
-    // apply the toggle here as well — two toggles cancel out and the pointer
-    // never moves.
+    // Pointer lock is routed through the host session controller so F8 and its
+    // launcher control share one state. The engine must not apply the toggle
+    // here as well — two toggles would cancel each other out.
     if action == StreamShortcutAction::TogglePointerLock && host_owned {
         let _ = output.send(event(
             "shortcut-action",
@@ -1805,9 +1800,9 @@ fn forward_nvst_session_events<R: NvstSessionResources>(
                         break;
                     };
                     if matches!(input.input, CapturedInput::Guide) {
-                        // Sessions hosted by a shell that owns its own chrome get
-                        // an overlay request; everything else falls back to the
-                        // engine's built-in stream menu.
+                        // Hosts that take ownership of overlay shortcuts get a
+                        // request they can handle or intentionally suppress;
+                        // standalone upstream runs keep the built-in menu.
                         let host_owned = shortcut_runtime
                             .as_ref()
                             .is_some_and(MediaRuntime::is_embedded)

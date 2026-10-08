@@ -1268,7 +1268,7 @@ impl SdlInputCapture {
                     return;
                 }
                 // Alt+Enter is the universal game-fullscreen chord; honor it even
-                // where the configured bindings only list F11 (Fn-lock laptops).
+                // where the configured bindings only list F10 (Fn-lock laptops).
                 if matches!(
                     scancode,
                     sdl2::keyboard::Scancode::Return | sdl2::keyboard::Scancode::KpEnter
@@ -2449,18 +2449,26 @@ fn is_native_guide_shortcut(
     scancode == sdl2::keyboard::Scancode::G && sdl_modifiers(scancode, keymod) == 0x02
 }
 
-/// Whether the embedding shell owns the stream window's placement.
+/// Whether an embedding host owns the stream window's placement.
 ///
-/// Set by the OpenNOW desktop launcher. With it the external SDL surface never
-/// reveals its top-level window of its own accord: it stays hidden until a
-/// `surface` command carries the shell's HWND, so a missing/failed handshake
-/// can never leave a second window floating over the app. The standalone
-/// fallback stays available for CLI runs and other shells that do not set it.
+/// OpenNOW's desktop launcher explicitly leaves this off so gameplay remains in
+/// a separate top-level SDL window. Other hosts can still opt into the surface
+/// attachment protocol by setting the environment variable.
 fn shell_placement_enabled() -> bool {
     std::env::var("OPENNOW_NATIVE_SHELL_PLACEMENT")
         .map(|value| {
             let value = value.trim().to_ascii_lowercase();
             matches!(value.as_str(), "1" | "true" | "yes" | "shell")
+        })
+        .unwrap_or(false)
+}
+
+/// Keep the standalone gameplay window free from the optional native menu/HUD.
+fn native_overlay_disabled() -> bool {
+    std::env::var("OPENNOW_NATIVE_DISABLE_OVERLAY")
+        .map(|value| {
+            let value = value.trim().to_ascii_lowercase();
+            matches!(value.as_str(), "1" | "true" | "yes")
         })
         .unwrap_or(false)
 }
@@ -2836,12 +2844,14 @@ impl WindowsExternalSdlSurface {
         let video = sdl
             .video()
             .map_err(|error| format!("SDL video initialization failed: {error}"))?;
-        let mut window_builder = video.window("OpenNOW Stream", 1280, 720);
-        window_builder
-            .position_centered()
-            .resizable()
-            .borderless()
-            .hidden();
+        let window_title = std::env::var("OPENNOW_GAME_TITLE")
+            .ok()
+            .map(|title| title.trim().to_owned())
+            .filter(|title| !title.is_empty())
+            .map(|title| format!("OpenNOW — {title}"))
+            .unwrap_or_else(|| "OpenNOW Stream".to_owned());
+        let mut window_builder = video.window(&window_title, 1280, 720);
+        window_builder.position_centered().resizable().hidden();
         let mut window = window_builder
             .build()
             .map_err(|error| format!("external SDL video window creation failed: {error}"))?;
@@ -2907,14 +2917,19 @@ impl WindowsExternalSdlSurface {
         input_capture.enable_gamepads(&sdl);
         input_capture.set_input_paused(true, &sdl, &mut window);
         let game_window_id = window.id();
-        let overlay = match OverlayManager::new(&video, game_window_id) {
-            Ok(overlay) => {
-                eprintln!("Windows SDL overlay ready (Ctrl+G menu, Ctrl+N stats)");
-                Some(overlay)
-            }
-            Err(error) => {
-                eprintln!("Windows SDL overlay unavailable, Ctrl+G falls back to dialog: {error}");
-                None
+        let overlay = if native_overlay_disabled() {
+            eprintln!("Native SDL menu/stats overlay disabled by the desktop launcher");
+            None
+        } else {
+            match OverlayManager::new(&video, game_window_id) {
+                Ok(overlay) => {
+                    eprintln!("Windows SDL overlay ready (Ctrl+G menu, Ctrl+N stats)");
+                    Some(overlay)
+                }
+                Err(error) => {
+                    eprintln!("Windows SDL overlay unavailable, Ctrl+G falls back to dialog: {error}");
+                    None
+                }
             }
         };
         Ok(Self {
@@ -3051,13 +3066,8 @@ impl WindowsExternalSdlSurface {
         }
     }
 
-    /// Standalone presentation for the desktop sidecar: without an embedding
-    /// shell no `surface` command ever arrives, so reveal the top-level SDL
-    /// window (and arm input for it) when the first frame presents.
-    /// For Tauri, we prefer embedded child (no separate window), but if
-    /// Tauri HWND not yet available, show standalone as fallback to avoid
-    /// black screen. Once surface command with handle arrives, update() will
-    /// attach child inside Tauri and hide standalone.
+    /// Show the standalone gameplay window once the first frame is ready. The
+    /// desktop launcher intentionally never sends a shell surface handle.
     fn show_standalone(&mut self) {
         if self.embedded || self.visible {
             return;
@@ -3071,8 +3081,9 @@ impl WindowsExternalSdlSurface {
             }
             return;
         }
-        eprintln!("Windows external SDL surface: showing standalone stream window (fallback, will embed when Tauri HWND arrives)");
+        eprintln!("Windows external SDL surface: showing standalone maximized stream window");
         self.window.show();
+        self.window.maximize();
         self.sdl.mouse().show_cursor(true);
         self.window.raise();
         if let Some(raw_input) = self.raw_input.as_ref() {
@@ -3082,10 +3093,12 @@ impl WindowsExternalSdlSurface {
         self.sync_input_ownership();
     }
 
-    /// Ctrl+G sidebar menu when the overlay is available, native dialog otherwise.
+    /// Ctrl+G menu. The desktop launcher disables this path for a clean game window.
     fn toggle_overlay_menu(&mut self) {
-        // Native window GFN long sidebar — 520px full with game image like React version
-        // Embedded hosts use overlay-request → React sidebar, standalone uses this GDI menu
+        if native_overlay_disabled() {
+            eprintln!("Native stream deck request suppressed (overlay disabled)");
+            return;
+        }
         let Some(overlay) = self.overlay.as_mut() else {
             self.show_menu();
             return;
@@ -3191,7 +3204,7 @@ impl WindowsExternalSdlSurface {
             MessageBoxFlag::INFORMATION,
             &buttons,
             "OpenNOW Stream",
-            "The game keeps running while this menu is open.\n\nKeys: F11 or Alt+Enter fullscreen, F8 mouse lock, Ctrl+Shift+Q end stream.",
+            "The game keeps running while this menu is open.\n\nKeys: F10 or Alt+Enter fullscreen, F8 mouse lock, Ctrl+Shift+Q end stream.",
             Some(&self.window),
             None::<sdl2::messagebox::MessageBoxColorScheme>,
         );
@@ -3252,14 +3265,10 @@ impl WindowsExternalSdlSurface {
         Ok(())
     }
 
-    /// Fullscreen toggle (F11 / Alt+Enter / the deck's button).
+    /// Fullscreen toggle (F10 / Alt+Enter / the launcher's button).
     ///
-    /// Embedded sessions fullscreen the *shell* window the plane is clipped in
-    /// — that is the window the game actually fills, and a maximised shell still
-    /// leaves the taskbar and frame in place. Standalone sessions keep the old
-    /// behaviour of fullscreening their own SDL window. The picture follows
-    /// either way: the parent-size watchdog re-places the plane, and the shell's
-    /// own resize is picked up by the client's republish.
+    /// Standalone sessions fullscreen their SDL game window. Other embedding
+    /// hosts can still direct the same control to their parent shell window.
     fn toggle_fullscreen(&mut self) {
         if self.embedded && self.parent_hwnd != 0 {
             let next = !self.shell_fullscreen;
@@ -3282,7 +3291,7 @@ impl WindowsExternalSdlSurface {
         eprintln!(
             "Windows SDL stream window fullscreen: {}",
             if self.fullscreen {
-                "on (F11 exits)"
+                "on (F10 exits)"
             } else {
                 "off"
             },

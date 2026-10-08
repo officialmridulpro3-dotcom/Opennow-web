@@ -14,11 +14,10 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
     rollupOptions: {
-      // Two entries: the app itself and the transparent native-stream overlay
-      // window (`overlay.html`), which the Tauri shell loads separately.
+      // Ship only the launcher UI. Native gameplay and its fullscreen state
+      // live in the sidecar's separate SDL window, not a second WebView.
       input: {
         main: fileURLToPath(new URL("./index.html", import.meta.url)),
-        overlay: fileURLToPath(new URL("./overlay.html", import.meta.url)),
       },
     },
   },

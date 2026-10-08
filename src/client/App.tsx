@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, JSX } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, m } from "motion/react";
@@ -32,22 +32,12 @@ import {
   resolveEntitledStreamProfile,
   SAFE_FALLBACK_STREAM_PROFILE,
 } from "@shared/gfn";
-import { FALLBACK_RELAY_ICE_SERVERS, GfnWebRtcClient, probeWebRtcEnvironment } from "./platforms/gfn/webrtcClient";
-import { getCachedNativeSidecarSupport, getNativeStatus, isNativeSurfaceAttached, sendNativeCommand, startNativeStream, stopNativeStream, syncNativeSurfaceAttached } from "./api";
+import type { GfnWebRtcClient as GfnWebRtcClientType } from "./platforms/gfn/webrtcClient";
+import { getCachedNativeSidecarSupport, getNativeStatus, startNativeStream, stopNativeStream } from "./api";
 import type { NativeSidecarStatus } from "./api";
 import { clientLog, setNativeEngineRunning } from "./api";
 import { formatShortcutForDisplay, isShortcutMatch, normalizeShortcut } from "./shortcuts";
 import { dispatchStreamShortcutAction } from "./streamShortcutActions";
-import {
-  hideNativeOverlay,
-  isNativeOverlayHostAvailable,
-  pushNativeOverlaySession,
-  pushNativeOverlayStats,
-  pushNativeOverlayToast,
-  pushNativeOverlayToggles,
-  sendNativeOverlayCommand,
-  subscribeNativeOverlayActions,
-} from "./nativeOverlayHost";
 import { useElapsedSeconds } from "./utils/useElapsedSeconds";
 import { useAuthSession } from "./hooks/useAuthSession";
 import { useCatalogData } from "./hooks/useCatalogData";
@@ -130,7 +120,6 @@ import { StreamLoading } from "./components/StreamLoading";
 import { StreamView } from "./components/StreamView";
 import { QueueServerSelectModal } from "./components/QueueServerSelectModal";
 import { ReleaseHighlightsModal } from "./components/ReleaseHighlightsModal";
-import { lazy, Suspense } from "react";
 import { MotionSpinner } from "./components/MotionSpinner";
 
 const LibraryPage = lazy(() => import("./components/LibraryPage").then(m => ({ default: m.LibraryPage })));
@@ -236,7 +225,7 @@ export function App(): JSX.Element {
     nativeStreamerExecutablePath: "",
     nativeCloudGsyncMode: "auto",
     nativeD3dFullscreenMode: "auto",
-    nativeExternalRenderer: false,
+    nativeExternalRenderer: true,
     transportMode: "nvst",
     showNativeStreamerStats: false,
     codec: DEFAULT_STREAM_PREFERENCES.codec,
@@ -266,7 +255,7 @@ export function App(): JSX.Element {
     showAntiAfkIndicator: true,
     showStatsOnLaunch: false,
     hideServerSelector: false,
-    appAccentColor: "green",
+    appAccentColor: "blue",
     appTheme: "auto",
     translucentUI: false,
     controllerMode: false,
@@ -319,14 +308,6 @@ export function App(): JSX.Element {
   const [nativeInputCaptureActive, setNativeInputCaptureActive] = useState(false);
   const [nativeInputBridgeReady, setNativeInputBridgeReady] = useState(false);
   const [nativeSidecarStatus, setNativeSidecarStatus] = useState<NativeSidecarStatus | null>(null);
-  // The engine reports whether it really embedded its video surface inside this
-  // window. Until it says otherwise the optimistic value written when the
-  // handle was handed over stands; a reported failure flips the deck back to
-  // opaque chrome so the user is not left staring at a hole with nothing
-  // behind it.
-  useEffect(() => {
-    syncNativeSurfaceAttached(nativeSidecarStatus?.surfaceAttached);
-  }, [nativeSidecarStatus]);
   const [nativeStarting, setNativeStarting] = useState(false);
   const [nativeError, setNativeError] = useState<string | null>(null);
   const [exitPrompt, setExitPrompt] = useState<ExitPromptState>({ open: false, gameTitle: t("app.labels.game") });
@@ -381,37 +362,11 @@ export function App(): JSX.Element {
    */
   const shortcutAppliedAtRef = useRef<Record<string, number>>({});
   /**
-   * Native sessions render gameplay in the engine's own window *above* this
-   * page, so the in-page sidebar would be invisible behind the video child
-   * window. Ctrl+G / Ctrl+N / Guide arrive here as `native-shortcut` events and
-   * are handed to the styled overlay window instead (see nativeOverlayHost.ts).
-   * Returns true when the overlay took the request.
-   */
-  const forwardNativeShortcutToOverlayRef = useRef<((action: string) => boolean) | null>(null);
-  /**
    * Opens the NVIDIA signaling bridge for the in-page (WebRTC) player. Defined
    * further down, next to the media elements it needs; launches reach it through
    * this ref so the launch path stays in one place.
    */
   const startWebRtcFromClaimRef = useRef<((claimed: SessionInfo) => Promise<void>) | null>(null);
-  useEffect(() => {
-    forwardNativeShortcutToOverlayRef.current = (action: string): boolean => {
-      if (!isNativeOverlayHostAvailable() || !nativeStreamingRef.current) return false;
-      // Embedded native sessions draw the deck inside this window (React chrome
-      // over the engine surface), so the shortcuts belong to the in-app UI
-      // rather than the separate always-on-top overlay window.
-      if (isNativeSurfaceAttached()) return false;
-      if (action === "toggleSidebar") {
-        sendNativeOverlayCommand("toggle-deck");
-        return true;
-      }
-      if (action === "toggleStats") {
-        sendNativeOverlayCommand("toggle-hud");
-        return true;
-      }
-      return false;
-    };
-  }, []);
   const streamingGameRef = useRef<GameInfo | null>(null);
 
   useEffect(() => {
@@ -455,7 +410,7 @@ export function App(): JSX.Element {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [videoElementHasFrame, setVideoElementHasFrame] = useState(false);
   const [streamRevealComplete, setStreamRevealComplete] = useState(false);
-  const clientRef = useRef<GfnWebRtcClient | null>(null);
+  const clientRef = useRef<GfnWebRtcClientType | null>(null);
   const isStreamingRef = useRef(streamStatus === "streaming");
 
   useEffect(() => {
@@ -773,7 +728,6 @@ export function App(): JSX.Element {
     setNativeSidecarStatus(null);
     setNativeError(null);
     setNativeStarting(false);
-    hideNativeOverlay();
     diagnosticsStore.set(defaultDiagnostics());
 
     if (!options?.keepStreamingContext) {
@@ -831,27 +785,19 @@ export function App(): JSX.Element {
   }, []);
   const nativeStreamMode = settings.streamClientMode === "native" && nativeSidecarAvailable;
   /**
-   * True while the NVST engine is running: it paints its own frames, so
-   * StreamView then reduces this window to a transparent hole. The WebRTC
-   * player keeps the window and the styled deck whenever the engine is idle.
+   * True while the NVST engine owns a separate OS game window. The Tauri
+   * window remains the launcher/session controller and is never transparent.
    */
   const nativeEngineActive = nativeSidecarStatus?.running ?? false;
 
   /**
-   * Native sessions need the backend event channel.
-   *
-   * Everything the engine initiates — the Ctrl+G/Ctrl+N/F11 chords, the
-   * clipboard-paste request, the live counters — is published over the
-   * `/api/signaling` socket. A native session never opens that socket (there is
-   * no WebRTC negotiation), so before this the engine's shortcuts and stats had
-   * nowhere to arrive: F11/Ctrl+N only worked when the WebView itself saw the
-   * key, and WebView2 swallows exactly those two as browser accelerators. Keep a
-   * passive socket open for as long as the engine runs.
+   * Native sessions keep a passive backend event channel open for fullscreen,
+   * pointer-lock, clipboard and live telemetry events. Ctrl+G/Ctrl+N overlay
+   * requests are deliberately suppressed before they reach this launcher.
    */
   useEffect(() => {
-    // The API layer cannot read React state, so it is told whether the engine
-    // owns the window: that decides whether fullscreen goes to the engine
-    // (frameless + monitor-sized) or to the shell's own window command.
+    // The API layer cannot read React state, so it is told when NVST owns the
+    // separate game window. Fullscreen commands then target that SDL window.
     setNativeEngineRunning(nativeEngineActive);
     if (!nativeEngineActive && !nativeStarting) return undefined;
     window.openNow.openNativeEventChannel?.();
@@ -1402,10 +1348,9 @@ export function App(): JSX.Element {
   }, [nativeStreamerShortcuts, session, streamStatus]);
 
   const setSessionFullscreen = useCallback(async (nextFullscreen: boolean) => {
-    // A native session's window belongs to the engine, so it fullscreens the
-    // window the game is clipped in and the shell command is skipped. The ref is
-    // checked too: `nativeEngineActive` comes from the status poll and can lag
-    // behind the session that is already on screen.
+    // Native gameplay has its own SDL window; explicit fullscreen requests go
+    // there instead of changing the launcher window. The ref also covers the
+    // brief gap before the sidecar status poll catches up.
     if (nativeEngineActive || nativeStreamingRef.current) {
       window.openNow.setNativeFullscreen?.(nextFullscreen);
       setSessionFullscreenState(nextFullscreen);
@@ -1497,13 +1442,6 @@ export function App(): JSX.Element {
       void requestPointerLockCapture(videoRef.current);
     }
   }, [requestPointerLockCapture]);
-
-  const setNativeInputPaused = useCallback((paused: boolean): void => {
-    // Only meaningful while a native session runs: the engine owns raw input
-    // there, and releasing it is what makes the styled deck clickable.
-    if (!nativeStreamingRef.current) return;
-    window.openNow.setNativeInputPaused(paused);
-  }, []);
 
   const resolveExitPrompt = useCallback((confirmed: boolean) => {
     const resolver = exitPromptResolverRef.current;
@@ -2301,12 +2239,19 @@ export function App(): JSX.Element {
 
   // Signaling events
   useEffect(() => {
-    const ensureWebRtcClient = (): GfnWebRtcClient | null => {
+    const ensureWebRtcClient = async (): Promise<GfnWebRtcClientType | null> => {
       if (clientRef.current) {
         return clientRef.current;
       }
       if (!videoRef.current || !audioRef.current) {
         return null;
+      }
+
+      // Keep the sizeable browser media stack out of the launcher startup path;
+      // native NVST sessions never need to download or initialize this module.
+      const { GfnWebRtcClient } = await import("./platforms/gfn/webrtcClient");
+      if (clientRef.current) {
+        return clientRef.current;
       }
 
       clientRef.current = new GfnWebRtcClient({
@@ -2409,6 +2354,9 @@ export function App(): JSX.Element {
       if (!videoRef.current || !audioRef.current) {
         throw new Error("The in-app player is still mounting — try again in a moment.");
       }
+      // Preload the WebRTC transport only for the in-app player. The actual
+      // client still starts when the SDP offer arrives, preserving mic timing.
+      await import("./platforms/gfn/webrtcClient");
       await window.openNow.connectSignaling(buildSignalingConnectRequest(claimed));
       console.log("[Stream] In-app player: signaling bridge opened", {
         sessionId: claimed.sessionId,
@@ -2416,13 +2364,13 @@ export function App(): JSX.Element {
       });
     };
 
-    const activateNativeInputForCurrentSession = (protocolVersion?: number): void => {
+    const activateNativeInputForCurrentSession = async (protocolVersion?: number): Promise<void> => {
       const activeSession = sessionRef.current;
       if (!activeSession) {
         console.warn("[App] Received native stream event but no active session in sessionRef!");
         return;
       }
-      const client = ensureWebRtcClient();
+      const client = await ensureWebRtcClient();
       if (!client) {
         console.warn("[App] Native stream event received before media elements were ready");
         return;
@@ -2440,9 +2388,9 @@ export function App(): JSX.Element {
           maxBitrateKbps: settings.maxBitrateMbps * 1000,
         },
         {
-          // Windows internal: RawInput on the child HWND (Electron click-through is flaky).
-          // Linux: always Electron → IPC (External floating renderer is unsupported).
-          // macOS internal: Electron → IPC. External floating window: always OS capture.
+          // Embedded Windows: RawInput on the child HWND (Electron click-through is flaky).
+          // Linux: always Electron → IPC (external rendering is unsupported there).
+          // macOS embedded: Electron → IPC. Standalone window: native OS capture.
           electronInputBridge:
             /linux/i.test(`${navigator.platform} ${navigator.userAgent}`)
             || (
@@ -2510,7 +2458,7 @@ export function App(): JSX.Element {
             iceServersCount: activeSession.iceServers?.length,
           }));
 
-          const client = ensureWebRtcClient();
+          const client = await ensureWebRtcClient();
 
           if (client) {
             await client.handleOffer(event.sdp, activeSession, {
@@ -2535,23 +2483,21 @@ export function App(): JSX.Element {
           }
         } else if (event.type === "native-stream-started") {
           console.log("[App] Native streamer started:", event.message ?? "");
-          activateNativeInputForCurrentSession(nativeInputProtocolVersionRef.current ?? undefined);
+          await activateNativeInputForCurrentSession(nativeInputProtocolVersionRef.current ?? undefined);
         } else if (event.type === "native-input-ready") {
           console.log("[App] Native input protocol ready:", event.protocolVersion);
           nativeInputProtocolVersionRef.current = event.protocolVersion;
           setNativeInputBridgeReady(true);
           clientRef.current?.setNativeInputProtocolVersion(event.protocolVersion);
           if (nativeStreamingRef.current || sessionRef.current) {
-            activateNativeInputForCurrentSession(event.protocolVersion);
+            await activateNativeInputForCurrentSession(event.protocolVersion);
           }
         } else if (event.type === "native-fullscreen-state") {
-          // The engine fullscreened (or restored) the window the game is
-          // clipped in — e.g. the F11 chord, which no browser delivers.
+          // Mirror fullscreen changes from F10 or the launcher control for the
+          // standalone native stream window.
           setSessionFullscreenState(event.fullscreen === true);
         } else if (event.type === "native-shortcut") {
-          if (!forwardNativeShortcutToOverlayRef.current?.(event.action)) {
-            handleStreamShortcutActionRef.current?.(event.action);
-          }
+          handleStreamShortcutActionRef.current?.(event.action);
         } else if (event.type === "native-clipboard-paste") {
           if (settings.clipboardPaste && (!nativeStreamingRef.current || nativeInputBridgeReady)) {
             void sendStreamClipboardPaste(clientRef.current);
@@ -2570,24 +2516,6 @@ export function App(): JSX.Element {
             diagnosticsStore.getSnapshot(),
             event.stats,
           ));
-          // Mirror the engine counters into the overlay HUD: the overlay is the
-          // only place they are visible while the video plane is on top.
-          pushNativeOverlayStats({
-            codec: event.stats.codec,
-            resolution: event.stats.resolution,
-            decodedFps: event.stats.decodedFps,
-            renderFps: event.stats.renderFps,
-            bitrateKbps: event.stats.bitrateKbps,
-            targetBitrateKbps: event.stats.targetBitrateKbps,
-            rttMs: event.stats.rttMs,
-            packetLossPercent: event.stats.packetLossPercent,
-            framesDecoded: event.stats.framesDecoded,
-            framesDropped: event.stats.sinkDropped,
-            hardwareAcceleration: event.stats.hardwareAcceleration,
-            queueMode: event.stats.queueMode,
-            zeroCopy: event.stats.zeroCopyD3D11 || event.stats.zeroCopyD3D12,
-            updatedAtMs: Date.now(),
-          });
         } else if (event.type === "native-stream-transition") {
           diagnosticsStore.set({
             ...diagnosticsStore.getSnapshot(),
@@ -2602,7 +2530,6 @@ export function App(): JSX.Element {
           const reason = event.reason ?? "Native streamer stopped";
           console.warn("[App] Native streamer stopped:", reason);
           nativeStreamingRef.current = false;
-          hideNativeOverlay();
           nativeInputProtocolVersionRef.current = null;
           setNativeInputBridgeReady(false);
           setNativeInputCaptureActive(false);
@@ -2988,8 +2915,8 @@ export function App(): JSX.Element {
 
       // Native-only: WebRTC probe eliminated — native NVST uses its own UDP bundle socket,
       // not browser WebRTC. The old probe blocked launches on VPN/firewall that only affects
-      // browser ICE, not sidecar. Skip entirely when native is the default (in-app embedded).
-      // WebRTC window completely eliminated, no black screen — in-app native stream only.
+      // browser ICE, not sidecar. Skip entirely when native playback is used; the
+      // sidecar opens its own window and no browser video decoder is needed.
       webrtcExtraIceServersRef.current = undefined;
 
       const sessionProxyUrl = activeSessionProxyUrl;
@@ -3828,7 +3755,6 @@ export function App(): JSX.Element {
   }, [buildCurrentStreamSettings, disconnectSignalingControlled, nativeStarting, nativeStreamerShortcuts]);
 
   const handleStopNative = useCallback(async () => {
-    hideNativeOverlay();
     try {
       setNativeSidecarStatus(await stopNativeStream());
     } catch (error) {
@@ -3931,118 +3857,20 @@ export function App(): JSX.Element {
     await handleStopStream();
   }, [handleStopStream, releasePointerLockIfNeeded, requestExitPrompt, streamStatus, streamingGame?.title, t]);
 
-  /**
-   * Styled native overlay bridge. This page owns the session state; the overlay
-   * window only renders it, and its buttons come back as actions that reuse the
-   * very same handlers as the in-app controls.
-   */
-  useEffect(() => {
-    if (!isNativeOverlayHostAvailable()) return;
-    return subscribeNativeOverlayActions((action, value) => {
-      switch (action) {
-        case "end-session":
-          void handlePromptedStopStream();
-          return;
-        case "toggle-fullscreen":
-          if (streamStatus === "connecting" || streamStatus === "streaming") {
-            void toggleSessionFullscreen();
-          }
-          return;
-        case "capture-mouse":
-        case "resume":
-          // Dismissing the deck returns focus to the game window, which is what
-          // re-locks the engine's relative-mouse capture.
-          sendNativeOverlayCommand("close-deck");
-          return;
-        case "toggle-mic":
-          if (nativeStreamingRef.current) {
-            void sendNativeCommand("microphone-toggle");
-          } else {
-            clientRef.current?.toggleMicrophone();
-          }
-          return;
-        case "toggle-recording":
-          if (nativeStreamingRef.current) {
-            void sendNativeCommand("recording-toggle");
-          }
-          return;
-        case "clipboard-paste":
-          // Native sessions read the Windows clipboard inside the engine window;
-          // the useful thing the deck can do is get out of the way.
-          sendNativeOverlayCommand("close-deck");
-          pushNativeOverlayToast({
-            kind: "info",
-            title: "Press Ctrl + V in the game",
-            detail: "The native window pastes your clipboard into the remote desktop",
-          });
-          return;
-        case "open-settings":
-          setCurrentPage("settings");
-          return;
-        case "set-mouse-sensitivity":
-          if (typeof value === "number") {
-            void updateSetting("mouseSensitivity", Math.max(0.25, Math.min(2, value / 100)));
-          }
-          return;
-        default:
-          return;
-      }
-    });
-  }, [handlePromptedStopStream, streamStatus, toggleSessionFullscreen, updateSetting]);
-
-  /**
-   * Keeps the overlay window fed while a native seat is live: session header
-   * once per change, live toggles whenever the app state they mirror moves.
-   */
-  useEffect(() => {
-    if (!isNativeOverlayHostAvailable() || !nativeStreamingRef.current) return;
-    const hero =
-      streamingGame?.heroImageUrl
-      ?? streamingGame?.imageUrlsByType?.HERO_IMAGE?.[0]
-      ?? streamingGame?.imageUrlsByType?.KEY_ART?.[0]
-      ?? null;
-    pushNativeOverlaySession({
-      gameTitle: streamingGame?.title ?? t("app.labels.game"),
-      heroImageUrl: hero,
-      coverImageUrl: streamingGame?.imageUrl ?? null,
-      region: session?.zone ?? null,
-      startedAtMs: sessionStartedAtMs,
-      transport: "nvst",
-      enginePid: nativeSidecarStatus?.pid ?? null,
-      protocolVersion: nativeInputProtocolVersionRef.current ?? null,
-      firstFrame: nativeSidecarStatus?.firstFrame === true,
-      recording: nativeSidecarStatus?.recording ?? null,
-    });
-    pushNativeOverlayToggles({
-      fullscreen: sessionFullscreen,
-      micMuted: settings.microphoneMode === "disabled",
-      recording: Boolean(nativeSidecarStatus?.recording),
-      inputCaptured: nativeInputCaptureActive,
-    });
-  }, [
-    nativeInputCaptureActive,
-    nativeSidecarStatus?.firstFrame,
-    nativeSidecarStatus?.pid,
-    nativeSidecarStatus?.recording,
-    session?.zone,
-    sessionFullscreen,
-    sessionStartedAtMs,
-    settings.microphoneMode,
-    streamingGame,
-    t,
-  ]);
-
   const applyStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction | "toggleSidebar"): void => {
-    // toggleSidebar comes from native overlay-request (Ctrl+G) — open the full React sidebar opaque left
+    // Ctrl+G / Guide is intentionally consumed during native playback. The
+    // standalone game window has no stream-deck overlay; WebRTC keeps its menu.
     if ((action as string) === "toggleSidebar") {
-      if (streamStatus === "streaming") {
+      if (!nativeStreamingRef.current && streamStatus === "streaming") {
         dispatchStreamShortcutAction("toggleSidebar");
       }
       return;
     }
     switch (action) {
       case "toggleStats":
-        setShowStatsOverlay((prev) => !prev);
+        if (!nativeStreamingRef.current) {
+          setShowStatsOverlay((prev) => !prev);
+        }
         return;
       case "togglePointerLock":
         if (nativeStreamingRef.current) {
@@ -4121,11 +3949,9 @@ export function App(): JSX.Element {
   );
 
   /**
-   * Entry point for the engine's `native-shortcut` events — the only way Ctrl+G
-   * / Ctrl+N / F11 can work while the game owns the keyboard, and the fallback
-   * for the chords WebView2 swallows as browser accelerators. A chord this page
-   * already applied for the same press is dropped (see
-   * `STREAM_SHORTCUT_DEDUPE_MS`).
+   * Entry point for native engine shortcut events such as F10 fullscreen and
+   * F8 pointer lock. The same chord may also reach the launcher DOM, so recent
+   * actions are de-duplicated (see `STREAM_SHORTCUT_DEDUPE_MS`).
    */
   const handleStreamShortcutAction = useCallback((action: NativeStreamerShortcutAction | "toggleSidebar"): void => {
     if (wasStreamShortcutAppliedRecently(action)) {
@@ -4384,13 +4210,11 @@ export function App(): JSX.Element {
             showNativeStats={settings.showNativeStreamerStats}
             nativeInputCaptureActive={nativeInputCaptureActive}
             gstreamerEnabled={nativeEngineActive}
-            nativeExternalRenderer={settings.nativeExternalRenderer}
             nativeSupported={(nativeSidecarStatus?.supported ?? false) && ((nativeSidecarStatus?.running ?? false) || nativeStarting || (nativeError ?? nativeSidecarStatus?.lastError ?? null) != null)}
             nativeRunning={nativeEngineActive}
             nativeStarting={nativeStarting}
             nativePhase={nativeSidecarStatus?.phase ?? null}
             nativeError={nativeError ?? nativeSidecarStatus?.lastError ?? null}
-            nativeSurfaceError={nativeSidecarStatus?.surfaceError ?? null}
             onStartNative={handleStartNative}
             onStopNative={handleStopNative}
             shortcuts={{
@@ -4457,7 +4281,6 @@ export function App(): JSX.Element {
             onReleasePointerLock={() => {
               void releasePointerLockIfNeeded();
             }}
-            onNativeInputPaused={setNativeInputPaused}
             allowEscapeToExitFullscreen={settings.allowEscapeToExitFullscreen}
             videoShader={settings.videoShader}
             onVideoShaderChange={handleVideoShaderChange}

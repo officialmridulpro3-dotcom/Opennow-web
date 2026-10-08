@@ -270,7 +270,7 @@ impl StreamShortcutBindings {
                 ),
                 (
                     StreamShortcutAction::ToggleFullscreen,
-                    read("toggleFullscreen", "F11"),
+                    read("toggleFullscreen", "F10"),
                 ),
                 (
                     StreamShortcutAction::StopStream,
@@ -4269,7 +4269,11 @@ mod tests {
             Some(StreamShortcutAction::ToggleStats)
         );
         assert_eq!(
-            bindings.action(0x7a, 0),
+            bindings.action(0x79, 0),
+            Some(StreamShortcutAction::ToggleFullscreen)
+        );
+        assert_eq!(
+            StreamShortcutBindings::default().action(0x79, 0),
             Some(StreamShortcutAction::ToggleFullscreen)
         );
         assert_eq!(

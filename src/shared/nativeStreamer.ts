@@ -2,7 +2,6 @@ import type {
   IceCandidatePayload,
   NativeStreamerBackend,
   NativeStreamStats,
-  NativeRenderSurface,
   NativeStreamerShortcutAction,
   NativeStreamerSessionContext,
   NativeVideoTransition,
@@ -57,16 +56,6 @@ export type NativeStreamerCommand =
       id: string;
       type: "input";
       input: NativeStreamerInputPacket;
-    }
-  | {
-      id: string;
-      type: "input-paused";
-      paused: boolean;
-    }
-  | {
-      id: string;
-      type: "surface";
-      surface: NativeRenderSurface;
     }
   | {
       id: string;
