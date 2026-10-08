@@ -1,6 +1,5 @@
 import { Play, Monitor } from "lucide-react";
 import { memo, type JSX } from "react";
-import { m } from "motion/react";
 import type { GameInfo } from "@shared/gfn";
 import { getStoreDisplayName, getStoreIconComponent } from "./GameCard";
 import { useTranslation } from "../i18n";
@@ -33,10 +32,9 @@ function getActiveStoreRaw(game: GameInfo): string | undefined {
 }
 
 /**
- * Deck poster card: big box art in a chamfered frame with corner brackets,
- * and a strip *below* the art carrying the title, store and launch control.
- * Art, title and launch are sibling buttons — nothing is nested inside
- * another interactive element.
+ * Lightweight library card: bounded box art with title, store and launch
+ * controls below it. Art, title and launch are sibling buttons — nothing is
+ * nested inside another interactive element.
  */
 export const PosterCard = memo(function PosterCard({
   game,
@@ -54,11 +52,7 @@ export const PosterCard = memo(function PosterCard({
   const StoreIcon = !subtitle && storeRaw ? getStoreIconComponent(storeRaw) : null;
 
   return (
-    <m.article
-      className={`poster-card${isSelected ? " selected" : ""}`}
-      whileHover={{ y: -6 }}
-      transition={{ type: "spring", stiffness: 420, damping: 30 }}
-    >
+    <article className={`poster-card${isSelected ? " selected" : ""}`}>
       <div className="poster-card-art">
         <button
           type="button"
@@ -69,20 +63,13 @@ export const PosterCard = memo(function PosterCard({
           aria-label={t("gameCard.selectGame", { title: game.title })}
         >
           {posterUrl ? (
-            <img src={posterUrl} alt="" className="poster-card-img" loading="lazy" />
+            <img src={posterUrl} alt="" className="poster-card-img" loading="lazy" decoding="async" />
           ) : (
             <span className="poster-card-placeholder">
               <Monitor size={30} />
               <span>{game.title}</span>
             </span>
           )}
-          <span className="poster-card-brackets" aria-hidden="true">
-            <span className="poster-card-bracket poster-card-bracket--tl" />
-            <span className="poster-card-bracket poster-card-bracket--tr" />
-            <span className="poster-card-bracket poster-card-bracket--bl" />
-            <span className="poster-card-bracket poster-card-bracket--br" />
-          </span>
-          <span className="poster-card-sweep" aria-hidden="true" />
         </button>
       </div>
 
@@ -135,6 +122,6 @@ export const PosterCard = memo(function PosterCard({
           </p>
         )}
       </div>
-    </m.article>
+    </article>
   );
 });

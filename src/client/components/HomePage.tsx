@@ -20,6 +20,10 @@ import { MotionSpinner } from "./MotionSpinner";
 const CONTROLLER_STORE_HERO_ROTATION_MS = 7000;
 const CONTROLLER_MOVE_REPEAT_MS = 140;
 
+// Keep the landing view quick to mount on slower PCs; full shelves remain one click away.
+const HOME_SHELF_PREVIEW_COUNT = 8;
+const HOME_ALL_GAMES_PREVIEW_COUNT = 12;
+
 const CONTROLLER_STORE_PROMINENT_IMAGE_KEYS = [
   "MARQUEE_HERO_IMAGE",
   "HERO_IMAGE",
@@ -740,7 +744,7 @@ export const HomePage = memo(function HomePage({
   );
 
   const mostPlayed = useMemo(
-    () => mostPlayedFull.slice(0, 12),
+    () => mostPlayedFull.slice(0, HOME_SHELF_PREVIEW_COUNT),
     [mostPlayedFull],
   );
 
@@ -752,7 +756,7 @@ export const HomePage = memo(function HomePage({
   );
 
   const jumpBackIn = useMemo(
-    () => jumpBackInFull.slice(0, 12),
+    () => jumpBackInFull.slice(0, HOME_SHELF_PREVIEW_COUNT),
     [jumpBackInFull],
   );
 
@@ -763,7 +767,7 @@ export const HomePage = memo(function HomePage({
     return [...librarySource];
   }, [librarySource, favoriteGameIds]);
 
-  const favourites = useMemo(() => favouritesFull.slice(0, 12), [favouritesFull]);
+  const favourites = useMemo(() => favouritesFull.slice(0, HOME_SHELF_PREVIEW_COUNT), [favouritesFull]);
 
   const newInLibraryFull = useMemo(
     () => [...librarySource].reverse(),
@@ -771,7 +775,7 @@ export const HomePage = memo(function HomePage({
   );
 
   const newInLibrary = useMemo(
-    () => newInLibraryFull.slice(0, 12),
+    () => newInLibraryFull.slice(0, HOME_SHELF_PREVIEW_COUNT),
     [newInLibraryFull],
   );
 
@@ -781,7 +785,7 @@ export const HomePage = memo(function HomePage({
   );
 
   const allGamesShelf = useMemo(
-    () => allGamesFull.slice(0, 24),
+    () => allGamesFull.slice(0, HOME_ALL_GAMES_PREVIEW_COUNT),
     [allGamesFull],
   );
 
@@ -949,20 +953,12 @@ export const HomePage = memo(function HomePage({
               <section className="hd-spotlight" aria-label={spotlightGame.title}>
                 <div className="hd-spotlight-art">
                   {spotlightArt ? (
-                    <img src={spotlightArt} alt="" className="hd-art-img" loading="eager" />
+                    <img src={spotlightArt} alt="" className="hd-art-img" loading="eager" decoding="async" />
                   ) : (
                     <span className="hd-art-img hd-art-img--placeholder" aria-hidden="true">
                       <Gamepad2 size={40} />
                     </span>
                   )}
-                  <span className="hd-art-brackets" aria-hidden="true">
-                    <span className="hd-art-bracket hd-art-bracket--tl" />
-                    <span className="hd-art-bracket hd-art-bracket--tr" />
-                    <span className="hd-art-bracket hd-art-bracket--bl" />
-                    <span className="hd-art-bracket hd-art-bracket--br" />
-                  </span>
-                  <span className="hd-art-ticks" aria-hidden="true" />
-                  <span className="hd-art-bloom" aria-hidden="true" />
                 </div>
 
                 <div className="hd-spotlight-panel">

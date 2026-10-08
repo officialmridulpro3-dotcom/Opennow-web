@@ -572,14 +572,6 @@ export const LibraryPage = memo(function LibraryPage({
 
   return (
     <div className="library-page library-page--deck">
-      {selectedHero && (
-        <div className="lib-ambient" aria-hidden="true">
-          <img src={selectedHero} alt="" className="lib-ambient-img" />
-          <span className="lib-ambient-bloom" />
-          <span className="lib-ambient-scrim" />
-        </div>
-      )}
-
       <div className="lib-layout">
         <div className="lib-main">
           <div className="lib-head">
@@ -692,19 +684,12 @@ export const LibraryPage = memo(function LibraryPage({
             <>
               <div className="lib-detail-art">
                 {selectedHero ? (
-                  <img src={selectedHero} alt="" className="lib-detail-img" />
+                  <img src={selectedHero} alt="" className="lib-detail-img" decoding="async" />
                 ) : (
                   <span className="lib-detail-img lib-detail-img--placeholder" aria-hidden="true">
                     <Gamepad2 size={36} />
                   </span>
                 )}
-                <span className="lib-detail-brackets" aria-hidden="true">
-                  <span className="lib-detail-bracket lib-detail-bracket--tl" />
-                  <span className="lib-detail-bracket lib-detail-bracket--tr" />
-                  <span className="lib-detail-bracket lib-detail-bracket--bl" />
-                  <span className="lib-detail-bracket lib-detail-bracket--br" />
-                </span>
-                <span className="lib-detail-ticks" aria-hidden="true" />
               </div>
 
               <div className="lib-detail-body">

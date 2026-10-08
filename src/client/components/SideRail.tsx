@@ -1,5 +1,5 @@
 import type { AuthUser } from "@shared/gfn";
-import { House, Library, Settings, PanelsTopLeft, Timer, User } from "lucide-react";
+import { House, Library, Settings, Timer, User } from "lucide-react";
 import type { JSX, Ref } from "react";
 import { useTranslation } from "../i18n";
 import { OpenNowLogoMark } from "./OpenNowLogoMark";
@@ -35,19 +35,21 @@ export function SideRail({ currentPage, onNavigate, user, onOpenAccount, avatarR
   return (
     <aside className="side-rail" aria-label="Primary">
       <div className="side-rail-top">
-        <button
-          type="button"
-          className="side-rail-logo"
-          onClick={() => onNavigate("home")}
-          aria-label="OpenNOW home"
-          title="OpenNOW"
-        >
-          <OpenNowLogoMark className="side-rail-logo-mark" />
-        </button>
-
-        <button type="button" className="side-rail-collapse" aria-label="Layout" title="Layout" disabled>
-          <PanelsTopLeft size={19} />
-        </button>
+        <div className="side-rail-brand">
+          <button
+            type="button"
+            className="side-rail-logo"
+            onClick={() => onNavigate("home")}
+            aria-label="OpenNOW home"
+            title="OpenNOW"
+          >
+            <OpenNowLogoMark className="side-rail-logo-mark" />
+          </button>
+          <div className="side-rail-brand-copy" aria-hidden="true">
+            <span className="side-rail-brand-name">OpenNOW</span>
+            <span className="side-rail-brand-caption">GAME LIBRARY</span>
+          </div>
+        </div>
 
         <nav className="side-rail-nav">
           {navItems.map((item) => {
@@ -67,8 +69,8 @@ export function SideRail({ currentPage, onNavigate, user, onOpenAccount, avatarR
                 title={item.label}
                 disabled={item.disabled}
               >
-                <Icon size={20} />
-                <span className="side-rail-item-glow" aria-hidden="true" />
+                <Icon size={19} aria-hidden="true" />
+                <span className="side-rail-item-label">{item.label}</span>
               </button>
             );
           })}
@@ -76,22 +78,27 @@ export function SideRail({ currentPage, onNavigate, user, onOpenAccount, avatarR
       </div>
 
       <div className="side-rail-bottom">
-        <button
-          type="button"
-          ref={avatarRef}
-          className="side-rail-avatar"
-          onClick={onOpenAccount}
-          aria-label={user?.displayName ?? t("auth.accounts.guest")}
-          title={user?.displayName ?? t("auth.accounts.guest")}
-        >
-          {user?.avatarUrl ? (
-            <img src={user.avatarUrl} alt="" className="side-rail-avatar-img" />
-          ) : user ? (
-            <span className="side-rail-avatar-initial">{avatarInitial}</span>
-          ) : (
-            <User size={18} />
-          )}
-        </button>
+        <div className="side-rail-account">
+          <button
+            type="button"
+            ref={avatarRef}
+            className="side-rail-avatar"
+            onClick={onOpenAccount}
+            aria-label={user?.displayName ?? t("auth.accounts.guest")}
+            title={user?.displayName ?? t("auth.accounts.guest")}
+          >
+            {user?.avatarUrl ? (
+              <img src={user.avatarUrl} alt="" className="side-rail-avatar-img" />
+            ) : user ? (
+              <span className="side-rail-avatar-initial">{avatarInitial}</span>
+            ) : (
+              <User size={18} />
+            )}
+          </button>
+          <span className="side-rail-account-copy" title={user?.displayName ?? t("auth.accounts.guest")}>
+            {user?.displayName ?? t("auth.accounts.guest")}
+          </span>
+        </div>
       </div>
     </aside>
   );

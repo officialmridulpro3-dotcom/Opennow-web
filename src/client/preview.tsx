@@ -190,9 +190,9 @@ const SORT_OPTIONS = [
 ] as never[];
 
 function PreviewApp() {
-  // Phase 1 preview opens on the new Playtime ledger; the rail still reaches
-  // home, library and the queue deck demo.
-  const [page, setPage] = useState<SideRailPage>("playtime");
+  // Open on the refreshed home dashboard; the rail still reaches the library,
+  // playtime ledger and queue deck demo.
+  const [page, setPage] = useState<SideRailPage>("home");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState("1091500");
   const [sortId, setSortId] = useState("last_played");
