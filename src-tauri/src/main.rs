@@ -402,7 +402,10 @@ fn open_main_window(
         .inner_size(1280.0, 800.0)
         .min_inner_size(1000.0, 640.0)
         .resizable(true)
-        .center()
+        // Native NVST video is clipped into this shell window. Start the host
+        // maximized so the first surface rect covers the available screen
+        // instead of leaving the embedded stream in a centered 1280x800 window.
+        .maximized(true)
         .transparent(true)
         .background_color(tauri::window::Color(0, 0, 0, 0))
         .initialization_script(EXTERNAL_LINK_SCRIPT);

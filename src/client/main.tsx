@@ -4,10 +4,12 @@ import { initLogCapture } from "@shared/logger";
 import { installBrowserBridge } from "./api";
 import { App } from "./App";
 import { MotionProvider } from "./components/MotionProvider";
+import { applyAutomaticUiPerformanceMode } from "./lib/uiPerformance";
 import { initializeLocale } from "./i18n";
 import "./styles.css";
 
 installBrowserBridge();
+applyAutomaticUiPerformanceMode();
 
 // Initialize log capture for the browser renderer.
 initLogCapture("renderer");

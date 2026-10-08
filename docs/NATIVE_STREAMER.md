@@ -146,14 +146,15 @@ restores the saved placement exactly, including a window that was maximised, and
 leaves an unmovable frameless window behind. Non-native sessions keep using
 `set_app_fullscreen` on the Tauri window; the in-page fullscreen API stays the
 browser fallback.
-The client republishes the surface rect as the window resizes *and* the engine
-watches the shell window it is embedded in: every 250 ms it compares the live
-client area with the size it last placed the plane at, re-derives the rect from
-the chrome insets measured on the last publish, and re-places the child itself
-(`Windows external SDL surface: shell window resized …`). A maximised window —
-or a fullscreen toggle — therefore fills with the picture even when the
-host-side publish is late, instead of leaving the game in a corner of the
-window.
+The desktop shell opens its main window maximized so a native session starts
+with the largest available client area. The client republishes the surface rect
+as the window resizes *and* the engine watches the shell window it is embedded
+in: every 250 ms it compares the live client area with the size it last placed
+the plane at, re-derives the rect from the chrome insets measured on the last
+publish, and re-places the child itself (`Windows external SDL surface: shell
+window resized …`). A maximised window — or a fullscreen toggle — therefore
+fills with the picture even when the host-side publish is late, instead of
+leaving the game in a corner of the window.
 
 Because the engine's plane is drawn *above* the WebView on Windows, the client
 publishes a rect that stops short of the deck's own panels (sidebar column and

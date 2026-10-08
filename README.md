@@ -14,6 +14,7 @@ The client UI is the official OpenNOW renderer copied from `OpenNOW/opennow-stab
 - Region latency is measured from each visitor's browser with bounded HTTPS checks; unreachable regions remain selectable and show a neutral unavailable state.
 - NVIDIA signaling is relayed through an ownership-checked same-origin WebSocket.
 - Electron updates, native streaming, local media recording, Discord RPC, and desktop window controls are not part of the web app.
+- The UI avoids continuous full-window ambient animation; constrained devices automatically use a low-effects profile, and large libraries render in small batches to reduce startup work and memory use.
 
 ## Development
 

@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { MotionProvider } from "./components/MotionProvider";
 import { NativeOverlayRoot } from "./components/native-overlay/NativeOverlayRoot";
 import { createTauriOverlayChannel } from "./components/native-overlay/nativeOverlayChannel";
+import { applyAutomaticUiPerformanceMode } from "./lib/uiPerformance";
 import "./styles.css";
 
 /**
@@ -17,6 +18,7 @@ import "./styles.css";
  * this module only wires the host channel and mounts the overlay.
  */
 
+applyAutomaticUiPerformanceMode();
 document.documentElement.classList.add("nov-page");
 
 const container = document.getElementById("root");

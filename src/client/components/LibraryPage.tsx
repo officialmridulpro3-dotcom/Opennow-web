@@ -1,4 +1,4 @@
-import { Library, Search, Gamepad2, ArrowUpDown, Play, Timer, Clock } from "lucide-react";
+import { Library, Search, Gamepad2, ArrowUpDown, Play, Timer, Clock, ChevronDown } from "lucide-react";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import type { JSX } from "react";
 import { AnimatePresence } from "motion/react";
@@ -24,6 +24,8 @@ import { SelectDropdown } from "./ui/SelectDropdown";
 import { LibraryControllerView } from "./library/LibraryControllerView";
 import { MotionSpinner } from "./MotionSpinner";
 
+const INITIAL_LIBRARY_PAGE_SIZE = 48;
+const LIBRARY_PAGE_SIZE = 48;
 const CONTROLLER_HERO_ROTATION_MS = 8000;
 const CONTROLLER_MOVE_REPEAT_MS = 140;
 const CONTROLLER_Y_HOLD_MS = 350;
@@ -89,6 +91,7 @@ export const LibraryPage = memo(function LibraryPage({
   const [controllerSearchOpen, setControllerSearchOpen] = useState(false);
   const [focusedControllerStoreFilterIndex, setFocusedControllerStoreFilterIndex] = useState(0);
   const [selectedLibraryFilterIds, setSelectedLibraryFilterIds] = useState<string[]>([]);
+  const [libraryVisibleCount, setLibraryVisibleCount] = useState(INITIAL_LIBRARY_PAGE_SIZE);
   const controllerSearchInputRef = useRef<HTMLInputElement | null>(null);
   const gamepadPreviousButtonsRef = useRef(0);
   const gamepadLastMoveAtRef = useRef(0);
@@ -126,6 +129,15 @@ export const LibraryPage = memo(function LibraryPage({
     () => games.filter((game) => gameMatchesLibraryFilters(game, selectedLibraryFilterIds, playtimeData, t)),
     [games, playtimeData, selectedLibraryFilterIds, t],
   );
+  const pagedLibraryGames = useMemo(
+    () => visibleLibraryGames.slice(0, libraryVisibleCount),
+    [libraryVisibleCount, visibleLibraryGames],
+  );
+
+  useEffect(() => {
+    setLibraryVisibleCount(INITIAL_LIBRARY_PAGE_SIZE);
+  }, [searchQuery, selectedLibraryFilterIds, selectedSortId]);
+
   const activeLibraryFilterOptions = useMemo(
     () => selectedLibraryFilterIds
       .map((filterId) => getLibraryFilterOptionById(libraryFilterGroups, filterId))
@@ -499,7 +511,7 @@ export const LibraryPage = memo(function LibraryPage({
   ].filter((c) => Boolean(c.value));
 
   const libraryGridItems = useMemo(
-    () => visibleLibraryGames.map((game) => {
+    () => pagedLibraryGames.map((game) => {
       const seconds = playtimeData[game.id]?.totalSeconds ?? 0;
       const note = seconds > 0
         ? formatPlaytimeDuration(t, seconds)
@@ -515,7 +527,7 @@ export const LibraryPage = memo(function LibraryPage({
         />
       );
     }),
-    [onPlayGame, onSelectGame, playtimeData, selectedGameId, t, visibleLibraryGames],
+    [onPlayGame, onSelectGame, pagedLibraryGames, playtimeData, selectedGameId, t],
   );
 
   if (controllerMode) {
@@ -647,7 +659,30 @@ export const LibraryPage = memo(function LibraryPage({
                 </p>
               </div>
             ) : (
-              <div className="lib-grid">{libraryGridItems}</div>
+              <>
+                <div className="lib-grid">{libraryGridItems}</div>
+                {pagedLibraryGames.length < visibleLibraryGames.length && (
+                  <div className="lib-grid-more">
+                    <span className="lib-grid-more-count">
+                      {t("home.search.showing", {
+                        shown: pagedLibraryGames.length,
+                        total: visibleLibraryGames.length,
+                      } as any)}
+                    </span>
+                    <button
+                      type="button"
+                      className="hd-search-loadmore"
+                      onClick={() => setLibraryVisibleCount((count) => Math.min(
+                        count + LIBRARY_PAGE_SIZE,
+                        visibleLibraryGames.length,
+                      ))}
+                    >
+                      <span>{t("home.search.loadMore") || "Load more"}</span>
+                      <ChevronDown size={14} />
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

@@ -13466,8 +13466,6 @@ body:has(.sv--native-hole) #root {
   scroll-snap-align: start;
 }
 
-   POSTER CARD — deck edition
-   ====================================================== */
 /* ======================================================
    POSTER CARD — deck edition (see EOF for the deck implementation)
    The old quiet-tile rules are retired; the deck cards live at the end
@@ -20844,4 +20842,79 @@ body:has(.sv--native-hole) #root {
   .gdp-title {
     font-size: 22px;
   }
+}
+
+/* ---------- Render-budget friendly polish ---------- */
+/* Keep the ambient color, but stop continuously repainting the entire shell. */
+.app-shell::before,
+.app-shell.app-container--atmosphere::before {
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+.app-shell::after {
+  display: none;
+}
+
+/* The stream's full-screen breathing glow and scan sweep were decorative only. */
+.sv-deck-glow {
+  animation: none;
+}
+
+.sv-deck-sweep {
+  display: none;
+}
+
+/* The desktop library mounts a bounded batch, and the browser can skip its
+   offscreen paint until the grid scrolls into view. */
+.lib-grid {
+  contain: content;
+  content-visibility: auto;
+}
+
+.lib-grid-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0 18px;
+}
+
+.lib-grid-more-count {
+  color: var(--color-steel);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Automatically enabled on machines with four or fewer logical cores, up to
+   4 GB reported memory, or browser data-saver enabled. Keep the typography,
+   contrast and layout; shed only expensive ambient layers and filters. */
+:root[data-ui-performance="lite"] {
+  --deck-glow: none;
+}
+
+:root[data-ui-performance="lite"] .app-shell::before,
+:root[data-ui-performance="lite"] .app-shell::after,
+:root[data-ui-performance="lite"] .lib-ambient,
+:root[data-ui-performance="lite"] .sv-deck-ground,
+:root[data-ui-performance="lite"] .catalog-atmosphere,
+:root[data-ui-performance="lite"] .login-bg-orb,
+:root[data-ui-performance="lite"] .login-bg-noise,
+:root[data-ui-performance="lite"] .poster-card-sweep,
+:root[data-ui-performance="lite"] .game-card-sweep,
+:root[data-ui-performance="lite"] .controller-store-tile-shine {
+  display: none !important;
+}
+
+:root[data-ui-performance="lite"] *,
+:root[data-ui-performance="lite"] *::before,
+:root[data-ui-performance="lite"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.08s !important;
+  scroll-behavior: auto !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  mix-blend-mode: normal !important;
 }
