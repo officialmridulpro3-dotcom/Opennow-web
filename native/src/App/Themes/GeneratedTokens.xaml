@@ -6,50 +6,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- Palette -->
-    <Color x:Key="colorVoidColor">#070b12</Color>
-    <SolidColorBrush x:Key="colorVoidBrush" Color="{StaticResource colorVoidColor}" />
-    <Color x:Key="colorUltraColor">#6574ff</Color>
-    <SolidColorBrush x:Key="colorUltraBrush" Color="{StaticResource colorUltraColor}" />
-    <Color x:Key="colorSteelColor">#9aabc5</Color>
-    <SolidColorBrush x:Key="colorSteelBrush" Color="{StaticResource colorSteelColor}" />
-    <Color x:Key="colorAzureColor">#42d8ff</Color>
-    <SolidColorBrush x:Key="colorAzureBrush" Color="{StaticResource colorAzureColor}" />
-    <Color x:Key="colorNeonColor">#b5f66c</Color>
-    <SolidColorBrush x:Key="colorNeonBrush" Color="{StaticResource colorNeonColor}" />
-    <Color x:Key="colorLightColor">#f4f7ff</Color>
-    <SolidColorBrush x:Key="colorLightBrush" Color="{StaticResource colorLightColor}" />
-    <Color x:Key="bgAColor">#070b12</Color>
-    <SolidColorBrush x:Key="bgABrush" Color="{StaticResource bgAColor}" />
-    <Color x:Key="bgBColor">#0f1427</Color>
-    <SolidColorBrush x:Key="bgBBrush" Color="{StaticResource bgBColor}" />
-    <Color x:Key="bgCColor">#161c38</Color>
-    <SolidColorBrush x:Key="bgCBrush" Color="{StaticResource bgCColor}" />
-    <Color x:Key="panelColor">#0e1223</Color>
-    <SolidColorBrush x:Key="panelBrush" Color="{StaticResource panelColor}" />
-    <Color x:Key="panelBorderSolidColor">#39414f</Color>
-    <SolidColorBrush x:Key="panelBorderSolidBrush" Color="{StaticResource panelBorderSolidColor}" />
-    <Color x:Key="inkColor">#f4f7ff</Color>
-    <SolidColorBrush x:Key="inkBrush" Color="{StaticResource inkColor}" />
-    <Color x:Key="inkSoftColor">#9aabc5</Color>
-    <SolidColorBrush x:Key="inkSoftBrush" Color="{StaticResource inkSoftColor}" />
-    <Color x:Key="inkMutedColor">#acbad1</Color>
-    <SolidColorBrush x:Key="inkMutedBrush" Color="{StaticResource inkMutedColor}" />
-    <Color x:Key="accentColor">#42d8ff</Color>
-    <SolidColorBrush x:Key="accentBrush" Color="{StaticResource accentColor}" />
-    <Color x:Key="accentHoverColor">#5eddff</Color>
-    <SolidColorBrush x:Key="accentHoverBrush" Color="{StaticResource accentHoverColor}" />
-    <Color x:Key="accentPressColor">#39b7d9</Color>
-    <SolidColorBrush x:Key="accentPressBrush" Color="{StaticResource accentPressColor}" />
-    <Color x:Key="accentOnColor">#070b12</Color>
-    <SolidColorBrush x:Key="accentOnBrush" Color="{StaticResource accentOnColor}" />
-    <Color x:Key="errorColor">#ff627f</Color>
-    <SolidColorBrush x:Key="errorBrush" Color="{StaticResource errorColor}" />
-    <Color x:Key="warningColor">#ffc45e</Color>
-    <SolidColorBrush x:Key="warningBrush" Color="{StaticResource warningColor}" />
-    <Color x:Key="infoColor">#42d8ff</Color>
-    <SolidColorBrush x:Key="infoBrush" Color="{StaticResource infoColor}" />
-    <Color x:Key="successColor">#b5f66c</Color>
-    <SolidColorBrush x:Key="successBrush" Color="{StaticResource successColor}" />
+    <SolidColorBrush x:Key="colorVoidBrush" Color="#070b12" />
+    <SolidColorBrush x:Key="colorUltraBrush" Color="#6574ff" />
+    <SolidColorBrush x:Key="colorSteelBrush" Color="#9aabc5" />
+    <SolidColorBrush x:Key="colorAzureBrush" Color="#42d8ff" />
+    <SolidColorBrush x:Key="colorNeonBrush" Color="#b5f66c" />
+    <SolidColorBrush x:Key="colorLightBrush" Color="#f4f7ff" />
+    <SolidColorBrush x:Key="bgABrush" Color="#070b12" />
+    <SolidColorBrush x:Key="bgBBrush" Color="#0f1427" />
+    <SolidColorBrush x:Key="bgCBrush" Color="#161c38" />
+    <SolidColorBrush x:Key="panelBrush" Color="#0e1223" />
+    <SolidColorBrush x:Key="panelBorderSolidBrush" Color="#39414f" />
+    <SolidColorBrush x:Key="inkBrush" Color="#f4f7ff" />
+    <SolidColorBrush x:Key="inkSoftBrush" Color="#9aabc5" />
+    <SolidColorBrush x:Key="inkMutedBrush" Color="#acbad1" />
+    <SolidColorBrush x:Key="accentBrush" Color="#42d8ff" />
+    <SolidColorBrush x:Key="accentHoverBrush" Color="#5eddff" />
+    <SolidColorBrush x:Key="accentPressBrush" Color="#39b7d9" />
+    <SolidColorBrush x:Key="accentOnBrush" Color="#070b12" />
+    <SolidColorBrush x:Key="errorBrush" Color="#ff627f" />
+    <SolidColorBrush x:Key="warningBrush" Color="#ffc45e" />
+    <SolidColorBrush x:Key="infoBrush" Color="#42d8ff" />
+    <SolidColorBrush x:Key="successBrush" Color="#b5f66c" />
 
     <!-- Alpha surfaces (kept as brushes so XAML opacity animation works) -->
 

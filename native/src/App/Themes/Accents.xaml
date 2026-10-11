@@ -16,7 +16,6 @@
     <SolidColorBrush x:Key="OpenNowAccentPressBrush" Color="#39B7D9" />
     <SolidColorBrush x:Key="OpenNowAccentSurfaceBrush" Color="#42D8FF" Opacity="0.08" />
     <SolidColorBrush x:Key="OpenNowAccentSurfaceStrongBrush" Color="#42D8FF" Opacity="0.16" />
-    <Color x:Key="OpenNowAccentColor">#42D8FF</Color>
 
     <!-- Lime -->
     <SolidColorBrush x:Key="OpenNowAccentLimeBrush" Color="#B5F66C" />

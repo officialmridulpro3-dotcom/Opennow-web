@@ -143,16 +143,16 @@ out += "    <!-- Palette -->\n";
 for (const token of COLOR_TOKENS) {
   const rgb = resolveColor(`var(--${token})`);
   if (!rgb) continue;
-  out += `    <Color x:Key="${pascal(token)}Color">${toHex(rgb)}</Color>\n`;
-  out += `    <SolidColorBrush x:Key="${pascal(token)}Brush" Color="{StaticResource ${pascal(token)}Color}" />\n`;
+  // Windows.UI.Color is not in the presentation XML namespace, so the hex goes
+  // straight into the brush instead of through a Color resource.
+  out += `    <SolidColorBrush x:Key="${pascal(token)}Brush" Color="${toHex(rgb)}" />\n`;
 }
 
 out += "\n    <!-- Alpha surfaces (kept as brushes so XAML opacity animation works) -->\n";
 for (const [token, alpha] of Object.entries(ALPHA_TOKENS)) {
   const rgb = resolveColor(`var(--${token})`);
   if (!rgb) continue;
-  out += `    <Color x:Key="${pascal(token)}Color">${toHex(rgb)}</Color>\n`;
-  out += `    <SolidColorBrush x:Key="${pascal(token)}Brush" Color="{StaticResource ${pascal(token)}Color}" Opacity="${alpha}" />\n`;
+  out += `    <SolidColorBrush x:Key="${pascal(token)}Brush" Color="${toHex(rgb)}" Opacity="${alpha}" />\n`;
 }
 
 out += "\n    <!-- Corner radii -->\n";

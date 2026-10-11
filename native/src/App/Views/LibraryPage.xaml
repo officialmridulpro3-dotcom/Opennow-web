@@ -82,7 +82,7 @@
                                     Visibility="{Binding Owned}">
                                 <TextBlock Text="Owned"
                                            FontSize="10"
-                                           Foreground="{StaticResource accentOnColor}" />
+                                           Foreground="{StaticResource accentOnBrush}" />
                             </Border>
                         </Grid>
                     </DataTemplate>
