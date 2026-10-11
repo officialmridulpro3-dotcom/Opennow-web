@@ -17,7 +17,6 @@
 #include <winrt/Microsoft.UI.Xaml.Data.h>
 #include <winrt/Microsoft.UI.Xaml.Input.h>
 #include <winrt/Microsoft.UI.Xaml.Media.h>
-#include <winrt/Microsoft.UI.Xaml.Media.Animation.h>
 #include <winrt/Microsoft.UI.Xaml.Media.Imaging.h>
 #include <winrt/Microsoft.UI.Xaml.Navigation.h>
 #include <winrt/Microsoft.UI.Dispatching.h>
@@ -30,6 +29,9 @@
 #include <winrt/Windows.System.h>
 #include <winrt/Windows.UI.Core.h>
 #include <winrt/Windows.UI.Xaml.Interop.h>  // xaml_typename
+
+// Last, because it completes against types declared by the headers above.
+#include <winrt/Microsoft.UI.Xaml.Media.Animation.h>
 
 // C++/WinRT helpers
 #include <wil/cppwinrt.h>

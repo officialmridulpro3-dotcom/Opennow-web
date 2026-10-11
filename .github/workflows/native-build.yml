@@ -303,6 +303,13 @@ jobs:
               $out += (@($hits | ForEach-Object { "$($_.LineNumber): $($_.Line.Trim())" }) -join "`n")
             }
           }
+          $out += '--- Microsoft.UI.Xaml.Media.Animation.h around the failure ---'
+          $anim = 'native\obj\OpenNOW.App\x64\Release\Generated Files\winrt\Microsoft.UI.Xaml.Media.Animation.h'
+          if (Test-Path $anim) {
+            $all = @(Get-Content $anim)
+            $start = [Math]::Max(0, 5900)
+            $out += (@($all[$start..([Math]::Min($all.Count - 1, 5960))]) -join "`n")
+          }
           $out += '--- head of App.xaml.g.h ---'
           $appx = 'native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml.g.h'
           if (Test-Path $appx) {
