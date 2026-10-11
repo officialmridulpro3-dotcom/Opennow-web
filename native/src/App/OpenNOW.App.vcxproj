@@ -56,10 +56,14 @@
     <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
     <CppWinRTGenerateWindowsMetadata>true</CppWinRTGenerateWindowsMetadata>
     <UseWinUI>true</UseWinUI>
+    <MinimalCoreWin>true</MinimalCoreWin>
     <!-- Without these the XAML compiler emits C++/CX code (^ references),
          which cannot compile in a C++/WinRT project. -->
     <CppWinRTProjectLanguage>C++/WinRT</CppWinRTProjectLanguage>
     <XamlLanguage>CppWinRT</XamlLanguage>
+    <!-- Both cppwinrt and the XAML compiler write here; keep it out of the
+         source tree. -->
+    <GeneratedFilesDir>$(IntDir)Generated Files\</GeneratedFilesDir>
     <EnableMsixTooling>false</EnableMsixTooling>
     <WindowsPackageType>None</WindowsPackageType>
   </PropertyGroup>
@@ -257,19 +261,32 @@
     <ProjectReference Include="..\Core\OpenNOW.Core.vcxproj" />
   </ItemGroup>
 
-  <!-- cppwinrt writes the generated header for Views\HomePage.idl into
-       "Generated Files\Views\HomePage.g.h", mirroring the source tree. Copy
-       every generated header next to the flat ones so a page can simply
-       #include "HomePage.g.h" wherever it lives. -->
-  <Target Name="OpenNOWFlattenGeneratedHeaders" BeforeTargets="ClCompile">
+  <!-- The XAML compiler writes its declarations next to the markup file
+       (Generated Files\Views\HomePage.xaml.g.h) while cppwinrt only looks for
+       the flat "HomePage.xaml.g.h" next to its own output. Copy that one file
+       across so cppwinrt's __has_include picks it up; nothing else is touched,
+       because cppwinrt's own .g.h files live here too. -->
+  <Target Name="OpenNOWWireXamlGeneratedHeaders" BeforeTargets="ClCompile">
     <ItemGroup>
-      <OpenNOWGeneratedHeader Include="$(IntDir)**\*.g.h" />
-      <OpenNOWGeneratedHeader Include="$(IntDir)**\*.g.hpp" />
-      <OpenNOWGeneratedHeader Include="$(MSBuildProjectDirectory)\**\*.g.h" />
+      <OpenNOWXamlHeader Include="$(MSBuildProjectDirectory)\Generated Files\**\*.xaml.g.h" />
+      <OpenNOWXamlHeader Include="$(IntDir)Generated Files\**\*.xaml.g.h"
+                         Exclude="$(IntDir)Generated Files\*.xaml.g.h" />
     </ItemGroup>
-    <Copy SourceFiles="@(OpenNOWGeneratedHeader)"
-          DestinationFolder="$(IntDir)Generated Files\"
+    <Copy SourceFiles="@(OpenNOWXamlHeader)"
+          DestinationFiles="@(OpenNOWXamlHeader->'$(IntDir)Generated Files\%(Filename)%(Extension)')"
           SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- Belt and braces: something in the Windows App SDK targets resets the
+       XAML dialect, and in CX mode the generated code cannot compile here. -->
+  <Target Name="OpenNOWForceCppWinRtXaml" BeforeTargets="MarkupCompilePass1;MarkupCompilePass2">
+    <PropertyGroup>
+      <XamlLanguage>CppWinRT</XamlLanguage>
+      <CppWinRTProjectLanguage>C++/WinRT</CppWinRTProjectLanguage>
+      <GeneratedFilesDir>$(IntDir)Generated Files\</GeneratedFilesDir>
+    </PropertyGroup>
+    <Message Importance="high"
+             Text="OpenNOW: XamlLanguage=$(XamlLanguage) CppWinRTProjectLanguage=$(CppWinRTProjectLanguage) GeneratedFilesDir=$(GeneratedFilesDir)" />
   </Target>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

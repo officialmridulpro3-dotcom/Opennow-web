@@ -264,6 +264,8 @@ jobs:
             $hits = @(Select-String -Path $targets.FullName -Pattern 'InitializeComponent' -List -ErrorAction SilentlyContinue)
             foreach ($hit in $hits) { $out += ($hit.Path + ' :: ' + $hit.Line.Trim()) }
           }
+          $out += '--- markup compiler output in the source tree ---'
+          $out += (@(Get-ChildItem -Path native\src\App\Generated Files -Recurse -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName) -join "`n")
           $out += '--- xbf files anywhere in the workspace ---'
           $out += (@(Get-ChildItem -Path . -Recurse -Filter *.xbf -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName) -join "`n")
           $out += '--- content of every App.g.* ---'
