@@ -104,9 +104,35 @@ jobs:
         run: |
           Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Directory -ErrorAction SilentlyContinue |
             Select-Object -ExpandProperty Name
+          Write-Output "--- VC targets paths (vXXX is the MSBuild toolset dir) ---"
+          Get-ChildItem "C:\Program Files\Microsoft Visual Studio\*\*\MSBuild\Microsoft\VC" -Directory -ErrorAction SilentlyContinue |
+            Select-Object -ExpandProperty FullName
+          Write-Output "--- MSVC toolsets ---"
+          Get-ChildItem "C:\Program Files\Microsoft Visual Studio\*\*\VC\Tools\MSVC" -Directory -ErrorAction SilentlyContinue |
+            Select-Object -ExpandProperty FullName
+
+      # A vcxproj that does not pin <PlatformToolset> takes the toolset that
+      # matches $(VisualStudioVersion). MSBuild leaves that empty when it is
+      # started outside a Developer Command Prompt, and the empty value falls
+      # back to v100, which fails with MSB8020. vswhere says which Visual
+      # Studio the image actually has.
+      - name: Resolve Visual Studio version
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          $installed = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.NativeDesktop -property installationVersion
+          if (-not $installed) { $installed = '17.0' }
+          $major = "$installed".Split('.')[0]
+          Write-Output "vswhere installationVersion: $installed"
+          Write-Output "VisualStudioVersion=$major.0" >> $env:GITHUB_ENV
 
       - name: Restore NuGet packages
-        run: msbuild native\OpenNOW.sln /t:Restore /p:Configuration=${{ inputs.configuration || 'Release' }} /p:Platform=x64 /verbosity:minimal
+        shell: pwsh
+        run: |
+          & msbuild native\OpenNOW.sln /t:Restore `
+            /p:Configuration="${{ inputs.configuration || 'Release' }}" `/p:Platform=x64 `
+            /p:VisualStudioVersion=$env:VisualStudioVersion /verbosity:minimal
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Build OpenNOW
         shell: pwsh
@@ -114,6 +140,7 @@ jobs:
           $configuration = "${{ inputs.configuration || 'Release' }}"
           & msbuild native\OpenNOW.sln `
             /p:Configuration=$configuration /p:Platform=x64 `
+            /p:VisualStudioVersion=$env:VisualStudioVersion `
             /verbosity:minimal `
             /flp:LogFile=native-build.log`;Verbosity=diagnostic 2>&1 | Out-File -FilePath native-build-stdout.log -Encoding utf8
           $code = $LASTEXITCODE
