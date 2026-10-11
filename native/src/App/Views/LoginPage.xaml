@@ -51,7 +51,7 @@
                                    FontFamily="Cascadia Mono, Consolas, monospace"
                                    FontSize="32"
                                    FontWeight="SemiBold"
-                                   LetterSpacing="4"
+                                   CharacterSpacing="200"
                                    Foreground="{ThemeResource OpenNowInkBrush}"
                                    HorizontalAlignment="Center" />
                         <TextBlock x:Name="ExpiryText"

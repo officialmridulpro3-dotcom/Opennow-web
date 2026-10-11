@@ -62,7 +62,12 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition /</Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="Resolution" Style="{StaticResource OpenNowStatLabel}" />
                     <TextBlock Grid.Row="0" Grid.Column="1" x:Name="ResolutionValue"
                                Text="—" Style="{StaticResource OpenNowStatValue}" />

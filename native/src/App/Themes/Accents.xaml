@@ -10,7 +10,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Cyan: the default, matching --color-azure #42d8ff -->
+    <!-- Cyan: the default, matching the color-azure token #42d8ff -->
     <SolidColorBrush x:Key="OpenNowAccentBrush" Color="#42D8FF" />
     <SolidColorBrush x:Key="OpenNowAccentHoverBrush" Color="#5EDDFF" />
     <SolidColorBrush x:Key="OpenNowAccentPressBrush" Color="#39B7D9" />
