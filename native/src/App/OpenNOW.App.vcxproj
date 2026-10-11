@@ -56,6 +56,10 @@
     <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
     <CppWinRTGenerateWindowsMetadata>true</CppWinRTGenerateWindowsMetadata>
     <UseWinUI>true</UseWinUI>
+    <!-- Without these the XAML compiler emits C++/CX code (^ references),
+         which cannot compile in a C++/WinRT project. -->
+    <CppWinRTProjectLanguage>C++/WinRT</CppWinRTProjectLanguage>
+    <XamlLanguage>CppWinRT</XamlLanguage>
     <EnableMsixTooling>false</EnableMsixTooling>
     <WindowsPackageType>None</WindowsPackageType>
   </PropertyGroup>

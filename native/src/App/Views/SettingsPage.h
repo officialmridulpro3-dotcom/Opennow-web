@@ -4,7 +4,7 @@
 
 #include "SettingsPage.g.h"
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 class SettingsPage : public SettingsPageT<SettingsPage> {
 public:
@@ -55,10 +55,10 @@ private:
     bool loading_ = true;
 };
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Views::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class SettingsPage : public SettingsPageT<SettingsPage, implementation::SettingsPage> {};
 
-}  // namespace winrt::OpenNOW::Views::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

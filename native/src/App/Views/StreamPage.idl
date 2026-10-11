@@ -1,4 +1,4 @@
-namespace OpenNOW.Views
+namespace OpenNOW
 {
     [default_interface]
     runtimeclass StreamPage : Microsoft.UI.Xaml.Controls.Page

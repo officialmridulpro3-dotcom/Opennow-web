@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "PlaytimePage.h"
-#include "Views.PlaytimePage.g.cpp"
+#include "PlaytimePage.g.cpp"
 
 #include <algorithm>
 #include <sstream>
@@ -14,7 +14,7 @@ using namespace winrt;
 using namespace winrt::Microsoft::UI::Xaml;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 namespace {
 
@@ -86,4 +86,4 @@ void PlaytimePage::Populate() {
     EmptyText().Visibility(empty ? Visibility::Visible : Visibility::Collapsed);
 }
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation

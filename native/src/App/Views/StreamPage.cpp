@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "StreamPage.h"
-#include "Views.StreamPage.g.cpp"
+#include "StreamPage.g.cpp"
 
 #include <winrt/Microsoft.UI.Windowing.h>
 
@@ -17,7 +17,7 @@ using namespace winrt::Microsoft::UI::Xaml::Input;
 using namespace winrt::Microsoft::UI::Dispatching;
 using namespace Windows::System;
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 StreamPage::StreamPage() {
     InitializeComponent();
@@ -247,4 +247,4 @@ void StreamPage::HideControlsSoon() {
     controlTimer_.Start();
 }
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation

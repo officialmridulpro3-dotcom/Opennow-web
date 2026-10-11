@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Views.PlaytimeViewModel.g.h"
+#include "PlaytimeViewModel.g.h"
 #include "PlaytimePage.g.h"
 
 #include <opennow/core/Types.hpp>
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 struct PlaytimeViewModel : PlaytimeViewModelT<PlaytimeViewModel> {
     PlaytimeViewModel() = default;
@@ -39,10 +39,10 @@ private:
     std::vector<opennow::core::PlaytimeEntry> entries_;
 };
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Views::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class PlaytimePage : public PlaytimePageT<PlaytimePage, implementation::PlaytimePage> {};
 
-}  // namespace winrt::OpenNOW::Views::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

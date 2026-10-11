@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "App.g.h"
+#include "App.xaml.g.h"
 
-namespace winrt::OpenNOW::Shell::implementation {
+namespace winrt::OpenNOW::implementation {
 
 class App : public AppT<App> {
 public:
@@ -16,13 +16,13 @@ private:
     void ConfigureLogging();
     void ApplyStartupTheme();
 
-    winrt::OpenNOW::Shell::MainWindow window_{nullptr};
+    winrt::OpenNOW::MainWindow window_{nullptr};
 };
 
-}  // namespace winrt::OpenNOW::Shell::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Shell::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class App : public AppT<App, implementation::App> {};
 
-}  // namespace winrt::OpenNOW::Shell::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

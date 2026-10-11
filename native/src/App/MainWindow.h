@@ -6,7 +6,7 @@
 
 #include "Services/AppServices.h"
 
-namespace winrt::OpenNOW::Shell::implementation {
+namespace winrt::OpenNOW::implementation {
 
 class MainWindow : public MainWindowT<MainWindow> {
 public:
@@ -43,10 +43,10 @@ private:
     bool loginOverlayVisible_ = false;
 };
 
-}  // namespace winrt::OpenNOW::Shell::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Shell::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class MainWindow : public MainWindowT<MainWindow, implementation::MainWindow> {};
 
-}  // namespace winrt::OpenNOW::Shell::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

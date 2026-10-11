@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "StreamSurfacePanel.h"
-#include "Controls.StreamSurfacePanel.g.cpp"
+#include "StreamSurfacePanel.g.cpp"
 
 #include <microsoft.ui.xaml.media.dxinterop.h>
 
@@ -13,7 +13,7 @@ using namespace winrt;
 using namespace winrt::Microsoft::UI::Xaml;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
 
-namespace winrt::OpenNOW::Controls::implementation {
+namespace winrt::OpenNOW::implementation {
 
 bool StreamSurfacePanel::EnsureSurface() {
     if (surface_ != nullptr) return true;
@@ -139,4 +139,4 @@ void StreamSurfacePanel::OnSizeChanged(winrt::Windows::Foundation::IInspectable 
     if (hasFrame_) surface_->Redraw();
 }
 
-}  // namespace winrt::OpenNOW::Controls::implementation
+}  // namespace winrt::OpenNOW::implementation

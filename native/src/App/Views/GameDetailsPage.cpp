@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "GameDetailsPage.h"
-#include "Views.GameDetailsPage.g.cpp"
+#include "GameDetailsPage.g.cpp"
 
 #include "StreamPage.h"
 
@@ -18,7 +18,7 @@ using namespace winrt::Microsoft::UI::Xaml::Controls;
 using namespace winrt::Microsoft::UI::Xaml::Media::Imaging;
 using namespace winrt::Microsoft::UI::Xaml::Navigation;
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 GameDetailsPage::GameDetailsPage() { InitializeComponent(); }
 
@@ -183,4 +183,4 @@ void GameDetailsPage::OnCancelRegion(Windows::Foundation::IInspectable const&,
     RegionOverlay().Visibility(Visibility::Collapsed);
 }
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation

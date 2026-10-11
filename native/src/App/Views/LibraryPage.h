@@ -8,7 +8,7 @@
 
 #include <opennow/core/Types.hpp>
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 class LibraryPage : public LibraryPageT<LibraryPage> {
 public:
@@ -34,10 +34,10 @@ private:
     std::string activeQuery_;
 };
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Views::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class LibraryPage : public LibraryPageT<LibraryPage, implementation::LibraryPage> {};
 
-}  // namespace winrt::OpenNOW::Views::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

@@ -10,7 +10,7 @@
 #include <winrt/Microsoft.UI.Dispatching.h>
 #include <winrt/Microsoft.UI.Input.h>
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 class StreamPage : public StreamPageT<StreamPage> {
 public:
@@ -55,10 +55,10 @@ private:
     Microsoft::UI::Dispatching::DispatcherQueueTimer controlTimer_{nullptr};
 };
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Views::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class StreamPage : public StreamPageT<StreamPage, implementation::StreamPage> {};
 
-}  // namespace winrt::OpenNOW::Views::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

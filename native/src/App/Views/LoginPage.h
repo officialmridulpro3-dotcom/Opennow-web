@@ -6,7 +6,7 @@
 
 #include <opennow/core/gfn/Auth.hpp>
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 class LoginPage : public LoginPageT<LoginPage> {
 public:
@@ -39,10 +39,10 @@ private:
         signedInEvent_;
 };
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Views::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class LoginPage : public LoginPageT<LoginPage, implementation::LoginPage> {};
 
-}  // namespace winrt::OpenNOW::Views::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

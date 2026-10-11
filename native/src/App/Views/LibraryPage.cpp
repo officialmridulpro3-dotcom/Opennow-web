@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "LibraryPage.h"
-#include "Views.LibraryPage.g.cpp"
+#include "LibraryPage.g.cpp"
 
 #include "GameDetailsPage.h"
 
@@ -15,7 +15,7 @@ using namespace winrt;
 using namespace winrt::Microsoft::UI::Xaml;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 LibraryPage::LibraryPage() {
     InitializeComponent();
@@ -152,4 +152,4 @@ void LibraryPage::OnContainerChanging(
     }
 }
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation

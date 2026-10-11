@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "Controls.StreamSurfacePanel.g.h"
+#include "StreamSurfacePanel.g.h"
 
 #include <memory>
 
 #include <opennow/dx/StreamSurface.hpp>
 
-namespace winrt::OpenNOW::Controls::implementation {
+namespace winrt::OpenNOW::implementation {
 
 class StreamSurfacePanel : public StreamSurfacePanelT<StreamSurfacePanel> {
 public:
@@ -53,11 +53,11 @@ private:
     bool hasFrame_ = false;
 };
 
-}  // namespace winrt::OpenNOW::Controls::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Controls::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class StreamSurfacePanel
     : public StreamSurfacePanelT<StreamSurfacePanel, implementation::StreamSurfacePanel> {};
 
-}  // namespace winrt::OpenNOW::Controls::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

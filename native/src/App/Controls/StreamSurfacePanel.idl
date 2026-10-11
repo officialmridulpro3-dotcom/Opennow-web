@@ -1,4 +1,4 @@
-namespace OpenNOW.Controls
+namespace OpenNOW
 {
     // A SwapChainPanel that owns the DirectX 10 video surface and forwards
     // decoded frames to it. XAML keeps its own composition tree; the stream is

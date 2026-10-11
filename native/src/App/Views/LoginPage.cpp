@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "LoginPage.h"
-#include "Views.LoginPage.g.cpp"
+#include "LoginPage.g.cpp"
 
 #include <chrono>
 #include <thread>
@@ -20,7 +20,7 @@ using namespace winrt::Microsoft::UI::Xaml::Controls;
 using namespace Windows::ApplicationModel::DataTransfer;
 using namespace Windows::System;
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 LoginPage::LoginPage() {
     InitializeComponent();
@@ -154,4 +154,4 @@ void LoginPage::ShowError(hstring const& message) {
     RestartButton().Visibility(Visibility::Visible);
 }
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation

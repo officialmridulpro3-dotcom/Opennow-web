@@ -3,16 +3,16 @@
 #pragma once
 
 // The view models come first: ShelfViewModel instantiates
-// IObservableVector<OpenNOW::Views::GameViewModel>, which asserts on an incomplete type.
-#include "Views.GameViewModel.g.h"
-#include "Views.ShelfViewModel.g.h"
+// IObservableVector<OpenNOW::GameViewModel>, which asserts on an incomplete type.
+#include "GameViewModel.g.h"
+#include "ShelfViewModel.g.h"
 #include "HomePage.g.h"
 
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
 
 #include <opennow/core/Types.hpp>
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 // Projection of a game for XAML data binding. WinUI binds to WinRT properties,
 // so the Core model gets mirrored into a runtime class.
@@ -45,13 +45,13 @@ struct ShelfViewModel : ShelfViewModelT<ShelfViewModel> {
     void Title(hstring const& value);
     hstring CountLabel();
     void CountLabel(hstring const& value);
-    Windows::Foundation::Collections::IObservableVector<OpenNOW::Views::GameViewModel> Games();
-    void Games(Windows::Foundation::Collections::IObservableVector<OpenNOW::Views::GameViewModel> const& value);
+    Windows::Foundation::Collections::IObservableVector<OpenNOW::GameViewModel> Games();
+    void Games(Windows::Foundation::Collections::IObservableVector<OpenNOW::GameViewModel> const& value);
 
 private:
     hstring title_;
     hstring countLabel_;
-    Windows::Foundation::Collections::IObservableVector<OpenNOW::Views::GameViewModel> games_{nullptr};
+    Windows::Foundation::Collections::IObservableVector<OpenNOW::GameViewModel> games_{nullptr};
 };
 
 class HomePage : public HomePageT<HomePage> {
@@ -74,10 +74,10 @@ private:
     std::string spotlightId_;
 };
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Views::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class HomePage : public HomePageT<HomePage, implementation::HomePage> {};
 
-}  // namespace winrt::OpenNOW::Views::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

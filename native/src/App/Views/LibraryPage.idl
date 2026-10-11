@@ -1,4 +1,4 @@
-namespace OpenNOW.Views
+namespace OpenNOW
 {
     [default_interface]
     runtimeclass LibraryPage : Microsoft.UI.Xaml.Controls.Page

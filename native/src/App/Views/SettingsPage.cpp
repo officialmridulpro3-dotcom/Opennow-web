@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "SettingsPage.h"
-#include "Views.SettingsPage.g.cpp"
+#include "SettingsPage.g.cpp"
 
 #include <winrt/Windows.System.h>
 
@@ -17,7 +17,7 @@ using namespace winrt::Microsoft::UI::Xaml;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
 using namespace Windows::System;
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 namespace {
 int IndexOf(const std::vector<std::string>& values, const std::string& value) {
@@ -332,4 +332,4 @@ void SettingsPage::OnOpenLogs(Windows::Foundation::IInspectable const&,
     Launcher::LaunchFolderAsync(folder);
 }
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation

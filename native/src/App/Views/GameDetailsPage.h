@@ -6,7 +6,7 @@
 
 #include <opennow/core/Types.hpp>
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 class GameDetailsPage : public GameDetailsPageT<GameDetailsPage> {
 public:
@@ -34,10 +34,10 @@ private:
     std::string selectedRegionUrl_;
 };
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation
 
-namespace winrt::OpenNOW::Views::factory_implementation {
+namespace winrt::OpenNOW::factory_implementation {
 
 class GameDetailsPage : public GameDetailsPageT<GameDetailsPage, implementation::GameDetailsPage> {};
 
-}  // namespace winrt::OpenNOW::Views::factory_implementation
+}  // namespace winrt::OpenNOW::factory_implementation

@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "HomePage.h"
-#include "Views.HomePage.g.cpp"
+#include "HomePage.g.cpp"
 
 #include "GameDetailsPage.h"
 
@@ -30,7 +30,7 @@ std::string JoinGenres(const opennow::core::Game& game) {
 
 }  // namespace
 
-namespace winrt::OpenNOW::Views::implementation {
+namespace winrt::OpenNOW::implementation {
 
 // ---- view models -----------------------------------------------------------------------------
 
@@ -161,4 +161,4 @@ void HomePage::OpenDetails(const std::string& gameId) {
     }
 }
 
-}  // namespace winrt::OpenNOW::Views::implementation
+}  // namespace winrt::OpenNOW::implementation

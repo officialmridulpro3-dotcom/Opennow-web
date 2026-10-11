@@ -3,11 +3,7 @@
 #include "pch.h"
 
 #include "MainWindow.h"
-#if __has_include("Shell.MainWindow.g.cpp")
-#include "Shell.MainWindow.g.cpp"
-#elif __has_include("MainWindow.g.cpp")
 #include "MainWindow.g.cpp"
-#endif
 
 #include <microsoft.ui.xaml.media.dxinterop.h>
 
@@ -38,7 +34,7 @@ std::wstring ToLower(std::wstring text) {
 
 }  // namespace
 
-namespace winrt::OpenNOW::Shell::implementation {
+namespace winrt::OpenNOW::implementation {
 
 MainWindow::MainWindow() {
     InitializeComponent();
@@ -82,7 +78,7 @@ winrt::fire_and_forget MainWindow::LoadAsync() {
     SetStatus(signedIn ? L"Connected" : L"Not signed in", signedIn);
 
     if (ContentFrame().Content()) {
-        if (auto page = ContentFrame().Content().try_as<Views::HomePage>()) {
+        if (auto page = ContentFrame().Content().try_as<OpenNOW::HomePage>()) {
             page.RefreshFromServices();
         }
     }
@@ -133,7 +129,7 @@ void MainWindow::WireSignInHandlers() {
 void MainWindow::WireStreamHandlers() {
     // Stream start/stop is driven from the details page; the shell shows the
     // stream page and mirrors progress into the status bar.
-    if (auto details = ContentFrame().Content().try_as<Views::GameDetailsPage>()) {
+    if (auto details = ContentFrame().Content().try_as<OpenNOW::GameDetailsPage>()) {
         // wired when the page is created; see NavigateTo
     }
 }
@@ -142,19 +138,19 @@ void MainWindow::NavigateTo(hstring const& page) {
     currentPage_ = page;
 
     if (page == L"home") {
-        ContentFrame().Navigate(xaml_typename<Views::HomePage>());
+        ContentFrame().Navigate(xaml_typename<OpenNOW::HomePage>());
         HeaderTitle().Text(L"Home");
         SelectNavButton(HomeNavButton());
     } else if (page == L"library") {
-        ContentFrame().Navigate(xaml_typename<Views::LibraryPage>());
+        ContentFrame().Navigate(xaml_typename<OpenNOW::LibraryPage>());
         HeaderTitle().Text(L"Library");
         SelectNavButton(LibraryNavButton());
     } else if (page == L"playtime") {
-        ContentFrame().Navigate(xaml_typename<Views::PlaytimePage>());
+        ContentFrame().Navigate(xaml_typename<OpenNOW::PlaytimePage>());
         HeaderTitle().Text(L"Playtime");
         SelectNavButton(PlaytimeNavButton());
     } else if (page == L"settings") {
-        ContentFrame().Navigate(xaml_typename<Views::SettingsPage>());
+        ContentFrame().Navigate(xaml_typename<OpenNOW::SettingsPage>());
         HeaderTitle().Text(L"Settings");
         SelectNavButton(SettingsNavButton());
     }
@@ -196,7 +192,7 @@ void MainWindow::OnSearchSubmitted(
     const std::string query = winrt::to_string(sender.Text());
     if (query.empty()) return;
     NavigateTo(L"library");
-    if (auto page = ContentFrame().Content().try_as<Views::LibraryPage>()) {
+    if (auto page = ContentFrame().Content().try_as<OpenNOW::LibraryPage>()) {
         page.RunSearch(to_hstring(query));
     }
 }
@@ -294,4 +290,4 @@ void MainWindow::SelectNavButton(Controls::Button const& button) {
     }
 }
 
-}  // namespace winrt::OpenNOW::Shell::implementation
+}  // namespace winrt::OpenNOW::implementation

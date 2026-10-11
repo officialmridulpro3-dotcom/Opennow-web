@@ -1,4 +1,4 @@
-namespace OpenNOW.Views
+namespace OpenNOW
 {
     // Device-authorization sign-in. NVIDIA never sees a redirect URI here: the
     // user approves a short code in their own browser and we poll the token

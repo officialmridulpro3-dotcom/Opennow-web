@@ -1,4 +1,4 @@
-namespace OpenNOW.Views
+namespace OpenNOW
 {
     // Bindable projection of opennow::core::Game. WinUI data binding needs
     // WinRT properties, so the Core model is mirrored here; the conversion is
