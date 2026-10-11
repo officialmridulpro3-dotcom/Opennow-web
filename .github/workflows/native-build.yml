@@ -246,26 +246,56 @@ jobs:
             toolchain.txt
           if-no-files-found: warn
 
-      # Log downloads need a GitHub session or the artifact blob host, neither
-      # of which every automation environment has. Pushing the log to an orphan
-      # branch means plain `git fetch` can always read it.
-      - name: Publish build log to the ci-buildlog branch
-        if: failure()
-        shell: bash
+      # Log downloads need a GitHub session or the artifact blob host, and the
+      # earlier "push the log to an orphan branch with git" step can fail on its
+      # own and then leave last run's log in place, which reads as a stale
+      # failure. Publishing through the contents API is one PUT and is readable
+      # from anywhere with `gh api .../contents/<file>?ref=ci-buildlog`.
+      - name: Publish build report to the ci-buildlog branch
+        if: always()
+        shell: pwsh
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          set -euo pipefail
-          git config user.name "ci"
-          git config user.email "ci@users.noreply.github.com"
-          git checkout --orphan ci-buildlog
-          git rm -rf . >/dev/null 2>&1 || true
-          for f in native-build.log native-build-stdout.log toolchain.txt; do
-            [ -f "$f" ] && cp "$f" "$(basename $f).txt" || true
-          done
-          git add -A
-          git commit -q -m "build log for run $GITHUB_RUN_ID ($GITHUB_REF_NAME)"
-          git push --force origin ci-buildlog
+          $ErrorActionPreference = 'Continue'
+          $headers = @{
+            Authorization  = "Bearer $env:GITHUB_TOKEN"
+            Accept         = 'application/vnd.github+json'
+            'User-Agent'   = 'opennow-ci'
+          }
+          $base = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/contents"
+
+          function Publish-File([string]$source, [string]$target) {
+            if (-not (Test-Path $source)) { return }
+            $content = [Convert]::ToBase64String([IO.File]::ReadAllBytes($source))
+            $sha = $null
+            try {
+              $sha = (Invoke-RestMethod -Headers $headers -Uri "$base/$target`?ref=ci-buildlog").sha
+            } catch { $sha = $null }
+            $body = @{ message = "CI report for run $env:GITHUB_RUN_ID"; content = $content }
+            if ($sha) { $body['sha'] = $sha }
+            Invoke-RestMethod -Method Put -Headers $headers -Uri "$base/$target" `
+              -ContentType 'application/json' -Body (ConvertTo-Json $body -Depth 5) | Out-Null
+            Write-Output "published $target"
+          }
+
+          # A compact error summary is what a failing build is actually read for;
+          # the two full logs are published alongside it.
+          $report = @()
+          if (Test-Path toolchain.txt) { $report += (Get-Content toolchain.txt) }
+          $report += '--- errors ---'
+          $log = @('native-build-stdout.log', 'native-build.log') | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if ($log) {
+            $report += (Select-String -Path $log -Pattern 'error [A-Z]+[0-9]+|: error |MSB[0-9]+:|fatal error' |
+                        Select-Object -ExpandProperty Line | Sort-Object -Unique | Select-Object -First 80)
+            $report += '--- tail of build output ---'
+            $report += (Get-Content $log -Tail 40)
+          }
+          ($report -join "`n") | Out-File -FilePath ci-report.txt -Encoding utf8
+
+          Publish-File 'ci-report.txt'            'ci-report.txt'
+          Publish-File 'native-build-stdout.log'   'native-build-stdout.log.txt'
+          Publish-File 'toolchain.txt'             'toolchain.txt'
 
   # ── Rolling release ────────────────────────────────────────────────────────
   # Workflow artifacts expire and need a signed-in session; release assets are
