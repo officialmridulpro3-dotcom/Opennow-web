@@ -264,6 +264,21 @@ jobs:
             $hits = @(Select-String -Path $targets.FullName -Pattern 'InitializeComponent' -List -ErrorAction SilentlyContinue)
             foreach ($hit in $hits) { $out += ($hit.Path + ' :: ' + $hit.Line.Trim()) }
           }
+          $out += '--- xaml compiler targets mentioning cppwinrt / language ---'
+          $pkgs = Join-Path $env:USERPROFILE '.nuget\packages'
+          $files = @(Get-ChildItem -Path $pkgs -Recurse -File -Include '*.targets','*.props' -ErrorAction SilentlyContinue |
+                     Where-Object { $_.Name -match 'Xaml|Markup|WinUI|AppSDK' })
+          $out += (@($files | Select-Object -ExpandProperty FullName) -join "`n")
+          foreach ($f in $files) {
+            $hits = @(Select-String -Path $f.FullName -Pattern 'CppWinRT|XamlLanguage|CompileAsWinRT|CodeGen.*Cpp|C\+\+/CX' -ErrorAction SilentlyContinue)
+            if ($hits.Count -gt 0) {
+              $out += "===== $($f.FullName) ====="
+              $out += (@($hits | ForEach-Object { "$($_.LineNumber): $($_.Line.Trim())" }) -join "`n")
+            }
+          }
+          $out += '--- head of the markup generated App.g.h ---'
+          $app = 'native\obj\OpenNOW.App\x64\Release\Generated Files\App.g.h'
+          if (Test-Path $app) { $out += (@(Get-Content $app -TotalCount 40) -join "`n") }
           $out += '--- markup compiler output in the source tree ---'
           $out += (@(Get-ChildItem -Path native\src\App\Generated Files -Recurse -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName) -join "`n")
           $out += '--- xbf files anywhere in the workspace ---'
