@@ -179,7 +179,7 @@ jobs:
           & msbuild native\OpenNOW.sln `
             /p:Configuration=$configuration /p:Platform=x64 `
             /p:PlatformToolset=$env:OPENNOW_PLATFORMTOOLSET `
-            /verbosity:minimal `
+            /verbosity:normal `
             /flp:LogFile=native-build.log`;Verbosity=diagnostic 2>&1 | Out-File -FilePath native-build-stdout.log -Encoding utf8
           $code = $LASTEXITCODE
           Get-Content native-build-stdout.log -Tail 120
@@ -264,6 +264,8 @@ jobs:
             $hits = @(Select-String -Path $targets.FullName -Pattern 'InitializeComponent' -List -ErrorAction SilentlyContinue)
             foreach ($hit in $hits) { $out += ($hit.Path + ' :: ' + $hit.Line.Trim()) }
           }
+          $out += '--- xbf files anywhere in the workspace ---'
+          $out += (@(Get-ChildItem -Path . -Recurse -Filter *.xbf -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName) -join "`n")
           $out += '--- content of every App.g.* ---'
           foreach ($g in @($files | Where-Object { $_.Name -like 'App.g.*' })) {
             $out += ('===== ' + $g.FullName)
