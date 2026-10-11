@@ -10,7 +10,17 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
+// secext.h (which declares GetUserNameExW and EXTENDED_NAME_FORMAT) is not
+// self-contained: it expects sspi.h to have run first, and sspi.h only
+// publishes SEC_ENTRY when SECURITY_WIN32 is defined.
+#ifndef SECURITY_WIN32
+#define SECURITY_WIN32
+#endif
 #include <windows.h>
+#include <sspi.h>
+#ifndef SEC_ENTRY
+#define SEC_ENTRY __stdcall
+#endif
 #include <secext.h>          // GetUserNameExW + NameSamCompatible
 #else
 #include <cstdlib>
