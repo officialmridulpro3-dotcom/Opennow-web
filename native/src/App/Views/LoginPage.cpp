@@ -17,7 +17,7 @@
 using namespace winrt;
 using namespace winrt::Microsoft::UI::Xaml;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
-using namespace Windows::ApplicationModel::DataTransfer;
+using namespace winrt::Windows::ApplicationModel::DataTransfer;
 using namespace winrt::Windows::System;
 
 namespace winrt::OpenNOW::implementation {
