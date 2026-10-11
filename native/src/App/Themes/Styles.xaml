@@ -46,7 +46,7 @@
         <Setter Property="FontSize" Value="13" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="{ThemeResource OpenNowInkBrush}" />
-        <Setter Property="LetterSpacing" Value="6" />
+        <Setter Property="CharacterSpacing" Value="6000" />
         <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
     </Style>
 
@@ -55,7 +55,7 @@
         <Setter Property="FontSize" Value="22" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="{ThemeResource OpenNowInkBrush}" />
-        <Setter Property="LetterSpacing" Value="-0.015" />
+        <Setter Property="CharacterSpacing" Value="-15" />
     </Style>
 
     <Style x:Key="OpenNowHeaderMeta" TargetType="TextBlock">
@@ -269,7 +269,7 @@
     <Style x:Key="OpenNowStatLabel" TargetType="TextBlock">
         <Setter Property="FontSize" Value="10" />
         <Setter Property="Foreground" Value="{ThemeResource OpenNowMutedBrush}" />
-        <Setter Property="LetterSpacing" Value="6" />
+        <Setter Property="CharacterSpacing" Value="6000" />
     </Style>
 
     <!-- ── Settings rows ──────────────────────────────────────────────────── -->
