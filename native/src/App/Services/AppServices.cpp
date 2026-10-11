@@ -1,3 +1,5 @@
+#include "pch.h"
+
 // OpenNOW native client — application services implementation.
 
 #include "AppServices.h"

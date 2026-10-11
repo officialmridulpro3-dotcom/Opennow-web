@@ -11,8 +11,8 @@
 #include "Services/AppServices.h"
 
 using namespace winrt;
-using namespace Microsoft::UI::Xaml;
-using namespace Microsoft::UI::Xaml::Controls;
+using namespace winrt::Microsoft::UI::Xaml;
+using namespace winrt::Microsoft::UI::Xaml::Controls;
 
 namespace winrt::OpenNOW::Views::implementation {
 
@@ -124,7 +124,7 @@ void LibraryPage::OnGameClicked(Windows::Foundation::IInspectable const&,
 void LibraryPage::OnContainerChanging(
     Windows::Foundation::IInspectable const&,
     Microsoft::UI::Xaml::Controls::ContainerContentChangingEventArgs const& args) {
-    using namespace Microsoft::UI::Xaml::Media::Animation;
+    using namespace winrt::Microsoft::UI::Xaml::Media::Animation;
 
     if (args.InRecycleQueue()) return;
 

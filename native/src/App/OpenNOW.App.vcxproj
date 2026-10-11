@@ -61,6 +61,9 @@
         $(MSBuildProjectDirectory)\..;
         $(MSBuildProjectDirectory)\..\Core\include;
         $(MSBuildProjectDirectory)\..\DirectX\include;
+        $(IntDir)Generated Files\;
+        $(IntDir)Generated Files\Views\;
+        $(IntDir)Generated Files\Controls\;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -110,7 +113,11 @@
     <ClCompile Include="Views\PlaytimePage.cpp" />
     <ClCompile Include="Views\SettingsPage.cpp" />
     <ClCompile Include="Views\StreamPage.cpp" />
-    <ClCompile Include="..\DirectX\src\StreamSurface.cpp" />
+    <ClCompile Include="..\DirectX\src\StreamSurface.cpp">
+      <!-- Lives in the DirectX tree and is also built by that project: it
+           includes its own headers, not this project's precompiled header. -->
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
 
   <ItemGroup>

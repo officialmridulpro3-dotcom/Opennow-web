@@ -14,8 +14,8 @@
 #include <opennow/core/Logging.hpp>
 
 using namespace winrt;
-using namespace Microsoft::UI::Xaml;
-using namespace Microsoft::UI::Xaml::Controls;
+using namespace winrt::Microsoft::UI::Xaml;
+using namespace winrt::Microsoft::UI::Xaml::Controls;
 using namespace Windows::ApplicationModel::DataTransfer;
 using namespace Windows::System;
 

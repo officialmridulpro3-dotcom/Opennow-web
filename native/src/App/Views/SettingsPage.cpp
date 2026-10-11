@@ -12,8 +12,8 @@
 #include <opennow/dx/StreamSurface.hpp>
 
 using namespace winrt;
-using namespace Microsoft::UI::Xaml;
-using namespace Microsoft::UI::Xaml::Controls;
+using namespace winrt::Microsoft::UI::Xaml;
+using namespace winrt::Microsoft::UI::Xaml::Controls;
 using namespace Windows::System;
 
 namespace winrt::OpenNOW::Views::implementation {

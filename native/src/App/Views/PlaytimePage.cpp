@@ -10,8 +10,8 @@
 #include "Services/AppServices.h"
 
 using namespace winrt;
-using namespace Microsoft::UI::Xaml;
-using namespace Microsoft::UI::Xaml::Controls;
+using namespace winrt::Microsoft::UI::Xaml;
+using namespace winrt::Microsoft::UI::Xaml::Controls;
 
 namespace winrt::OpenNOW::Views::implementation {
 

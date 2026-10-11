@@ -36,6 +36,10 @@ using core::Game;
 using core::StreamStats;
 using core::Subscription;
 
+// The GFN protocol layer keeps its own namespace; call sites below spell it
+// `gfn::...`, so alias it here rather than dragging the whole namespace in.
+namespace gfn = core::gfn;
+
 
 // Progress shown on the stream loading screen and in the status bar.
 enum class StreamPhase {

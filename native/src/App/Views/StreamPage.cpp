@@ -10,10 +10,10 @@
 #include <opennow/core/Logging.hpp>
 
 using namespace winrt;
-using namespace Microsoft::UI::Xaml;
-using namespace Microsoft::UI::Xaml::Controls;
-using namespace Microsoft::UI::Xaml::Input;
-using namespace Microsoft::UI::Dispatching;
+using namespace winrt::Microsoft::UI::Xaml;
+using namespace winrt::Microsoft::UI::Xaml::Controls;
+using namespace winrt::Microsoft::UI::Xaml::Input;
+using namespace winrt::Microsoft::UI::Dispatching;
 using namespace Windows::System;
 
 namespace winrt::OpenNOW::Views::implementation {

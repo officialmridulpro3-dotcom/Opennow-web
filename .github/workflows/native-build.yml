@@ -274,7 +274,7 @@ jobs:
             } catch { $sha = $null }
             $body = @{ message = "CI report for run $env:GITHUB_RUN_ID"; content = $content }
             if ($sha) { $body['sha'] = $sha }
-            Invoke-RestMethod -Method Put -Headers $headers -Uri "$base/$target" `
+            Invoke-RestMethod -Method Put -Headers $headers -Uri "$base/$target`?ref=ci-buildlog" `
               -ContentType 'application/json' -Body (ConvertTo-Json $body -Depth 5) | Out-Null
             Write-Output "published $target"
           }
@@ -283,6 +283,9 @@ jobs:
           # the two full logs are published alongside it.
           $report = @()
           if (Test-Path toolchain.txt) { $report += (Get-Content toolchain.txt) }
+          $report += '--- generated files ---'
+          $report += ((Get-ChildItem -Path native\obj -Recurse -Include *.g.h,*.winmd -ErrorAction SilentlyContinue |
+                       Select-Object -ExpandProperty FullName) -join "`n")
           $report += '--- errors ---'
           $log = @('native-build-stdout.log', 'native-build.log') | Where-Object { Test-Path $_ } | Select-Object -First 1
           if ($log) {
