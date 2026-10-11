@@ -15,7 +15,9 @@
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.Primitives.h>
 #include <winrt/Microsoft.UI.Xaml.Data.h>
+#include <winrt/Microsoft.UI.Xaml.Input.h>
 #include <winrt/Microsoft.UI.Xaml.Media.h>
+#include <winrt/Microsoft.UI.Xaml.Media.Animation.h>
 #include <winrt/Microsoft.UI.Xaml.Media.Imaging.h>
 #include <winrt/Microsoft.UI.Xaml.Navigation.h>
 #include <winrt/Microsoft.UI.Dispatching.h>
@@ -26,6 +28,7 @@
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.Streams.h>
 #include <winrt/Windows.System.h>
+#include <winrt/Windows.UI.Core.h>
 #include <winrt/Windows.UI.Xaml.Interop.h>  // xaml_typename
 
 // C++/WinRT helpers
@@ -44,6 +47,10 @@
 #include <opennow/core/gfn/DeviceId.hpp>
 #include <opennow/core/gfn/Signaling.hpp>
 #include <opennow/core/gfn/Subscription.hpp>
+
+// The page headers declare members with these types, so they have to be
+// visible before any page header is parsed, not just in the .cpp files.
+#include "Services/AppServices.h"
 
 #include <cctype>
 #include <coroutine>

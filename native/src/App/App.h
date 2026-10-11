@@ -20,9 +20,3 @@ private:
 };
 
 }  // namespace winrt::OpenNOW::implementation
-
-namespace winrt::OpenNOW::factory_implementation {
-
-class App : public AppT<App, implementation::App> {};
-
-}  // namespace winrt::OpenNOW::factory_implementation

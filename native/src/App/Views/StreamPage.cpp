@@ -5,6 +5,7 @@
 #include "StreamPage.h"
 #include "StreamPage.g.cpp"
 
+#include <winrt/Microsoft.UI.Interop.h>
 #include <winrt/Microsoft.UI.Windowing.h>
 
 #include "Services/AppServices.h"
@@ -15,7 +16,7 @@ using namespace winrt::Microsoft::UI::Xaml;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
 using namespace winrt::Microsoft::UI::Xaml::Input;
 using namespace winrt::Microsoft::UI::Dispatching;
-using namespace Windows::System;
+using namespace winrt::Windows::System;
 
 namespace winrt::OpenNOW::implementation {
 
@@ -194,25 +195,29 @@ void StreamPage::OnToggleMicrophone(Windows::Foundation::IInspectable const&,
 
 void StreamPage::OnToggleFullscreen(Windows::Foundation::IInspectable const&,
                                     Microsoft::UI::Xaml::RoutedEventArgs const&) {
-    // WinUI 3 exposes the presenter through the window's AppWindow.
-    if (auto window = Microsoft::UI::Windowing::AppWindow::TryCreateForCurrentThread()) {
-        const auto presenter = window.Presenter().as<Microsoft::UI::Windowing::FullScreenPresenter>();
-        if (presenter != nullptr) {
-            window.SetPresenter(Microsoft::UI::Windowing::AppWindowPresenterKind::Default);
-        } else {
-            window.SetPresenter(Microsoft::UI::Windowing::AppWindowPresenterKind::FullScreen);
-        }
-    }
+    // WinUI 3 reaches the presenter through the AppWindow of the host window.
+    const HWND host = GetActiveWindow();
+    if (host == nullptr) return;
+    const auto appWindow = Microsoft::UI::Windowing::AppWindow::GetFromWindowId(
+        Microsoft::UI::GetWindowIdFromWindow(host));
+    if (appWindow == nullptr) return;
+
+    using Microsoft::UI::Windowing::AppWindowPresenterKind;
+    const bool fullScreen =
+        appWindow.Presenter().Kind() == AppWindowPresenterKind::FullScreen;
+    appWindow.SetPresenter(fullScreen ? AppWindowPresenterKind::Default
+                                      : AppWindowPresenterKind::FullScreen);
 }
 
 void StreamPage::OnKeyDown(Windows::Foundation::IInspectable const&,
                            Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& args) {
-    const auto shift = Microsoft::UI::Input::InputKeyboardSource::GetKeyStateForCurrentThread(
-                           VirtualKey::Shift)
-                           .has_flag(Windows::UI::Core::CoreVirtualKeyStates::Down);
-    const auto control = Microsoft::UI::Input::InputKeyboardSource::GetKeyStateForCurrentThread(
-                             VirtualKey::Control)
-                             .has_flag(Windows::UI::Core::CoreVirtualKeyStates::Down);
+    const auto Down = Windows::UI::Core::CoreVirtualKeyStates::Down;
+    const auto shift =
+        (Microsoft::UI::Input::InputKeyboardSource::GetKeyStateForCurrentThread(VirtualKey::Shift) &
+         Down) == Down;
+    const auto control =
+        (Microsoft::UI::Input::InputKeyboardSource::GetKeyStateForCurrentThread(VirtualKey::Control) &
+         Down) == Down;
 
     if (control && shift && args.Key() == VirtualKey::S) {
         OnToggleStats(nullptr, nullptr);

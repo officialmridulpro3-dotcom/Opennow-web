@@ -15,7 +15,7 @@
 using namespace winrt;
 using namespace winrt::Microsoft::UI::Xaml;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
-using namespace Windows::System;
+using namespace winrt::Windows::System;
 
 namespace winrt::OpenNOW::implementation {
 
