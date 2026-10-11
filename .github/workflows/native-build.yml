@@ -88,6 +88,8 @@ jobs:
     name: Build Windows x64
     runs-on: windows-latest
     timeout-minutes: 60
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -96,12 +98,10 @@ jobs:
 
       # Diagnostics only: which Windows SDK versions are actually on the image.
       # TargetPlatformVersion is "10.0" in both projects, so MSBuild picks the
-      # newest installed SDK and this step explains what that resolved to.
+      # newest installed SDK and this step records what that resolved to.
       - name: Report installed Windows SDKs
         shell: pwsh
         run: |
-          Get-ChildItem "HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots" -ErrorAction SilentlyContinue |
-            ForEach-Object { $_.GetValue("KitsRoot") }
           Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Directory -ErrorAction SilentlyContinue |
             Select-Object -ExpandProperty Name
 
@@ -109,18 +109,31 @@ jobs:
         run: msbuild native\OpenNOW.sln /t:Restore /p:Configuration=${{ inputs.configuration || 'Release' }} /p:Platform=x64 /verbosity:minimal
 
       - name: Build OpenNOW
-        id: build
         shell: pwsh
         run: |
-          $ErrorActionPreference = "Continue"
           $configuration = "${{ inputs.configuration || 'Release' }}"
           & msbuild native\OpenNOW.sln `
             /p:Configuration=$configuration /p:Platform=x64 `
-            /p:AppxBundle=Never /verbosity:minimal `
-            /flp:LogFile=native-build.log`;Verbosity=detailed`;WarningsOnly=false
+            /verbosity:minimal `
+            /flp:LogFile=native-build.log`;Verbosity=diagnostic 2>&1 | Out-File -FilePath native-build-stdout.log -Encoding utf8
           $code = $LASTEXITCODE
-          "exit-code=$code" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          if ($code -ne 0) { throw "msbuild failed with exit code $code" }
+          Get-Content native-build-stdout.log -Tail 120
+
+          if ($code -ne 0) {
+            # Surface the compiler errors as workflow annotations: they show up
+            # directly in the run summary, which is far quicker than digging
+            # through the uploaded log on a failing build.
+            $log = if (Test-Path native-build.log) { "native-build.log" } else { "native-build-stdout.log" }
+            $errors = Select-String -Path $log -Pattern ' error [A-Z]+[0-9]+|: error |MSB[0-9]+:|fatal error' |
+                      Select-Object -First 40
+            foreach ($match in $errors) {
+              $text = ($match.Line.Trim() -replace '\r','' -replace '\n',' ')
+              if ($text.Length -gt 300) { $text = $text.Substring(0, 300) }
+              Write-Output "::error::$text"
+            }
+            Write-Output "::error::msbuild exited with $code - full log is on the ci-buildlog branch and in the native-build-log artifact"
+            exit $code
+          }
 
       - name: List build output
         shell: pwsh
@@ -158,12 +171,35 @@ jobs:
           if-no-files-found: error
 
       - name: Upload build log
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: native-build-log
-          path: native-build.log
+          path: |
+            native-build.log
+            native-build-stdout.log
           if-no-files-found: warn
+
+      # Log downloads need a GitHub session or the artifact blob host, neither
+      # of which every automation environment has. Pushing the log to an orphan
+      # branch means plain `git fetch` can always read it.
+      - name: Publish build log to the ci-buildlog branch
+        if: failure()
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "ci"
+          git config user.email "ci@users.noreply.github.com"
+          git checkout --orphan ci-buildlog
+          git rm -rf . >/dev/null 2>&1 || true
+          for f in native-build.log native-build-stdout.log; do
+            [ -f "$f" ] && cp "$f" "$(basename $f).txt" || true
+          done
+          git add -A
+          git commit -q -m "build log for run $GITHUB_RUN_ID ($GITHUB_REF_NAME)"
+          git push --force origin ci-buildlog
 
   # ── Rolling release ────────────────────────────────────────────────────────
   # Workflow artifacts expire and need a signed-in session; release assets are
