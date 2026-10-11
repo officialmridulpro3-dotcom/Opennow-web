@@ -10,6 +10,12 @@
 #include <restrictederrorinfo.h>
 #include <hstring.h>
 
+// windows.h defines GetCurrentTime as a macro, which mangles the projection of
+// Storyboard.GetCurrentTime. WinUI 3 C++ projects undef it around the generated
+// headers; do the same around every projection header.
+#pragma push_macro("GetCurrentTime")
+#undef GetCurrentTime
+
 // Windows App SDK (WinUI 3)
 #include <winrt/Microsoft.UI.Xaml.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
@@ -32,6 +38,8 @@
 
 // Last, because it completes against types declared by the headers above.
 #include <winrt/Microsoft.UI.Xaml.Media.Animation.h>
+
+#pragma pop_macro("GetCurrentTime")
 
 // C++/WinRT helpers
 #include <wil/cppwinrt.h>
