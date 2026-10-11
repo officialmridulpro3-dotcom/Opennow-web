@@ -1,0 +1,99 @@
+vswhere            : C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
+installationVersion: 18.10.12217.157
+installationPath   : C:\Program Files\Microsoft Visual Studio\18\Enterprise
+visualStudioMajor  : 18
+propsFile          : C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Microsoft.Cpp.Default.props
+platformToolset    : v145
+--- DefaultPlatformToolset table ---
+
+--- toolset directories ---
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v160\Platforms\x64\PlatformToolsets\v142
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\v143
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\ClangCL
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\v145
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\WindowsApplicationForDrivers10.0
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\WindowsKernelModeDriver10.0
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\WindowsUserModeDriver10.0
+--- generated files ---
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Controls.StreamSurfacePanel.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.GameDetailsPage.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.GameViewModel.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.HomePage.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.LibraryPage.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.LoginPage.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.PlaytimePage.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.PlaytimeViewModel.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.SettingsPage.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.ShelfViewModel.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views.StreamPage.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.g.h
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Merged\OpenNOW.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\App.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\GameDetailsPage.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\HomePage.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\LibraryPage.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\LoginPage.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\MainWindow.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\PlaytimePage.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\SettingsPage.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\StreamPage.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\StreamSurfacePanel.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+--- errors ---
+D:\a\Opennow-web\Opennow-web\native\src\App\App.cpp(20,5): error C3861: 'InitializeComponent': identifier not found [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Controls\StreamSurfacePanel.h(5,10): error C1083: Cannot open include file: 'StreamSurfacePanel.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Services\AppServices.cpp(382,34): error C2039: 'streamingBaseUrl': is not a member of 'opennow::core::gfn::LoginProvider' [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Services\AppServices.cpp(445,17): error C2923: 'opennow::core::Result': 'CatalogPage' is not a valid template type argument for parameter 'T' [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Services\AppServices.cpp(445,24): error C2065: 'CatalogPage': undeclared identifier [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Services\AppServices.cpp(504,5): error C2065: 'preferredRegionUrl_': undeclared identifier [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Services\AppServices.cpp(509,12): error C2065: 'preferredRegionUrl_': undeclared identifier [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\GameDetailsPage.h(5,10): error C1083: Cannot open include file: 'GameDetailsPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\HomePage.h(5,10): error C1083: Cannot open include file: 'HomePage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\LibraryPage.h(5,10): error C1083: Cannot open include file: 'LibraryPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\LoginPage.h(5,10): error C1083: Cannot open include file: 'LoginPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\PlaytimePage.h(5,10): error C1083: Cannot open include file: 'PlaytimePage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\SettingsPage.h(5,10): error C1083: Cannot open include file: 'SettingsPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\StreamPage.h(5,10): error C1083: Cannot open include file: 'StreamPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+--- tail of build output ---
+  
+D:\a\Opennow-web\Opennow-web\native\src\App\Services\AppServices.cpp(445,17): error C2923: 'opennow::core::Result': 'CatalogPage' is not a valid template type argument for parameter 'T' [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Services/AppServices.cpp')
+      D:\a\Opennow-web\Opennow-web\native\src\App\Services\AppServices.cpp(445,24):
+      see declaration of 'CatalogPage'
+  
+D:\a\Opennow-web\Opennow-web\native\src\App\Services\AppServices.cpp(504,5): error C2065: 'preferredRegionUrl_': undeclared identifier [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Services/AppServices.cpp')
+  
+D:\a\Opennow-web\Opennow-web\native\src\App\Services\AppServices.cpp(509,12): error C2065: 'preferredRegionUrl_': undeclared identifier [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Services/AppServices.cpp')
+  
+  HomePage.cpp
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\HomePage.h(5,10): error C1083: Cannot open include file: 'HomePage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Views/HomePage.cpp')
+  
+  LibraryPage.cpp
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\LibraryPage.h(5,10): error C1083: Cannot open include file: 'LibraryPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Views/LibraryPage.cpp')
+  
+  LoginPage.cpp
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\LoginPage.h(5,10): error C1083: Cannot open include file: 'LoginPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Views/LoginPage.cpp')
+  
+  GameDetailsPage.cpp
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\GameDetailsPage.h(5,10): error C1083: Cannot open include file: 'GameDetailsPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Views/GameDetailsPage.cpp')
+  
+  PlaytimePage.cpp
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\PlaytimePage.h(5,10): error C1083: Cannot open include file: 'PlaytimePage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Views/PlaytimePage.cpp')
+  
+  SettingsPage.cpp
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\SettingsPage.h(5,10): error C1083: Cannot open include file: 'SettingsPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Views/SettingsPage.cpp')
+  
+  StreamPage.cpp
+D:\a\Opennow-web\Opennow-web\native\src\App\Views\StreamPage.h(5,10): error C1083: Cannot open include file: 'StreamPage.g.h': No such file or directory [D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj]
+  (compiling source file '/Views/StreamPage.cpp')
+  
