@@ -303,6 +303,15 @@ jobs:
               $out += (@($hits | ForEach-Object { "$($_.LineNumber): $($_.Line.Trim())" }) -join "`n")
             }
           }
+          $out += '--- head of App.xaml.g.h ---'
+          $appx = 'native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml.g.h'
+          if (Test-Path $appx) {
+            $out += (@(Get-Content $appx -TotalCount 60) -join "`n")
+            $out += '--- AppT / namespace lines in App.xaml.g.h ---'
+            $out += (@(Get-Content $appx | Where-Object { $_ -match 'AppT|namespace|^#include|struct ' }) -join "`n")
+          } else {
+            $out += 'App.xaml.g.h is missing'
+          }
           $out += '--- head of the markup generated App.g.h ---'
           $app = 'native\obj\OpenNOW.App\x64\Release\Generated Files\App.g.h'
           if (Test-Path $app) { $out += (@(Get-Content $app -TotalCount 40) -join "`n") }

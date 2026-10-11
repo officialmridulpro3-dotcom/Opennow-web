@@ -46,6 +46,7 @@
 #include <opennow/core/gfn/Subscription.hpp>
 
 #include <cctype>
+#include <coroutine>
 #include <cwctype>
 
 namespace winrt {
@@ -57,7 +58,7 @@ inline auto resume_foreground(Microsoft::UI::Dispatching::DispatcherQueue const&
         Microsoft::UI::Dispatching::DispatcherQueue queue;
         bool await_ready() const noexcept { return false; }
         void await_resume() const noexcept {}
-        void await_suspend(std::experimental::coroutine_handle<> handle) const {
+        void await_suspend(std::coroutine_handle<> handle) const {
             queue.TryEnqueue([handle] { handle(); });
         }
     };

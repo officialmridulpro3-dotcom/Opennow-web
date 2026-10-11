@@ -67,7 +67,7 @@ void PlaytimePage::Refresh() {
 }
 
 void PlaytimePage::Populate() {
-    auto models = single_threaded_observable_vector<PlaytimeViewModel>();
+    auto models = single_threaded_observable_vector<winrt::OpenNOW::PlaytimeViewModel>();
     std::int64_t totalSeconds = 0;
     std::int64_t totalSessions = 0;
     for (const auto& entry : entries_) {

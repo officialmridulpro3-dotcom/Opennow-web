@@ -57,11 +57,11 @@ hstring ShelfViewModel::Title() { return title_; }
 void ShelfViewModel::Title(hstring const& value) { title_ = value; }
 hstring ShelfViewModel::CountLabel() { return countLabel_; }
 void ShelfViewModel::CountLabel(hstring const& value) { countLabel_ = value; }
-Windows::Foundation::Collections::IObservableVector<GameViewModel> ShelfViewModel::Games() {
+Windows::Foundation::Collections::IObservableVector<winrt::OpenNOW::GameViewModel> ShelfViewModel::Games() {
     return games_;
 }
 void ShelfViewModel::Games(
-    Windows::Foundation::Collections::IObservableVector<GameViewModel> const& value) {
+    Windows::Foundation::Collections::IObservableVector<winrt::OpenNOW::GameViewModel> const& value) {
     games_ = value;
 }
 
@@ -91,11 +91,11 @@ winrt::fire_and_forget HomePage::LoadAsync() {
         co_return;
     }
 
-    auto shelfModels = single_threaded_observable_vector<ShelfViewModel>();
+    auto shelfModels = single_threaded_observable_vector<winrt::OpenNOW::ShelfViewModel>();
     for (const auto& shelf : shelves) {
         // The first eight cards of every shelf, matching the web client's
         // "mount eight cards per shelf" behaviour on constrained devices.
-        auto games = single_threaded_observable_vector<GameViewModel>();
+        auto games = single_threaded_observable_vector<winrt::OpenNOW::GameViewModel>();
         const std::size_t count = std::min<std::size_t>(shelf.games.size(), 8);
         for (std::size_t index = 0; index < count; ++index) {
             games.Append(make<GameViewModel>(shelf.games[index]));

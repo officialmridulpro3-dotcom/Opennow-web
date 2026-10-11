@@ -96,7 +96,7 @@ void LibraryPage::ApplyFilters() {
             break;
     }
 
-    auto models = single_threaded_observable_vector<GameViewModel>();
+    auto models = single_threaded_observable_vector<winrt::OpenNOW::GameViewModel>();
     for (const auto& game : filtered) {
         models.Append(make<GameViewModel>(game));
     }
@@ -115,7 +115,7 @@ void LibraryPage::OnFilterChanged(Windows::Foundation::IInspectable const&,
 
 void LibraryPage::OnGameClicked(Windows::Foundation::IInspectable const&,
                                 Microsoft::UI::Xaml::Controls::ItemClickEventArgs const& args) {
-    if (auto model = args.ClickedItem().try_as<GameViewModel>()) {
+    if (auto model = args.ClickedItem().try_as<winrt::OpenNOW::GameViewModel>()) {
         if (auto frame = Frame()) {
             frame.Navigate(xaml_typename<GameDetailsPage>(), box_value(model.Id()));
         }
