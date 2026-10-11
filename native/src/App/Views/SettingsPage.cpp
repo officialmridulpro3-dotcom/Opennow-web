@@ -3,6 +3,7 @@
 #include "pch.h"
 
 #include "SettingsPage.h"
+#include "SettingsPage.g.cpp"
 
 #include <winrt/Windows.System.h>
 

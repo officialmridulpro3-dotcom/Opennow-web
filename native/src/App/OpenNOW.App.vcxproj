@@ -187,5 +187,19 @@
     <ProjectReference Include="..\Core\OpenNOW.Core.vcxproj" />
   </ItemGroup>
 
+  <!-- cppwinrt writes the generated header for Views\HomePage.idl into
+       "Generated Files\Views\HomePage.g.h", mirroring the source tree. Copy
+       every generated header next to the flat ones so a page can simply
+       #include "HomePage.g.h" wherever it lives. -->
+  <Target Name="OpenNOWFlattenGeneratedHeaders" BeforeTargets="ClCompile">
+    <ItemGroup>
+      <OpenNOWGeneratedHeader Include="$(IntDir)Generated Files\**\*.g.h" />
+      <OpenNOWGeneratedHeader Include="$(IntDir)Generated Files\**\*.g.hpp" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OpenNOWGeneratedHeader)"
+          DestinationFolder="$(IntDir)Generated Files\"
+          SkipUnchangedFiles="true" />
+  </Target>
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

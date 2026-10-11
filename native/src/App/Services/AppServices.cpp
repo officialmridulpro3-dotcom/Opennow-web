@@ -379,7 +379,7 @@ core::Result<gfn::DeviceLoginChallenge> AppServices::StartDeviceLogin(std::size_
 
     const std::size_t index = providerIndex < providers_.size() ? providerIndex : 0;
     const gfn::LoginProvider provider = providers_[index];
-    streamingBaseUrl_ = provider.streamingBaseUrl;
+    streamingBaseUrl_ = provider.streamingServiceUrl;
     return auth_->StartDeviceLogin(provider);
 }
 
@@ -442,7 +442,7 @@ core::Result<std::vector<Game>> AppServices::Search(const std::string& query) {
     const core::Result<void> vpc = EnsureVpcId();
     if (!vpc.ok()) return core::Result<std::vector<Game>>::Fail(vpc.error);
 
-    const core::Result<CatalogPage> page =
+    const core::Result<gfn::CatalogPage> page =
         catalog_->BrowseApps(tokens_.accessToken, vpcId_, query, "relevance", {}, 60);
     if (!page.ok()) return core::Result<std::vector<Game>>::Fail(page.error);
     return core::Result<std::vector<Game>>::Ok(page->games);

@@ -3,6 +3,7 @@
 #include "pch.h"
 
 #include "LibraryPage.h"
+#include "LibraryPage.g.cpp"
 
 #include "GameDetailsPage.h"
 

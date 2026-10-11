@@ -3,6 +3,7 @@
 #include "pch.h"
 
 #include "MainWindow.h"
+#include "MainWindow.g.cpp"
 
 #include <microsoft.ui.xaml.media.dxinterop.h>
 

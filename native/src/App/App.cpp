@@ -3,6 +3,7 @@
 #include "pch.h"
 
 #include "App.h"
+#include "App.g.cpp"
 #include "MainWindow.h"
 
 #include <opennow/core/Logging.hpp>

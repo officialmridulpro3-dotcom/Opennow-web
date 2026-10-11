@@ -266,17 +266,46 @@ jobs:
           $base = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/contents"
 
           function Publish-File([string]$source, [string]$target) {
-            if (-not (Test-Path $source)) { return }
-            $content = [Convert]::ToBase64String([IO.File]::ReadAllBytes($source))
-            $sha = $null
+            if (-not (Test-Path $source)) { Write-Output "skip (absent): $source"; return }
+            $bytes   = [IO.File]::ReadAllBytes($source)
+            $content = [Convert]::ToBase64String($bytes)
+            $uri     = 'https://api.github.com/repos/' + $env:GITHUB_REPOSITORY + '/contents/' + $target + '?ref=ci-buildlog'
+            $sha     = $null
             try {
-              $sha = (Invoke-RestMethod -Headers $headers -Uri "$base/$target`?ref=ci-buildlog").sha
-            } catch { $sha = $null }
-            $body = @{ message = "CI report for run $env:GITHUB_RUN_ID"; content = $content }
-            if ($sha) { $body['sha'] = $sha }
-            Invoke-RestMethod -Method Put -Headers $headers -Uri "$base/$target`?ref=ci-buildlog" `
-              -ContentType 'application/json' -Body (ConvertTo-Json $body -Depth 5) | Out-Null
-            Write-Output "published $target"
+              $sha = (Invoke-RestMethod -Headers $headers -Uri $uri -ErrorAction Stop).sha
+            } catch {
+              Write-Output ('no existing revision for ' + $target)
+            }
+            $payload = @{ message = 'CI report for run ' + $env:GITHUB_RUN_ID; content = $content }
+            if ($sha) { $payload['sha'] = $sha }
+            try {
+              Invoke-RestMethod -Method Put -Headers $headers -Uri $uri -ContentType 'application/json' `
+                -Body (ConvertTo-Json $payload -Depth 5) -ErrorAction Stop | Out-Null
+              Write-Output ('published ' + $target + ' (' + $bytes.Length + ' bytes)')
+            } catch {
+              Write-Output ('publish FAILED for ' + $target + ': ' + $_.Exception.Message)
+            }
+          }
+
+          # The git push is the fallback: it writes into logs/ only, so it can
+          # never pick up build outputs, and RUN.txt makes a stale branch
+          # obvious instead of looking like the current failure.
+          $gitLog = @()
+          try {
+            git config user.name  'ci' | Out-Null
+            git config user.email 'ci@users.noreply.github.com' | Out-Null
+            git checkout --orphan ci-buildlog 2>&1 | Out-Null
+            git rm -rf . 2>&1 | Out-Null
+            New-Item -ItemType Directory -Force -Path logs | Out-Null
+            foreach ($pair in @(@('native-build-stdout.log', 'stdout.log'), @('toolchain.txt', 'toolchain.txt'), @('ci-report.txt', 'ci-report.txt'))) {
+              if (Test-Path $pair[0]) { Copy-Item $pair[0] ('logs/' + $pair[1]) -Force }
+            }
+            Set-Content -Path logs/RUN.txt -Value ("run $env:GITHUB_RUN_ID`n$(Get-Date -Format o)")
+            git add -A logs 2>&1 | Out-Null
+            git commit -q -m "build log for run $env:GITHUB_RUN_ID ($env:GITHUB_REF_NAME)" 2>&1 | Out-Null
+            git push --force origin ci-buildlog 2>&1 | Out-Null
+          } catch {
+            Write-Output ('git publish failed: ' + $_.Exception.Message)
           }
 
           # A compact error summary is what a failing build is actually read for;
@@ -284,7 +313,8 @@ jobs:
           $report = @()
           if (Test-Path toolchain.txt) { $report += (Get-Content toolchain.txt) }
           $report += '--- generated files ---'
-          $report += ((Get-ChildItem -Path native\obj -Recurse -Include *.g.h,*.winmd -ErrorAction SilentlyContinue |
+          $report += ((Get-ChildItem -Path native\obj -Recurse -File -ErrorAction SilentlyContinue |
+                       Where-Object { $_.Name -match '\.g\.(h|hpp|cpp)$' } |
                        Select-Object -ExpandProperty FullName) -join "`n")
           $report += '--- errors ---'
           $log = @('native-build-stdout.log', 'native-build.log') | Where-Object { Test-Path $_ } | Select-Object -First 1

@@ -3,6 +3,7 @@
 #include "pch.h"
 
 #include "LoginPage.h"
+#include "LoginPage.g.cpp"
 
 #include <chrono>
 #include <thread>

@@ -218,6 +218,7 @@ private:
     std::vector<core::PlaytimeEntry> playtime_;
     std::string vpcId_;
     std::string streamingBaseUrl_;
+    std::string preferredRegionUrl_;
     bool signedIn_ = false;
 
     mutable std::mutex mutex_;
