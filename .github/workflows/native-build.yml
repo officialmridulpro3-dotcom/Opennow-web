@@ -1,0 +1,211 @@
+name: Native client (C++ / WinUI 3 / DirectX 10)
+
+# Builds the native OpenNOW Windows client from native/ into a portable ZIP.
+#
+# Manual run: Actions tab -> Native client (C++ / WinUI 3 / DirectX 10)
+#             -> Run workflow -> pick Debug or Release.
+#
+# Two cheap jobs run first on Linux and gate nothing: the Core protocol tests
+# and a check that the generated files are in sync with the web client. They
+# exist so a broken protocol change or a stale generated file is obvious next
+# to the Windows log instead of buried in it.
+
+on:
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: Build configuration
+        required: true
+        default: Release
+        type: choice
+        options: [Release, Debug]
+  push:
+    branches: [main, "arena/**"]
+    tags: ["v*"]
+    paths:
+      - "native/**"
+      - ".github/workflows/native-build.yml"
+  pull_request:
+    paths:
+      - "native/**"
+      - ".github/workflows/native-build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  # ── Core protocol tests (Linux) ────────────────────────────────────────────
+  core-tests:
+    name: Core tests (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure and build
+        run: |
+          set -euo pipefail
+          cmake -S native/src/Core -B build/core -DOPENNOW_BUILD_TESTS=ON
+          cmake --build build/core -j"$(nproc)"
+
+      - name: Run tests
+        run: ctest --test-dir build/core --output-on-failure
+
+  # ── Generated-file drift check (Linux) ─────────────────────────────────────
+  generators:
+    name: Generated files in sync
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The three generators read the web client's stylesheet, GraphQL queries
+      # and locales. If a run changes a committed file, the native client has
+      # drifted from the web client and should be regenerated.
+      - name: Regenerate and diff
+        run: |
+          set -euo pipefail
+          node native/tools/sync-design-tokens.mjs
+          node native/tools/extract-graphql-queries.mjs
+          node native/tools/sync-locales.mjs
+          git config user.name "ci"
+          git config user.email "ci@example.invalid"
+          git add -A native/src/App/Themes/GeneratedTokens.xaml \
+                     native/src/App/Strings \
+                     native/src/Core/include/opennow/core/gfn/GeneratedQueries.inc
+          git diff --cached --quiet || {
+            echo "::error::Generated files are out of date. Run: npm run native:sync"
+            git diff --cached --stat
+            exit 1
+          }
+
+  # ── Windows x64 build ──────────────────────────────────────────────────────
+  build-windows:
+    name: Build Windows x64
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      # Diagnostics only: which Windows SDK versions are actually on the image.
+      # TargetPlatformVersion is "10.0" in both projects, so MSBuild picks the
+      # newest installed SDK and this step explains what that resolved to.
+      - name: Report installed Windows SDKs
+        shell: pwsh
+        run: |
+          Get-ChildItem "HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots" -ErrorAction SilentlyContinue |
+            ForEach-Object { $_.GetValue("KitsRoot") }
+          Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Directory -ErrorAction SilentlyContinue |
+            Select-Object -ExpandProperty Name
+
+      - name: Restore NuGet packages
+        run: msbuild native\OpenNOW.sln /t:Restore /p:Configuration=${{ inputs.configuration || 'Release' }} /p:Platform=x64 /verbosity:minimal
+
+      - name: Build OpenNOW
+        id: build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Continue"
+          $configuration = "${{ inputs.configuration || 'Release' }}"
+          & msbuild native\OpenNOW.sln `
+            /p:Configuration=$configuration /p:Platform=x64 `
+            /p:AppxBundle=Never /verbosity:minimal `
+            /flp:LogFile=native-build.log`;Verbosity=detailed`;WarningsOnly=false
+          $code = $LASTEXITCODE
+          "exit-code=$code" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          if ($code -ne 0) { throw "msbuild failed with exit code $code" }
+
+      - name: List build output
+        shell: pwsh
+        run: Get-ChildItem -Recurse native\build\x64\${{ inputs.configuration || 'Release' }} -File | Select-Object -ExpandProperty FullName
+
+      # Portable layout: the executable plus every DLL the Windows App SDK
+      # copied next to it. Unpackaged WinUI 3 apps run from a plain folder.
+      - name: Assemble portable build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $configuration = "${{ inputs.configuration || 'Release' }}"
+          $out = "native\build\x64\$configuration"
+          if (-not (Test-Path "$out\OpenNOW.App.exe")) {
+            throw "OpenNOW.App.exe not found in $out"
+          }
+          $portable = "portable\OpenNOW-native"
+          New-Item -ItemType Directory -Force -Path $portable | Out-Null
+          Copy-Item "$out\*" $portable -Recurse -Force
+          Compress-Archive -Path $portable -DestinationPath "portable\OpenNOW-native-windows-x64.zip"
+          Get-ChildItem -Recurse $portable -File | Select-Object -ExpandProperty Name
+
+      - name: Upload portable build
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenNOW-native-windows-x64-portable
+          path: portable/OpenNOW-native-windows-x64.zip
+          if-no-files-found: error
+
+      - name: Upload standalone executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenNOW-native-windows-x64-exe
+          path: native/build/x64/${{ inputs.configuration || 'Release' }}/OpenNOW.App.exe
+          if-no-files-found: error
+
+      - name: Upload build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-build-log
+          path: native-build.log
+          if-no-files-found: warn
+
+  # ── Rolling release ────────────────────────────────────────────────────────
+  # Workflow artifacts expire and need a signed-in session; release assets are
+  # permanent and give one stable download link per branch line.
+  publish:
+    name: Publish native build
+    needs: [build-windows]
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download portable build
+        uses: actions/download-artifact@v4
+        with:
+          name: OpenNOW-native-windows-x64-portable
+          path: staging/portable
+
+      - name: Stage release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          cp staging/portable/*.zip assets/OpenNOW-native-windows-x64.zip
+          (cd assets && sha256sum OpenNOW-native-windows-x64.zip > SHA256SUMS.txt)
+          ls -l assets && cat assets/SHA256SUMS.txt
+
+      - name: Create or refresh the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ref="${GITHUB_REF_NAME}"
+          case "$ref" in
+            v*)   tag="native-$ref"; prerelease="" ;;
+            *)    tag="native-${ref//\//-}"; prerelease="--prerelease" ;;
+          esac
+          notes="Automated native (C++/WinUI 3) build of ${ref} at $(git rev-parse --short HEAD).
+          
+          Unpack the archive and run OpenNOW.App.exe. Requires Windows 10 1809+ and a DirectX 10 capable GPU."
+          gh release delete "$tag" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$tag" assets/* --title "OpenNOW native ${ref}" --notes "$notes" $prerelease
