@@ -112,26 +112,64 @@ jobs:
             Select-Object -ExpandProperty FullName
 
       # A vcxproj that does not pin <PlatformToolset> takes the toolset that
-      # matches $(VisualStudioVersion). MSBuild leaves that empty when it is
-      # started outside a Developer Command Prompt, and the empty value falls
-      # back to v100, which fails with MSB8020. vswhere says which Visual
-      # Studio the image actually has.
-      - name: Resolve Visual Studio version
+      # matches $(VisualStudioVersion). MSBuild leaves that empty outside a
+      # Developer Command Prompt and then falls back to v100, which fails with
+      # MSB8020. There is no stable "latest" value, so read the toolset table
+      # out of the Microsoft.Cpp.Default.props that is actually installed and
+      # pass the result explicitly.
+      - name: Resolve MSVC platform toolset
         shell: pwsh
         run: |
           $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
-          $installed = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.NativeDesktop -property installationVersion
-          if (-not $installed) { $installed = '17.0' }
-          $major = "$installed".Split('.')[0]
-          Write-Output "vswhere installationVersion: $installed"
-          Write-Output "VisualStudioVersion=$major.0" >> $env:GITHUB_ENV
+          $installed = if (Test-Path $vswhere) { (& $vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.NativeDesktop -property installationVersion) -join '' } else { '' }
+          $vsInstall = if (Test-Path $vswhere) { (& $vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.NativeDesktop -property installationPath) -join '' } else { '' }
+          if (-not $vsInstall) {
+            $vsInstall = (Get-ChildItem 'C:\Program Files\Microsoft Visual Studio' -Directory -ErrorAction SilentlyContinue |
+                          Select-Object -First 1).FullName
+          }
+          $major = if ($installed) { "$installed".Split('.')[0] } else { '' }
+
+          $toolset = ''
+          $props = Get-ChildItem (Join-Path $vsInstall 'MSBuild\Microsoft\VC\v*\Microsoft.Cpp.Default.props') -ErrorAction SilentlyContinue |
+                   Sort-Object FullName -Descending | Select-Object -First 1
+          if ($props -and $major) {
+            foreach ($line in Get-Content $props.FullName) {
+              if (($line -match 'DefaultPlatformToolset') -and ($line -match "'$major.0'") -and ($line -match '(v[0-9]+)')) {
+                $toolset = $matches[1]
+                break
+              }
+            }
+          }
+          if (-not $toolset) {
+            # No table entry: fall back to the newest toolset directory that
+            # ships with this Visual Studio.
+            $toolset = (Get-ChildItem (Join-Path $vsInstall 'MSBuild\Microsoft\VC\*\Platforms\x64\PlatformToolsets') -Directory -ErrorAction SilentlyContinue |
+                        Where-Object { $_.Name -match '^v[0-9]+$' } |
+                        Sort-Object Name -Descending | Select-Object -First 1).Name
+          }
+          if (-not $toolset) { $toolset = 'v143' }
+
+          @(
+            "vswhere            : $vswhere"
+            "installationVersion: $installed"
+            "installationPath   : $vsInstall"
+            "visualStudioMajor  : $major"
+            "propsFile          : $($props.FullName)"
+            "platformToolset    : $toolset"
+            "--- DefaultPlatformToolset table ---"
+            $(if ($props) { (Select-String -Path $props.FullName -Pattern 'DefaultPlatformToolset' | Select-Object -ExpandProperty Line) -join "`n" })
+            "--- toolset directories ---"
+            $((Get-ChildItem (Join-Path $vsInstall 'MSBuild\Microsoft\VC\*\Platforms\x64\PlatformToolsets') -Directory -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName) -join "`n")
+          ) | Out-File -FilePath toolchain.txt -Encoding utf8
+
+          Write-Output "OPENNOW_PLATFORMTOOLSET=$toolset" >> $env:GITHUB_ENV
 
       - name: Restore NuGet packages
         shell: pwsh
         run: |
           & msbuild native\OpenNOW.sln /t:Restore `
-            /p:Configuration="${{ inputs.configuration || 'Release' }}" `/p:Platform=x64 `
-            /p:VisualStudioVersion=$env:VisualStudioVersion /verbosity:minimal
+            /p:Configuration="${{ inputs.configuration || 'Release' }}" /p:Platform=x64 `
+            /p:PlatformToolset=$env:OPENNOW_PLATFORMTOOLSET /verbosity:minimal
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Build OpenNOW
@@ -140,7 +178,7 @@ jobs:
           $configuration = "${{ inputs.configuration || 'Release' }}"
           & msbuild native\OpenNOW.sln `
             /p:Configuration=$configuration /p:Platform=x64 `
-            /p:VisualStudioVersion=$env:VisualStudioVersion `
+            /p:PlatformToolset=$env:OPENNOW_PLATFORMTOOLSET `
             /verbosity:minimal `
             /flp:LogFile=native-build.log`;Verbosity=diagnostic 2>&1 | Out-File -FilePath native-build-stdout.log -Encoding utf8
           $code = $LASTEXITCODE
@@ -205,6 +243,7 @@ jobs:
           path: |
             native-build.log
             native-build-stdout.log
+            toolchain.txt
           if-no-files-found: warn
 
       # Log downloads need a GitHub session or the artifact blob host, neither
@@ -221,7 +260,7 @@ jobs:
           git config user.email "ci@users.noreply.github.com"
           git checkout --orphan ci-buildlog
           git rm -rf . >/dev/null 2>&1 || true
-          for f in native-build.log native-build-stdout.log; do
+          for f in native-build.log native-build-stdout.log toolchain.txt; do
             [ -f "$f" ] && cp "$f" "$(basename $f).txt" || true
           done
           git add -A
