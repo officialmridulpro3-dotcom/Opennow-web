@@ -240,18 +240,26 @@
     </Page>
   </ItemGroup>
 
-  <!-- ── resources ───────────────────────────────────────────────────────── -->
+  <!-- Merged dictionaries are markup too: the XAML compiler has to turn them
+       into .xbf, or the Source references in App.xaml resolve to nothing. -->
   <ItemGroup>
-    <Resource Include="Themes\GeneratedTokens.xaml" />
-    <Resource Include="Themes\Styles.xaml" />
-    <Resource Include="Themes\Accents.xaml" />
-    <Image Include="..\..\..\public\opennow-logo.png">
-      <Link>Assets\opennow-logo.png</Link>
-    </Image>
-    <Image Include="..\..\..\public\opennow-logo-mark.png">
-      <Link>Assets\opennow-logo-mark.png</Link>
-    </Image>
+    <Page Include="Themes\GeneratedTokens.xaml" />
+    <Page Include="Themes\Styles.xaml" />
+    <Page Include="Themes\Accents.xaml" />
   </ItemGroup>
+
+  <!-- Images are not a C++ item type; copy them next to the executable, where
+       ms-appx:///Assets/... looks for them. -->
+  <ItemGroup>
+    <OpenNOWAsset Include="..\..\..\public\opennow-logo.png" />
+    <OpenNOWAsset Include="..\..\..\public\opennow-logo-mark.png" />
+  </ItemGroup>
+
+  <Target Name="OpenNOWCopyAssets" AfterTargets="Build">
+    <Copy SourceFiles="@(OpenNOWAsset)"
+          DestinationFiles="@(OpenNOWAsset->'$(OutDir)Assets\%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
+  </Target>
 
   <ItemGroup>
     <Manifest Include="app.manifest" />
