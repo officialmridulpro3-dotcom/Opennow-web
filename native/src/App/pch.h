@@ -62,6 +62,10 @@
 // visible before any page header is parsed, not just in the .cpp files.
 #include "Services/AppServices.h"
 
+// The generated XamlTypeInfo maps markup-backed types to their code-behind
+// header; this one has no markup of its own, so nothing else pulls it in.
+#include "Controls/StreamSurfacePanel.h"
+
 #include <cctype>
 #include <coroutine>
 #include <cwctype>

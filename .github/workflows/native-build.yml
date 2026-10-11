@@ -291,6 +291,16 @@ jobs:
             $hits = @(Select-String -Path $targets.FullName -Pattern 'InitializeComponent' -List -ErrorAction SilentlyContinue)
             foreach ($hit in $hits) { $out += ($hit.Path + ' :: ' + $hit.Line.Trim()) }
           }
+          $out += '--- includes in XamlTypeInfo.g.cpp ---'
+          $xti = 'native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp'
+          if (Test-Path $xti) {
+            $out += (@(Get-Content $xti | Where-Object { $_ -match '^#include' }) -join "`n")
+            $lines = @(Get-Content $xti)
+            $out += '--- XamlTypeInfo.g.cpp 1290-1300 ---'
+            $numbered = @()
+            for ($i = 1289; $i -le [Math]::Min($lines.Count - 1, 1299); $i++) { $numbered += ("{0}: {1}" -f ($i + 1), $lines[$i]) }
+            $out += (@($numbered) -join "`n")
+          }
           $out += '--- cppwinrt.exe copies on the runner ---'
           $out += (@(Get-ChildItem -Path 'C:\Program Files (x86)\Windows Kits\10\bin' -Recurse -Filter 'cppwinrt.exe' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName) -join "`n")
           $out += '--- xaml compiler targets mentioning cppwinrt / language ---'
