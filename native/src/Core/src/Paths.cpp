@@ -8,9 +8,9 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
+#include <windows.h>          // EXTERN_C and the base types knownfolders.h needs
 #include <knownfolders.h>
 #include <shlobj.h>
-#include <windows.h>
 #endif
 
 namespace opennow::core {

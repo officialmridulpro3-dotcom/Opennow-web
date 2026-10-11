@@ -9,6 +9,7 @@
 #ifdef _WIN32
 
 #include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.Networking.Sockets.h>
 #include <winrt/Windows.Security.Cryptography.h>
 #include <winrt/Windows.Storage.Streams.h>
@@ -49,7 +50,7 @@ public:
     void Send(const std::string& text) override {
         if (socket_ == nullptr || writer_ == nullptr) return;
         try {
-            writer_->WriteString(winrt::to_hstring(text));
+            writer_.WriteString(winrt::to_hstring(text));
             SendAsync();
         } catch (const winrt::hresult_error& error) {
             LogError("Signaling", "WebSocket send threw: " + winrt::to_string(error.message()));
@@ -82,8 +83,8 @@ private:
 
     fire_and_forget SendAsync() {
         try {
-            co_await writer_->StoreAsync();
-            co_await writer_->FlushAsync();
+            co_await writer_.StoreAsync();
+            co_await writer_.FlushAsync();
         } catch (const winrt::hresult_error& error) {
             LogError("Signaling", "Signaling send failed: " + winrt::to_string(error.message()));
         }

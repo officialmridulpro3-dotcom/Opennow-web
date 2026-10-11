@@ -11,6 +11,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#include <secext.h>          // GetUserNameExW + NameSamCompatible
 #else
 #include <cstdlib>
 #include <unistd.h>

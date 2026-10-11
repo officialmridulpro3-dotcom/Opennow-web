@@ -200,7 +200,7 @@ public:
             headerLength, request.body.empty() ? WINHTTP_NO_REQUEST_DATA
                                                : const_cast<char*>(request.body.data()),
             static_cast<DWORD>(request.body.size()), static_cast<DWORD>(request.body.size()),
-            nullptr);
+            0);
 
         if (!sent || !WinHttpReceiveResponse(requestHandle, nullptr)) {
             response.transportError = "WinHttpSendRequest failed: " +
