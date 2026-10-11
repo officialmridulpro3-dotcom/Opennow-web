@@ -1,0 +1,16 @@
+vswhere            : C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
+installationVersion: 18.10.12217.157
+installationPath   : C:\Program Files\Microsoft Visual Studio\18\Enterprise
+visualStudioMajor  : 18
+propsFile          : C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Microsoft.Cpp.Default.props
+platformToolset    : v145
+--- DefaultPlatformToolset table ---
+
+--- toolset directories ---
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v160\Platforms\x64\PlatformToolsets\v142
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v170\Platforms\x64\PlatformToolsets\v143
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\ClangCL
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\v145
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\WindowsApplicationForDrivers10.0
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\WindowsKernelModeDriver10.0
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Platforms\x64\PlatformToolsets\WindowsUserModeDriver10.0
