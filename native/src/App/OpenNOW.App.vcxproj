@@ -71,6 +71,16 @@
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 
+  <!-- OpenNOW.Core links against the C++/WinRT headers the Windows SDK ships,
+       so project the app with that same cppwinrt rather than the NuGet one:
+       mixing the two fails the linker with LNK2038 (C++/WinRT version). -->
+  <PropertyGroup>
+    <CppWinRTPackage>false</CppWinRTPackage>
+    <CppWinRTPath Condition="Exists('$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64\cppwinrt.exe')">$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64\</CppWinRTPath>
+    <CppWinRTPath Condition="'$(CppWinRTPath)' == '' And Exists('$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\cppwinrt.exe')">$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\</CppWinRTPath>
+    <CppWinRTPath Condition="'$(CppWinRTPath)' == '' And Exists('$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x86\cppwinrt.exe')">$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x86\</CppWinRTPath>
+  </PropertyGroup>
+
   <!-- Windows App SDK + WIL. Bump these in lockstep with Directory.Build.props. -->
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CppWinRT" Version="2.0.240405.15" />
@@ -295,7 +305,7 @@
       <GeneratedFilesDir>$(IntDir)Generated Files\</GeneratedFilesDir>
     </PropertyGroup>
     <Message Importance="high"
-             Text="OpenNOW: XamlLanguage=$(XamlLanguage) CppWinRTProjectLanguage=$(CppWinRTProjectLanguage) GeneratedFilesDir=$(GeneratedFilesDir)" />
+             Text="OpenNOW: XamlLanguage=$(XamlLanguage) CppWinRTProjectLanguage=$(CppWinRTProjectLanguage) GeneratedFilesDir=$(GeneratedFilesDir) CppWinRTPath=$(CppWinRTPath)" />
   </Target>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

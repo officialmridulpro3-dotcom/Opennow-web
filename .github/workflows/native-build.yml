@@ -291,6 +291,8 @@ jobs:
             $hits = @(Select-String -Path $targets.FullName -Pattern 'InitializeComponent' -List -ErrorAction SilentlyContinue)
             foreach ($hit in $hits) { $out += ($hit.Path + ' :: ' + $hit.Line.Trim()) }
           }
+          $out += '--- cppwinrt.exe copies on the runner ---'
+          $out += (@(Get-ChildItem -Path 'C:\Program Files (x86)\Windows Kits\10\bin' -Recurse -Filter 'cppwinrt.exe' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName) -join "`n")
           $out += '--- xaml compiler targets mentioning cppwinrt / language ---'
           $pkgs = Join-Path $env:USERPROFILE '.nuget\packages'
           $files = @(Get-ChildItem -Path $pkgs -Recurse -File -Include '*.targets','*.props' -ErrorAction SilentlyContinue |
