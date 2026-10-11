@@ -67,6 +67,9 @@
     <GeneratedFilesDir>$(IntDir)Generated Files\</GeneratedFilesDir>
     <EnableMsixTooling>false</EnableMsixTooling>
     <WindowsPackageType>None</WindowsPackageType>
+    <!-- Unpackaged, so carry the Windows App SDK runtime alongside the exe:
+         the target machines do not have it installed. -->
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
