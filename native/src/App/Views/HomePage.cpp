@@ -5,6 +5,11 @@
 #include "HomePage.h"
 #include "HomePage.g.cpp"
 
+// The view models are declared in HomePage.idl, so cppwinrt writes their
+// activation glue next to this page's.
+#include "GameViewModel.g.cpp"
+#include "ShelfViewModel.g.cpp"
+
 #include "GameDetailsPage.h"
 
 #include <winrt/Microsoft.UI.Xaml.Media.Imaging.h>

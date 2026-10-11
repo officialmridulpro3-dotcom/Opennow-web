@@ -4,6 +4,7 @@
 
 #include "PlaytimePage.h"
 #include "PlaytimePage.g.cpp"
+#include "PlaytimeViewModel.g.cpp"
 
 #include <algorithm>
 #include <sstream>
