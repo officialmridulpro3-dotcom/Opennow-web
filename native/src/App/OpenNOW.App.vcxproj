@@ -47,6 +47,7 @@
 
   <!-- Windows App SDK + WIL. Bump these in lockstep with Directory.Build.props. -->
   <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CppWinRT" Version="2.0.240405.15" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
     <PackageReference Include="Microsoft.Windows.ImplementationLibrary" Version="1.0.240803.1" />
   </ItemGroup>
