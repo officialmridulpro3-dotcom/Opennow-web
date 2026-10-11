@@ -1,0 +1,3876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GENERATED FILE — produced by native/tools/sync-locales.mjs from locales/*.json -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="app.actions.add" xml:space="preserve">
+    <value>Hinzufügen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.back" xml:space="preserve">
+    <value>Zurück</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.browse" xml:space="preserve">
+    <value>Durchsuchen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.buy" xml:space="preserve">
+    <value>Buy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.close" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.confirm" xml:space="preserve">
+    <value>bestätigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.continue" xml:space="preserve">
+    <value>Weiter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.delete" xml:space="preserve">
+    <value>Löschen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.done" xml:space="preserve">
+    <value>Fertig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.markAsOwned" xml:space="preserve">
+    <value>Mark as Owned</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.open" xml:space="preserve">
+    <value>Offen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.play" xml:space="preserve">
+    <value>Spielen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.refresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.remove" xml:space="preserve">
+    <value>Entfernen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.reset" xml:space="preserve">
+    <value>Zurücksetzen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.resume" xml:space="preserve">
+    <value>Lebenslauf</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.retry" xml:space="preserve">
+    <value>Versuchen Sie es noch einmal</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.save" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.search" xml:space="preserve">
+    <value>Suchen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.select" xml:space="preserve">
+    <value>Auswählen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.settings" xml:space="preserve">
+    <value>Einstellungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.showInFolder" xml:space="preserve">
+    <value>Im Ordner anzeigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.sort" xml:space="preserve">
+    <value>Sortieren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.stop" xml:space="preserve">
+    <value>Stopp</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.switch" xml:space="preserve">
+    <value>Wechseln</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.description" xml:space="preserve">
+    <value>Cloud-Gaming, Open Source.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.auto" xml:space="preserve">
+    <value>Automatisch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.best" xml:space="preserve">
+    <value>Am besten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.beta" xml:space="preserve">
+    <value>Beta</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.current" xml:space="preserve">
+    <value>Aktuell</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.default" xml:space="preserve">
+    <value>Standard</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.defaultDevice" xml:space="preserve">
+    <value>Standardgerät</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.experimental" xml:space="preserve">
+    <value>Experimentell</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.free" xml:space="preserve">
+    <value>Kostenlos</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.game" xml:space="preserve">
+    <value>Spiel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.hardware" xml:space="preserve">
+    <value>Hardware</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.no" xml:space="preserve">
+    <value>Nein</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.other" xml:space="preserve">
+    <value>Andere</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.priority" xml:space="preserve">
+    <value>Priorität</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.softwareCpu" xml:space="preserve">
+    <value>Software (CPU)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.ultimate" xml:space="preserve">
+    <value>Ultimativ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.unlimited" xml:space="preserve">
+    <value>Unbegrenzt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.name" xml:space="preserve">
+    <value>OpenNOW</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.checking" xml:space="preserve">
+    <value>Überprüfen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.connecting" xml:space="preserve">
+    <value>Verbinden...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.disabled" xml:space="preserve">
+    <value>Deaktiviert</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.error" xml:space="preserve">
+    <value>Fehler</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.failed" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.idle" xml:space="preserve">
+    <value>Leerlauf</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.loading" xml:space="preserve">
+    <value>Laden...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.markingOwned" xml:space="preserve">
+    <value>Marking as owned...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.ready" xml:space="preserve">
+    <value>Bereit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.saved" xml:space="preserve">
+    <value>Gespeichert</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.testing" xml:space="preserve">
+    <value>Testen...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.unknown" xml:space="preserve">
+    <value>Unbekannt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.upToDate" xml:space="preserve">
+    <value>Auf dem neuesten Stand</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.tagline" xml:space="preserve">
+    <value>Open-Source-Cloud-Gaming-Client</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.bitrateMbps" xml:space="preserve">
+    <value>{{value}} Mbit/s</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.durationLeft" xml:space="preserve">
+    <value>{{value}} übrig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gb" xml:space="preserve">
+    <value>{{value}} GB</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gbLeft" xml:space="preserve">
+    <value>{{value}} GB übrig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gbTotal" xml:space="preserve">
+    <value>{{value}} GB insgesamt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gbUsed" xml:space="preserve">
+    <value>{{value}} GB verwendet</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.hours" xml:space="preserve">
+    <value>{{value}}h</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.hoursLeft" xml:space="preserve">
+    <value>{{value}}h übrig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.hoursUsed" xml:space="preserve">
+    <value>{{value}}h verwendet</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.milliseconds" xml:space="preserve">
+    <value>{{value}}ms</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.minutes" xml:space="preserve">
+    <value>{{value}} min</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.percent" xml:space="preserve">
+    <value>{{value}}%</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.seconds" xml:space="preserve">
+    <value>{{value}}s</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.activeAccount" xml:space="preserve">
+    <value>Aktives Konto</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.addAccount" xml:space="preserve">
+    <value>Konto hinzufügen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.cancelAccountRemoval" xml:space="preserve">
+    <value>Kontoentfernung abbrechen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.cancelLogOut" xml:space="preserve">
+    <value>Abmelden abbrechen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.guest" xml:space="preserve">
+    <value>Gast</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.kicker" xml:space="preserve">
+    <value>Konten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.logOutAll" xml:space="preserve">
+    <value>Melden Sie alle Konten ab</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.logOutConfirmation" xml:space="preserve">
+    <value>Abmeldebestätigung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccount" xml:space="preserve">
+    <value>Konto entfernen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountConfirmation" xml:space="preserve">
+    <value>Kontobestätigung entfernen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountDescription" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie {{name}} aus gespeicherten Konten entfernen möchten?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountSubtext" xml:space="preserve">
+    <value>Sie können dieses Konto erneut hinzufügen, indem Sie sich anmelden.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountTitle" xml:space="preserve">
+    <value>Konto entfernen?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeNamedAccount" xml:space="preserve">
+    <value>Entfernen Sie {{name}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAll" xml:space="preserve">
+    <value>Alle abmelden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllAccounts" xml:space="preserve">
+    <value>Melden Sie alle Konten ab</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllDescription" xml:space="preserve">
+    <value>Sie sind dabei, alle gespeicherten Konten von diesem Gerät zu entfernen und in den Gastmodus zurückzukehren.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllSubtext" xml:space="preserve">
+    <value>Ihre Cloud-Sitzungsdaten bleiben im Dienst. Dadurch werden lediglich lokale OpenNOW-Kontositzungen gelöscht.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllTitle" xml:space="preserve">
+    <value>Alle Konten abmelden?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.staySignedIn" xml:space="preserve">
+    <value>Bleiben Sie angemeldet</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.switchAccount" xml:space="preserve">
+    <value>Konto wechseln</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.thisAccount" xml:space="preserve">
+    <value>dieses Konto</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.cancelDeviceLogin" xml:space="preserve">
+    <value>Anmeldung abbrechen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.connecting" xml:space="preserve">
+    <value>Verbinden...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.restoringSession" xml:space="preserve">
+    <value>Sitzung wird wiederhergestellt...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.signIn" xml:space="preserve">
+    <value>Anmelden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.signInWithLink" xml:space="preserve">
+    <value>Mit einem Link anmelden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.codeHint" xml:space="preserve">
+    <value>Geben Sie diesen Code auf der NVIDIA-Seite ein, falls danach gefragt wird.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.codeLabel" xml:space="preserve">
+    <value>Bestätigungscode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.copied" xml:space="preserve">
+    <value>Kopiert</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.copyCode" xml:space="preserve">
+    <value>Code kopieren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.description" xml:space="preserve">
+    <value>Öffnen Sie die NVIDIA-Anmeldeseite in einem neuen Tab und bestätigen Sie die Anfrage. OpenNOW fährt automatisch fort.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.expired" xml:space="preserve">
+    <value>Anmeldelink abgelaufen. Starten Sie erneut, um einen neuen zu erhalten.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.expiresIn" xml:space="preserve">
+    <value>Link läuft in {{time}} ab</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.hideQr" xml:space="preserve">
+    <value>QR-Code ausblenden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.manualUrl" xml:space="preserve">
+    <value>Oder öffnen Sie diese Adresse manuell</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.open" xml:space="preserve">
+    <value>NVIDIA-Anmeldung öffnen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.openAgain" xml:space="preserve">
+    <value>Anmeldeseite erneut öffnen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.preparing" xml:space="preserve">
+    <value>Anmeldung wird vorbereitet</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.preparingDescription" xml:space="preserve">
+    <value>Ihr NVIDIA-Anmeldelink wird angefordert...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.showQr" xml:space="preserve">
+    <value>QR-Code anzeigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.title" xml:space="preserve">
+    <value>Anmeldelink öffnen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.waiting" xml:space="preserve">
+    <value>Warten auf Ihre Bestätigung der Anmeldung...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.provider.label" xml:space="preserve">
+    <value>Anbieter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.provider.loading" xml:space="preserve">
+    <value>Laden...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.provider.select" xml:space="preserve">
+    <value>Anbieter auswählen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.qr.alt" xml:space="preserve">
+    <value>Anmelde-QR-Code</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.qr.description" xml:space="preserve">
+    <value>Scannen Sie den Code mit Ihrem Telefon und bestätigen Sie die Anfrage. OpenNOW fährt automatisch fort.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.qr.title" xml:space="preserve">
+    <value>Zum Anmelden scannen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.missingRefreshTokenContinuing" xml:space="preserve">
+    <value>Die gespeicherte Sitzung hat kein Aktualisierungstoken. Fortsetzung...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.noSavedSessionFound" xml:space="preserve">
+    <value>Keine gespeicherte Sitzung gefunden.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.restoringSavedSession" xml:space="preserve">
+    <value>Gespeicherte Sitzung wird wiederhergestellt...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.sessionRestoreFailed" xml:space="preserve">
+    <value>Die Wiederherstellung der Sitzung ist fehlgeschlagen. Bitte melden Sie sich erneut an.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.sessionRestored" xml:space="preserve">
+    <value>Sitzung wiederhergestellt.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.sessionRestoredTokenRefreshed" xml:space="preserve">
+    <value>Sitzung wiederhergestellt. Token aktualisiert.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.tokenRefreshFailedContinuing" xml:space="preserve">
+    <value>Die Aktualisierung des Tokens ist fehlgeschlagen. Mit gespeicherter Sitzung fortfahren...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.tokenRefreshFailedUsingSaved" xml:space="preserve">
+    <value>Die Aktualisierung des Tokens ist fehlgeschlagen. Verwendung des gespeicherten Sitzungstokens.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.tokenRefreshedLoadingAccount" xml:space="preserve">
+    <value>Token aktualisiert. Ihr Konto wird geladen...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.subtitle.checkingSavedAccounts" xml:space="preserve">
+    <value>Gespeicherte Konten prüfen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.title.restoringSession" xml:space="preserve">
+    <value>Sitzung wird wiederhergestellt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.title.signIn" xml:space="preserve">
+    <value>Melden Sie sich an</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="common.back" xml:space="preserve">
+    <value>Back</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="common.clear" xml:space="preserve">
+    <value>Suche löschen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="common.loading" xml:space="preserve">
+    <value>Loading...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.directLaunchNotFoundDescription" xml:space="preserve">
+    <value>OpenNOW could not find a game matching "{{value}}". Use --launch-app-id for exact LaunchBox entries.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.directLaunchNotFoundTitle" xml:space="preserve">
+    <value>Direct Launch Failed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.duplicateSessionDescription" xml:space="preserve">
+    <value>Auf Ihrem Konto läuft bereits eine andere Sitzung. Schließen Sie es zuerst oder warten Sie, bis das Zeitlimit abgelaufen ist, und starten Sie es dann erneut.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.duplicateSessionTitle" xml:space="preserve">
+    <value>Doppelte Sitzung erkannt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.insufficientPlayabilityDescription" xml:space="preserve">
+    <value>Your current GeForce NOW membership is not high enough to play this game. Upgrade to a higher tier and try again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.insufficientPlayabilityTierDescription" xml:space="preserve">
+    <value>This game requires {{tier}} on GeForce NOW. Upgrade your membership to play it.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.insufficientPlayabilityTitle" xml:space="preserve">
+    <value>Membership Upgrade Required</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.launchFailedTitle" xml:space="preserve">
+    <value>Start fehlgeschlagen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.launchUnknown" xml:space="preserve">
+    <value>Das Spiel konnte nicht gestartet werden. Bitte versuchen Sie es erneut.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.loginFailed" xml:space="preserve">
+    <value>Die Anmeldung ist fehlgeschlagen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedFailed" xml:space="preserve">
+    <value>Failed to mark game as owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedFailedWithReason" xml:space="preserve">
+    <value>Failed to mark game as owned: {{reason}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedMissingVariant" xml:space="preserve">
+    <value>Select a store variant before marking it owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedSignInRequired" xml:space="preserve">
+    <value>Sign in before marking games as owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.nativeStreamerStoppedDescription" xml:space="preserve">
+    <value>Der native Streaming-Prozess wurde gestoppt und konnte nicht automatisch wiederhergestellt werden. Versuchen Sie, die Sitzung über die App erneut fortzusetzen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.nativeStreamerStoppedTitle" xml:space="preserve">
+    <value>Nativer Streamer gestoppt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.queueAdPlayTimeout" xml:space="preserve">
+    <value>Zeitüberschreitung bei der Anzeigenwiedergabe</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.queueAdUrlLoad" xml:space="preserve">
+    <value>Fehler beim Laden der URL</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.queueAdVideoStuck" xml:space="preserve">
+    <value>Das Werbevideo hängt fest</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.resumeAttachFailedDescription" xml:space="preserve">
+    <value>Vor dem Medien-Handshake ist die Wiederaufnahme der Verbindung fehlgeschlagen. Versuchen Sie es noch einmal.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.sessionConnectionLostDescription" xml:space="preserve">
+    <value>Die Verbindung zu Ihrer laufenden Sitzung ging verloren und konnte nicht automatisch wiederhergestellt werden. Versuchen Sie, den Vorgang über die App erneut fortzusetzen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.sessionConnectionLostTitle" xml:space="preserve">
+    <value>Sitzungsverbindung verloren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.sessionResumeFailedDescription" xml:space="preserve">
+    <value>Die Verbindung zur laufenden Sitzung wurde unterbrochen und die Wiederaufnahme ist fehlgeschlagen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.switchAccountFailed" xml:space="preserve">
+    <value>Kontowechsel fehlgeschlagen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.userStorageUnavailableAction" xml:space="preserve">
+    <value>Open Storage Settings</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.userStorageUnavailableDescription" xml:space="preserve">
+    <value>NVIDIA reported that Persistent Storage is unavailable for this account or storage location. Open Settings → Account → Persistent Storage, then use NVIDIA Storage Manager to reset or move the storage location. If it still fails, check NVIDIA server status.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.userStorageUnavailableTitle" xml:space="preserve">
+    <value>Persistent Storage Unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.webrtcBlockedDescription" xml:space="preserve">
+    <value>Your browser could not create any network path for the stream (0 ICE candidates). Disable any VPN, allow your browser through the firewall/antivirus, disable extensions like "WebRTC leak prevention", or try a different browser, then start the stream again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.webrtcBlockedTitle" xml:space="preserve">
+    <value>WebRTC Is Blocked</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.available" xml:space="preserve">
+    <value>Verfügbar</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.owned" xml:space="preserve">
+    <value>Im Besitz</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.playGame" xml:space="preserve">
+    <value>Spielen Sie {{title}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.selectGame" xml:space="preserve">
+    <value>Wählen Sie {{title}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.status.maintenance" xml:space="preserve">
+    <value>Under maintenance</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.status.unavailable" xml:space="preserve">
+    <value>Unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.status.updating" xml:space="preserve">
+    <value>Updating</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.store" xml:space="preserve">
+    <value>{{store}}-Shop</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.buy" xml:space="preserve">
+    <value>KAUFEN</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.chooseStore" xml:space="preserve">
+    <value>Spiele-Store wählen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.chooseStoreHint" xml:space="preserve">
+    <value>Wo besitzt du dieses Spiel und willst spielen?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.developer" xml:space="preserve">
+    <value>Entwickler</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.gallery" xml:space="preserve">
+    <value>Galerie</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.gameNotFound" xml:space="preserve">
+    <value>Spiel nicht gefunden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.gameStores" xml:space="preserve">
+    <value>Spiele-Stores:</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.markAsOwned" xml:space="preserve">
+    <value>ALS BESITZT MARKIEREN</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.notSubscribed" xml:space="preserve">
+    <value>Nicht abonniert</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.owned" xml:space="preserve">
+    <value>Besitzt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.pcDigitalVersion" xml:space="preserve">
+    <value>PC-Digitalversion</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.publisher" xml:space="preserve">
+    <value>Publisher</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.rating" xml:space="preserve">
+    <value>Bewertung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.storeHint" xml:space="preserve">
+    <value>Wähle einen Store, in dem du das Spiel besitzt, und markiere es als besitzt.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.subscribed" xml:space="preserve">
+    <value>Abonniert</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.subscriptions" xml:space="preserve">
+    <value>Abos:</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="games.markOwned.success" xml:space="preserve">
+    <value>Marked {{title}} as owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.cloudReady" xml:space="preserve">
+    <value>Cloud ready</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.emptyBody" xml:space="preserve">
+    <value>The cloud storefront returned empty panels. Try again after the catalog service refreshes.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.emptyTitle" xml:space="preserve">
+    <value>No Store collections found</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.eyebrow" xml:space="preserve">
+    <value>CONTROLLER STORE</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.featured" xml:space="preserve">
+    <value>Featured</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.hints" xml:space="preserve">
+    <value>D-pad browse / A launch / Space select</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.notOwned" xml:space="preserve">
+    <value>Not owned</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.owned" xml:space="preserve">
+    <value>Im Besitz</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.playNow" xml:space="preserve">
+    <value>Play Now</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.purchaseUnavailable" xml:space="preserve">
+    <value>Purchase unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.readyToStream" xml:space="preserve">
+    <value>Ready to stream</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.storeCount" xml:space="preserve">
+    <value>{{count}} stores</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.title" xml:space="preserve">
+    <value>Store Theater</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.variant" xml:space="preserve">
+    <value>{{variant}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.loading" xml:space="preserve">
+    <value>Laden...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shown" xml:space="preserve">
+    <value>{{shown}} angezeigt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shownSupported" xml:space="preserve">
+    <value>{{shown}} angezeigt · {{supported}} unterstützt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shownTotal" xml:space="preserve">
+    <value>{{shown}} angezeigt · {{total}} insgesamt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shownTotalSupported" xml:space="preserve">
+    <value>{{shown}} angezeigt · {{total}} insgesamt · {{supported}} unterstützt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.allGames" xml:space="preserve">
+    <value>Alle Spiele</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellGenre" xml:space="preserve">
+    <value>Genre</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellLastPlayed" xml:space="preserve">
+    <value>Zuletzt gespielt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellPlaytime" xml:space="preserve">
+    <value>Spielzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellStore" xml:space="preserve">
+    <value>Store</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.eyebrow" xml:space="preserve">
+    <value>Weiterspielen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.eyebrowReady" xml:space="preserve">
+    <value>Bereit zum Spielen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.favourites" xml:space="preserve">
+    <value>Favoriten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.jumpBackIn" xml:space="preserve">
+    <value>Wieder einsteigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.launch" xml:space="preserve">
+    <value>Starten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.ledger" xml:space="preserve">
+    <value>Protokoll ansehen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.ledgerSessions" xml:space="preserve">
+    <value>{{count}} Sitzung erfasst</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.ledgerSessions_plural" xml:space="preserve">
+    <value>{{count}} Sitzungen erfasst</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.mostPlayed" xml:space="preserve">
+    <value>Am meisten gespielt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.newInLibrary" xml:space="preserve">
+    <value>Neu in deiner Bibliothek</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.seeAll" xml:space="preserve">
+    <value>Alle anzeigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.seeAllCount" xml:space="preserve">
+    <value>Alle {{count}} anzeigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.shelfCount" xml:space="preserve">
+    <value>{{count}} Titel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.shelfCount_plural" xml:space="preserve">
+    <value>{{count}} Titel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.voiceReady" xml:space="preserve">
+    <value>Das Deck ist warm. Wähle einen Titel, die Cloud übernimmt den Rest.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.voiceResume" xml:space="preserve">
+    <value>{{value}} auf der Uhr — mach genau da weiter.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.checkBackLater" xml:space="preserve">
+    <value>Schauen Sie später noch einmal vorbei, um neue Ergänzungen zu sehen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.loadingGames" xml:space="preserve">
+    <value>Spiele werden geladen...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.noGamesFound" xml:space="preserve">
+    <value>Keine Spiele gefunden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.tryAdjustingSearch" xml:space="preserve">
+    <value>Versuchen Sie, Ihre Suchbegriffe oder Filter anzupassen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.filters" xml:space="preserve">
+    <value>Filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.clearSearch" xml:space="preserve">
+    <value>Suche löschen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.loadMore" xml:space="preserve">
+    <value>Mehr laden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.resultsFor" xml:space="preserve">
+    <value>Suche · "{query}"</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.searching" xml:space="preserve">
+    <value>Suche...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.showing" xml:space="preserve">
+    <value>{shown} / {total}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.searchPlaceholder" xml:space="preserve">
+    <value>Spiele suchen...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.sortAriaLabel" xml:space="preserve">
+    <value>Sort games</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.activeFilters" xml:space="preserve">
+    <value>Active filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.allStores" xml:space="preserve">
+    <value>All Stores</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.chooseStore" xml:space="preserve">
+    <value>Choose a Store</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.clearFilters" xml:space="preserve">
+    <value>Clear</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.controllerTitle" xml:space="preserve">
+    <value>Bibliothek</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.controls" xml:space="preserve">
+    <value>Controls: {{controls}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.allGames" xml:space="preserve">
+    <value>Alle Spiele</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellGenre" xml:space="preserve">
+    <value>Genre</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellLastPlayed" xml:space="preserve">
+    <value>Zuletzt gespielt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellPlaytime" xml:space="preserve">
+    <value>Spielzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellSessions" xml:space="preserve">
+    <value>Sitzungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellStore" xml:space="preserve">
+    <value>Store</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.chipAll" xml:space="preserve">
+    <value>Alle</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.count" xml:space="preserve">
+    <value>{{count}} Titel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.count_plural" xml:space="preserve">
+    <value>{{count}} Titel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.emptyDetail" xml:space="preserve">
+    <value>Wähle ein Spiel aus dem Raster für die Konsole.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.eyebrow" xml:space="preserve">
+    <value>Bibliothek // ausgewählt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.hint" xml:space="preserve">
+    <value>Wähle einen Titel für die Konsole</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.launch" xml:space="preserve">
+    <value>Starten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.viewLedger" xml:space="preserve">
+    <value>Protokoll ansehen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.developer" xml:space="preserve">
+    <value>Developer: {{developer}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.libraryEmpty" xml:space="preserve">
+    <value>Ihre Bibliothek ist leer</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.loadingLibrary" xml:space="preserve">
+    <value>Laden Ihrer Bibliothek...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.noFilteredGames" xml:space="preserve">
+    <value>No games match those filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.noGamesFound" xml:space="preserve">
+    <value>Keine Spiele gefunden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.noGamesMatch" xml:space="preserve">
+    <value>Keine Spiele passen zu „{{query}}“</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.ownedGamesAppearHere" xml:space="preserve">
+    <value>Spiele, die Sie besitzen, werden hier angezeigt. Durchsuchen Sie den Katalog, um Spiele zu finden.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.tryAdjustingFilters" xml:space="preserve">
+    <value>Try clearing a filter or changing your search.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.favoriteToggle" xml:space="preserve">
+    <value>Favorit umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filter" xml:space="preserve">
+    <value>Filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.activity" xml:space="preserve">
+    <value>Activity</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.controls" xml:space="preserve">
+    <value>Controls</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.platform" xml:space="preserve">
+    <value>Platform</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.playType" xml:space="preserve">
+    <value>Play Type</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.cloudLaunch" xml:space="preserve">
+    <value>Cloud Launch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.controller" xml:space="preserve">
+    <value>Controller</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.installToPlay" xml:space="preserve">
+    <value>Install to Play</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.keyboardMouse" xml:space="preserve">
+    <value>Keyboard &amp; Mouse</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.neverPlayed" xml:space="preserve">
+    <value>Never Played</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.played" xml:space="preserve">
+    <value>Played</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.touch" xml:space="preserve">
+    <value>Touch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filteredGameCount" xml:space="preserve">
+    <value>{{shown}} of {{total}} games</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filters" xml:space="preserve">
+    <value>Filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.gameCount" xml:space="preserve">
+    <value>{{count}}-Spiel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.gameCount_plural" xml:space="preserve">
+    <value>{{count}} Spiele</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.genres" xml:space="preserve">
+    <value>Genres: {{genres}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.daysAgo" xml:space="preserve">
+    <value>Vor {{count}}d</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.hoursAgo" xml:space="preserve">
+    <value>Vor {{count}}h</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.justNow" xml:space="preserve">
+    <value>Gerade eben</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.minutesAgo" xml:space="preserve">
+    <value>Vor {{count}}m</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.never" xml:space="preserve">
+    <value>Nie gespielt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.weeksAgo" xml:space="preserve">
+    <value>Vor {{count}}w</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.loadingGameDetails" xml:space="preserve">
+    <value>Loading game details...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.moreInfo" xml:space="preserve">
+    <value>More Info</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.moreOptions" xml:space="preserve">
+    <value>More Options</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.nvidiaTech" xml:space="preserve">
+    <value>NVIDIA Tech: {{tech}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.players" xml:space="preserve">
+    <value>Players: {{players}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.publisher" xml:space="preserve">
+    <value>Publisher: {{publisher}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.rating" xml:space="preserve">
+    <value>Rating: {{rating}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.removeFilter" xml:space="preserve">
+    <value>Remove {{filter}} filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.searchPlaceholder" xml:space="preserve">
+    <value>Durchsuchen Sie Ihre Bibliothek...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.selectedStore" xml:space="preserve">
+    <value>Selected Store: {{store}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.sortAriaLabel" xml:space="preserve">
+    <value>Sort library</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.storeFilter" xml:space="preserve">
+    <value>Store Filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.storeFilterHint" xml:space="preserve">
+    <value>Hold Y, use up/down, release Y to apply</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.storeNotListed" xml:space="preserve">
+    <value>Store not listed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.title" xml:space="preserve">
+    <value>Meine Bibliothek</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.playtimeDetails" xml:space="preserve">
+    <value>Details zur Spielzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.showPlaytimeDetails" xml:space="preserve">
+    <value>Details zur Spielzeit anzeigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.showStorageDetails" xml:space="preserve">
+    <value>Speicherdetails anzeigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.notAvailable" xml:space="preserve">
+    <value>N/A</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.serverRegionVpc" xml:space="preserve">
+    <value>Serverregion (VPC)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageLeft" xml:space="preserve">
+    <value>Lagerplatz übrig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageRegion" xml:space="preserve">
+    <value>Speicherregion</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageRegionCode" xml:space="preserve">
+    <value>Code der Speicherregion</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageTotal" xml:space="preserve">
+    <value>Speicher insgesamt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageUsage" xml:space="preserve">
+    <value>Speichernutzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageUsed" xml:space="preserve">
+    <value>Verwendeter Speicher</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storageDetails" xml:space="preserve">
+    <value>Speicherdetails</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.subscriptionDetails" xml:space="preserve">
+    <value>Abonnementdetails</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.allotted" xml:space="preserve">
+    <value>Zugeteilt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.firstEntitlement" xml:space="preserve">
+    <value>Erster Anspruch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.gameplayAllowed" xml:space="preserve">
+    <value>Gameplay erlaubt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.no" xml:space="preserve">
+    <value>Nein</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.notifyAtGeneral" xml:space="preserve">
+    <value>Benachrichtigen unter (Allgemein)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.notifyAtInSession" xml:space="preserve">
+    <value>Benachrichtigen um (in Sitzung)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.periodEnd" xml:space="preserve">
+    <value>Periodenende</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.periodStart" xml:space="preserve">
+    <value>Periodenbeginn</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.planState" xml:space="preserve">
+    <value>Planzustand</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.purchased" xml:space="preserve">
+    <value>Gekauft</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.rolledOver" xml:space="preserve">
+    <value>Umgedreht</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.subType" xml:space="preserve">
+    <value>Untertyp</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.tier" xml:space="preserve">
+    <value>Stufe</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.timeLeft" xml:space="preserve">
+    <value>Verbleibende Zeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.timeUsage" xml:space="preserve">
+    <value>Zeitverbrauch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.totalTime" xml:space="preserve">
+    <value>Gesamtzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.type" xml:space="preserve">
+    <value>Typ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.unlimitedTime" xml:space="preserve">
+    <value>Unbegrenzte Zeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.used" xml:space="preserve">
+    <value>{{percent}} verwendet</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.usedTime" xml:space="preserve">
+    <value>Verwendete Zeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.yes" xml:space="preserve">
+    <value>Ja</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.home" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.library" xml:space="preserve">
+    <value>Bibliothek</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.playtime" xml:space="preserve">
+    <value>Spielzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.settings" xml:space="preserve">
+    <value>Einstellungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.refresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.reset" xml:space="preserve">
+    <value>Protokoll zurücksetzen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetCancel" xml:space="preserve">
+    <value>Statistiken behalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetConfirm" xml:space="preserve">
+    <value>Alles löschen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetConfirmBody" xml:space="preserve">
+    <value>Das löscht jede erfasste Stunde auf diesem Gerät. Das lässt sich nicht rückgängig machen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetConfirmTitle" xml:space="preserve">
+    <value>Spielzeit zurücksetzen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.updated" xml:space="preserve">
+    <value>Protokoll aktualisiert {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.daily" xml:space="preserve">
+    <value>Letzter {{count}} Tag</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.dailySr" xml:space="preserve">
+    <value>{{value}} in diesem Zeitraum gestreamt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.daily_plural" xml:space="preserve">
+    <value>Letzte {{count}} Tage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.hourly" xml:space="preserve">
+    <value>Tagesstunde</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.hourlySr" xml:space="preserve">
+    <value>Stärkste Stunde {{hour}}:00 mit {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.title" xml:space="preserve">
+    <value>Wann du spielst</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.weekday" xml:space="preserve">
+    <value>Wochentag</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.weekdaySr" xml:space="preserve">
+    <value>Stärkster Wochentag mit {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.body" xml:space="preserve">
+    <value>Starte ein Spiel und die Uhr läuft, sobald das erste Bild ankommt. Wartezeiten werden separat erfasst, sodass nur echtes Spielen zählt.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.cta" xml:space="preserve">
+    <value>Bibliothek durchsuchen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.eyebrow" xml:space="preserve">
+    <value>Protokoll // leer</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.title" xml:space="preserve">
+    <value>Noch keine Spielzeit erfasst</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.eyebrow" xml:space="preserve">
+    <value>OpenNOW // Protokoll</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.hours" xml:space="preserve">
+    <value>{{count}} Std</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.hoursMinutes" xml:space="preserve">
+    <value>{{hours}} Std {{minutes}} Min</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.minutes" xml:space="preserve">
+    <value>{{count}} Min</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.never" xml:space="preserve">
+    <value>—</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.seconds" xml:space="preserve">
+    <value>{{count}} Sek</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.detail" xml:space="preserve">
+    <value>{{minutes}} Minuten mehr, verteilt auf {{sessions}} Sitzungen und {{games}} Spiele</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.label" xml:space="preserve">
+    <value>Gesamt gestreamt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.peakHour" xml:space="preserve">
+    <value>Stärkste Stunde: {{hour}}:00 — {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.sr" xml:space="preserve">
+    <value>Du hast insgesamt {{hours}} Stunden und {{minutes}} Minuten gestreamt.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.unitHours" xml:space="preserve">
+    <value>Std</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.unitMinutes" xml:space="preserve">
+    <value>Min</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.live.label" xml:space="preserve">
+    <value>Jetzt live</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.live.unknownGame" xml:space="preserve">
+    <value>Aktuelle Sitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.loading" xml:space="preserve">
+    <value>Protokoll wird geladen …</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.count" xml:space="preserve">
+    <value>{{count}} Spiel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.count_plural" xml:space="preserve">
+    <value>{{count}} Spiele</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.more" xml:space="preserve">
+    <value>+ {{count}} weitere Spiele nicht angezeigt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.sessions" xml:space="preserve">
+    <value>{{count}} Sitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.sessions_plural" xml:space="preserve">
+    <value>{{count}} Sitzungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.share" xml:space="preserve">
+    <value>{{value}} % der Gesamtzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.sr" xml:space="preserve">
+    <value>Platz {{rank}}: {{title}}, {{value}} gestreamt in {{sessions}} Sitzungen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.title" xml:space="preserve">
+    <value>Nach Spielzeit sortiert</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.empty" xml:space="preserve">
+    <value>Noch keine abgeschlossenen Sitzungen erfasst.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.engineNative" xml:space="preserve">
+    <value>Nativ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.engineWeb" xml:space="preserve">
+    <value>WebRTC</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.title" xml:space="preserve">
+    <value>Letzte Sitzungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.wait" xml:space="preserve">
+    <value>{{value}} Wartezeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.average" xml:space="preserve">
+    <value>Ø Sitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.games" xml:space="preserve">
+    <value>Gespielte Spiele</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.longest" xml:space="preserve">
+    <value>Längste Sitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.queue" xml:space="preserve">
+    <value>Zeit in der Queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.sessions" xml:space="preserve">
+    <value>Sitzungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.setup" xml:space="preserve">
+    <value>Zeit zum Verbinden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.subtitle" xml:space="preserve">
+    <value>Jede Minute, die du wirklich im Stream verbracht hast — Wartezeiten in der Queue zählen separat.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.title" xml:space="preserve">
+    <value>Spielzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.allServers" xml:space="preserve">
+    <value>Alle Server</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.close" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.wait" xml:space="preserve">
+    <value>{{duration}} warten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.gotIt" xml:space="preserve">
+    <value>Got it</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.kicker" xml:space="preserve">
+    <value>What's new</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.settingsLink" xml:space="preserve">
+    <value>What's new</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.title" xml:space="preserve">
+    <value>OpenNOW {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.unavailable" xml:space="preserve">
+    <value>Release notes couldn't be loaded right now.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.viewOnGitHub" xml:space="preserve">
+    <value>View full release on GitHub</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.active" xml:space="preserve">
+    <value>Aktive Sitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.activeSessionMissingServerAddress" xml:space="preserve">
+    <value>Aktive Sitzung gefunden (fehlende Serveradresse)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.cancelExit" xml:space="preserve">
+    <value>Beenden abbrechen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.control" xml:space="preserve">
+    <value>Sitzungskontrolle</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.current" xml:space="preserve">
+    <value>Aktuell</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.elapsed" xml:space="preserve">
+    <value>Vergangen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.elapsedTitle" xml:space="preserve">
+    <value>Verstrichene Zeit der aktuellen Spielsitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.elapsedWithValue" xml:space="preserve">
+    <value>Sitzung {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.endSession" xml:space="preserve">
+    <value>Sitzung beenden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.exitConfirmation" xml:space="preserve">
+    <value>Bestätigung zum Beenden des Streams</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.exitStream" xml:space="preserve">
+    <value>Stream beenden?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.readyToLaunch" xml:space="preserve">
+    <value>Bereit zum Start</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.readyToSwitch" xml:space="preserve">
+    <value>Bereit zum Wechsel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.remainingPlaytime" xml:space="preserve">
+    <value>{{value}} übrig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resume" xml:space="preserve">
+    <value>Lebenslauf</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resumeActiveCloudSession" xml:space="preserve">
+    <value>Setzen Sie die aktive Cloud-Sitzung fort</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resumeActiveCloudSessionTitle" xml:space="preserve">
+    <value>Aktive Cloud-Sitzung fortsetzen: {{title}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resumeCurrentStream" xml:space="preserve">
+    <value>Aktuellen Stream fortsetzen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminate" xml:space="preserve">
+    <value>Beenden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminateActiveCloudSession" xml:space="preserve">
+    <value>Beenden Sie die aktive Cloud-Sitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminateActiveCloudSessionTitle" xml:space="preserve">
+    <value>Aktive Cloud-Sitzung beenden: {{title}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminateConfirmation" xml:space="preserve">
+    <value>{{title}} beenden? Dadurch wird die aktive Cloud-Sitzung sofort beendet.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.thisGame" xml:space="preserve">
+    <value>dieses Spiel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.thisSession" xml:space="preserve">
+    <value>diese Sitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.timeWarning" xml:space="preserve">
+    <value>Warnung zur Sitzungszeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.freeTier15MinutesRemaining" xml:space="preserve">
+    <value>Es verbleiben noch 15 Minuten in dieser kostenlosen Sitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.freeTier30MinutesRemaining" xml:space="preserve">
+    <value>Es verbleiben noch 30 Minuten in dieser kostenlosen Sitzung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.freeTierEndsSoon" xml:space="preserve">
+    <value>Diese kostenlose Sitzung endet bald</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.idleTimeoutApproaching" xml:space="preserve">
+    <value>Leerlauf-Timeout naht</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.maximumSessionTimeApproaching" xml:space="preserve">
+    <value>Die maximale Sitzungszeit rückt näher</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.sessionTimeLimitApproaching" xml:space="preserve">
+    <value>Das Zeitlimit für die Sitzung rückt näher</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.applicationUpdates" xml:space="preserve">
+    <value>Anwendungsaktualisierungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.automaticallyCheckForUpdates" xml:space="preserve">
+    <value>Automatisch nach Updates suchen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.automaticallyCheckForUpdatesOffHint" xml:space="preserve">
+    <value>Wenn die Option deaktiviert ist, bleibt OpenNOW auf der aktuellen Version, es sei denn, Sie verwenden die unten stehenden manuellen Aktualisierungsschaltflächen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.automaticallyCheckForUpdatesOnHint" xml:space="preserve">
+    <value>Wenn diese Option aktiviert ist, überprüfen gepackte Builds GitHub-Releases im Hintergrund nach dem Start und in regelmäßigen Abständen, während OpenNOW ausgeführt wird.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.availableVersion" xml:space="preserve">
+    <value>Verfügbare Version: {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.backgroundChecksOff" xml:space="preserve">
+    <value>Die Aktualisierungsprüfungen im Hintergrund sind deaktiviert, bis Sie sie manuell überprüfen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.backgroundChecksOn" xml:space="preserve">
+    <value>Gepackte Builds prüfen GitHub-Releases im Hintergrund.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.cacheCleared" xml:space="preserve">
+    <value>Cache erfolgreich geleert. Die App wird beim nächsten Start aktualisiert.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.checkForUpdates" xml:space="preserve">
+    <value>Suchen Sie nach Updates</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCache" xml:space="preserve">
+    <value>Cache löschen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCacheConfirm" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie alle zwischengespeicherten Daten löschen möchten? Dadurch werden alle Spielmetadaten, Bilder und Bibliotheksinformationen gelöscht.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCacheFailed" xml:space="preserve">
+    <value>Cache konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCacheHint" xml:space="preserve">
+    <value>Löschen Sie alle zwischengespeicherten Spieldaten, Bilder und Metadaten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.downloadProgress" xml:space="preserve">
+    <value>Download-Fortschritt: {{percent}}%</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.downloadUpdate" xml:space="preserve">
+    <value>Laden Sie das Update herunter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.downloadedVersion" xml:space="preserve">
+    <value>Heruntergeladene Version: {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.exportLogs" xml:space="preserve">
+    <value>Protokolle exportieren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.exportLogsFailed" xml:space="preserve">
+    <value>Protokolle konnten nicht exportiert werden. Bitte versuchen Sie es erneut.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.exportLogsHint" xml:space="preserve">
+    <value>Laden Sie Debug-Protokolle mit vertraulichen Daten herunter, die aus Datenschutzgründen geschwärzt wurden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.lastChecked" xml:space="preserve">
+    <value>Zuletzt überprüft: {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.restartToInstall" xml:space="preserve">
+    <value>Starten Sie die Installation neu</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannel" xml:space="preserve">
+    <value>Update Channel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelHint" xml:space="preserve">
+    <value>Choose Stable for regular releases or Nightly to preview the latest builds from the dev branch.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelNightly" xml:space="preserve">
+    <value>Nightly</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelNightlyHint" xml:space="preserve">
+    <value>Nightly builds may be less reliable. Switching channels immediately checks for an available update.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelStable" xml:space="preserve">
+    <value>Stable (Default)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.checking" xml:space="preserve">
+    <value>Überprüfen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.downloading" xml:space="preserve">
+    <value>Herunterladen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.packagedBuildsOnly" xml:space="preserve">
+    <value>Nur gepackte Builds</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.readyToInstall" xml:space="preserve">
+    <value>Bereit zur Installation</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.updateAvailable" xml:space="preserve">
+    <value>Update verfügbar</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.version" xml:space="preserve">
+    <value>Version {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.whatsNew" xml:space="preserve">
+    <value>What's new</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.whatsNewHint" xml:space="preserve">
+    <value>View the release notes for the current version of OpenNOW.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.actionFailed" xml:space="preserve">
+    <value>Game account action failed. Please try again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.connect" xml:space="preserve">
+    <value>Connect</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.connectedAccount" xml:space="preserve">
+    <value>Connected account</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.connecting" xml:space="preserve">
+    <value>Connecting...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.description" xml:space="preserve">
+    <value>Link supported store accounts to unlock provider-required games and sync owned libraries into OpenNOW.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.empty" xml:space="preserve">
+    <value>No supported game-account providers were returned for this account.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.linkSuccess" xml:space="preserve">
+    <value>{{provider}} connected.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.loadFailed" xml:space="preserve">
+    <value>Failed to load connected game accounts.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.loading" xml:space="preserve">
+    <value>Loading connected game accounts...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.notConnectedDescription" xml:space="preserve">
+    <value>Connect this provider to GeForce NOW when a game requires it.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.recently" xml:space="preserve">
+    <value>recently</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.reconnect" xml:space="preserve">
+    <value>Reconnect</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.refresh" xml:space="preserve">
+    <value>Refresh</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.requiredForSomeGames" xml:space="preserve">
+    <value>Required for some games</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.resync" xml:space="preserve">
+    <value>Resync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.resyncSuccess" xml:space="preserve">
+    <value>{{provider}} library sync started.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.resyncing" xml:space="preserve">
+    <value>Resyncing...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.signInRequired" xml:space="preserve">
+    <value>Sign in before managing connected game accounts.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.ssoSupported" xml:space="preserve">
+    <value>Account linking</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusConnected" xml:space="preserve">
+    <value>Connected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusExpired" xml:space="preserve">
+    <value>Expired</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusNotConnected" xml:space="preserve">
+    <value>Not connected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusSyncError" xml:space="preserve">
+    <value>Sync issue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.sync" xml:space="preserve">
+    <value>Sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncOnlyDescription" xml:space="preserve">
+    <value>Sync this provider's supported library games without account-linking SSO.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncState" xml:space="preserve">
+    <value>Sync state: {{state}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncSummary" xml:space="preserve">
+    <value>{{count}} synced game as of {{date}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncSummary_plural" xml:space="preserve">
+    <value>{{count}} synced games as of {{date}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncSupported" xml:space="preserve">
+    <value>Library sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncUnknown" xml:space="preserve">
+    <value>Unknown</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncing" xml:space="preserve">
+    <value>Syncing...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.title" xml:space="preserve">
+    <value>Connected Game Accounts</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlink" xml:space="preserve">
+    <value>Unlink</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlinkConfirm" xml:space="preserve">
+    <value>Unlink {{provider}} from GeForce NOW? Synced library entries from that account may disappear until you reconnect.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlinkSuccess" xml:space="preserve">
+    <value>{{provider}} unlinked.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlinking" xml:space="preserve">
+    <value>Unlinking...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.disabled" xml:space="preserve">
+    <value>Deaktiviert</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphone" xml:space="preserve">
+    <value>Mikrofon</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneDevice" xml:space="preserve">
+    <value>Mikrofongerät</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneDeviceHint" xml:space="preserve">
+    <value>Wählen Sie das Eingabegerät für den Voice-Chat aus</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneHint" xml:space="preserve">
+    <value>Aktivieren Sie den Voice-Chat während des Streamings</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneIndexed" xml:space="preserve">
+    <value>Mikrofon {{index}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneInputLevel" xml:space="preserve">
+    <value>Mikrofoneingangspegel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneMode" xml:space="preserve">
+    <value>Mikrofonmodus</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.noMicrophoneDevicesFound" xml:space="preserve">
+    <value>Keine Mikrofongeräte gefunden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionDenied" xml:space="preserve">
+    <value>Der Zugriff auf das Mikrofon wurde verweigert. Aktivieren Sie den Mikrofonzugriff für OpenNOW unter Systemeinstellungen &gt; Datenschutz und Sicherheit &gt; Mikrofon.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionRestricted" xml:space="preserve">
+    <value>Der Mikrofonzugriff ist durch macOS eingeschränkt und kann nicht über OpenNOW aktiviert werden.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionUnavailable" xml:space="preserve">
+    <value>Der Mikrofonzugriff ist nicht verfügbar.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionUnknown" xml:space="preserve">
+    <value>Der Mikrofonberechtigungsstatus kann nicht ermittelt werden. Überprüfen Sie die Datenschutzeinstellungen des macOS-Mikrofons für OpenNOW.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.pushToTalk" xml:space="preserve">
+    <value>Push-to-Talk</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.selectedDevice" xml:space="preserve">
+    <value>Ausgewähltes Gerät</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.title" xml:space="preserve">
+    <value>Audio</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.voiceActivity" xml:space="preserve">
+    <value>Sprachaktivität</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.advanced" xml:space="preserve">
+    <value>Erweitert – Codec-Diagnose</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.decode" xml:space="preserve">
+    <value>Dekodieren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.description" xml:space="preserve">
+    <value>Testen Sie, welche Codecs Ihr System dekodieren/kodieren kann und ob sie GPU oder CPU verwenden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.encode" xml:space="preserve">
+    <value>Kodieren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.linuxHardwareHint" xml:space="preserve">
+    <value>Linux AppImage diagnostics use Chromium's WebRTC/MediaCapabilities report. Hardware decode depends on the Chromium build plus your distro GPU/video stack: x64 systems may need VA-API/NVIDIA VA-API drivers, while ARM V4L2 support depends on Chromium/Electron exposing that decoder.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.notInWebrtc" xml:space="preserve">
+    <value>Nicht in WebRTC</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.profiles" xml:space="preserve">
+    <value>Profile:</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.retest" xml:space="preserve">
+    <value>Erneut testen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.testCodecs" xml:space="preserve">
+    <value>Codecs testen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.title" xml:space="preserve">
+    <value>Codec-Diagnose</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.webrtcReady" xml:space="preserve">
+    <value>WebRTC-fähig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.higherBitDepth" xml:space="preserve">
+    <value>Höhere Bittiefe</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.highestChromaAndBitDepth" xml:space="preserve">
+    <value>Höchste Chroma und Bittiefe</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.mostCompatible" xml:space="preserve">
+    <value>Am kompatibelsten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.requiresH265OrAv1Title" xml:space="preserve">
+    <value>{{description}} – erfordert H265/AV1</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.sharperChroma" xml:space="preserve">
+    <value>Schärferes Chroma</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.inGameLanguageHint" xml:space="preserve">
+    <value>Sprache für In-Game-Menüs, Untertitel und Audio (sofern unterstützt)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.keyboardLayout" xml:space="preserve">
+    <value>Tastaturlayout</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.language" xml:space="preserve">
+    <value>Sprache</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.launchBehavior" xml:space="preserve">
+    <value>Startverhalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.persistInGameSettings" xml:space="preserve">
+    <value>Save in-game graphics settings</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.persistInGameSettingsHint" xml:space="preserve">
+    <value>Lets supported games keep graphics options changed inside the stream. Sent only for games that advertise NVIDIA in-game settings persistence support.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.preferredStore" xml:space="preserve">
+    <value>Bevorzugter Store</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.title" xml:space="preserve">
+    <value>Spiel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.clipboardPaste" xml:space="preserve">
+    <value>Einfügen in die Zwischenablage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.editable" xml:space="preserve">
+    <value>Bearbeitbar</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.gyroscopeControls" xml:space="preserve">
+    <value>Gyroscope Controls</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.gyroscopeControlsHint" xml:space="preserve">
+    <value>Expose controller motion sensors for gyro aiming when the input backend supports it.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.keyboardLayoutHint" xml:space="preserve">
+    <value>Steuert, wie Ihre physische Tastatur innerhalb der Remote-Sitzung zugeordnet wird. Getrennt von der Spracheinstellung im Spiel.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseAccelerator" xml:space="preserve">
+    <value>Mausbeschleuniger</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseAcceleratorHint" xml:space="preserve">
+    <value>Dynamische Turn-Boost-Stärke (1 % = Off-like, 150 % = am stärksten).</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseAndKeyboard" xml:space="preserve">
+    <value>Maus und Tastatur</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseSensitivity" xml:space="preserve">
+    <value>Mausempfindlichkeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseSensitivityHint" xml:space="preserve">
+    <value>Auf Mausbewegung angewendeter Multiplikator (1,00 = Standard)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.nativeCursorOverlay" xml:space="preserve">
+    <value>Native Cursor Overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.nativeCursorOverlayHint" xml:space="preserve">
+    <value>WebRTC only. Uses NVIDIA's cursor_channel for a local cursor overlay; turn this off to leave cursor rendering to the server-side stream.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.recording" xml:space="preserve">
+    <value>Aufnahme</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.resetToDefaults" xml:space="preserve">
+    <value>Auf Standardeinstellungen zurücksetzen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.screenshot" xml:space="preserve">
+    <value>Screenshot</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutConflictBinding" xml:space="preserve">
+    <value>Die Verknüpfung steht in Konflikt mit einer anderen Bindung.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutConflictSidebar" xml:space="preserve">
+    <value>Die Verknüpfung steht in Konflikt mit dem Umschalter in der Seitenleiste der Einstellungen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutEmpty" xml:space="preserve">
+    <value>Die Verknüpfung darf nicht leer sein.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutHint" xml:space="preserve">
+    <value>Klicken Sie auf ein Feld und drücken Sie zum Binden die Tasten oder fügen Sie eine Verknüpfung ein ({{examples}}). Escape bricht den Fokus ab. Vollbild: {{fullscreen}}. Stopp: {{stop}}. Mikrofon: {{mic}}. Screenshot: {{screenshot}}. Aufnahme: {{recording}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutInvalid" xml:space="preserve">
+    <value>Ungültiges Verknüpfungsformat.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcuts" xml:space="preserve">
+    <value>Verknüpfungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.steamControllerCompatibilityMode" xml:space="preserve">
+    <value>Steam Controller Compatibility Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.steamControllerCompatibilityModeHint" xml:space="preserve">
+    <value>macOS only. Restores Chromium's older HID gamepad path for Steam Controller, but may reduce Xbox controller compatibility. Applies after app restart.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.stopStream" xml:space="preserve">
+    <value>Stream stoppen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.title" xml:space="preserve">
+    <value>Eingang</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleAntiAfk" xml:space="preserve">
+    <value>Anti-AFK umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleFullscreen" xml:space="preserve">
+    <value>Vollbild umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleMicrophone" xml:space="preserve">
+    <value>Mikrofon umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.togglePointerLock" xml:space="preserve">
+    <value>Zeigersperre umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleStats" xml:space="preserve">
+    <value>Statistiken umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleStreamSidebar" xml:space="preserve">
+    <value>Stream-Seitenleiste umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColor" xml:space="preserve">
+    <value>Akzentfarbe</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorAmber" xml:space="preserve">
+    <value>Arcade Amber</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorAzure" xml:space="preserve">
+    <value>Azur</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorHint" xml:space="preserve">
+    <value>Wendet den ausgewählten Akzent auf die Standard-Desktop-Benutzeroberfläche an und bleibt zwischen den Starts bestehen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorNeon" xml:space="preserve">
+    <value>Neon</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorRose" xml:space="preserve">
+    <value>Pulse Rose</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorSteel" xml:space="preserve">
+    <value>Stahl</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorViolet" xml:space="preserve">
+    <value>Plasma Violet</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorWhite" xml:space="preserve">
+    <value>Weiß</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.appLanguage" xml:space="preserve">
+    <value>App-Sprache</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.appLanguageHint" xml:space="preserve">
+    <value>Ändert die Schnittstellensprache von OpenNOW. Für nicht übersetzte Zeichenfolgen wird Englisch verwendet.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.appearance" xml:space="preserve">
+    <value>Aussehen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.autoFullScreen" xml:space="preserve">
+    <value>Automatischer Vollbildmodus</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.autoFullScreenHint" xml:space="preserve">
+    <value>Wechseln Sie automatisch in den Vollbildmodus, wenn Sie eine Verbindung herstellen oder eine Sitzung starten.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.controllerMode" xml:space="preserve">
+    <value>Controller Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.controllerModeHint" xml:space="preserve">
+    <value>Use a large-screen console-style shell with controller button hints and a horizontal library layout.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.discordRichPresence" xml:space="preserve">
+    <value>Discord-reiche Präsenz</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.discordRichPresenceHint" xml:space="preserve">
+    <value>Zeigen Sie das Spiel, das Sie streamen, als Ihre Discord-Aktivität an, einschließlich der verstrichenen Zeit.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.escapeExitsFullscreen" xml:space="preserve">
+    <value>Escape beendet den Vollbildmodus</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.escapeExitsFullscreenHint" xml:space="preserve">
+    <value>Wenn diese Option aktiviert ist, wird durch Drücken der Escape-Taste der Vollbildmodus beendet. Wenn deaktiviert (Standard), wird Escape an das Spiel weitergeleitet, während der Mauszeiger gesperrt ist.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.everyMinutes" xml:space="preserve">
+    <value>Alle {{count}} min</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideServerSelector" xml:space="preserve">
+    <value>Serverauswahl ausblenden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideServerSelectorHint" xml:space="preserve">
+    <value>Überspringen Sie das Dialogfeld zur Auswahl des Free-Tier-Servers und starten Sie immer mit dem Standardrouting von OpenNOW.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideStreamOverlayButtons" xml:space="preserve">
+    <value>Stream-Overlay-Schaltflächen ausblenden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideStreamOverlayButtonsHint" xml:space="preserve">
+    <value>Blenden Sie beim Streamen die Schaltflächen „Mikrofon“, „Vollbild“ und „Sitzung beenden“ aus.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.off" xml:space="preserve">
+    <value>Aus</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.posterSize" xml:space="preserve">
+    <value>Postergröße</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.posterSizeHint" xml:space="preserve">
+    <value>Adjusts game posters in real time across the library.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionElapsedCounter" xml:space="preserve">
+    <value>Zähler für abgelaufene Sitzungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionElapsedCounterHint" xml:space="preserve">
+    <value>Aktivieren oder deaktivieren Sie den Zähler für die abgelaufene Live-Sitzung während des Streamings.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerDisabledHint" xml:space="preserve">
+    <value>Durch Deaktivieren des Zählers für die abgelaufene Sitzung wird verhindert, dass der Live-Timer für die abgelaufene Sitzung überhaupt gerendert wird. Die Indikatoren für die verbleibende Spielzeit bleiben unverändert.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerReappear" xml:space="preserve">
+    <value>Der Sitzungstimer wird erneut angezeigt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerReappearHint" xml:space="preserve">
+    <value>Gibt an, wie oft der Sitzungstimer während des Streamings wieder angezeigt wird (0 deaktiviert Wiederholungen).</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerVisibleTime" xml:space="preserve">
+    <value>Sichtbare Zeit des Sitzungstimers</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerVisibleTimeHint" xml:space="preserve">
+    <value>Wie lange der Sitzungstimer bei jedem Erscheinen sichtbar bleibt.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showAntiAfkIndicator" xml:space="preserve">
+    <value>Anti-AFK-Indikator anzeigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showAntiAfkIndicatorHint" xml:space="preserve">
+    <value>Zeigen Sie beim Streaming das Abzeichen „ANTI-AFK EIN“ an, während Anti-AFK aktiviert ist.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showSessionTimeRemainingInStatsOverlay" xml:space="preserve">
+    <value>Session Time in Stats Overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showSessionTimeRemainingInStatsOverlayHint" xml:space="preserve">
+    <value>The session countdown appears in the in-stream sidebar by default. Enable this to also show it in the stats overlay.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showStatsOnStreamLaunch" xml:space="preserve">
+    <value>Statistiken beim Stream-Start anzeigen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showStatsOnStreamLaunchHint" xml:space="preserve">
+    <value>Zeigt automatisch das Statistik-Overlay an, wenn ein neuer Stream startet.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.translucentUI" xml:space="preserve">
+    <value>Translucent UI</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.translucentUIHint" xml:space="preserve">
+    <value>Enable glassmorphism and translucent overlays.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.bundledPathDetected" xml:space="preserve">
+    <value>Gebündelter Pfad erkannt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.checkNativeStreamer" xml:space="preserve">
+    <value>Überprüfen Sie den nativen Streamer</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.codecSupportUnknown" xml:space="preserve">
+    <value>Codec-Unterstützung unbekannt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.directxBackend" xml:space="preserve">
+    <value>DirectX-Backend</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.directxBackendHint" xml:space="preserve">
+    <value>Gilt für den nächsten nativen Streamer-Prozess. Auto verwendet den schnellsten Standardpfad; Wählen Sie DirectX 11 oder DirectX 12, um einen bestimmten Windows-Renderer zu erzwingen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptAltTab" xml:space="preserve">
+    <value>Alt+Tab zurück in das OpenNOW-Fenster, um den Stream zu verlassen oder OpenNOW-Verknüpfungen zu verwenden.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptBody" xml:space="preserve">
+    <value>Der native Streamer ist noch experimentell. OpenNOW-Verknüpfungen funktionieren nicht, während das native Streamer-Fenster den Fokus hat.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptCancel" xml:space="preserve">
+    <value>Deaktiviert bleiben</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptEnable" xml:space="preserve">
+    <value>Aktivieren Sie Native Streamer</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptEsc" xml:space="preserve">
+    <value>abbrechen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptKicker" xml:space="preserve">
+    <value>Experimentell</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptNewSessions" xml:space="preserve">
+    <value>Natives Streaming gilt nur für neue Sitzungen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptShortcuts" xml:space="preserve">
+    <value>Overlay-, Exit-, Vollbild-, Statistik- und andere Verknüpfungen werden nicht im nativen Streamer-Fenster ausgelöst.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptTitle" xml:space="preserve">
+    <value>Native Streamer aktivieren?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.framePacing" xml:space="preserve">
+    <value>Frame-Tempo</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.framePacingHint" xml:space="preserve">
+    <value>Die niedrigste Latenz vermeidet G-Sync-Stimulation und ist am besten für das Mausgefühl geeignet. Smooth G-Sync kann Tearing reduzieren, kann jedoch das Rendern auf die Bildwiederholfrequenz des Monitors beschränken.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.gstreamerReady" xml:space="preserve">
+    <value>GStreamer bereit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.gstreamerRuntime" xml:space="preserve">
+    <value>GStreamer-Laufzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.linuxRuntimeHint" xml:space="preserve">
+    <value>Die Linux AppImage/private GStreamer-Bündelung wird absichtlich nicht standardmäßig verwendet, da VAAPI/V4L2/Vulkan-Plugins mit der Host-Distribution und dem GPU-Treiber-Stack übereinstimmen müssen. .deb-Pakete deklarieren Debian/Ubuntu-Abhängigkeiten automatisch.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.lowestLatency" xml:space="preserve">
+    <value>Niedrigste Latenz</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.memoryPathUnknown" xml:space="preserve">
+    <value>Speicherpfad unbekannt</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.nativeStreaming" xml:space="preserve">
+    <value>Natives Streaming</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.nativeStreamingHint" xml:space="preserve">
+    <value>Natives Streaming ist experimentell und kann plattformspezifische Fehler, Störungen oder Fallbacks auf Chromium/WebRTC aufweisen. Aktivieren Sie es nur, wenn Sie den GStreamer-basierten Desktop-Streamer problemlos für neue Sitzungen testen möchten.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.notReady" xml:space="preserve">
+    <value>Nicht bereit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderMode" xml:space="preserve">
+    <value>Render Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeExternal" xml:space="preserve">
+    <value>External (Floating)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeHint" xml:space="preserve">
+    <value>Internal (default) embeds native video in the OpenNOW window. External keeps the floating GStreamer window for testing/fallback. Change applies to the next native streamer process.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeInternal" xml:space="preserve">
+    <value>Internal (One Window)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeInternalOnlyHint" xml:space="preserve">
+    <value>This platform uses Internal (one window) only. Keyboard, mouse, and controller input stay in Electron and are forwarded over IPC. External floating mode is Windows-only.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.reportOnDiscord" xml:space="preserve">
+    <value>Bericht über Discord</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.reportOnGithubIssues" xml:space="preserve">
+    <value>Bericht über GitHub-Probleme</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.runtimeDefaultHint" xml:space="preserve">
+    <value>Paketierte Windows-/macOS-Builds erkennen automatisch eine gebündelte Laufzeit neben dem nativen Streamer. Linux verwendet Distributionspakete.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.showNativeStreamerStats" xml:space="preserve">
+    <value>Show Native Streamer Stats</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.showNativeStreamerStatsHint" xml:space="preserve">
+    <value>Display the native streamer's own diagnostics overlay during native sessions.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.smoothGsync" xml:space="preserve">
+    <value>Reibungsloses G-Sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.statusDefaultHint" xml:space="preserve">
+    <value>OpenNOW überprüft den gebündelten GStreamer-Streamer, wenn diese Registerkarte geöffnet wird.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.streamerStatus" xml:space="preserve">
+    <value>Streamer-Status</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.title" xml:space="preserve">
+    <value>Nativer Streamer</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportMode" xml:space="preserve">
+    <value>Transport Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeHint" xml:space="preserve">
+    <value>WebRTC is the supported path. NVST (experimental) uses classic RTSPS + UDP video (Moonlight-hypothesis scaffold) while keyboard/mouse/controller stay on WebRTC SCTP datachannels. First live sessions may need SRTP/pcap validation.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeNvst" xml:space="preserve">
+    <value>NVST (Experimental)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeWebrtc" xml:space="preserve">
+    <value>WebRTC (Default)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeWindowsOnlyHint" xml:space="preserve">
+    <value>NVST transport is Windows-only for now. This platform always uses WebRTC.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.videoPath" xml:space="preserve">
+    <value>Videopfad</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.videoPathDefaultHint" xml:space="preserve">
+    <value>OpenNOW zeigt den aktiven Hardware-Dekodierungspfad an, nachdem GStreamer erkannt wurde.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.noMatches" xml:space="preserve">
+    <value>Keine Einstellungen stimmten mit „{{query}}“ überein.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.availableLegend" xml:space="preserve">
+    <value>Available ({{value}})</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.availableLegendUnavailable" xml:space="preserve">
+    <value>Available unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.currentLocationOption" xml:space="preserve">
+    <value>{{region}} (Current)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.currentLocationUnavailable" xml:space="preserve">
+    <value>Current location</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.description" xml:space="preserve">
+    <value>Persistent Cloud Storage saves downloaded games and supported game data for future sessions.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.detected" xml:space="preserve">
+    <value>Detected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.locationTitle" xml:space="preserve">
+    <value>Storage Location</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.locationsFailed" xml:space="preserve">
+    <value>Failed to load storage locations.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.locationsLoading" xml:space="preserve">
+    <value>Loading storage locations...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.meterLabel" xml:space="preserve">
+    <value>Persistent Storage usage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.notDetected" xml:space="preserve">
+    <value>No Persistent Storage add-on was found for the active account.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.openManager" xml:space="preserve">
+    <value>Open NVIDIA</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.openManagerFailed" xml:space="preserve">
+    <value>Failed to open NVIDIA Storage Manager.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.recommended" xml:space="preserve">
+    <value>Recommended</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.region" xml:space="preserve">
+    <value>Region: {{region}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.regionUnavailable" xml:space="preserve">
+    <value>Region unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.remaining" xml:space="preserve">
+    <value>{{value}} available</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetConfirm" xml:space="preserve">
+    <value>Reset Persistent Storage in {{region}}? This will delete all installed games and persistent data from NVIDIA cloud storage. This action cannot be undone.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetFailed" xml:space="preserve">
+    <value>Failed to reset Persistent Storage. Please try again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetHint" xml:space="preserve">
+    <value>NVIDIA Storage Manager handles reset and storage-location changes in your browser.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetRequiresBrowser" xml:space="preserve">
+    <value>NVIDIA requires its web account session for this reset. Complete reset or location changes in NVIDIA Storage Manager.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetRequiresBrowserHint" xml:space="preserve">
+    <value>Current location: {{region}}. Reset and location changes open in NVIDIA Storage Manager.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetStorage" xml:space="preserve">
+    <value>Reset Storage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetSuccess" xml:space="preserve">
+    <value>Persistent Storage reset complete.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetTitle" xml:space="preserve">
+    <value>Storage Reset</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetWillKeepLocation" xml:space="preserve">
+    <value>Reset keeps the current storage location: {{region}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetWillMoveLocation" xml:space="preserve">
+    <value>Reset will also change storage location to {{region}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetting" xml:space="preserve">
+    <value>Resetting...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.title" xml:space="preserve">
+    <value>Persistent Storage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.unavailable" xml:space="preserve">
+    <value>Unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usage" xml:space="preserve">
+    <value>{{used}} used of {{total}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usageUnavailable" xml:space="preserve">
+    <value>Persistent storage is active, but usage is unavailable.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usedLegend" xml:space="preserve">
+    <value>Used ({{value}})</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usedLegendUnavailable" xml:space="preserve">
+    <value>Used unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usedOutOf" xml:space="preserve">
+    <value>used out of {{total}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.autoBest" xml:space="preserve">
+    <value>Auto (am besten)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.noRegionsAvailable" xml:space="preserve">
+    <value>Keine Regionen verfügbar</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.noRegionsMatch" xml:space="preserve">
+    <value>Keine Regionen stimmen mit „{{query}}“ überein.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.refreshPing" xml:space="preserve">
+    <value>Ping aktualisieren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.retry" xml:space="preserve">
+    <value>Wiederholen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.searchPlaceholder" xml:space="preserve">
+    <value>Regionen durchsuchen...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.title" xml:space="preserve">
+    <value>Region</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.saved" xml:space="preserve">
+    <value>Gespeichert</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.searchPlaceholder" xml:space="preserve">
+    <value>Sucheinstellungen...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.about" xml:space="preserve">
+    <value>Über</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.account" xml:space="preserve">
+    <value>Account</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.audio" xml:space="preserve">
+    <value>Audio</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.game" xml:space="preserve">
+    <value>Spiel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.input" xml:space="preserve">
+    <value>Eingabe</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.interface" xml:space="preserve">
+    <value>Schnittstelle</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.nativeStreamer" xml:space="preserve">
+    <value>Nativer Streamer</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.stream" xml:space="preserve">
+    <value>Streamen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.thanks" xml:space="preserve">
+    <value>Danke</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.communityDataUnavailable" xml:space="preserve">
+    <value>Community-Daten nicht verfügbar</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.contributor" xml:space="preserve">
+    <value>Mitwirkender</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.contributorsSubtitle" xml:space="preserve">
+    <value>Leute, die OpenNOW in Code, Korrekturen und Funktionen verbessern.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.contributorsTitle" xml:space="preserve">
+    <value>Mitwirkende</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.githubSponsors" xml:space="preserve">
+    <value>GitHub Sponsors</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.loadingContributors" xml:space="preserve">
+    <value>Mitwirkende von GitHub werden geladen...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.loadingSupporters" xml:space="preserve">
+    <value>Unterstützer von GitHub-Sponsoren werden geladen...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.noContributors" xml:space="preserve">
+    <value>Derzeit konnten keine Mitwirkenden angezeigt werden.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.noSupporters" xml:space="preserve">
+    <value>Derzeit konnten keine Unterstützer angezeigt werden.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.privateSponsor" xml:space="preserve">
+    <value>Private sponsor</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.projectSponsor" xml:space="preserve">
+    <value>Project sponsor</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.subtitle" xml:space="preserve">
+    <value>OpenNOW wird von Mitwirkenden geprägt, die den Kunden aufbauen, und Unterstützern, die das Projekt hinter den Kulissen unterstützen.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.supporter" xml:space="preserve">
+    <value>Unterstützer</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.supportersSubtitle" xml:space="preserve">
+    <value>Öffentliche GitHub-Sponsoren, die die Arbeit unterstützen, sowie private Unterstützer, sofern verfügbar.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.supportersTitle" xml:space="preserve">
+    <value>Unterstützer</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.title" xml:space="preserve">
+    <value>Vielen Dank, dass Sie OpenNOW beim Wachstum geholfen haben</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.title" xml:space="preserve">
+    <value>Einstellungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.appliesAfterRestart" xml:space="preserve">
+    <value>Gilt nach dem Neustart der App.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.aspectRatio" xml:space="preserve">
+    <value>Seitenverhältnis</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.codec" xml:space="preserve">
+    <value>Codec</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.colorDepth" xml:space="preserve">
+    <value>Farbtiefe</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.cpu" xml:space="preserve">
+    <value>CPU</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.customBitrate" xml:space="preserve">
+    <value>Custom</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.decoder" xml:space="preserve">
+    <value>Decoder</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.encoder" xml:space="preserve">
+    <value>Encoder</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.experimentalL4SRequest" xml:space="preserve">
+    <value>Experimentelle L4S-Anfrage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.experimentalL4SRequestHint" xml:space="preserve">
+    <value>Fordern Sie die GeForce NOW L4S-Streaming-Funktion für neu erstellte Sitzungen an. Dadurch ändert sich das WebRTC-Verhalten des Browsers nicht und kann vom Dienst oder Netzwerkpfad ignoriert werden.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.fps" xml:space="preserve">
+    <value>FPS</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.gpu" xml:space="preserve">
+    <value>GPU</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.launchInConsoleMode" xml:space="preserve">
+    <value>Console Mode (TV / Big Picture)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.launchInConsoleModeHint" xml:space="preserve">
+    <value>Start OpenNOW fullscreen with Controller Mode enabled, like GeForce NOW's TV mode. Sessions ask NVIDIA to launch games gamepad-friendly (big picture) while Console Mode or Controller Mode is active.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.maxBitrate" xml:space="preserve">
+    <value>Maximale Bitrate</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.recordingBitrate" xml:space="preserve">
+    <value>Recording Bitrate</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.recordingBitrateHint" xml:space="preserve">
+    <value>Controls local recording video bitrate. Auto lets the browser choose.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.requiresH265OrAv1" xml:space="preserve">
+    <value>Dieser Modus erfordert H265 oder AV1. Der Codec wird automatisch umgeschaltet.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.resolution" xml:space="preserve">
+    <value>Auflösung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.sessionProxy" xml:space="preserve">
+    <value>Sitzungs-Proxy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.sessionProxyHint" xml:space="preserve">
+    <value>Wird nur für die Nvidia-Sitzungserstellung und Warteschlangenabfrage verwendet. Streaming-/Signalisierungsverkehr wird nicht weitergeleitet. Zortos stellt einen Proxy für GitHub-Sponsoren/Unterstützer bereit.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.softwareCpu" xml:space="preserve">
+    <value>Software (CPU)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.testing" xml:space="preserve">
+    <value>Testen...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.title" xml:space="preserve">
+    <value>Video</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptBody" xml:space="preserve">
+    <value>This session proxy is voluntarily provided by Zortos to help OpenNOW users reach GeForce NOW. It is optional, shared, and may be rate-limited or unavailable at times.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptContinue" xml:space="preserve">
+    <value>Continue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptCostHint" xml:space="preserve">
+    <value>Running this proxy has ongoing server costs. If it helps you, consider supporting Zortos on GitHub Sponsors.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptDonate" xml:space="preserve">
+    <value>Donate on GitHub Sponsors</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptEsc" xml:space="preserve">
+    <value>cancel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptKicker" xml:space="preserve">
+    <value>Community service</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptTitle" xml:space="preserve">
+    <value>Use Zortos community proxy?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enabledBadge" xml:space="preserve">
+    <value>Using Zortos community proxy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.provisionFailed" xml:space="preserve">
+    <value>Could not activate the Zortos community proxy right now. Try again later or set up a proxy manually.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.provisioning" xml:space="preserve">
+    <value>Activating...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.useButton" xml:space="preserve">
+    <value>Use Zortos community proxy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.brightness" xml:space="preserve">
+    <value>Brightness</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.contrast" xml:space="preserve">
+    <value>Contrast</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.filmGrain" xml:space="preserve">
+    <value>Film Grain</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.hint" xml:space="preserve">
+    <value>GPU post-processing shaders applied to the decoded stream: sharpening, color grading, and film grain. Can also be adjusted live from the in-stream sidebar.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.nativeUnavailable" xml:space="preserve">
+    <value>Video filters do not apply while native streaming renders the video outside the app window.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.reset" xml:space="preserve">
+    <value>Reset to defaults</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.saturation" xml:space="preserve">
+    <value>Saturation</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.sharpen" xml:space="preserve">
+    <value>Sharpen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.title" xml:space="preserve">
+    <value>Video Filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.vibrance" xml:space="preserve">
+    <value>Vibrance</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.closeSettings" xml:space="preserve">
+    <value>Schließen Sie die Einstellungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.sessionTimeRemaining" xml:space="preserve">
+    <value>Session Time Left</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.sessionTimeRemainingTitle" xml:space="preserve">
+    <value>Session time remaining</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.showSessionTimeRemainingInStatsOverlay" xml:space="preserve">
+    <value>Show session time remaining in stats overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.statsOverlay" xml:space="preserve">
+    <value>Stats overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.title" xml:space="preserve">
+    <value>Seitenleiste</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.hint.allShortcuts" xml:space="preserve">
+    <value>Alle Kurzbefehle</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.hint.commands" xml:space="preserve">
+    <value>Befehle</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.hint.move" xml:space="preserve">
+    <value>Bewegen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.regionAuto" xml:space="preserve">
+    <value>Region automatisch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.themeDeck" xml:space="preserve">
+    <value>Deck-Design</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.connectedBadge.title" xml:space="preserve">
+    <value>Connected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.antiAfkEnabled" xml:space="preserve">
+    <value>Anti-AFK ist aktiviert</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.controllerConnected" xml:space="preserve">
+    <value>{{count}}-Controller angeschlossen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.controllerConnected_plural" xml:space="preserve">
+    <value>{{count}}-Controller verbunden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.enterFullscreen" xml:space="preserve">
+    <value>Geben Sie den Vollbildmodus ein</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.exitFullscreen" xml:space="preserve">
+    <value>Beenden Sie den Vollbildmodus</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.muteMicrophone" xml:space="preserve">
+    <value>Mikrofon stumm schalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.unmuteMicrophone" xml:space="preserve">
+    <value>Stummschaltung des Mikrofons aufheben</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.delete" xml:space="preserve">
+    <value>Aufnahme löschen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.scrollLeft" xml:space="preserve">
+    <value>Aufzeichnungen nach links scrollen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.scrollRight" xml:space="preserve">
+    <value>Scrollen Sie mit den Aufnahmen nach rechts</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.title" xml:space="preserve">
+    <value>Aufnahmen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.alt" xml:space="preserve">
+    <value>Screenshot {{fileName}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.closePreview" xml:space="preserve">
+    <value>Screenshot-Vorschau schließen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.preview" xml:space="preserve">
+    <value>Screenshot-Vorschau</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.scrollLeft" xml:space="preserve">
+    <value>Scrollen Sie durch die Galerie nach links</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.scrollRight" xml:space="preserve">
+    <value>Scrollen Sie durch die Galerie nach rechts</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.title" xml:space="preserve">
+    <value>Screenshot</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sessionStarted.kicker" xml:space="preserve">
+    <value>Ready</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sessionStarted.title" xml:space="preserve">
+    <value>Session started</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.clickHereThenPress" xml:space="preserve">
+    <value>Klicken Sie hier und drücken Sie dann eine Taste</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.clickThenPress" xml:space="preserve">
+    <value>Klicken Sie und drücken Sie dann eine Taste</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.conflict" xml:space="preserve">
+    <value>Die Verknüpfung steht in Konflikt mit einer vorhandenen Bindung.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.empty" xml:space="preserve">
+    <value>Die Verknüpfung darf nicht leer sein.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.examples" xml:space="preserve">
+    <value>Beispiele: F3, Strg+Umschalt+Q, Strg+Umschalt+K</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.focusAndPress" xml:space="preserve">
+    <value>Konzentrieren Sie sich und drücken Sie die Tastenkombination zum Binden</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.invalidFormat" xml:space="preserve">
+    <value>Ungültiges Verknüpfungsformat.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.stats" xml:space="preserve">
+    <value>Statistiken</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.microphoneHandling" xml:space="preserve">
+    <value>Handhabung des Mikrofons</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.microphoneInputLevel" xml:space="preserve">
+    <value>Mikrofoneingangspegel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.microphoneMode" xml:space="preserve">
+    <value>Mikrofonmodus</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.recordingShortcut" xml:space="preserve">
+    <value>Aufnahmeverknüpfung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.remainingPlaytime" xml:space="preserve">
+    <value>Verbleibende Spielzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.screenshotShortcut" xml:space="preserve">
+    <value>Screenshot-Verknüpfung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.sections" xml:space="preserve">
+    <value>Abschnitte der Seitenleiste</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.stopStream" xml:space="preserve">
+    <value>Stream stoppen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.title" xml:space="preserve">
+    <value>Einstellungen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.toggleMicrophone" xml:space="preserve">
+    <value>Mikrofon umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.toggleStats" xml:space="preserve">
+    <value>Statistiken umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.toggleStreamSidebar" xml:space="preserve">
+    <value>Stream-Seitenleiste umschalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.bitratePerformance" xml:space="preserve">
+    <value>Actual receive bitrate compared with the negotiated target</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.bitrateShort" xml:space="preserve">
+    <value>Bit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.collapse" xml:space="preserve">
+    <value>Hide detailed stats</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.connecting" xml:space="preserve">
+    <value>Verbinden...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.decode" xml:space="preserve">
+    <value>Dekodieren</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.decodeTime" xml:space="preserve">
+    <value>D = Dekodierungszeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.expand" xml:space="preserve">
+    <value>Show detailed stats</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.hideAdvanced" xml:space="preserve">
+    <value>Hide advanced diagnostics</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.input" xml:space="preserve">
+    <value>Eingabe</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.inputChannelState" xml:space="preserve">
+    <value>Teilweise zuverlässiger Eingangskanalstatus und Bytes in der Warteschlange</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.inputQueuePressure" xml:space="preserve">
+    <value>Druck in der Eingabewarteschlange (gepufferte Bytes und verzögertes Leeren)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.jitterBuffer" xml:space="preserve">
+    <value>JB = Jitter-Pufferverzögerung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.live" xml:space="preserve">
+    <value>Live</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.mouseFlushCadence" xml:space="preserve">
+    <value>Mausfrequenz und Paketrate</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.network" xml:space="preserve">
+    <value>Netzwerk</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.overlayLabel" xml:space="preserve">
+    <value>Stream statistics</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.packetLoss" xml:space="preserve">
+    <value>Prozentsatz des Paketverlusts</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.packetLossValue" xml:space="preserve">
+    <value>{{value}} % Verlust</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.render" xml:space="preserve">
+    <value>Rendern</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.renderTime" xml:space="preserve">
+    <value>R = Renderzeit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.roundTripLatency" xml:space="preserve">
+    <value>Round-Trip-Netzwerklatenz</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.rtt" xml:space="preserve">
+    <value>RTT</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.showAdvanced" xml:space="preserve">
+    <value>Advanced diagnostics</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.stable" xml:space="preserve">
+    <value>Stabil</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.sync" xml:space="preserve">
+    <value>Sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.timeRemainingShort" xml:space="preserve">
+    <value>Left</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.waitingForVideo" xml:space="preserve">
+    <value>Waiting for game video…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.actions.cancelLoading" xml:space="preserve">
+    <value>Laden abbrechen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.actions.tryAgain" xml:space="preserve">
+    <value>Try again</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.adTag" xml:space="preserve">
+    <value>Ad</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.advertisement" xml:space="preserve">
+    <value>Werbung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.advertisementInProgress" xml:space="preserve">
+    <value>Anzeige in Bearbeitung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.availableForProgression" xml:space="preserve">
+    <value>{{count}}-Anzeige für Warteschlangenfortschritt verfügbar.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.availableForProgression_plural" xml:space="preserve">
+    <value>{{count}}-Anzeigen für den Warteschlangenfortschritt verfügbar.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.freeTierQueueAdsBegin" xml:space="preserve">
+    <value>Warteschlangenanzeigen im kostenlosen Kontingent beginnen, sobald Sie in die Warteschlange eintreten.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.live" xml:space="preserve">
+    <value>Live</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.mediaWillAppear" xml:space="preserve">
+    <value>Das Werbemittel erscheint hier, sobald es verfügbar ist.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.playbackRequired" xml:space="preserve">
+    <value>Während Ihre Sitzung in der Warteschlange ist, ist eine Anzeigenwiedergabe erforderlich.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.resumeToStayInQueue" xml:space="preserve">
+    <value>Setzen Sie die Anzeigen fort, um in der Warteschlange zu bleiben.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.sponsored" xml:space="preserve">
+    <value>Sponsored</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.titledAdvertisement" xml:space="preserve">
+    <value>{{title}}-Werbung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.connecting" xml:space="preserve">
+    <value>The game is ready. Waiting for the first clear frame.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.next" xml:space="preserve">
+    <value>Up next</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.queue" xml:space="preserve">
+    <value>Settle in. We'll keep your place and bring the game in when it's ready.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.setup" xml:space="preserve">
+    <value>Your cloud rig is reserved and getting comfortable for you.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.starting" xml:space="preserve">
+    <value>The game is starting on your cloud rig.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.findingCapacity" xml:space="preserve">
+    <value>Finding the best available cloud rig for this session.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.mediaHandshake" xml:space="preserve">
+    <value>Negotiating the low-latency video and input channels.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.queueMoving" xml:space="preserve">
+    <value>The live queue is moving. Your place is secured at #{{position}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.rigReserved" xml:space="preserve">
+    <value>A gaming rig is reserved. Applying your session configuration now.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.servicesStarting" xml:space="preserve">
+    <value>Starting game services and preparing the remote display.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.editorial.keepWindowOpen" xml:space="preserve">
+    <value>Keep this window open — closing it drops your place in line.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.editorial.noInstalls" xml:space="preserve">
+    <value>No installs and no patches — the rig handles all of that while you wait.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.editorial.savesCarryOver" xml:space="preserve">
+    <value>Your saves and settings carry over automatically.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.error.codeLabel" xml:space="preserve">
+    <value>Error code</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.aheadOfYou" xml:space="preserve">
+    <value>{{count}} player ahead of you</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.aheadOfYou_plural" xml:space="preserve">
+    <value>{{count}} players ahead of you</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.currentStage" xml:space="preserve">
+    <value>Current stage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.estWait" xml:space="preserve">
+    <value>Est. wait</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.estimatedWait" xml:space="preserve">
+    <value>Estimated wait</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.inQueue" xml:space="preserve">
+    <value>In queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.placeInQueue" xml:space="preserve">
+    <value>Your place in queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.playersAhead" xml:space="preserve">
+    <value>Players ahead</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.position" xml:space="preserve">
+    <value>Position</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.stage" xml:space="preserve">
+    <value>Stage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.valueUnknown" xml:space="preserve">
+    <value>—</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.yourPosition" xml:space="preserve">
+    <value>Your position</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.youreNext" xml:space="preserve">
+    <value>You're next</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.adQueue" xml:space="preserve">
+    <value>Anzeigenwarteschlange</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.launchError" xml:space="preserve">
+    <value>Startfehler</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.launchProgress" xml:space="preserve">
+    <value>Game launch progress</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.nowLoading" xml:space="preserve">
+    <value>Wird jetzt geladen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.highDemand" xml:space="preserve">
+    <value>Demand is high — holding your place in line</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.joinedQueue" xml:space="preserve">
+    <value>Joined the {platform} queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.launchFailed" xml:space="preserve">
+    <value>Launch failed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.launchRequested" xml:space="preserve">
+    <value>Launch requested</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.queueAdvanced" xml:space="preserve">
+    <value>Queue advanced — #{position}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.queuePosition" xml:space="preserve">
+    <value>Queue position #{position}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.rigAllocated" xml:space="preserve">
+    <value>Rig allocated — preparing session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.routeOpening" xml:space="preserve">
+    <value>Opening stream route</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.session" xml:space="preserve">
+    <value>Session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.stillTrying" xml:space="preserve">
+    <value>Still working on it — thanks for your patience</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.streamStarting" xml:space="preserve">
+    <value>Stream starting — running final checks</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.title" xml:space="preserve">
+    <value>Session log</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.waitingForRig" xml:space="preserve">
+    <value>Waiting for an available rig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.gained" xml:space="preserve">
+    <value>{{count}} place gained</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.gained_plural" xml:space="preserve">
+    <value>{{count}} places gained</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.label" xml:space="preserve">
+    <value>Movement</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.updates" xml:space="preserve">
+    <value>over {{count}} update</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.updates_plural" xml:space="preserve">
+    <value>over {{count}} updates</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.progress.ariaText" xml:space="preserve">
+    <value>Step {{current}} of {{total}}: {{label}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.connectingToServer" xml:space="preserve">
+    <value>Verbindung zum Server wird hergestellt...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.gameLaunchFailed" xml:space="preserve">
+    <value>Der Spielstart ist fehlgeschlagen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.loading" xml:space="preserve">
+    <value>Laden...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.positionInQueue" xml:space="preserve">
+    <value>Platzieren Sie #{{position}} in der Warteschlange</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.queuePaused" xml:space="preserve">
+    <value>Sitzungswarteschlange angehalten</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.settingUpRig" xml:space="preserve">
+    <value>Einrichten Ihres Gaming-Rigs...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.settingUpStream" xml:space="preserve">
+    <value>Stream wird eingerichtet...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.startingStream" xml:space="preserve">
+    <value>Stream wird gestartet...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.waitingInQueue" xml:space="preserve">
+    <value>Warten in der Warteschlange...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.connect" xml:space="preserve">
+    <value>Connect</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.queue" xml:space="preserve">
+    <value>Warteschlange</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.ready" xml:space="preserve">
+    <value>Bereit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.setup" xml:space="preserve">
+    <value>Einrichtung</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.calculating" xml:space="preserve">
+    <value>Calculating…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.cleared" xml:space="preserve">
+    <value>Cleared</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.elapsed" xml:space="preserve">
+    <value>Elapsed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.protected" xml:space="preserve">
+    <value>Secured</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.queuePosition" xml:space="preserve">
+    <value>Queue position</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.session" xml:space="preserve">
+    <value>Session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.startedAt" xml:space="preserve">
+    <value>Started {{time}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.almostReady" xml:space="preserve">
+    <value>Almost ready</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.connecting" xml:space="preserve">
+    <value>Connecting</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.error" xml:space="preserve">
+    <value>Couldn't start your session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.settingUp" xml:space="preserve">
+    <value>Setting up your session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+</root>

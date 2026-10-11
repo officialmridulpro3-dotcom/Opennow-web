@@ -1,0 +1,36 @@
+<!-- Accent themes.
+     The web client lets the user switch the accent between cyan, lime, violet,
+     amber and rose. In XAML we declare each accent as a resource dictionary's
+     worth of overrides and swap them at runtime by replacing the merged
+     dictionary entry (see MainWindow::ApplyAccentTheme).
+
+     Only the accent-derived brushes are redefined here; everything else keeps
+     coming from GeneratedTokens.xaml. -->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Cyan: the default, matching --color-azure #42d8ff -->
+    <SolidColorBrush x:Key="OpenNowAccentBrush" Color="#42D8FF" />
+    <SolidColorBrush x:Key="OpenNowAccentHoverBrush" Color="#5EDDFF" />
+    <SolidColorBrush x:Key="OpenNowAccentPressBrush" Color="#39B7D9" />
+    <SolidColorBrush x:Key="OpenNowAccentSurfaceBrush" Color="#42D8FF" Opacity="0.08" />
+    <SolidColorBrush x:Key="OpenNowAccentSurfaceStrongBrush" Color="#42D8FF" Opacity="0.16" />
+    <Color x:Key="OpenNowAccentColor">#42D8FF</Color>
+
+    <!-- Lime -->
+    <SolidColorBrush x:Key="OpenNowAccentLimeBrush" Color="#B5F66C" />
+    <SolidColorBrush x:Key="OpenNowAccentLimeSurfaceBrush" Color="#B5F66C" Opacity="0.14" />
+
+    <!-- Violet -->
+    <SolidColorBrush x:Key="OpenNowAccentVioletBrush" Color="#6574FF" />
+    <SolidColorBrush x:Key="OpenNowAccentVioletSurfaceBrush" Color="#6574FF" Opacity="0.14" />
+
+    <!-- Amber -->
+    <SolidColorBrush x:Key="OpenNowAccentAmberBrush" Color="#FFC45E" />
+    <SolidColorBrush x:Key="OpenNowAccentAmberSurfaceBrush" Color="#FFC45E" Opacity="0.14" />
+
+    <!-- Rose -->
+    <SolidColorBrush x:Key="OpenNowAccentRoseBrush" Color="#FF627F" />
+    <SolidColorBrush x:Key="OpenNowAccentRoseSurfaceBrush" Color="#FF627F" Opacity="0.14" />
+</ResourceDictionary>

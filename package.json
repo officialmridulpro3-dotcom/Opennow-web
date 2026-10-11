@@ -24,7 +24,9 @@
     "desktop:prepare": "node scripts/prepare-desktop.mjs",
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build",
-    "desktop:icons": "tauri icon public/opennow-logo.png"
+    "desktop:icons": "tauri icon public/opennow-logo.png",
+    "native:sync": "node native/tools/sync-design-tokens.mjs && node native/tools/extract-graphql-queries.mjs && node native/tools/sync-locales.mjs",
+    "native:core:test": "cmake -S native/src/Core -B build/core -DOPENNOW_BUILD_TESTS=ON && cmake --build build/core -j && ctest --test-dir build/core --output-on-failure"
   },
   "dependencies": {
     "@react-three/fiber": "^9.6.1",

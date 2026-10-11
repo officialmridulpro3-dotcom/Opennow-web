@@ -1,0 +1,8 @@
+namespace OpenNOW.Views
+{
+    [default_interface]
+    runtimeclass GameDetailsPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        GameDetailsPage();
+    }
+}

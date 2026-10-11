@@ -1,0 +1,21 @@
+{
+  "name": "opennow-native",
+  "version": "0.1.0",
+  "description": "Native Windows client for OpenNOW (C++ / WinUI 3 / DirectX 10)",
+  "homepage": "https://github.com/OpenCloudGaming/Opennow-web",
+  "license": "MIT",
+  "dependencies": [],
+  "builtin-baseline": "2024.11.16",
+  "overrides": [],
+  "features": {
+    "webrtc": {
+      "description": "Production media transport. Without it the client builds with the diagnostic test-pattern transport.",
+      "dependencies": []
+    }
+  },
+  "notes": [
+    "The Core library has no external dependencies: JSON, hashing and Base64 are implemented in-tree so CI can build and test on Linux.",
+    "HTTP uses WinHTTP (part of Windows) rather than curl or OpenSSL.",
+    "libwebrtc is not published on vcpkg; see BUILD.md for how to link a prebuilt libwebrtc for the production transport."
+  ]
+}

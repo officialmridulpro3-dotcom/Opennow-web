@@ -13,3 +13,9 @@ src-tauri/target/
 src-tauri/binaries/
 src-tauri/resources/server.mjs
 src-tauri/gen/
+
+# Native Windows client (C++/WinUI 3) build output
+native/build/
+native/obj/
+native/.vs/
+native/src/Core/build/

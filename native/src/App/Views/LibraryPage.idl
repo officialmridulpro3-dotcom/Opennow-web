@@ -1,0 +1,11 @@
+namespace OpenNOW.Views
+{
+    [default_interface]
+    runtimeclass LibraryPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        LibraryPage();
+
+        // Runs a catalog search (called by the shell's search box).
+        void RunSearch(String query);
+    }
+}

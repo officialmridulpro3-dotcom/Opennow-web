@@ -1,0 +1,37 @@
+namespace OpenNOW.Controls
+{
+    // A SwapChainPanel that owns the DirectX 10 video surface and forwards
+    // decoded frames to it. XAML keeps its own composition tree; the stream is
+    // drawn into the panel's swap chain, which is exactly how the web client's
+    // <video> element sat inside the DOM.
+    [default_interface]
+    runtimeclass StreamSurfacePanel : Microsoft.UI.Xaml.Controls.SwapChainPanel
+    {
+        StreamSurfacePanel();
+
+        // True once the D3D10 device and the composition swap chain exist.
+        Boolean Ready { get; };
+
+        // Last upload/render error, empty when healthy.
+        String LastError { get; };
+
+        // 0..1 — the in-shader sharpening strength.
+        Double Sharpening;
+
+        // Keep the stream's aspect ratio inside the panel.
+        Boolean Letterbox;
+
+        // Starts the renderer for a stream of the given size.
+        Boolean Begin(UInt32 width, UInt32 height);
+
+        // Uploads one NV12 frame. The array must be at least width * height * 3/2.
+        Boolean SubmitNv12(UInt8[] luma, UInt32 lumaStride,
+                           UInt8[] chroma, UInt32 chromaStride,
+                           UInt32 width, UInt32 height, Boolean fullRange);
+
+        // Re-presents the last frame (used after a resize).
+        Boolean Redraw();
+
+        void Shutdown();
+    }
+}

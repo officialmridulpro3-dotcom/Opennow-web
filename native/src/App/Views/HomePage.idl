@@ -1,0 +1,36 @@
+namespace OpenNOW.Views
+{
+    // Bindable projection of opennow::core::Game. WinUI data binding needs
+    // WinRT properties, so the Core model is mirrored here; the conversion is
+    // a straight field copy, no logic.
+    [default_interface]
+    unsealed runtimeclass GameViewModel
+    {
+        GameViewModel();
+        String Id { get; };
+        String Title { get; };
+        String PlatformLabel { get; };
+        String PosterUrl { get; };
+        String HeroUrl { get; };
+        String Genres { get; };
+        Boolean Owned { get; };
+    }
+
+    [default_interface]
+    unsealed runtimeclass ShelfViewModel
+    {
+        ShelfViewModel();
+        String Title;
+        String CountLabel;
+        Windows.Foundation.Collections.IObservableVector<GameViewModel> Games;
+    }
+
+    [default_interface]
+    runtimeclass HomePage : Microsoft.UI.Xaml.Controls.Page
+    {
+        HomePage();
+
+        // Re-reads the cached catalog after a sign-in or a settings change.
+        void RefreshFromServices();
+    }
+}

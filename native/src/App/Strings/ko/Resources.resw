@@ -1,0 +1,3876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GENERATED FILE — produced by native/tools/sync-locales.mjs from locales/*.json -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="app.actions.add" xml:space="preserve">
+    <value>추가</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.back" xml:space="preserve">
+    <value>뒤로</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.browse" xml:space="preserve">
+    <value>둘러보기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.buy" xml:space="preserve">
+    <value>Buy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.cancel" xml:space="preserve">
+    <value>취소</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.close" xml:space="preserve">
+    <value>닫기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.confirm" xml:space="preserve">
+    <value>확인하다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.continue" xml:space="preserve">
+    <value>계속</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.delete" xml:space="preserve">
+    <value>삭제</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.done" xml:space="preserve">
+    <value>완료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.markAsOwned" xml:space="preserve">
+    <value>Mark as Owned</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.open" xml:space="preserve">
+    <value>열기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.play" xml:space="preserve">
+    <value>플레이</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.refresh" xml:space="preserve">
+    <value>새로고침</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.remove" xml:space="preserve">
+    <value>제거</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.reset" xml:space="preserve">
+    <value>재설정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.resume" xml:space="preserve">
+    <value>이력서</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.retry" xml:space="preserve">
+    <value>재시도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.save" xml:space="preserve">
+    <value>저장</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.search" xml:space="preserve">
+    <value>검색</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.select" xml:space="preserve">
+    <value>선택</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.settings" xml:space="preserve">
+    <value>설정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.showInFolder" xml:space="preserve">
+    <value>폴더에 표시</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.sort" xml:space="preserve">
+    <value>정렬</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.stop" xml:space="preserve">
+    <value>중지</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.switch" xml:space="preserve">
+    <value>스위치</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.description" xml:space="preserve">
+    <value>클라우드 게임, 오픈 소스.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.auto" xml:space="preserve">
+    <value>자동</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.best" xml:space="preserve">
+    <value>최고</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.beta" xml:space="preserve">
+    <value>베타</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.current" xml:space="preserve">
+    <value>현재</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.default" xml:space="preserve">
+    <value>기본값</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.defaultDevice" xml:space="preserve">
+    <value>기본 장치</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.experimental" xml:space="preserve">
+    <value>실험적</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.free" xml:space="preserve">
+    <value>무료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.game" xml:space="preserve">
+    <value>게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.hardware" xml:space="preserve">
+    <value>하드웨어</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.no" xml:space="preserve">
+    <value>아니요</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.other" xml:space="preserve">
+    <value>기타</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.priority" xml:space="preserve">
+    <value>우선순위</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.softwareCpu" xml:space="preserve">
+    <value>소프트웨어(CPU)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.ultimate" xml:space="preserve">
+    <value>궁극의</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.unlimited" xml:space="preserve">
+    <value>무제한</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.name" xml:space="preserve">
+    <value>OpenNOW</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.checking" xml:space="preserve">
+    <value>확인 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.connecting" xml:space="preserve">
+    <value>연결 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.disabled" xml:space="preserve">
+    <value>장애인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.error" xml:space="preserve">
+    <value>오류</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.failed" xml:space="preserve">
+    <value>실패</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.idle" xml:space="preserve">
+    <value>유휴</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.loading" xml:space="preserve">
+    <value>로드 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.markingOwned" xml:space="preserve">
+    <value>Marking as owned...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.ready" xml:space="preserve">
+    <value>준비</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.saved" xml:space="preserve">
+    <value>저장됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.testing" xml:space="preserve">
+    <value>테스트 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.unknown" xml:space="preserve">
+    <value>알 수 없음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.upToDate" xml:space="preserve">
+    <value>최신</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.tagline" xml:space="preserve">
+    <value>오픈 소스 클라우드 게임 클라이언트</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.bitrateMbps" xml:space="preserve">
+    <value>{{value}}Mbps</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.durationLeft" xml:space="preserve">
+    <value>{{value}} 남음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gb" xml:space="preserve">
+    <value>{{value}}GB</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gbLeft" xml:space="preserve">
+    <value>{{value}}GB 남음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gbTotal" xml:space="preserve">
+    <value>총 {{value}}GB</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gbUsed" xml:space="preserve">
+    <value>{{value}}GB 사용됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.hours" xml:space="preserve">
+    <value>{{value}}h</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.hoursLeft" xml:space="preserve">
+    <value>{{value}}시간 남음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.hoursUsed" xml:space="preserve">
+    <value>{{value}}h 사용됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.milliseconds" xml:space="preserve">
+    <value>{{value}}ms</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.minutes" xml:space="preserve">
+    <value>{{value}}분</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.percent" xml:space="preserve">
+    <value>{{value}}%</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.seconds" xml:space="preserve">
+    <value>{{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.activeAccount" xml:space="preserve">
+    <value>활성 계정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.addAccount" xml:space="preserve">
+    <value>계정 추가</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.cancelAccountRemoval" xml:space="preserve">
+    <value>계정 삭제 취소</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.cancelLogOut" xml:space="preserve">
+    <value>로그아웃 취소</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.guest" xml:space="preserve">
+    <value>손님</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.kicker" xml:space="preserve">
+    <value>계정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.logOutAll" xml:space="preserve">
+    <value>모든 계정 로그아웃</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.logOutConfirmation" xml:space="preserve">
+    <value>로그아웃 확인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccount" xml:space="preserve">
+    <value>계정 삭제</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountConfirmation" xml:space="preserve">
+    <value>계정 확인 삭제</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountDescription" xml:space="preserve">
+    <value>저장된 계정에서 {{name}}을 제거하시겠습니까?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountSubtext" xml:space="preserve">
+    <value>로그인하면 이 계정을 다시 추가할 수 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountTitle" xml:space="preserve">
+    <value>계정을 삭제하시겠습니까?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeNamedAccount" xml:space="preserve">
+    <value>{{name}} 제거</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAll" xml:space="preserve">
+    <value>모두 로그아웃</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllAccounts" xml:space="preserve">
+    <value>모든 계정에서 로그아웃</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllDescription" xml:space="preserve">
+    <value>이 기기에서 저장된 모든 계정을 삭제하고 게스트 모드로 돌아가려고 합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllSubtext" xml:space="preserve">
+    <value>클라우드 세션 데이터는 서비스에 유지됩니다. 그러면 로컬 OpenNOW 계정 세션이 지워집니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllTitle" xml:space="preserve">
+    <value>모든 계정에서 로그아웃하시겠습니까?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.staySignedIn" xml:space="preserve">
+    <value>로그인 상태 유지</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.switchAccount" xml:space="preserve">
+    <value>계정 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.thisAccount" xml:space="preserve">
+    <value>이 계정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.cancelDeviceLogin" xml:space="preserve">
+    <value>로그인 취소</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.connecting" xml:space="preserve">
+    <value>연결 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.restoringSession" xml:space="preserve">
+    <value>세션을 복원하는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.signIn" xml:space="preserve">
+    <value>로그인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.signInWithLink" xml:space="preserve">
+    <value>링크로 로그인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.codeHint" xml:space="preserve">
+    <value>NVIDIA 페이지에서 요청하면 이 코드를 입력하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.codeLabel" xml:space="preserve">
+    <value>확인 코드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.copied" xml:space="preserve">
+    <value>복사됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.copyCode" xml:space="preserve">
+    <value>코드 복사</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.description" xml:space="preserve">
+    <value>새 탭에서 NVIDIA 로그인 페이지를 열고 요청을 승인하세요. OpenNOW가 자동으로 계속됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.expired" xml:space="preserve">
+    <value>로그인 링크가 만료되었습니다. 다시 시작하여 새 링크를 받으세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.expiresIn" xml:space="preserve">
+    <value>링크 만료까지 {{time}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.hideQr" xml:space="preserve">
+    <value>QR 코드 숨기기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.manualUrl" xml:space="preserve">
+    <value>또는 이 주소를 직접 열기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.open" xml:space="preserve">
+    <value>NVIDIA 로그인 열기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.openAgain" xml:space="preserve">
+    <value>로그인 페이지 다시 열기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.preparing" xml:space="preserve">
+    <value>로그인 준비 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.preparingDescription" xml:space="preserve">
+    <value>NVIDIA 로그인 링크를 요청하는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.showQr" xml:space="preserve">
+    <value>QR 코드 표시</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.title" xml:space="preserve">
+    <value>로그인 링크 열기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.waiting" xml:space="preserve">
+    <value>로그인 요청 승인을 기다리는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.provider.label" xml:space="preserve">
+    <value>공급자</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.provider.loading" xml:space="preserve">
+    <value>로드 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.provider.select" xml:space="preserve">
+    <value>제공업체 선택</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.qr.alt" xml:space="preserve">
+    <value>로그인 QR 코드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.qr.description" xml:space="preserve">
+    <value>휴대폰으로 스캔한 뒤 로그인 요청을 승인하세요. OpenNOW가 자동으로 계속됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.qr.title" xml:space="preserve">
+    <value>스캔하여 로그인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.missingRefreshTokenContinuing" xml:space="preserve">
+    <value>저장된 세션에는 새로 고침 토큰이 없습니다. 계속...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.noSavedSessionFound" xml:space="preserve">
+    <value>저장된 세션이 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.restoringSavedSession" xml:space="preserve">
+    <value>저장된 세션을 복원하는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.sessionRestoreFailed" xml:space="preserve">
+    <value>세션 복원에 실패했습니다. 다시 로그인해 주세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.sessionRestored" xml:space="preserve">
+    <value>세션이 복원되었습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.sessionRestoredTokenRefreshed" xml:space="preserve">
+    <value>세션이 복원되었습니다. 토큰이 새로 고쳐졌습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.tokenRefreshFailedContinuing" xml:space="preserve">
+    <value>토큰 새로고침에 실패했습니다. 저장된 세션을 계속하는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.tokenRefreshFailedUsingSaved" xml:space="preserve">
+    <value>토큰 새로고침에 실패했습니다. 저장된 세션 토큰을 사용합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.tokenRefreshedLoadingAccount" xml:space="preserve">
+    <value>토큰이 새로 고쳐졌습니다. 계정을 로드하는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.subtitle.checkingSavedAccounts" xml:space="preserve">
+    <value>저장된 계정을 확인하는 중입니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.title.restoringSession" xml:space="preserve">
+    <value>세션 복원 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.title.signIn" xml:space="preserve">
+    <value>로그인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="common.back" xml:space="preserve">
+    <value>Back</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="common.clear" xml:space="preserve">
+    <value>검색 지우기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="common.loading" xml:space="preserve">
+    <value>Loading...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.directLaunchNotFoundDescription" xml:space="preserve">
+    <value>OpenNOW could not find a game matching "{{value}}". Use --launch-app-id for exact LaunchBox entries.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.directLaunchNotFoundTitle" xml:space="preserve">
+    <value>Direct Launch Failed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.duplicateSessionDescription" xml:space="preserve">
+    <value>귀하의 계정에서 이미 다른 세션이 실행 중입니다. 먼저 닫거나 시간 초과될 때까지 기다린 후 다시 시작하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.duplicateSessionTitle" xml:space="preserve">
+    <value>중복 세션이 감지되었습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.insufficientPlayabilityDescription" xml:space="preserve">
+    <value>Your current GeForce NOW membership is not high enough to play this game. Upgrade to a higher tier and try again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.insufficientPlayabilityTierDescription" xml:space="preserve">
+    <value>This game requires {{tier}} on GeForce NOW. Upgrade your membership to play it.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.insufficientPlayabilityTitle" xml:space="preserve">
+    <value>Membership Upgrade Required</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.launchFailedTitle" xml:space="preserve">
+    <value>실행 실패</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.launchUnknown" xml:space="preserve">
+    <value>게임을 시작할 수 없습니다. 다시 시도해 주세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.loginFailed" xml:space="preserve">
+    <value>로그인 실패</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedFailed" xml:space="preserve">
+    <value>Failed to mark game as owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedFailedWithReason" xml:space="preserve">
+    <value>Failed to mark game as owned: {{reason}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedMissingVariant" xml:space="preserve">
+    <value>Select a store variant before marking it owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedSignInRequired" xml:space="preserve">
+    <value>Sign in before marking games as owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.nativeStreamerStoppedDescription" xml:space="preserve">
+    <value>기본 스트리밍 프로세스가 중지되어 자동으로 복원할 수 없습니다. 앱에서 세션을 다시 재개해 보세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.nativeStreamerStoppedTitle" xml:space="preserve">
+    <value>네이티브 스트리머가 중지되었습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.queueAdPlayTimeout" xml:space="preserve">
+    <value>광고 재생 시간 초과</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.queueAdUrlLoad" xml:space="preserve">
+    <value>URL을 로드하는 중 오류가 발생했습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.queueAdVideoStuck" xml:space="preserve">
+    <value>광고 영상이 멈췄어요</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.resumeAttachFailedDescription" xml:space="preserve">
+    <value>미디어 핸드셰이크 전에 연결 재개에 실패했습니다. 다시 한 번 재개해 보세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.sessionConnectionLostDescription" xml:space="preserve">
+    <value>실행 중인 세션에 대한 연결이 끊어져 자동으로 복원할 수 없습니다. 앱에서 다시 시작해 보세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.sessionConnectionLostTitle" xml:space="preserve">
+    <value>세션 연결 끊김</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.sessionResumeFailedDescription" xml:space="preserve">
+    <value>실행 중인 세션에 대한 연결이 끊어졌고 재개에 실패했습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.switchAccountFailed" xml:space="preserve">
+    <value>계정을 전환하지 못했습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.userStorageUnavailableAction" xml:space="preserve">
+    <value>Open Storage Settings</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.userStorageUnavailableDescription" xml:space="preserve">
+    <value>NVIDIA reported that Persistent Storage is unavailable for this account or storage location. Open Settings → Account → Persistent Storage, then use NVIDIA Storage Manager to reset or move the storage location. If it still fails, check NVIDIA server status.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.userStorageUnavailableTitle" xml:space="preserve">
+    <value>Persistent Storage Unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.webrtcBlockedDescription" xml:space="preserve">
+    <value>Your browser could not create any network path for the stream (0 ICE candidates). Disable any VPN, allow your browser through the firewall/antivirus, disable extensions like "WebRTC leak prevention", or try a different browser, then start the stream again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.webrtcBlockedTitle" xml:space="preserve">
+    <value>WebRTC Is Blocked</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.available" xml:space="preserve">
+    <value>가능</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.owned" xml:space="preserve">
+    <value>소유</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.playGame" xml:space="preserve">
+    <value>{{title}} 플레이</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.selectGame" xml:space="preserve">
+    <value>{{title}}를 선택하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.status.maintenance" xml:space="preserve">
+    <value>Under maintenance</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.status.unavailable" xml:space="preserve">
+    <value>Unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.status.updating" xml:space="preserve">
+    <value>Updating</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.store" xml:space="preserve">
+    <value>{{store}} 스토어</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.buy" xml:space="preserve">
+    <value>구매</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.chooseStore" xml:space="preserve">
+    <value>게임 스토어 선택</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.chooseStoreHint" xml:space="preserve">
+    <value>이 게임을 어디에서 소유하고 플레이하고 싶나요?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.developer" xml:space="preserve">
+    <value>개발사</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.gallery" xml:space="preserve">
+    <value>갤러리</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.gameNotFound" xml:space="preserve">
+    <value>게임을 찾을 수 없음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.gameStores" xml:space="preserve">
+    <value>게임 스토어:</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.markAsOwned" xml:space="preserve">
+    <value>보유로 표시</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.notSubscribed" xml:space="preserve">
+    <value>구독 안 함</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.owned" xml:space="preserve">
+    <value>보유 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.pcDigitalVersion" xml:space="preserve">
+    <value>PC 디지털 버전</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.publisher" xml:space="preserve">
+    <value>퍼블리셔</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.rating" xml:space="preserve">
+    <value>등급</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.storeHint" xml:space="preserve">
+    <value>게임을 보유한 스토어를 선택한 뒤 보유로 표시하면 라이브러리에 추가됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.subscribed" xml:space="preserve">
+    <value>구독 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.subscriptions" xml:space="preserve">
+    <value>구독:</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="games.markOwned.success" xml:space="preserve">
+    <value>Marked {{title}} as owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.cloudReady" xml:space="preserve">
+    <value>Cloud ready</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.emptyBody" xml:space="preserve">
+    <value>The cloud storefront returned empty panels. Try again after the catalog service refreshes.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.emptyTitle" xml:space="preserve">
+    <value>No Store collections found</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.eyebrow" xml:space="preserve">
+    <value>CONTROLLER STORE</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.featured" xml:space="preserve">
+    <value>Featured</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.hints" xml:space="preserve">
+    <value>D-pad browse / A launch / Space select</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.notOwned" xml:space="preserve">
+    <value>Not owned</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.owned" xml:space="preserve">
+    <value>소유</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.playNow" xml:space="preserve">
+    <value>Play Now</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.purchaseUnavailable" xml:space="preserve">
+    <value>Purchase unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.readyToStream" xml:space="preserve">
+    <value>Ready to stream</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.storeCount" xml:space="preserve">
+    <value>{{count}} stores</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.title" xml:space="preserve">
+    <value>Store Theater</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.variant" xml:space="preserve">
+    <value>{{variant}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.loading" xml:space="preserve">
+    <value>로드 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shown" xml:space="preserve">
+    <value>{{shown}} 표시됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shownSupported" xml:space="preserve">
+    <value>{{shown}} 표시 · {{supported}} 지원</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shownTotal" xml:space="preserve">
+    <value>{{shown}}개 표시 · 총 {{total}}개</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shownTotalSupported" xml:space="preserve">
+    <value>{{shown}} 표시 · 총 {{total}} · {{supported}} 지원</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.allGames" xml:space="preserve">
+    <value>전체 게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellGenre" xml:space="preserve">
+    <value>장르</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellLastPlayed" xml:space="preserve">
+    <value>마지막 플레이</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellPlaytime" xml:space="preserve">
+    <value>플레이 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellStore" xml:space="preserve">
+    <value>스토어</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.eyebrow" xml:space="preserve">
+    <value>이어서 플레이</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.eyebrowReady" xml:space="preserve">
+    <value>플레이 준비 완료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.favourites" xml:space="preserve">
+    <value>즐겨찾기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.jumpBackIn" xml:space="preserve">
+    <value>다시 시작하기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.launch" xml:space="preserve">
+    <value>실행</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.ledger" xml:space="preserve">
+    <value>기록 보기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.ledgerSessions" xml:space="preserve">
+    <value>세션 {{count}}개 기록됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.ledgerSessions_plural" xml:space="preserve">
+    <value>세션 {{count}}개 기록됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.mostPlayed" xml:space="preserve">
+    <value>가장 많이 플레이</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.newInLibrary" xml:space="preserve">
+    <value>라이브러리 신규</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.seeAll" xml:space="preserve">
+    <value>전체 보기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.seeAllCount" xml:space="preserve">
+    <value>{{count}}개 전체 보기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.shelfCount" xml:space="preserve">
+    <value>{{count}}개</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.shelfCount_plural" xml:space="preserve">
+    <value>{{count}}개</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.voiceReady" xml:space="preserve">
+    <value>덱이 준비됐습니다. 타이틀을 고르면 나머지는 클라우드가 처리합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.voiceResume" xml:space="preserve">
+    <value>누적 {{value}} — 중단한 지점부터 이어가세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.checkBackLater" xml:space="preserve">
+    <value>새로운 추가 사항은 나중에 다시 확인하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.loadingGames" xml:space="preserve">
+    <value>게임 로드 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.noGamesFound" xml:space="preserve">
+    <value>게임을 찾을 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.tryAdjustingSearch" xml:space="preserve">
+    <value>검색어나 필터를 조정해 보세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.filters" xml:space="preserve">
+    <value>필터</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.clearSearch" xml:space="preserve">
+    <value>검색 지우기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.loadMore" xml:space="preserve">
+    <value>더 불러오기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.resultsFor" xml:space="preserve">
+    <value>검색 · "{query}"</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.searching" xml:space="preserve">
+    <value>검색 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.showing" xml:space="preserve">
+    <value>{shown} / {total}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.searchPlaceholder" xml:space="preserve">
+    <value>게임 검색...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.sortAriaLabel" xml:space="preserve">
+    <value>Sort games</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.activeFilters" xml:space="preserve">
+    <value>Active filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.allStores" xml:space="preserve">
+    <value>All Stores</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.chooseStore" xml:space="preserve">
+    <value>Choose a Store</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.clearFilters" xml:space="preserve">
+    <value>Clear</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.controllerTitle" xml:space="preserve">
+    <value>도서관</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.controls" xml:space="preserve">
+    <value>Controls: {{controls}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.allGames" xml:space="preserve">
+    <value>전체 게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellGenre" xml:space="preserve">
+    <value>장르</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellLastPlayed" xml:space="preserve">
+    <value>마지막 플레이</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellPlaytime" xml:space="preserve">
+    <value>플레이 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellSessions" xml:space="preserve">
+    <value>세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellStore" xml:space="preserve">
+    <value>스토어</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.chipAll" xml:space="preserve">
+    <value>전체</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.count" xml:space="preserve">
+    <value>{{count}}개</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.count_plural" xml:space="preserve">
+    <value>{{count}}개</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.emptyDetail" xml:space="preserve">
+    <value>그리드에서 게임을 선택하면 콘솔이 표시됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.eyebrow" xml:space="preserve">
+    <value>라이브러리 // 선택됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.hint" xml:space="preserve">
+    <value>콘솔을 보려면 타이틀을 선택하세요</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.launch" xml:space="preserve">
+    <value>실행</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.viewLedger" xml:space="preserve">
+    <value>기록 보기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.developer" xml:space="preserve">
+    <value>Developer: {{developer}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.libraryEmpty" xml:space="preserve">
+    <value>라이브러리가 비어 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.loadingLibrary" xml:space="preserve">
+    <value>라이브러리 로드 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.noFilteredGames" xml:space="preserve">
+    <value>No games match those filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.noGamesFound" xml:space="preserve">
+    <value>게임을 찾을 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.noGamesMatch" xml:space="preserve">
+    <value>"{{query}}"와 일치하는 게임이 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.ownedGamesAppearHere" xml:space="preserve">
+    <value>소유한 게임이 여기에 표시됩니다. 게임을 찾으려면 카탈로그를 탐색하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.tryAdjustingFilters" xml:space="preserve">
+    <value>Try clearing a filter or changing your search.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.favoriteToggle" xml:space="preserve">
+    <value>즐겨찾기 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filter" xml:space="preserve">
+    <value>Filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.activity" xml:space="preserve">
+    <value>Activity</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.controls" xml:space="preserve">
+    <value>Controls</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.platform" xml:space="preserve">
+    <value>Platform</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.playType" xml:space="preserve">
+    <value>Play Type</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.cloudLaunch" xml:space="preserve">
+    <value>Cloud Launch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.controller" xml:space="preserve">
+    <value>Controller</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.installToPlay" xml:space="preserve">
+    <value>Install to Play</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.keyboardMouse" xml:space="preserve">
+    <value>Keyboard &amp; Mouse</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.neverPlayed" xml:space="preserve">
+    <value>Never Played</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.played" xml:space="preserve">
+    <value>Played</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.touch" xml:space="preserve">
+    <value>Touch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filteredGameCount" xml:space="preserve">
+    <value>{{shown}} of {{total}} games</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filters" xml:space="preserve">
+    <value>Filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.gameCount" xml:space="preserve">
+    <value>{{count}} 게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.gameCount_plural" xml:space="preserve">
+    <value>{{count}} 게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.genres" xml:space="preserve">
+    <value>Genres: {{genres}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.daysAgo" xml:space="preserve">
+    <value>{{count}}일 전</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.hoursAgo" xml:space="preserve">
+    <value>{{count}}시간 전</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.justNow" xml:space="preserve">
+    <value>지금 막</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.minutesAgo" xml:space="preserve">
+    <value>{{count}}분 전</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.never" xml:space="preserve">
+    <value>플레이한 적 없음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.weeksAgo" xml:space="preserve">
+    <value>{{count}}주 전</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.loadingGameDetails" xml:space="preserve">
+    <value>Loading game details...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.moreInfo" xml:space="preserve">
+    <value>More Info</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.moreOptions" xml:space="preserve">
+    <value>More Options</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.nvidiaTech" xml:space="preserve">
+    <value>NVIDIA Tech: {{tech}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.players" xml:space="preserve">
+    <value>Players: {{players}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.publisher" xml:space="preserve">
+    <value>Publisher: {{publisher}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.rating" xml:space="preserve">
+    <value>Rating: {{rating}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.removeFilter" xml:space="preserve">
+    <value>Remove {{filter}} filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.searchPlaceholder" xml:space="preserve">
+    <value>라이브러리 검색...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.selectedStore" xml:space="preserve">
+    <value>Selected Store: {{store}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.sortAriaLabel" xml:space="preserve">
+    <value>Sort library</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.storeFilter" xml:space="preserve">
+    <value>Store Filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.storeFilterHint" xml:space="preserve">
+    <value>Hold Y, use up/down, release Y to apply</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.storeNotListed" xml:space="preserve">
+    <value>Store not listed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.title" xml:space="preserve">
+    <value>내 라이브러리</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.playtimeDetails" xml:space="preserve">
+    <value>플레이 시간 세부정보</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.showPlaytimeDetails" xml:space="preserve">
+    <value>플레이 시간 세부정보 표시</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.showStorageDetails" xml:space="preserve">
+    <value>저장용량 세부정보 표시</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.notAvailable" xml:space="preserve">
+    <value>해당 없음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.serverRegionVpc" xml:space="preserve">
+    <value>서버 지역(VPC)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageLeft" xml:space="preserve">
+    <value>남은 저장 공간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageRegion" xml:space="preserve">
+    <value>저장 지역</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageRegionCode" xml:space="preserve">
+    <value>저장 지역 코드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageTotal" xml:space="preserve">
+    <value>총 저장용량</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageUsage" xml:space="preserve">
+    <value>스토리지 사용량</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageUsed" xml:space="preserve">
+    <value>사용된 저장소</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storageDetails" xml:space="preserve">
+    <value>스토리지 세부정보</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.subscriptionDetails" xml:space="preserve">
+    <value>구독 세부정보</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.allotted" xml:space="preserve">
+    <value>할당됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.firstEntitlement" xml:space="preserve">
+    <value>첫 번째 권리</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.gameplayAllowed" xml:space="preserve">
+    <value>게임 플레이가 허용됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.no" xml:space="preserve">
+    <value>아니요</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.notifyAtGeneral" xml:space="preserve">
+    <value>통지 대상(일반)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.notifyAtInSession" xml:space="preserve">
+    <value>알림 시간(세션 중)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.periodEnd" xml:space="preserve">
+    <value>기간 종료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.periodStart" xml:space="preserve">
+    <value>기간 시작</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.planState" xml:space="preserve">
+    <value>계획 상태</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.purchased" xml:space="preserve">
+    <value>구매함</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.rolledOver" xml:space="preserve">
+    <value>롤오버됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.subType" xml:space="preserve">
+    <value>하위 유형</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.tier" xml:space="preserve">
+    <value>계층</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.timeLeft" xml:space="preserve">
+    <value>남은 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.timeUsage" xml:space="preserve">
+    <value>시간 사용량</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.totalTime" xml:space="preserve">
+    <value>총 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.type" xml:space="preserve">
+    <value>유형</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.unlimitedTime" xml:space="preserve">
+    <value>시간 무제한</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.used" xml:space="preserve">
+    <value>{{percent}} 사용됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.usedTime" xml:space="preserve">
+    <value>사용시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.yes" xml:space="preserve">
+    <value>예</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.home" xml:space="preserve">
+    <value>매장</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.library" xml:space="preserve">
+    <value>도서관</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.playtime" xml:space="preserve">
+    <value>플레이 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.settings" xml:space="preserve">
+    <value>설정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.refresh" xml:space="preserve">
+    <value>새로고침</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.reset" xml:space="preserve">
+    <value>기록 초기화</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetCancel" xml:space="preserve">
+    <value>통계 유지</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetConfirm" xml:space="preserve">
+    <value>모두 삭제</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetConfirmBody" xml:space="preserve">
+    <value>이 기기에 기록된 모든 시간이 삭제되며 되돌릴 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetConfirmTitle" xml:space="preserve">
+    <value>플레이 시간 초기화</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.updated" xml:space="preserve">
+    <value>기록 업데이트: {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.daily" xml:space="preserve">
+    <value>최근 {{count}}일</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.dailySr" xml:space="preserve">
+    <value>이 기간 동안 {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.daily_plural" xml:space="preserve">
+    <value>최근 {{count}}일</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.hourly" xml:space="preserve">
+    <value>시간대</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.hourlySr" xml:space="preserve">
+    <value>{{hour}}:00에 정점, {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.title" xml:space="preserve">
+    <value>플레이 시간대</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.weekday" xml:space="preserve">
+    <value>요일</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.weekdaySr" xml:space="preserve">
+    <value>가장 많은 요일 {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.body" xml:space="preserve">
+    <value>게임을 실행하면 첫 프레임이 도착하는 순간부터 시간이 집계됩니다. 대기열 시간은 별도로 기록되므로 실제 플레이만 포함됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.cta" xml:space="preserve">
+    <value>라이브러리 둘러보기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.eyebrow" xml:space="preserve">
+    <value>기록 // 비어 있음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.title" xml:space="preserve">
+    <value>아직 기록된 플레이 시간이 없습니다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.eyebrow" xml:space="preserve">
+    <value>OpenNOW // 기록</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.hours" xml:space="preserve">
+    <value>{{count}}시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.hoursMinutes" xml:space="preserve">
+    <value>{{hours}}시간 {{minutes}}분</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.minutes" xml:space="preserve">
+    <value>{{count}}분</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.never" xml:space="preserve">
+    <value>—</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.seconds" xml:space="preserve">
+    <value>{{count}}초</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.detail" xml:space="preserve">
+    <value>추가 {{minutes}}분 · {{sessions}}회 세션 · {{games}}개 게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.label" xml:space="preserve">
+    <value>총 스트리밍 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.peakHour" xml:space="preserve">
+    <value>가장 많이 플레이한 시간: {{hour}}:00 — {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.sr" xml:space="preserve">
+    <value>총 {{hours}}시간 {{minutes}}분을 스트리밍했습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.unitHours" xml:space="preserve">
+    <value>시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.unitMinutes" xml:space="preserve">
+    <value>분</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.live.label" xml:space="preserve">
+    <value>지금 스트리밍 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.live.unknownGame" xml:space="preserve">
+    <value>현재 세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.loading" xml:space="preserve">
+    <value>기록을 불러오는 중…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.count" xml:space="preserve">
+    <value>{{count}}개 게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.count_plural" xml:space="preserve">
+    <value>{{count}}개 게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.more" xml:space="preserve">
+    <value>나머지 {{count}}개 게임은 표시되지 않습니다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.sessions" xml:space="preserve">
+    <value>{{count}}회 세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.sessions_plural" xml:space="preserve">
+    <value>{{count}}회 세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.share" xml:space="preserve">
+    <value>전체의 {{value}}%</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.sr" xml:space="preserve">
+    <value>{{rank}}위: {{title}} — {{sessions}}회 세션, {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.title" xml:space="preserve">
+    <value>플레이 시간 순위</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.empty" xml:space="preserve">
+    <value>아직 완료된 세션이 기록되지 않았습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.engineNative" xml:space="preserve">
+    <value>네이티브</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.engineWeb" xml:space="preserve">
+    <value>WebRTC</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.title" xml:space="preserve">
+    <value>최근 세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.wait" xml:space="preserve">
+    <value>대기 {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.average" xml:space="preserve">
+    <value>평균 세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.games" xml:space="preserve">
+    <value>플레이한 게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.longest" xml:space="preserve">
+    <value>최장 세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.queue" xml:space="preserve">
+    <value>대기열 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.sessions" xml:space="preserve">
+    <value>세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.setup" xml:space="preserve">
+    <value>연결 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.subtitle" xml:space="preserve">
+    <value>실제로 스트림에 머문 시간만 집계합니다 — 대기열 시간은 별도로 계산됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.title" xml:space="preserve">
+    <value>플레이 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.allServers" xml:space="preserve">
+    <value>모든 서버</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.cancel" xml:space="preserve">
+    <value>취소</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.close" xml:space="preserve">
+    <value>닫기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.wait" xml:space="preserve">
+    <value>{{duration}} 잠깐만요</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.gotIt" xml:space="preserve">
+    <value>Got it</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.kicker" xml:space="preserve">
+    <value>What's new</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.settingsLink" xml:space="preserve">
+    <value>What's new</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.title" xml:space="preserve">
+    <value>OpenNOW {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.unavailable" xml:space="preserve">
+    <value>Release notes couldn't be loaded right now.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.viewOnGitHub" xml:space="preserve">
+    <value>View full release on GitHub</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.active" xml:space="preserve">
+    <value>활성 세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.activeSessionMissingServerAddress" xml:space="preserve">
+    <value>활성 세션을 찾았습니다(서버 주소 누락).</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.cancelExit" xml:space="preserve">
+    <value>종료 취소</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.control" xml:space="preserve">
+    <value>세션 제어</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.current" xml:space="preserve">
+    <value>현재</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.elapsed" xml:space="preserve">
+    <value>경과됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.elapsedTitle" xml:space="preserve">
+    <value>현재 게임 세션 경과 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.elapsedWithValue" xml:space="preserve">
+    <value>세션 {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.endSession" xml:space="preserve">
+    <value>세션 종료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.exitConfirmation" xml:space="preserve">
+    <value>스트림 종료 확인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.exitStream" xml:space="preserve">
+    <value>스트림을 종료하시겠습니까?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.readyToLaunch" xml:space="preserve">
+    <value>출시 준비 완료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.readyToSwitch" xml:space="preserve">
+    <value>전환 준비 완료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.remainingPlaytime" xml:space="preserve">
+    <value>{{value}} 남음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resume" xml:space="preserve">
+    <value>이력서</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resumeActiveCloudSession" xml:space="preserve">
+    <value>활성 클라우드 세션 재개</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resumeActiveCloudSessionTitle" xml:space="preserve">
+    <value>활성 클라우드 세션 재개: {{title}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resumeCurrentStream" xml:space="preserve">
+    <value>현재 스트림 재개</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminate" xml:space="preserve">
+    <value>종료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminateActiveCloudSession" xml:space="preserve">
+    <value>활성 클라우드 세션 종료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminateActiveCloudSessionTitle" xml:space="preserve">
+    <value>활성 클라우드 세션 종료: {{title}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminateConfirmation" xml:space="preserve">
+    <value>{{title}}를 종료하시겠습니까? 그러면 활성 클라우드 세션이 즉시 종료됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.thisGame" xml:space="preserve">
+    <value>이 게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.thisSession" xml:space="preserve">
+    <value>이번 세션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.timeWarning" xml:space="preserve">
+    <value>세션 시간 경고</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.freeTier15MinutesRemaining" xml:space="preserve">
+    <value>이 무료 등급 세션이 15분 남았습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.freeTier30MinutesRemaining" xml:space="preserve">
+    <value>이 무료 등급 세션이 30분 남았습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.freeTierEndsSoon" xml:space="preserve">
+    <value>이 무료 등급 세션이 곧 종료됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.idleTimeoutApproaching" xml:space="preserve">
+    <value>유휴 시간 초과가 다가오고 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.maximumSessionTimeApproaching" xml:space="preserve">
+    <value>최대 세션 시간이 다가오고 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.sessionTimeLimitApproaching" xml:space="preserve">
+    <value>세션 시간 제한이 다가오고 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.applicationUpdates" xml:space="preserve">
+    <value>애플리케이션 업데이트</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.automaticallyCheckForUpdates" xml:space="preserve">
+    <value>자동으로 업데이트 확인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.automaticallyCheckForUpdatesOffHint" xml:space="preserve">
+    <value>꺼져 있으면 아래 수동 업데이트 버튼을 사용하지 않는 한 OpenNOW는 현재 버전을 유지합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.automaticallyCheckForUpdatesOnHint" xml:space="preserve">
+    <value>켜져 있으면 패키지 빌드는 시작 후 백그라운드에서 OpenNOW가 실행되는 동안 정기적으로 GitHub 릴리스를 확인합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.availableVersion" xml:space="preserve">
+    <value>사용 가능한 버전: {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.backgroundChecksOff" xml:space="preserve">
+    <value>수동으로 확인할 때까지 백그라운드 업데이트 확인은 해제되어 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.backgroundChecksOn" xml:space="preserve">
+    <value>패키지된 빌드는 백그라운드에서 GitHub 릴리스를 확인합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.cacheCleared" xml:space="preserve">
+    <value>캐시가 성공적으로 지워졌습니다. 다음에 시작할 때 앱이 새로 고쳐집니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.checkForUpdates" xml:space="preserve">
+    <value>업데이트 확인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCache" xml:space="preserve">
+    <value>캐시 삭제</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCacheConfirm" xml:space="preserve">
+    <value>캐시된 데이터를 모두 삭제하시겠습니까? 모든 게임 메타데이터, 이미지, 라이브러리 정보가 삭제됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCacheFailed" xml:space="preserve">
+    <value>캐시를 삭제하지 못했습니다. 다시 시도해 주세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCacheHint" xml:space="preserve">
+    <value>캐시된 게임 데이터, 이미지, 메타데이터를 모두 삭제합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.downloadProgress" xml:space="preserve">
+    <value>다운로드 진행률: {{percent}}%</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.downloadUpdate" xml:space="preserve">
+    <value>업데이트 다운로드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.downloadedVersion" xml:space="preserve">
+    <value>다운로드된 버전: {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.exportLogs" xml:space="preserve">
+    <value>로그 내보내기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.exportLogsFailed" xml:space="preserve">
+    <value>로그를 내보내지 못했습니다. 다시 시도해 주세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.exportLogsHint" xml:space="preserve">
+    <value>개인 정보 보호를 위해 수정된 민감한 데이터가 포함된 디버그 로그 다운로드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.lastChecked" xml:space="preserve">
+    <value>마지막 확인: {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.restartToInstall" xml:space="preserve">
+    <value>다시 시작하여 설치</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannel" xml:space="preserve">
+    <value>Update Channel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelHint" xml:space="preserve">
+    <value>Choose Stable for regular releases or Nightly to preview the latest builds from the dev branch.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelNightly" xml:space="preserve">
+    <value>Nightly</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelNightlyHint" xml:space="preserve">
+    <value>Nightly builds may be less reliable. Switching channels immediately checks for an available update.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelStable" xml:space="preserve">
+    <value>Stable (Default)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.checking" xml:space="preserve">
+    <value>확인 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.downloading" xml:space="preserve">
+    <value>다운로드 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.packagedBuildsOnly" xml:space="preserve">
+    <value>패키지된 빌드만</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.readyToInstall" xml:space="preserve">
+    <value>설치 준비 완료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.updateAvailable" xml:space="preserve">
+    <value>업데이트 가능</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.version" xml:space="preserve">
+    <value>버전 {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.whatsNew" xml:space="preserve">
+    <value>What's new</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.whatsNewHint" xml:space="preserve">
+    <value>View the release notes for the current version of OpenNOW.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.actionFailed" xml:space="preserve">
+    <value>Game account action failed. Please try again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.connect" xml:space="preserve">
+    <value>Connect</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.connectedAccount" xml:space="preserve">
+    <value>Connected account</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.connecting" xml:space="preserve">
+    <value>Connecting...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.description" xml:space="preserve">
+    <value>Link supported store accounts to unlock provider-required games and sync owned libraries into OpenNOW.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.empty" xml:space="preserve">
+    <value>No supported game-account providers were returned for this account.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.linkSuccess" xml:space="preserve">
+    <value>{{provider}} connected.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.loadFailed" xml:space="preserve">
+    <value>Failed to load connected game accounts.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.loading" xml:space="preserve">
+    <value>Loading connected game accounts...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.notConnectedDescription" xml:space="preserve">
+    <value>Connect this provider to GeForce NOW when a game requires it.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.recently" xml:space="preserve">
+    <value>recently</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.reconnect" xml:space="preserve">
+    <value>Reconnect</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.refresh" xml:space="preserve">
+    <value>Refresh</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.requiredForSomeGames" xml:space="preserve">
+    <value>Required for some games</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.resync" xml:space="preserve">
+    <value>Resync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.resyncSuccess" xml:space="preserve">
+    <value>{{provider}} library sync started.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.resyncing" xml:space="preserve">
+    <value>Resyncing...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.signInRequired" xml:space="preserve">
+    <value>Sign in before managing connected game accounts.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.ssoSupported" xml:space="preserve">
+    <value>Account linking</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusConnected" xml:space="preserve">
+    <value>Connected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusExpired" xml:space="preserve">
+    <value>Expired</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusNotConnected" xml:space="preserve">
+    <value>Not connected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusSyncError" xml:space="preserve">
+    <value>Sync issue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.sync" xml:space="preserve">
+    <value>Sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncOnlyDescription" xml:space="preserve">
+    <value>Sync this provider's supported library games without account-linking SSO.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncState" xml:space="preserve">
+    <value>Sync state: {{state}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncSummary" xml:space="preserve">
+    <value>{{count}} synced game as of {{date}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncSummary_plural" xml:space="preserve">
+    <value>{{count}} synced games as of {{date}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncSupported" xml:space="preserve">
+    <value>Library sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncUnknown" xml:space="preserve">
+    <value>Unknown</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncing" xml:space="preserve">
+    <value>Syncing...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.title" xml:space="preserve">
+    <value>Connected Game Accounts</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlink" xml:space="preserve">
+    <value>Unlink</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlinkConfirm" xml:space="preserve">
+    <value>Unlink {{provider}} from GeForce NOW? Synced library entries from that account may disappear until you reconnect.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlinkSuccess" xml:space="preserve">
+    <value>{{provider}} unlinked.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlinking" xml:space="preserve">
+    <value>Unlinking...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.disabled" xml:space="preserve">
+    <value>장애인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphone" xml:space="preserve">
+    <value>마이크</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneDevice" xml:space="preserve">
+    <value>마이크 장치</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneDeviceHint" xml:space="preserve">
+    <value>음성 채팅을 위한 입력 장치 선택</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneHint" xml:space="preserve">
+    <value>스트리밍 중 음성 채팅 활성화</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneIndexed" xml:space="preserve">
+    <value>마이크 {{index}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneInputLevel" xml:space="preserve">
+    <value>마이크 입력 레벨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneMode" xml:space="preserve">
+    <value>마이크 모드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.noMicrophoneDevicesFound" xml:space="preserve">
+    <value>마이크 장치를 찾을 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionDenied" xml:space="preserve">
+    <value>마이크 액세스가 거부되었습니다. 시스템 설정 &gt; 개인 정보 보호 및 보안 &gt; 마이크에서 OpenNOW에 대한 마이크 액세스를 활성화합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionRestricted" xml:space="preserve">
+    <value>마이크 액세스는 macOS에 의해 제한되며 OpenNOW에서는 활성화할 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionUnavailable" xml:space="preserve">
+    <value>마이크에 액세스할 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionUnknown" xml:space="preserve">
+    <value>마이크 권한 상태를 확인할 수 없습니다. OpenNOW에 대한 macOS 마이크 개인 정보 보호 설정을 확인하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.pushToTalk" xml:space="preserve">
+    <value>푸시투톡</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.selectedDevice" xml:space="preserve">
+    <value>선택한 장치</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.title" xml:space="preserve">
+    <value>오디오</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.voiceActivity" xml:space="preserve">
+    <value>음성 활동</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.advanced" xml:space="preserve">
+    <value>고급 - 코덱 진단</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.decode" xml:space="preserve">
+    <value>디코드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.description" xml:space="preserve">
+    <value>시스템에서 디코딩/인코딩할 수 있는 코덱과 GPU 또는 CPU를 사용하는지 테스트합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.encode" xml:space="preserve">
+    <value>인코딩</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.linuxHardwareHint" xml:space="preserve">
+    <value>Linux AppImage diagnostics use Chromium's WebRTC/MediaCapabilities report. Hardware decode depends on the Chromium build plus your distro GPU/video stack: x64 systems may need VA-API/NVIDIA VA-API drivers, while ARM V4L2 support depends on Chromium/Electron exposing that decoder.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.notInWebrtc" xml:space="preserve">
+    <value>WebRTC에 없음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.profiles" xml:space="preserve">
+    <value>프로필:</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.retest" xml:space="preserve">
+    <value>재테스트</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.testCodecs" xml:space="preserve">
+    <value>테스트 코덱</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.title" xml:space="preserve">
+    <value>코덱 진단</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.webrtcReady" xml:space="preserve">
+    <value>WebRTC 준비</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.higherBitDepth" xml:space="preserve">
+    <value>더 높은 비트 심도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.highestChromaAndBitDepth" xml:space="preserve">
+    <value>가장 높은 채도 및 비트 심도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.mostCompatible" xml:space="preserve">
+    <value>가장 호환성이 좋음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.requiresH265OrAv1Title" xml:space="preserve">
+    <value>{{description}} - H265/AV1 필요</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.sharperChroma" xml:space="preserve">
+    <value>더 선명한 채도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.inGameLanguageHint" xml:space="preserve">
+    <value>게임 내 메뉴, 자막, 오디오 언어(지원되는 경우)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.keyboardLayout" xml:space="preserve">
+    <value>키보드 레이아웃</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.language" xml:space="preserve">
+    <value>언어</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.launchBehavior" xml:space="preserve">
+    <value>실행 동작</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.persistInGameSettings" xml:space="preserve">
+    <value>Save in-game graphics settings</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.persistInGameSettingsHint" xml:space="preserve">
+    <value>Lets supported games keep graphics options changed inside the stream. Sent only for games that advertise NVIDIA in-game settings persistence support.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.preferredStore" xml:space="preserve">
+    <value>선호하는 매장</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.title" xml:space="preserve">
+    <value>게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.clipboardPaste" xml:space="preserve">
+    <value>클립보드 붙여넣기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.editable" xml:space="preserve">
+    <value>편집 가능</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.gyroscopeControls" xml:space="preserve">
+    <value>Gyroscope Controls</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.gyroscopeControlsHint" xml:space="preserve">
+    <value>Expose controller motion sensors for gyro aiming when the input backend supports it.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.keyboardLayoutHint" xml:space="preserve">
+    <value>원격 세션 내에서 실제 키보드가 매핑되는 방식을 제어합니다. 게임 내 언어 설정과 별개입니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseAccelerator" xml:space="preserve">
+    <value>마우스 가속기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseAcceleratorHint" xml:space="preserve">
+    <value>동적 회전 부스트 강도(1% = 오프 유사, 150% = 가장 강함).</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseAndKeyboard" xml:space="preserve">
+    <value>마우스 및 키보드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseSensitivity" xml:space="preserve">
+    <value>마우스 감도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseSensitivityHint" xml:space="preserve">
+    <value>마우스 움직임에 적용되는 승수(1.00 = 기본값)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.nativeCursorOverlay" xml:space="preserve">
+    <value>Native Cursor Overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.nativeCursorOverlayHint" xml:space="preserve">
+    <value>WebRTC only. Uses NVIDIA's cursor_channel for a local cursor overlay; turn this off to leave cursor rendering to the server-side stream.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.recording" xml:space="preserve">
+    <value>녹음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.resetToDefaults" xml:space="preserve">
+    <value>기본값으로 재설정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.screenshot" xml:space="preserve">
+    <value>스크린샷</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutConflictBinding" xml:space="preserve">
+    <value>바로가기가 다른 바인딩과 충돌합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutConflictSidebar" xml:space="preserve">
+    <value>바로가기가 설정 사이드바 토글과 충돌합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutEmpty" xml:space="preserve">
+    <value>바로가기는 비워둘 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutHint" xml:space="preserve">
+    <value>필드를 클릭하고 키를 눌러 바로가기({{examples}})를 바인딩하거나 붙여넣습니다. Esc는 포커스를 취소합니다. 전체 화면: {{fullscreen}}. 중지: {{stop}}. 마이크: {{mic}}. 스크린샷: {{screenshot}}. 녹음: {{recording}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutInvalid" xml:space="preserve">
+    <value>잘못된 바로가기 형식입니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcuts" xml:space="preserve">
+    <value>단축키</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.steamControllerCompatibilityMode" xml:space="preserve">
+    <value>Steam Controller Compatibility Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.steamControllerCompatibilityModeHint" xml:space="preserve">
+    <value>macOS only. Restores Chromium's older HID gamepad path for Steam Controller, but may reduce Xbox controller compatibility. Applies after app restart.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.stopStream" xml:space="preserve">
+    <value>스트림 중지</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.title" xml:space="preserve">
+    <value>입력</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleAntiAfk" xml:space="preserve">
+    <value>AFK 방지 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleFullscreen" xml:space="preserve">
+    <value>전체 화면 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleMicrophone" xml:space="preserve">
+    <value>마이크 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.togglePointerLock" xml:space="preserve">
+    <value>토글 포인터 잠금</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleStats" xml:space="preserve">
+    <value>통계 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleStreamSidebar" xml:space="preserve">
+    <value>스트림 사이드바 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColor" xml:space="preserve">
+    <value>악센트 색상</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorAmber" xml:space="preserve">
+    <value>Arcade Amber</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorAzure" xml:space="preserve">
+    <value>애저</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorHint" xml:space="preserve">
+    <value>표준 데스크톱 UI 전체에 선택한 악센트를 적용하고 실행 간에 유지됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorNeon" xml:space="preserve">
+    <value>네온</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorRose" xml:space="preserve">
+    <value>Pulse Rose</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorSteel" xml:space="preserve">
+    <value>스틸</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorViolet" xml:space="preserve">
+    <value>Plasma Violet</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorWhite" xml:space="preserve">
+    <value>화이트</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.appLanguage" xml:space="preserve">
+    <value>앱 언어</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.appLanguageHint" xml:space="preserve">
+    <value>OpenNOW의 인터페이스 언어를 변경합니다. 번역되지 않은 문자열에는 영어가 사용됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.appearance" xml:space="preserve">
+    <value>외관</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.autoFullScreen" xml:space="preserve">
+    <value>자동 전체 화면</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.autoFullScreenHint" xml:space="preserve">
+    <value>세션에 연결하거나 시작할 때 자동으로 전체 화면으로 전환됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.controllerMode" xml:space="preserve">
+    <value>Controller Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.controllerModeHint" xml:space="preserve">
+    <value>Use a large-screen console-style shell with controller button hints and a horizontal library layout.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.discordRichPresence" xml:space="preserve">
+    <value>불일치의 풍부한 존재</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.discordRichPresenceHint" xml:space="preserve">
+    <value>경과 시간을 포함하여 스트리밍 중인 게임을 Discord 활동으로 표시합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.escapeExitsFullscreen" xml:space="preserve">
+    <value>탈출 전체 화면 종료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.escapeExitsFullscreenHint" xml:space="preserve">
+    <value>활성화되면 Esc 키를 누르면 전체 화면이 종료됩니다. 비활성화되면(기본값) 마우스가 포인터로 잠겨 있는 동안 Escape가 게임으로 전달됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.everyMinutes" xml:space="preserve">
+    <value>{{count}}분마다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideServerSelector" xml:space="preserve">
+    <value>서버 선택기 숨기기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideServerSelectorHint" xml:space="preserve">
+    <value>무료 계층 서버 선택 대화 상자를 건너뛰고 항상 OpenNOW의 기본 라우팅으로 실행하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideStreamOverlayButtons" xml:space="preserve">
+    <value>스트림 오버레이 버튼 숨기기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideStreamOverlayButtonsHint" xml:space="preserve">
+    <value>스트리밍하는 동안 마이크, 전체 화면 및 세션 종료 버튼을 숨깁니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.off" xml:space="preserve">
+    <value>끄기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.posterSize" xml:space="preserve">
+    <value>포스터 크기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.posterSizeHint" xml:space="preserve">
+    <value>Adjusts game posters in real time across the library.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionElapsedCounter" xml:space="preserve">
+    <value>세션 경과 카운터</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionElapsedCounterHint" xml:space="preserve">
+    <value>스트리밍하는 동안 라이브 세션 경과 카운터를 활성화하거나 비활성화합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerDisabledHint" xml:space="preserve">
+    <value>세션 경과 카운터를 비활성화하면 실시간 경과 타이머의 렌더링이 전혀 중지됩니다. 남은 플레이 시간 표시는 변경되지 않습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerReappear" xml:space="preserve">
+    <value>세션 타이머가 다시 나타납니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerReappearHint" xml:space="preserve">
+    <value>스트리밍하는 동안 세션 타이머가 다시 나타나는 빈도입니다(0은 반복을 비활성화합니다).</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerVisibleTime" xml:space="preserve">
+    <value>세션 타이머 표시 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerVisibleTimeHint" xml:space="preserve">
+    <value>세션 타이머가 나타날 때마다 표시되는 시간입니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showAntiAfkIndicator" xml:space="preserve">
+    <value>AFK 방지 표시기 표시</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showAntiAfkIndicatorHint" xml:space="preserve">
+    <value>스트리밍 중에 Anti-AFK가 활성화된 동안 ANTI-AFK ON 배지를 표시합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showSessionTimeRemainingInStatsOverlay" xml:space="preserve">
+    <value>Session Time in Stats Overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showSessionTimeRemainingInStatsOverlayHint" xml:space="preserve">
+    <value>The session countdown appears in the in-stream sidebar by default. Enable this to also show it in the stats overlay.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showStatsOnStreamLaunch" xml:space="preserve">
+    <value>스트림 시작 시 통계 표시</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showStatsOnStreamLaunchHint" xml:space="preserve">
+    <value>새 스트림이 시작되면 자동으로 통계 오버레이를 표시합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.translucentUI" xml:space="preserve">
+    <value>Translucent UI</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.translucentUIHint" xml:space="preserve">
+    <value>Enable glassmorphism and translucent overlays.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.bundledPathDetected" xml:space="preserve">
+    <value>번들 경로가 감지되었습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.checkNativeStreamer" xml:space="preserve">
+    <value>네이티브 스트리머 확인</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.codecSupportUnknown" xml:space="preserve">
+    <value>코덱 지원 여부를 알 수 없음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.directxBackend" xml:space="preserve">
+    <value>DirectX 백엔드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.directxBackendHint" xml:space="preserve">
+    <value>다음 네이티브 스트리머 프로세스에 적용됩니다. 자동은 가장 빠른 기본 경로를 사용합니다. 특정 Windows 렌더러를 강제로 적용하려면 DirectX 11 또는 DirectX 12를 선택하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptAltTab" xml:space="preserve">
+    <value>Alt+Tab을 눌러 OpenNOW 창으로 돌아가서 스트림을 종료하거나 OpenNOW 단축키를 사용하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptBody" xml:space="preserve">
+    <value>기본 스트리머는 아직 실험적입니다. 기본 스트리머 창에 포커스가 있는 동안에는 OpenNOW 단축키가 작동하지 않습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptCancel" xml:space="preserve">
+    <value>비활성화 상태 유지</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptEnable" xml:space="preserve">
+    <value>네이티브 스트리머 활성화</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptEsc" xml:space="preserve">
+    <value>취소하다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptKicker" xml:space="preserve">
+    <value>실험적</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptNewSessions" xml:space="preserve">
+    <value>기본 스트리밍은 새 세션에만 적용됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptShortcuts" xml:space="preserve">
+    <value>오버레이, 종료, 전체 화면, 통계 및 기타 단축키는 기본 스트리머 창 내에서 실행되지 않습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptTitle" xml:space="preserve">
+    <value>네이티브 스트리머를 활성화하시겠습니까?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.framePacing" xml:space="preserve">
+    <value>프레임 속도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.framePacingHint" xml:space="preserve">
+    <value>최저 대기 시간은 G-Sync 속도를 피하고 마우스 느낌에 가장 적합합니다. Smooth G-Sync는 테어링을 줄일 수 있지만 렌더링을 모니터 새로 고침 빈도로 제한할 수 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.gstreamerReady" xml:space="preserve">
+    <value>GStreamer 준비</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.gstreamerRuntime" xml:space="preserve">
+    <value>GStreamer 런타임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.linuxRuntimeHint" xml:space="preserve">
+    <value>VAAPI/V4L2/Vulkan 플러그인은 호스트 배포판 및 GPU 드라이버 스택과 일치해야 하므로 Linux AppImage/개인 GStreamer 번들은 기본적으로 의도적으로 사용되지 않습니다. .deb 패키지는 Debian/Ubuntu 종속성을 자동으로 선언합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.lowestLatency" xml:space="preserve">
+    <value>최저 지연 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.memoryPathUnknown" xml:space="preserve">
+    <value>메모리 경로를 알 수 없음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.nativeStreaming" xml:space="preserve">
+    <value>네이티브 스트리밍</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.nativeStreamingHint" xml:space="preserve">
+    <value>네이티브 스트리밍은 실험적이며 플랫폼별 버그, 결함 또는 Chromium/WebRTC에 대한 폴백이 있을 수 있습니다. 새 세션에 대해 GStreamer 기반 데스크탑 스트리머를 테스트하는 것이 편한 경우에만 활성화하십시오.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.notReady" xml:space="preserve">
+    <value>준비되지 않음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderMode" xml:space="preserve">
+    <value>Render Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeExternal" xml:space="preserve">
+    <value>External (Floating)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeHint" xml:space="preserve">
+    <value>Internal (default) embeds native video in the OpenNOW window. External keeps the floating GStreamer window for testing/fallback. Change applies to the next native streamer process.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeInternal" xml:space="preserve">
+    <value>Internal (One Window)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeInternalOnlyHint" xml:space="preserve">
+    <value>This platform uses Internal (one window) only. Keyboard, mouse, and controller input stay in Electron and are forwarded over IPC. External floating mode is Windows-only.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.reportOnDiscord" xml:space="preserve">
+    <value>불화에 대한 보고</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.reportOnGithubIssues" xml:space="preserve">
+    <value>GitHub 문제 보고</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.runtimeDefaultHint" xml:space="preserve">
+    <value>패키지된 Windows/macOS 빌드는 기본 스트리머 옆에 있는 번들 런타임을 자동 감지합니다. Linux는 distro 패키지를 사용합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.showNativeStreamerStats" xml:space="preserve">
+    <value>Show Native Streamer Stats</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.showNativeStreamerStatsHint" xml:space="preserve">
+    <value>Display the native streamer's own diagnostics overlay during native sessions.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.smoothGsync" xml:space="preserve">
+    <value>부드러운 G-Sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.statusDefaultHint" xml:space="preserve">
+    <value>OpenNOW는 이 탭이 열리면 번들로 제공되는 GStreamer 스트리머를 확인합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.streamerStatus" xml:space="preserve">
+    <value>스트리머 상태</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.title" xml:space="preserve">
+    <value>네이티브 스트리머</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportMode" xml:space="preserve">
+    <value>Transport Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeHint" xml:space="preserve">
+    <value>WebRTC is the supported path. NVST (experimental) uses classic RTSPS + UDP video (Moonlight-hypothesis scaffold) while keyboard/mouse/controller stay on WebRTC SCTP datachannels. First live sessions may need SRTP/pcap validation.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeNvst" xml:space="preserve">
+    <value>NVST (Experimental)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeWebrtc" xml:space="preserve">
+    <value>WebRTC (Default)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeWindowsOnlyHint" xml:space="preserve">
+    <value>NVST transport is Windows-only for now. This platform always uses WebRTC.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.videoPath" xml:space="preserve">
+    <value>비디오 경로</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.videoPathDefaultHint" xml:space="preserve">
+    <value>OpenNOW는 GStreamer가 감지된 후 활성 하드웨어 디코드 경로를 표시합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.noMatches" xml:space="preserve">
+    <value>"{{query}}"와 일치하는 설정이 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.availableLegend" xml:space="preserve">
+    <value>Available ({{value}})</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.availableLegendUnavailable" xml:space="preserve">
+    <value>Available unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.currentLocationOption" xml:space="preserve">
+    <value>{{region}} (Current)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.currentLocationUnavailable" xml:space="preserve">
+    <value>Current location</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.description" xml:space="preserve">
+    <value>Persistent Cloud Storage saves downloaded games and supported game data for future sessions.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.detected" xml:space="preserve">
+    <value>Detected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.locationTitle" xml:space="preserve">
+    <value>Storage Location</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.locationsFailed" xml:space="preserve">
+    <value>Failed to load storage locations.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.locationsLoading" xml:space="preserve">
+    <value>Loading storage locations...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.meterLabel" xml:space="preserve">
+    <value>Persistent Storage usage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.notDetected" xml:space="preserve">
+    <value>No Persistent Storage add-on was found for the active account.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.openManager" xml:space="preserve">
+    <value>Open NVIDIA</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.openManagerFailed" xml:space="preserve">
+    <value>Failed to open NVIDIA Storage Manager.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.recommended" xml:space="preserve">
+    <value>Recommended</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.region" xml:space="preserve">
+    <value>Region: {{region}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.regionUnavailable" xml:space="preserve">
+    <value>Region unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.remaining" xml:space="preserve">
+    <value>{{value}} available</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetConfirm" xml:space="preserve">
+    <value>Reset Persistent Storage in {{region}}? This will delete all installed games and persistent data from NVIDIA cloud storage. This action cannot be undone.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetFailed" xml:space="preserve">
+    <value>Failed to reset Persistent Storage. Please try again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetHint" xml:space="preserve">
+    <value>NVIDIA Storage Manager handles reset and storage-location changes in your browser.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetRequiresBrowser" xml:space="preserve">
+    <value>NVIDIA requires its web account session for this reset. Complete reset or location changes in NVIDIA Storage Manager.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetRequiresBrowserHint" xml:space="preserve">
+    <value>Current location: {{region}}. Reset and location changes open in NVIDIA Storage Manager.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetStorage" xml:space="preserve">
+    <value>Reset Storage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetSuccess" xml:space="preserve">
+    <value>Persistent Storage reset complete.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetTitle" xml:space="preserve">
+    <value>Storage Reset</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetWillKeepLocation" xml:space="preserve">
+    <value>Reset keeps the current storage location: {{region}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetWillMoveLocation" xml:space="preserve">
+    <value>Reset will also change storage location to {{region}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetting" xml:space="preserve">
+    <value>Resetting...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.title" xml:space="preserve">
+    <value>Persistent Storage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.unavailable" xml:space="preserve">
+    <value>Unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usage" xml:space="preserve">
+    <value>{{used}} used of {{total}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usageUnavailable" xml:space="preserve">
+    <value>Persistent storage is active, but usage is unavailable.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usedLegend" xml:space="preserve">
+    <value>Used ({{value}})</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usedLegendUnavailable" xml:space="preserve">
+    <value>Used unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usedOutOf" xml:space="preserve">
+    <value>used out of {{total}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.autoBest" xml:space="preserve">
+    <value>자동(최상)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.noRegionsAvailable" xml:space="preserve">
+    <value>사용 가능한 리전이 없습니다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.noRegionsMatch" xml:space="preserve">
+    <value>"{{query}}"와 일치하는 지역이 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.refreshPing" xml:space="preserve">
+    <value>핑 새로 고침</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.retry" xml:space="preserve">
+    <value>다시 시도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.searchPlaceholder" xml:space="preserve">
+    <value>지역 검색...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.title" xml:space="preserve">
+    <value>지역</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.saved" xml:space="preserve">
+    <value>저장됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.searchPlaceholder" xml:space="preserve">
+    <value>검색 설정...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.about" xml:space="preserve">
+    <value>소개</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.account" xml:space="preserve">
+    <value>Account</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.audio" xml:space="preserve">
+    <value>오디오</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.game" xml:space="preserve">
+    <value>게임</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.input" xml:space="preserve">
+    <value>입력</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.interface" xml:space="preserve">
+    <value>인터페이스</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.nativeStreamer" xml:space="preserve">
+    <value>네이티브 스트리머</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.stream" xml:space="preserve">
+    <value>스트림</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.thanks" xml:space="preserve">
+    <value>감사합니다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.communityDataUnavailable" xml:space="preserve">
+    <value>커뮤니티 데이터를 사용할 수 없습니다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.contributor" xml:space="preserve">
+    <value>기여자</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.contributorsSubtitle" xml:space="preserve">
+    <value>코드, 수정 사항 및 기능에서 OpenNOW를 개선하는 사람들.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.contributorsTitle" xml:space="preserve">
+    <value>기여자</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.githubSponsors" xml:space="preserve">
+    <value>GitHub Sponsors</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.loadingContributors" xml:space="preserve">
+    <value>GitHub에서 기여자를 로드하는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.loadingSupporters" xml:space="preserve">
+    <value>GitHub 후원자에서 후원자를 로드하는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.noContributors" xml:space="preserve">
+    <value>지금은 참여자를 표시할 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.noSupporters" xml:space="preserve">
+    <value>지금은 지지자를 표시할 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.privateSponsor" xml:space="preserve">
+    <value>Private sponsor</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.projectSponsor" xml:space="preserve">
+    <value>Project sponsor</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.subtitle" xml:space="preserve">
+    <value>OpenNOW는 클라이언트를 구축하는 기여자와 뒤에서 프로젝트를 지원하는 지지자들에 의해 형성됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.supporter" xml:space="preserve">
+    <value>서포터</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.supportersSubtitle" xml:space="preserve">
+    <value>작업을 지원하는 공개 GitHub 후원자와 가능한 경우 개인 후원자.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.supportersTitle" xml:space="preserve">
+    <value>서포터즈</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.title" xml:space="preserve">
+    <value>OpenNOW의 성장을 도와주셔서 감사합니다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.title" xml:space="preserve">
+    <value>설정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.appliesAfterRestart" xml:space="preserve">
+    <value>앱을 다시 시작한 후 적용됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.aspectRatio" xml:space="preserve">
+    <value>종횡비</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.codec" xml:space="preserve">
+    <value>코덱</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.colorDepth" xml:space="preserve">
+    <value>색상 심도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.cpu" xml:space="preserve">
+    <value>CPU</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.customBitrate" xml:space="preserve">
+    <value>Custom</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.decoder" xml:space="preserve">
+    <value>디코더</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.encoder" xml:space="preserve">
+    <value>인코더</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.experimentalL4SRequest" xml:space="preserve">
+    <value>실험적인 L4S 요청</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.experimentalL4SRequestHint" xml:space="preserve">
+    <value>새로 생성된 세션에서 GeForce NOW L4S 스트리밍 기능을 요청하세요. 이는 브라우저 WebRTC 동작 자체를 변경하지 않으며 서비스 또는 네트워크 경로에서 무시될 수 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.fps" xml:space="preserve">
+    <value>FPS</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.gpu" xml:space="preserve">
+    <value>GPU</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.launchInConsoleMode" xml:space="preserve">
+    <value>Console Mode (TV / Big Picture)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.launchInConsoleModeHint" xml:space="preserve">
+    <value>Start OpenNOW fullscreen with Controller Mode enabled, like GeForce NOW's TV mode. Sessions ask NVIDIA to launch games gamepad-friendly (big picture) while Console Mode or Controller Mode is active.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.maxBitrate" xml:space="preserve">
+    <value>최대 비트 전송률</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.recordingBitrate" xml:space="preserve">
+    <value>Recording Bitrate</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.recordingBitrateHint" xml:space="preserve">
+    <value>Controls local recording video bitrate. Auto lets the browser choose.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.requiresH265OrAv1" xml:space="preserve">
+    <value>이 모드에는 H265 또는 AV1이 필요합니다. 코덱이 자동으로 전환됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.resolution" xml:space="preserve">
+    <value>해상도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.sessionProxy" xml:space="preserve">
+    <value>세션 프록시</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.sessionProxyHint" xml:space="preserve">
+    <value>Nvidia 세션 생성 및 대기열 폴링에만 사용됩니다. 스트리밍/시그널링 트래픽은 프록시되지 않습니다. Zortos는 GitHub 후원자/서포터를 위한 프록시를 제공합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.softwareCpu" xml:space="preserve">
+    <value>소프트웨어(CPU)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.testing" xml:space="preserve">
+    <value>테스트 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.title" xml:space="preserve">
+    <value>비디오</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptBody" xml:space="preserve">
+    <value>This session proxy is voluntarily provided by Zortos to help OpenNOW users reach GeForce NOW. It is optional, shared, and may be rate-limited or unavailable at times.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptContinue" xml:space="preserve">
+    <value>Continue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptCostHint" xml:space="preserve">
+    <value>Running this proxy has ongoing server costs. If it helps you, consider supporting Zortos on GitHub Sponsors.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptDonate" xml:space="preserve">
+    <value>Donate on GitHub Sponsors</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptEsc" xml:space="preserve">
+    <value>cancel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptKicker" xml:space="preserve">
+    <value>Community service</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptTitle" xml:space="preserve">
+    <value>Use Zortos community proxy?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enabledBadge" xml:space="preserve">
+    <value>Using Zortos community proxy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.provisionFailed" xml:space="preserve">
+    <value>Could not activate the Zortos community proxy right now. Try again later or set up a proxy manually.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.provisioning" xml:space="preserve">
+    <value>Activating...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.useButton" xml:space="preserve">
+    <value>Use Zortos community proxy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.brightness" xml:space="preserve">
+    <value>Brightness</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.contrast" xml:space="preserve">
+    <value>Contrast</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.filmGrain" xml:space="preserve">
+    <value>Film Grain</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.hint" xml:space="preserve">
+    <value>GPU post-processing shaders applied to the decoded stream: sharpening, color grading, and film grain. Can also be adjusted live from the in-stream sidebar.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.nativeUnavailable" xml:space="preserve">
+    <value>Video filters do not apply while native streaming renders the video outside the app window.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.reset" xml:space="preserve">
+    <value>Reset to defaults</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.saturation" xml:space="preserve">
+    <value>Saturation</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.sharpen" xml:space="preserve">
+    <value>Sharpen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.title" xml:space="preserve">
+    <value>Video Filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.vibrance" xml:space="preserve">
+    <value>Vibrance</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.closeSettings" xml:space="preserve">
+    <value>설정 닫기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.sessionTimeRemaining" xml:space="preserve">
+    <value>Session Time Left</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.sessionTimeRemainingTitle" xml:space="preserve">
+    <value>Session time remaining</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.showSessionTimeRemainingInStatsOverlay" xml:space="preserve">
+    <value>Show session time remaining in stats overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.statsOverlay" xml:space="preserve">
+    <value>Stats overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.title" xml:space="preserve">
+    <value>사이드바</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.hint.allShortcuts" xml:space="preserve">
+    <value>모든 단축키</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.hint.commands" xml:space="preserve">
+    <value>명령</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.hint.move" xml:space="preserve">
+    <value>이동</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.regionAuto" xml:space="preserve">
+    <value>자동 리전</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.themeDeck" xml:space="preserve">
+    <value>덱 테마</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.connectedBadge.title" xml:space="preserve">
+    <value>Connected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.antiAfkEnabled" xml:space="preserve">
+    <value>AFK 방지가 활성화되었습니다</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.controllerConnected" xml:space="preserve">
+    <value>{{count}} 컨트롤러가 연결됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.controllerConnected_plural" xml:space="preserve">
+    <value>{{count}} 컨트롤러가 연결됨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.enterFullscreen" xml:space="preserve">
+    <value>전체 화면으로 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.exitFullscreen" xml:space="preserve">
+    <value>전체 화면 종료</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.muteMicrophone" xml:space="preserve">
+    <value>마이크 음소거</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.unmuteMicrophone" xml:space="preserve">
+    <value>마이크 음소거 해제</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.delete" xml:space="preserve">
+    <value>녹음 삭제</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.scrollLeft" xml:space="preserve">
+    <value>녹음을 왼쪽으로 스크롤</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.scrollRight" xml:space="preserve">
+    <value>녹음을 오른쪽으로 스크롤</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.title" xml:space="preserve">
+    <value>녹음</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.alt" xml:space="preserve">
+    <value>스크린샷 {{fileName}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.closePreview" xml:space="preserve">
+    <value>스크린샷 미리보기 닫기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.preview" xml:space="preserve">
+    <value>스크린샷 미리보기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.scrollLeft" xml:space="preserve">
+    <value>갤러리를 왼쪽으로 스크롤</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.scrollRight" xml:space="preserve">
+    <value>갤러리를 오른쪽으로 스크롤</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.title" xml:space="preserve">
+    <value>스크린샷</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sessionStarted.kicker" xml:space="preserve">
+    <value>Ready</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sessionStarted.title" xml:space="preserve">
+    <value>Session started</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.clickHereThenPress" xml:space="preserve">
+    <value>여기를 클릭한 다음 키를 누르세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.clickThenPress" xml:space="preserve">
+    <value>클릭한 다음 키를 누르세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.conflict" xml:space="preserve">
+    <value>바로가기가 기존 바인딩과 충돌합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.empty" xml:space="preserve">
+    <value>바로가기는 비워둘 수 없습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.examples" xml:space="preserve">
+    <value>예: F3, Ctrl+Shift+Q, Ctrl+Shift+K</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.focusAndPress" xml:space="preserve">
+    <value>초점을 맞추고 키 조합을 눌러 바인딩하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.invalidFormat" xml:space="preserve">
+    <value>잘못된 바로가기 형식입니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.stats" xml:space="preserve">
+    <value>통계</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.microphoneHandling" xml:space="preserve">
+    <value>마이크 취급</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.microphoneInputLevel" xml:space="preserve">
+    <value>마이크 입력 레벨</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.microphoneMode" xml:space="preserve">
+    <value>마이크 모드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.recordingShortcut" xml:space="preserve">
+    <value>녹음 바로가기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.remainingPlaytime" xml:space="preserve">
+    <value>남은 플레이 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.screenshotShortcut" xml:space="preserve">
+    <value>스크린샷 바로가기</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.sections" xml:space="preserve">
+    <value>사이드바 섹션</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.stopStream" xml:space="preserve">
+    <value>스트림 중지</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.title" xml:space="preserve">
+    <value>설정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.toggleMicrophone" xml:space="preserve">
+    <value>마이크 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.toggleStats" xml:space="preserve">
+    <value>통계 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.toggleStreamSidebar" xml:space="preserve">
+    <value>스트림 사이드바 전환</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.bitratePerformance" xml:space="preserve">
+    <value>Actual receive bitrate compared with the negotiated target</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.bitrateShort" xml:space="preserve">
+    <value>Bit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.collapse" xml:space="preserve">
+    <value>Hide detailed stats</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.connecting" xml:space="preserve">
+    <value>연결 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.decode" xml:space="preserve">
+    <value>디코드</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.decodeTime" xml:space="preserve">
+    <value>D = 디코드 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.expand" xml:space="preserve">
+    <value>Show detailed stats</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.hideAdvanced" xml:space="preserve">
+    <value>Hide advanced diagnostics</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.input" xml:space="preserve">
+    <value>입력</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.inputChannelState" xml:space="preserve">
+    <value>부분적으로 신뢰할 수 있는 입력 채널 상태 및 대기 중인 바이트</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.inputQueuePressure" xml:space="preserve">
+    <value>입력 큐 압력(버퍼링된 바이트 및 지연된 플러시)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.jitterBuffer" xml:space="preserve">
+    <value>JB = 지터 버퍼 지연</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.live" xml:space="preserve">
+    <value>Live</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.mouseFlushCadence" xml:space="preserve">
+    <value>마우스 플러시 케이던스 및 패킷 속도</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.network" xml:space="preserve">
+    <value>네트워크</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.overlayLabel" xml:space="preserve">
+    <value>Stream statistics</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.packetLoss" xml:space="preserve">
+    <value>패킷 손실 비율</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.packetLossValue" xml:space="preserve">
+    <value>{{value}}% 손실</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.render" xml:space="preserve">
+    <value>렌더링</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.renderTime" xml:space="preserve">
+    <value>R = 렌더링 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.roundTripLatency" xml:space="preserve">
+    <value>왕복 네트워크 대기 시간</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.rtt" xml:space="preserve">
+    <value>RTT</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.showAdvanced" xml:space="preserve">
+    <value>Advanced diagnostics</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.stable" xml:space="preserve">
+    <value>안정적</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.sync" xml:space="preserve">
+    <value>Sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.timeRemainingShort" xml:space="preserve">
+    <value>Left</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.waitingForVideo" xml:space="preserve">
+    <value>Waiting for game video…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.actions.cancelLoading" xml:space="preserve">
+    <value>로드 취소</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.actions.tryAgain" xml:space="preserve">
+    <value>Try again</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.adTag" xml:space="preserve">
+    <value>Ad</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.advertisement" xml:space="preserve">
+    <value>광고</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.advertisementInProgress" xml:space="preserve">
+    <value>광고 진행 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.availableForProgression" xml:space="preserve">
+    <value>대기열 진행에 {{count}} 광고를 사용할 수 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.availableForProgression_plural" xml:space="preserve">
+    <value>대기열 진행에 {{count}} 광고를 사용할 수 있습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.freeTierQueueAdsBegin" xml:space="preserve">
+    <value>무료 계층 대기열 광고는 대기열에 들어가자마자 시작됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.live" xml:space="preserve">
+    <value>Live</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.mediaWillAppear" xml:space="preserve">
+    <value>광고 미디어가 출시되는 대로 여기에 표시됩니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.playbackRequired" xml:space="preserve">
+    <value>세션이 대기열에 있는 동안 광고 재생이 필요합니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.resumeToStayInQueue" xml:space="preserve">
+    <value>대기열에 머물려면 광고를 재개하세요.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.sponsored" xml:space="preserve">
+    <value>Sponsored</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.titledAdvertisement" xml:space="preserve">
+    <value>{{title}} 광고</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.connecting" xml:space="preserve">
+    <value>The game is ready. Waiting for the first clear frame.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.next" xml:space="preserve">
+    <value>Up next</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.queue" xml:space="preserve">
+    <value>Settle in. We'll keep your place and bring the game in when it's ready.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.setup" xml:space="preserve">
+    <value>Your cloud rig is reserved and getting comfortable for you.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.starting" xml:space="preserve">
+    <value>The game is starting on your cloud rig.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.findingCapacity" xml:space="preserve">
+    <value>Finding the best available cloud rig for this session.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.mediaHandshake" xml:space="preserve">
+    <value>Negotiating the low-latency video and input channels.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.queueMoving" xml:space="preserve">
+    <value>The live queue is moving. Your place is secured at #{{position}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.rigReserved" xml:space="preserve">
+    <value>A gaming rig is reserved. Applying your session configuration now.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.servicesStarting" xml:space="preserve">
+    <value>Starting game services and preparing the remote display.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.editorial.keepWindowOpen" xml:space="preserve">
+    <value>Keep this window open — closing it drops your place in line.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.editorial.noInstalls" xml:space="preserve">
+    <value>No installs and no patches — the rig handles all of that while you wait.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.editorial.savesCarryOver" xml:space="preserve">
+    <value>Your saves and settings carry over automatically.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.error.codeLabel" xml:space="preserve">
+    <value>Error code</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.aheadOfYou" xml:space="preserve">
+    <value>{{count}} player ahead of you</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.aheadOfYou_plural" xml:space="preserve">
+    <value>{{count}} players ahead of you</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.currentStage" xml:space="preserve">
+    <value>Current stage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.estWait" xml:space="preserve">
+    <value>Est. wait</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.estimatedWait" xml:space="preserve">
+    <value>Estimated wait</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.inQueue" xml:space="preserve">
+    <value>In queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.placeInQueue" xml:space="preserve">
+    <value>Your place in queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.playersAhead" xml:space="preserve">
+    <value>Players ahead</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.position" xml:space="preserve">
+    <value>Position</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.stage" xml:space="preserve">
+    <value>Stage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.valueUnknown" xml:space="preserve">
+    <value>—</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.yourPosition" xml:space="preserve">
+    <value>Your position</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.youreNext" xml:space="preserve">
+    <value>You're next</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.adQueue" xml:space="preserve">
+    <value>광고 대기열</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.launchError" xml:space="preserve">
+    <value>실행 오류</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.launchProgress" xml:space="preserve">
+    <value>Game launch progress</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.nowLoading" xml:space="preserve">
+    <value>지금 로드 중</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.highDemand" xml:space="preserve">
+    <value>Demand is high — holding your place in line</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.joinedQueue" xml:space="preserve">
+    <value>Joined the {platform} queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.launchFailed" xml:space="preserve">
+    <value>Launch failed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.launchRequested" xml:space="preserve">
+    <value>Launch requested</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.queueAdvanced" xml:space="preserve">
+    <value>Queue advanced — #{position}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.queuePosition" xml:space="preserve">
+    <value>Queue position #{position}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.rigAllocated" xml:space="preserve">
+    <value>Rig allocated — preparing session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.routeOpening" xml:space="preserve">
+    <value>Opening stream route</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.session" xml:space="preserve">
+    <value>Session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.stillTrying" xml:space="preserve">
+    <value>Still working on it — thanks for your patience</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.streamStarting" xml:space="preserve">
+    <value>Stream starting — running final checks</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.title" xml:space="preserve">
+    <value>Session log</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.waitingForRig" xml:space="preserve">
+    <value>Waiting for an available rig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.gained" xml:space="preserve">
+    <value>{{count}} place gained</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.gained_plural" xml:space="preserve">
+    <value>{{count}} places gained</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.label" xml:space="preserve">
+    <value>Movement</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.updates" xml:space="preserve">
+    <value>over {{count}} update</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.updates_plural" xml:space="preserve">
+    <value>over {{count}} updates</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.progress.ariaText" xml:space="preserve">
+    <value>Step {{current}} of {{total}}: {{label}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.connectingToServer" xml:space="preserve">
+    <value>서버에 연결하는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.gameLaunchFailed" xml:space="preserve">
+    <value>게임 실행 실패</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.loading" xml:space="preserve">
+    <value>로드 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.positionInQueue" xml:space="preserve">
+    <value>대기열에서 #{{position}} 위치</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.queuePaused" xml:space="preserve">
+    <value>세션 대기열이 일시중지되었습니다.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.settingUpRig" xml:space="preserve">
+    <value>게임 장비를 설정하는 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.settingUpStream" xml:space="preserve">
+    <value>스트림 설정 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.startingStream" xml:space="preserve">
+    <value>스트림 설정 중...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.waitingInQueue" xml:space="preserve">
+    <value>대기열에서 기다리고 있습니다...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.connect" xml:space="preserve">
+    <value>Connect</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.queue" xml:space="preserve">
+    <value>대기열</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.ready" xml:space="preserve">
+    <value>준비</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.setup" xml:space="preserve">
+    <value>설정</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.calculating" xml:space="preserve">
+    <value>Calculating…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.cleared" xml:space="preserve">
+    <value>Cleared</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.elapsed" xml:space="preserve">
+    <value>Elapsed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.protected" xml:space="preserve">
+    <value>Secured</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.queuePosition" xml:space="preserve">
+    <value>Queue position</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.session" xml:space="preserve">
+    <value>Session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.startedAt" xml:space="preserve">
+    <value>Started {{time}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.almostReady" xml:space="preserve">
+    <value>Almost ready</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.connecting" xml:space="preserve">
+    <value>Connecting</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.error" xml:space="preserve">
+    <value>Couldn't start your session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.settingUp" xml:space="preserve">
+    <value>Setting up your session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+</root>

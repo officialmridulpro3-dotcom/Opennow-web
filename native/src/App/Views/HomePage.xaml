@@ -1,0 +1,135 @@
+<Page
+    x:Class="OpenNOW.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <!-- Empty state: the catalog only exists once signed in. -->
+        <StackPanel x:Name="EmptyState"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="12"
+                    Visibility="Visible">
+            <ProgressRing x:Name="LoadingRing" Width="28" Height="28" IsActive="True" />
+            <TextBlock x:Name="EmptyText"
+                       Text="Loading your library…"
+                       Style="{StaticResource OpenNowBodySoftText}"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <ScrollViewer x:Name="ShelfScroller" Visibility="Collapsed" Padding="24,0,24,24">
+            <StackPanel Spacing="28">
+
+                <!-- Spotlight: the first game of the first shelf, shown wide. -->
+                <Grid x:Name="Spotlight" Height="320" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="420" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image x:Name="SpotlightImage"
+                           Stretch="UniformToFill"
+                           VerticalAlignment="Center" />
+                    <Rectangle Grid.Column="0">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#00070B12" Offset="0.35" />
+                                <GradientStop Color="#070B12" Offset="1" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <StackPanel Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Spacing="14"
+                                Padding="8,0,0,0">
+                        <TextBlock x:Name="SpotlightTitle"
+                                   FontSize="30"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource OpenNowInkBrush}" />
+                        <TextBlock x:Name="SpotlightMeta"
+                                   Style="{StaticResource OpenNowBodySoftText}"
+                                   TextWrapping="Wrap" />
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button x:Name="SpotlightPlayButton"
+                                    Style="{StaticResource OpenNowPrimaryButton}"
+                                    Click="OnSpotlightPlay"
+                                    Content="Play" />
+                            <Button x:Name="SpotlightDetailsButton"
+                                    Style="{StaticResource OpenNowSecondaryButton}"
+                                    Click="OnSpotlightDetails"
+                                    Content="Details" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Shelves: one horizontal strip per catalog panel section.
+                     Each shelf shows eight cards, matching the web client. -->
+                <ItemsRepeater x:Name="ShelfRepeater">
+                    <ItemsRepeater.Layout>
+                        <StackLayout Orientation="Vertical" Spacing="28" />
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Spacing="12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Title}"
+                                               Style="{StaticResource OpenNowShelfTitle}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding CountLabel}"
+                                               Style="{StaticResource OpenNowCaptionText}"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+
+                                <ScrollViewer HorizontalScrollMode="Enabled"
+                                              HorizontalScrollBarVisibility="Hidden"
+                                              VerticalScrollMode="Disabled">
+                                    <ItemsRepeater ItemsSource="{Binding Games}">
+                                        <ItemsRepeater.Layout>
+                                            <StackLayout Orientation="Horizontal" Spacing="16" />
+                                        </ItemsRepeater.Layout>
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Style="{StaticResource OpenNowCard}"
+                                                        Width="180"
+                                                        Height="270"
+                                                        Click="OnGameCardClicked"
+                                                        Tag="{Binding Id}">
+                                                    <Grid>
+                                                        <Image Source="{Binding PosterUrl}"
+                                                               Stretch="UniformToFill" />
+                                                        <Border VerticalAlignment="Bottom"
+                                                                Padding="10"
+                                                                Background="#B3070B12">
+                                                            <StackPanel Spacing="2">
+                                                                <TextBlock Text="{Binding Title}"
+                                                                           FontSize="13"
+                                                                           FontWeight="SemiBold"
+                                                                           TextTrimming="CharacterEllipsis"
+                                                                           Foreground="{ThemeResource OpenNowInkBrush}" />
+                                                                <TextBlock Text="{Binding PlatformLabel}"
+                                                                           Style="{StaticResource OpenNowCaptionText}" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </Grid>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

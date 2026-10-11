@@ -1,0 +1,14 @@
+namespace OpenNOW.Views
+{
+    // Device-authorization sign-in. NVIDIA never sees a redirect URI here: the
+    // user approves a short code in their own browser and we poll the token
+    // endpoint, exactly like the web client.
+    [default_interface]
+    runtimeclass LoginPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        LoginPage();
+
+        // Raised once tokens have been exchanged and the profile is loaded.
+        event Windows.Foundation.TypedEventHandler<IInspectable, IInspectable> SignedIn;
+    }
+}

@@ -1,0 +1,302 @@
+<!-- OpenNOW control styles.
+     Every style is a retemplate of the WinUI control so the whole app shares
+     one visual language with the web client: midnight panels, 8px corner radii,
+     an accent-driven focus ring, and hover/press states that animate in 0.2s.
+     No blurred backdrop and no continuous animation — the streaming surface
+     needs the GPU budget. -->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls">
+
+    <!-- ── Semantic brushes ───────────────────────────────────────────────── -->
+
+    <!-- Backgrounds: the web client layers three blues so panels read as depth
+         rather than as separate cards. -->
+    <LinearGradientBrush x:Key="OpenNowBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="{StaticResource bgAColor}" Offset="0" />
+        <GradientStop Color="{StaticResource bgBColor}" Offset="0.55" />
+        <GradientStop Color="{StaticResource bgCColor}" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="OpenNowPanelBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource panelColor}" Offset="0" />
+        <GradientStop Color="{StaticResource bgBColor}" Offset="1" />
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="OpenNowRailBrush" Color="{StaticResource bgAColor}" />
+    <SolidColorBrush x:Key="OpenNowPanelBorderBrush" Color="{StaticResource panelBorderSolidColor}" />
+    <SolidColorBrush x:Key="OpenNowInkBrush" Color="{StaticResource inkColor}" />
+    <SolidColorBrush x:Key="OpenNowInkSoftBrush" Color="{StaticResource inkSoftColor}" />
+    <SolidColorBrush x:Key="OpenNowMutedBrush" Color="{StaticResource inkMutedColor}" />
+    <SolidColorBrush x:Key="OpenNowAccentBrush" Color="{StaticResource accentColor}" />
+    <SolidColorBrush x:Key="OpenNowSuccessBrush" Color="{StaticResource successColor}" />
+    <SolidColorBrush x:Key="OpenNowWarningBrush" Color="{StaticResource warningColor}" />
+    <SolidColorBrush x:Key="OpenNowErrorBrush" Color="{StaticResource errorColor}" />
+    <SolidColorBrush x:Key="OpenNowCardBrush" Color="{StaticResource cardColor}" />
+    <SolidColorBrush x:Key="OpenNowCardHoverBrush" Color="{StaticResource cardHoverColor}" />
+
+    <SolidColorBrush x:Key="OpenNowAccentSurfaceBrush" Color="{StaticResource accentColor}" Opacity="0.08" />
+    <SolidColorBrush x:Key="OpenNowAccentSurfaceStrongBrush" Color="{StaticResource accentColor}" Opacity="0.16" />
+
+    <!-- ── Typography ─────────────────────────────────────────────────────── -->
+
+    <Style x:Key="OpenNowTitleBarText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI Variable Display, Segoe UI, Sans-serif" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkBrush}" />
+        <Setter Property="LetterSpacing" Value="6" />
+        <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
+    </Style>
+
+    <Style x:Key="OpenNowHeaderTitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI Variable Display, Segoe UI, Sans-serif" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkBrush}" />
+        <Setter Property="LetterSpacing" Value="-0.015" />
+    </Style>
+
+    <Style x:Key="OpenNowHeaderMeta" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowMutedBrush}" />
+    </Style>
+
+    <Style x:Key="OpenNowBodyText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkBrush}" />
+    </Style>
+
+    <Style x:Key="OpenNowBodySoftText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkSoftBrush}" />
+    </Style>
+
+    <Style x:Key="OpenNowShelfTitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkBrush}" />
+    </Style>
+
+    <Style x:Key="OpenNowStatusBarText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowMutedBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="OpenNowRailLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowMutedBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="OpenNowRailIcon" TargetType="FontIcon">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowMutedBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="OpenNowChipText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkSoftBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="OpenNowCaptionText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowMutedBrush}" />
+    </Style>
+
+    <!-- ── Chips ──────────────────────────────────────────────────────────── -->
+
+    <Style x:Key="OpenNowChip" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource OpenNowCardBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource rPill}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource OpenNowPanelBorderBrush}" />
+    </Style>
+
+    <!-- ── Navigation rail button ─────────────────────────────────────────── -->
+
+    <Style x:Key="OpenNowRailButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Width" Value="60" />
+        <Setter Property="Height" Value="58" />
+        <Setter Property="Margin" Value="4,2" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource rMd}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="UseSystemFocusVisuals" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="Root"
+                          Background="{TemplateBinding Background}"
+                          CornerRadius="{TemplateBinding CornerRadius}">
+                        <Border x:Name="AccentBar"
+                                Width="3"
+                                Height="20"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                CornerRadius="0,2,2,0"
+                                Background="{ThemeResource OpenNowAccentBrush}"
+                                Opacity="0" />
+                        <ContentPresenter x:Name="Content"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Root"
+                                                                       Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource OpenNowCardHoverBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Root"
+                                                                       Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource OpenNowAccentSurfaceBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="AccentBar"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="{StaticResource DurationFast}" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Root"
+                                                                       Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource OpenNowAccentSurfaceBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unselected" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ── Buttons ────────────────────────────────────────────────────────── -->
+
+    <Style x:Key="OpenNowPrimaryButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+        <Setter Property="Background" Value="{ThemeResource OpenNowAccentBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource accentOnColor}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="CornerRadius" Value="{StaticResource rMd}" />
+        <Setter Property="Padding" Value="18,9" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style x:Key="OpenNowSecondaryButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+        <Setter Property="Background" Value="{ThemeResource OpenNowCardBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource rMd}" />
+        <Setter Property="Padding" Value="16,9" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource OpenNowPanelBorderBrush}" />
+    </Style>
+
+    <Style x:Key="OpenNowGhostButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkSoftBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="10,6" />
+    </Style>
+
+    <Style x:Key="OpenNowAccountButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource rPill}" />
+        <Setter Property="Padding" Value="4" />
+    </Style>
+
+    <Style x:Key="OpenNowDangerButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowErrorBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource OpenNowErrorBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource rMd}" />
+        <Setter Property="Padding" Value="16,9" />
+    </Style>
+
+    <!-- ── Game card ──────────────────────────────────────────────────────── -->
+
+    <!-- The card lifts on hover with a 1.04 scale on the artwork only; scaling
+         the whole card would reflow the shelf. -->
+    <Style x:Key="OpenNowCard" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+        <Setter Property="Background" Value="{ThemeResource OpenNowCardBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource rLg}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    </Style>
+
+    <!-- ── Stream HUD ─────────────────────────────────────────────────────── -->
+
+    <Style x:Key="OpenNowHudPanel" TargetType="Border">
+        <Setter Property="Background" Value="#CC070B12" />
+        <Setter Property="CornerRadius" Value="{StaticResource rLg}" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource OpenNowPanelBorderBrush}" />
+    </Style>
+
+    <Style x:Key="OpenNowStatValue" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Cascadia Mono, Consolas, monospace" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkBrush}" />
+    </Style>
+
+    <Style x:Key="OpenNowStatLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowMutedBrush}" />
+        <Setter Property="LetterSpacing" Value="6" />
+    </Style>
+
+    <!-- ── Settings rows ──────────────────────────────────────────────────── -->
+
+    <Style x:Key="OpenNowSettingsRow" TargetType="Grid">
+        <Setter Property="Padding" Value="0,14" />
+        <Setter Property="BorderBrush" Value="{ThemeResource OpenNowPanelBorderBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+    </Style>
+
+    <Style x:Key="OpenNowSettingsLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowInkBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="OpenNowSettingsHint" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{ThemeResource OpenNowMutedBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="OpenNowSectionCard" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource OpenNowPanelBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource rXl}" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource OpenNowPanelBorderBrush}" />
+    </Style>
+</ResourceDictionary>

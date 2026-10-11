@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- OpenNOW — WinUI 3 (Windows App SDK) C++/WinRT application.
+
+     Unpackaged by default (WindowsPackageType=None): the installer story is a
+     plain folder + optional MSIX, and it keeps the DirectX swap chain out of
+     the UWP container's restrictions. Set EnableMsixTooling=true and add a
+     Package.appxmanifest if you want a packaged build; nothing else changes. -->
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildProjectDirectory)\..\..\Directory.Build.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6F2A1B7C-4B31-4C9E-9A64-0E1B2C3D4E5F}</ProjectGuid>
+    <RootNamespace>OpenNOW</RootNamespace>
+    <WindowsAppContainer>false</WindowsAppContainer>
+    <AppContainerApplication>false</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
+    <TargetPlatformVersion>10.0.22621.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
+    <WholeProgramOptimization Condition="'$(Configuration)'=='Release'">true</WholeProgramOptimization>
+    <CppWinRTOptimized>true</CppWinRTOptimized>
+    <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
+    <CppWinRTGenerateWindowsMetadata>true</CppWinRTGenerateWindowsMetadata>
+    <MinimalCoreWin>true</MinimalCoreWin>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>false</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.WindowsSDK.props" />
+
+  <!-- Windows App SDK + WIL. Bump these in lockstep with Directory.Build.props. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
+    <PackageReference Include="Microsoft.Windows.ImplementationLibrary" Version="1.0.240803.1" />
+  </ItemGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <WarningLevel>Level4</WarningLevel>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj /utf-8</AdditionalOptions>
+      <AdditionalIncludeDirectories>
+        $(MSBuildProjectDirectory)\..;
+        $(MSBuildProjectDirectory)\..\Core\include;
+        $(MSBuildProjectDirectory)\..\DirectX\include;
+        %(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>
+        d3d10_1.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;windowsapp.lib;crypt32.lib;winhttp.lib;%(AdditionalDependencies)
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- ── precompiled header ──────────────────────────────────────────────── -->
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+
+  <!-- ── IDL: every WinRT type must be declared here ──────────────────────── -->
+  <ItemGroup>
+    <Midl Include="App.idl" />
+    <Midl Include="MainWindow.idl" />
+    <Midl Include="Controls\StreamSurfacePanel.idl" />
+    <Midl Include="Views\HomePage.idl" />
+    <Midl Include="Views\LibraryPage.idl" />
+    <Midl Include="Views\LoginPage.idl" />
+    <Midl Include="Views\GameDetailsPage.idl" />
+    <Midl Include="Views\PlaytimePage.idl" />
+    <Midl Include="Views\SettingsPage.idl" />
+    <Midl Include="Views\StreamPage.idl" />
+  </ItemGroup>
+
+  <!-- ── sources ─────────────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Controls\StreamSurfacePanel.cpp" />
+    <ClCompile Include="Services\AppServices.cpp" />
+    <ClCompile Include="Views\HomePage.cpp" />
+    <ClCompile Include="Views\LibraryPage.cpp" />
+    <ClCompile Include="Views\LoginPage.cpp" />
+    <ClCompile Include="Views\GameDetailsPage.cpp" />
+    <ClCompile Include="Views\PlaytimePage.cpp" />
+    <ClCompile Include="Views\SettingsPage.cpp" />
+    <ClCompile Include="Views\StreamPage.cpp" />
+    <ClCompile Include="..\DirectX\src\StreamSurface.cpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClInclude Include="App.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="Controls\StreamSurfacePanel.h" />
+    <ClInclude Include="Services\AppServices.h" />
+    <ClInclude Include="Views\HomePage.h" />
+    <ClInclude Include="Views\LibraryPage.h" />
+    <ClInclude Include="Views\LoginPage.h" />
+    <ClInclude Include="Views\GameDetailsPage.h" />
+    <ClInclude Include="Views\PlaytimePage.h" />
+    <ClInclude Include="Views\SettingsPage.h" />
+    <ClInclude Include="Views\StreamPage.h" />
+  </ItemGroup>
+
+  <!-- ── XAML ────────────────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\HomePage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LibraryPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LoginPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\GameDetailsPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PlaytimePage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StreamPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <!-- ── resources ───────────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <Resource Include="Themes\GeneratedTokens.xaml" />
+    <Resource Include="Themes\Styles.xaml" />
+    <Resource Include="Themes\Accents.xaml" />
+    <Image Include="..\..\..\public\opennow-logo.png">
+      <Link>Assets\opennow-logo.png</Link>
+    </Image>
+    <Image Include="..\..\..\public\opennow-logo-mark.png">
+      <Link>Assets\opennow-logo-mark.png</Link>
+    </Image>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Manifest Include="app.manifest" />
+  </ItemGroup>
+
+  <!-- ── project references ──────────────────────────────────────────────── -->
+  <ItemGroup>
+    <ProjectReference Include="..\Core\OpenNOW.Core.vcxproj" />
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

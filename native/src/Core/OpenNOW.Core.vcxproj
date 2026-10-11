@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- OpenNOW Core — static library shared with the CMake build used by CI.
+     The same sources compile under MSVC here and under g++/clang on Linux,
+     which is what lets the protocol code be unit tested off-Windows. -->
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildProjectDirectory)\..\..\Directory.Build.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2C8E4A19-77C3-4B72-9F0D-8A5E6B1C9D21}</ProjectGuid>
+    <RootNamespace>OpenNOWCore</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WindowsAppContainer>false</WindowsAppContainer>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <WarningLevel>Level4</WarningLevel>
+      <AdditionalOptions>%(AdditionalOptions) /utf-8 /permissive-</AdditionalOptions>
+      <AdditionalIncludeDirectories>
+        $(MSBuildProjectDirectory)\include;%(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <ClInclude Include="include\opennow\core\Json.hpp" />
+    <ClInclude Include="include\opennow\core\Hash.hpp" />
+    <ClInclude Include="include\opennow\core\Http.hpp" />
+    <ClInclude Include="include\opennow\core\Logging.hpp" />
+    <ClInclude Include="include\opennow\core\Paths.hpp" />
+    <ClInclude Include="include\opennow\core\Result.hpp" />
+    <ClInclude Include="include\opennow\core\Settings.hpp" />
+    <ClInclude Include="include\opennow\core\Types.hpp" />
+    <ClInclude Include="include\opennow\core\gfn\Auth.hpp" />
+    <ClInclude Include="include\opennow\core\gfn\Catalog.hpp" />
+    <ClInclude Include="include\opennow\core\gfn\CloudMatch.hpp" />
+    <ClInclude Include="include\opennow\core\gfn\Constants.hpp" />
+    <ClInclude Include="include\opennow\core\gfn\DeviceId.hpp" />
+    <ClInclude Include="include\opennow\core\gfn\GeneratedQueries.inc" />
+    <ClInclude Include="include\opennow\core\gfn\Signaling.hpp" />
+    <ClInclude Include="include\opennow\core\gfn\Subscription.hpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClCompile Include="src\Json.cpp" />
+    <ClCompile Include="src\Hash.cpp" />
+    <ClCompile Include="src\Http.cpp" />
+    <ClCompile Include="src\Logging.cpp" />
+    <ClCompile Include="src\Paths.cpp" />
+    <ClCompile Include="src\Settings.cpp" />
+    <ClCompile Include="src\Types.cpp" />
+    <ClCompile Include="src\gfn\Auth.cpp" />
+    <ClCompile Include="src\gfn\Catalog.cpp" />
+    <ClCompile Include="src\gfn\CloudMatch.cpp" />
+    <ClCompile Include="src\gfn\Constants.cpp" />
+    <ClCompile Include="src\gfn\DeviceId.cpp" />
+    <ClCompile Include="src\gfn\Signaling.cpp" />
+    <ClCompile Include="src\gfn\SignalingWinrt.cpp" />
+    <ClCompile Include="src\gfn\Subscription.cpp" />
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

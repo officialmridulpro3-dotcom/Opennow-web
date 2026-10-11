@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shared MSBuild settings for the native OpenNOW client. -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <WindowsAppSDKVersion>1.6.241114003</WindowsAppSDKVersion>
+    <OpenNowVersion>0.1.0</OpenNowVersion>
+    <OutDir>$(MSBuildThisFileDirectory)build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(MSBuildThisFileDirectory)obj\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- NuGet restore for C++ projects (PackageReference in vcxproj). -->
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+  </PropertyGroup>
+
+  <!-- DirectX: the client targets DirectX 10 hardware. Nothing in the tree is
+       allowed to require a D3D11-only feature, and /W4 + /WX in CI would catch
+       accidental use of a newer API through the SDK headers' deprecation
+       attributes. -->
+  <PropertyGroup>
+    <OpenNowMaxFeatureLevel>10_1</OpenNowMaxFeatureLevel>
+  </PropertyGroup>
+</Project>

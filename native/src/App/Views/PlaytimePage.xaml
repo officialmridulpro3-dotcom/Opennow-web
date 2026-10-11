@@ -1,0 +1,105 @@
+<Page
+    x:Class="OpenNOW.Views.PlaytimePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="24,16,24,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Summary cards -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Style="{StaticResource OpenNowSectionCard}"
+                    Margin="0,0,12,0">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="TOTAL PLAYTIME"
+                               Style="{StaticResource OpenNowStatLabel}" />
+                    <TextBlock x:Name="TotalTimeText"
+                               FontSize="26"
+                               FontWeight="SemiBold"
+                               Foreground="{ThemeResource OpenNowInkBrush}" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1"
+                    Style="{StaticResource OpenNowSectionCard}"
+                    Margin="6,0">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="GAMES PLAYED"
+                               Style="{StaticResource OpenNowStatLabel}" />
+                    <TextBlock x:Name="GamesCountText"
+                               FontSize="26"
+                               FontWeight="SemiBold"
+                               Foreground="{ThemeResource OpenNowInkBrush}" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2"
+                    Style="{StaticResource OpenNowSectionCard}"
+                    Margin="12,0,0,0">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="SESSIONS"
+                               Style="{StaticResource OpenNowStatLabel}" />
+                    <TextBlock x:Name="SessionsCountText"
+                               FontSize="26"
+                               FontWeight="SemiBold"
+                               Foreground="{ThemeResource OpenNowInkBrush}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Per-game table -->
+        <Grid Grid.Row="1">
+            <TextBlock x:Name="EmptyText"
+                       Text="No sessions recorded yet. Play a game and it will show up here."
+                       Style="{StaticResource OpenNowBodySoftText}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Visibility="Collapsed" />
+
+            <ListView x:Name="PlaytimeList">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="4,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="160" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0"
+                                       Text="{Binding Title}"
+                                       Style="{StaticResource OpenNowBodyText}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding TotalLabel}"
+                                       Style="{StaticResource OpenNowBodySoftText}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding SessionsLabel}"
+                                       Style="{StaticResource OpenNowBodySoftText}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="3"
+                                       Text="{Binding LastPlayedLabel}"
+                                       Style="{StaticResource OpenNowCaptionText}"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>

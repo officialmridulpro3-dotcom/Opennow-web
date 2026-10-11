@@ -1,0 +1,22 @@
+namespace OpenNOW.Views
+{
+    [default_interface]
+    unsealed runtimeclass PlaytimeViewModel
+    {
+        PlaytimeViewModel();
+        String GameId { get; };
+        String Title { get; };
+        String TotalLabel { get; };
+        String SessionsLabel { get; };
+        String LastPlayedLabel { get; };
+    }
+
+    [default_interface]
+    runtimeclass PlaytimePage : Microsoft.UI.Xaml.Controls.Page
+    {
+        PlaytimePage();
+
+        // Reloads the playtime table (called after a session ends).
+        void Refresh();
+    }
+}

@@ -1,0 +1,150 @@
+<Page
+    x:Class="OpenNOW.Views.StreamPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:OpenNOW.Controls"
+    mc:Ignorable="d">
+
+    <!-- The stream fills the page. Everything else floats on top of it, which is
+         why the grid has no row definitions: every overlay is absolutely placed
+         and hidden by default so it costs nothing while playing. -->
+    <Grid x:Name="Root" Background="#FF000000">
+
+        <!-- DirectX 10 video surface -->
+        <controls:StreamSurfacePanel x:Name="Surface" />
+
+        <!-- ── Loading / queue overlay ───────────────────────────────────── -->
+        <Grid x:Name="LoadingOverlay" Background="#F2070B12">
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="18">
+                <ProgressRing x:Name="LoadingRing" Width="40" Height="40" IsActive="True" />
+                <TextBlock x:Name="PhaseText"
+                           Text="Requesting a seat…"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource OpenNowInkBrush}"
+                           HorizontalAlignment="Center" />
+                <TextBlock x:Name="DetailText"
+                           Text=""
+                           Style="{StaticResource OpenNowBodySoftText}"
+                           HorizontalAlignment="Center" />
+                <TextBlock x:Name="QueueText"
+                           Text=""
+                           FontSize="28"
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource OpenNowAccentBrush}"
+                           HorizontalAlignment="Center"
+                           Visibility="Collapsed" />
+                <Button x:Name="CancelButton"
+                        Style="{StaticResource OpenNowSecondaryButton}"
+                        HorizontalAlignment="Center"
+                        Click="OnCancel"
+                        Content="Cancel" />
+            </StackPanel>
+        </Grid>
+
+        <!-- ── In-session HUD ────────────────────────────────────────────── -->
+        <!-- Top-left stats. Hidden until the user asks for them with Ctrl+Shift+S. -->
+        <Border x:Name="StatsPanel"
+                Style="{StaticResource OpenNowHudPanel}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="20"
+                Visibility="Collapsed">
+            <StackPanel Spacing="8" MinWidth="180">
+                <TextBlock Text="STREAM" Style="{StaticResource OpenNowStatLabel}" />
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition /</Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Resolution" Style="{StaticResource OpenNowStatLabel}" />
+                    <TextBlock Grid.Row="0" Grid.Column="1" x:Name="ResolutionValue"
+                               Text="—" Style="{StaticResource OpenNowStatValue}" />
+                    <TextBlock Grid.Row="1" Text="FPS" Style="{StaticResource OpenNowStatLabel}" />
+                    <TextBlock Grid.Row="1" Grid.Column="1" x:Name="FpsValue"
+                               Text="—" Style="{StaticResource OpenNowStatValue}" />
+                    <TextBlock Grid.Row="2" Text="Bitrate" Style="{StaticResource OpenNowStatLabel}" />
+                    <TextBlock Grid.Row="2" Grid.Column="1" x:Name="BitrateValue"
+                               Text="—" Style="{StaticResource OpenNowStatValue}" />
+                    <TextBlock Grid.Row="3" Text="Latency" Style="{StaticResource OpenNowStatLabel}" />
+                    <TextBlock Grid.Row="3" Grid.Column="1" x:Name="LatencyValue"
+                               Text="—" Style="{StaticResource OpenNowStatValue}" />
+                    <TextBlock Grid.Row="4" Text="Packet loss" Style="{StaticResource OpenNowStatLabel}" />
+                    <TextBlock Grid.Row="4" Grid.Column="1" x:Name="LossValue"
+                               Text="—" Style="{StaticResource OpenNowStatValue}" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Bottom control bar: fades out while the pointer is idle. -->
+        <Border x:Name="ControlBar"
+                Style="{StaticResource OpenNowHudPanel}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,20"
+                Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Button x:Name="StatsButton"
+                        Style="{StaticResource OpenNowGhostButton}"
+                        Click="OnToggleStats"
+                        ToolTipService.ToolTip="Statistics (Ctrl+Shift+S)">
+                    <FontIcon Glyph="&#xE9E9;" FontSize="14" />
+                </Button>
+                <Button x:Name="MicrophoneButton"
+                        Style="{StaticResource OpenNowGhostButton}"
+                        Click="OnToggleMicrophone"
+                        ToolTipService.ToolTip="Microphone">
+                    <FontIcon Glyph="&#xE720;" FontSize="14" />
+                </Button>
+                <Button x:Name="FullscreenButton"
+                        Style="{StaticResource OpenNowGhostButton}"
+                        Click="OnToggleFullscreen"
+                        ToolTipService.ToolTip="Fullscreen (F11)">
+                    <FontIcon Glyph="&#xE740;" FontSize="14" />
+                </Button>
+                <Rectangle Width="1" Height="20" Fill="{ThemeResource OpenNowPanelBorderBrush}" />
+                <Button x:Name="StopButton"
+                        Style="{StaticResource OpenNowDangerButton}"
+                        Click="OnStop"
+                        Content="End session" />
+            </StackPanel>
+        </Border>
+
+        <!-- Exit confirmation, shown when the user presses Escape. -->
+        <Grid x:Name="ExitPrompt"
+              Background="#CC070B12"
+              Visibility="Collapsed">
+            <Border Width="420"
+                    Padding="24"
+                    CornerRadius="{StaticResource rXl}"
+                    Background="{ThemeResource OpenNowPanelBrush}"
+                    BorderBrush="{ThemeResource OpenNowPanelBorderBrush}"
+                    BorderThickness="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="End this session?"
+                               Style="{StaticResource OpenNowShelfTitle}" />
+                    <TextBlock Text="Your game will be closed on the remote machine."
+                               Style="{StaticResource OpenNowSettingsHint}" />
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Spacing="10">
+                        <Button Content="Keep playing"
+                                Style="{StaticResource OpenNowSecondaryButton}"
+                                Click="OnDismissExit" />
+                        <Button Content="End session"
+                                Style="{StaticResource OpenNowPrimaryButton}"
+                                Click="OnStop" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

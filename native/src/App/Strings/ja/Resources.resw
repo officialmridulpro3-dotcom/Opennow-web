@@ -1,0 +1,3876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GENERATED FILE — produced by native/tools/sync-locales.mjs from locales/*.json -->
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="app.actions.add" xml:space="preserve">
+    <value>追加</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.back" xml:space="preserve">
+    <value>戻る</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.browse" xml:space="preserve">
+    <value>閲覧する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.buy" xml:space="preserve">
+    <value>Buy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.cancel" xml:space="preserve">
+    <value>キャンセル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.close" xml:space="preserve">
+    <value>閉じる</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.confirm" xml:space="preserve">
+    <value>確認</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.continue" xml:space="preserve">
+    <value>続ける</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.delete" xml:space="preserve">
+    <value>削除</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.done" xml:space="preserve">
+    <value>完了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.markAsOwned" xml:space="preserve">
+    <value>Mark as Owned</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.open" xml:space="preserve">
+    <value>開く</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.play" xml:space="preserve">
+    <value>プレイ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.refresh" xml:space="preserve">
+    <value>更新</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.remove" xml:space="preserve">
+    <value>削除</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.reset" xml:space="preserve">
+    <value>リセット</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.resume" xml:space="preserve">
+    <value>再開</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.retry" xml:space="preserve">
+    <value>再試行</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.save" xml:space="preserve">
+    <value>保存</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.search" xml:space="preserve">
+    <value>検索</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.select" xml:space="preserve">
+    <value>選択</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.settings" xml:space="preserve">
+    <value>設定</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.showInFolder" xml:space="preserve">
+    <value>フォルダ内に表示</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.sort" xml:space="preserve">
+    <value>並べ替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.stop" xml:space="preserve">
+    <value>停止</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.actions.switch" xml:space="preserve">
+    <value>スイッチ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.description" xml:space="preserve">
+    <value>クラウドゲーム、オープンソースに。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.auto" xml:space="preserve">
+    <value>自動</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.best" xml:space="preserve">
+    <value>ベスト</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.beta" xml:space="preserve">
+    <value>ベータ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.current" xml:space="preserve">
+    <value>現在</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.default" xml:space="preserve">
+    <value>デフォルト</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.defaultDevice" xml:space="preserve">
+    <value>デフォルトデバイス</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.experimental" xml:space="preserve">
+    <value>実験的</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.free" xml:space="preserve">
+    <value>無料</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.game" xml:space="preserve">
+    <value>ゲーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.hardware" xml:space="preserve">
+    <value>ハードウェア</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.no" xml:space="preserve">
+    <value>いいえ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.other" xml:space="preserve">
+    <value>その他</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.priority" xml:space="preserve">
+    <value>優先順位</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.softwareCpu" xml:space="preserve">
+    <value>ソフトウェア（CPU）</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.ultimate" xml:space="preserve">
+    <value>Ultimate</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.labels.unlimited" xml:space="preserve">
+    <value>無制限</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.name" xml:space="preserve">
+    <value>OpenNOW</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.checking" xml:space="preserve">
+    <value>チェック中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.connecting" xml:space="preserve">
+    <value>接続中…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.disabled" xml:space="preserve">
+    <value>無効</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.error" xml:space="preserve">
+    <value>エラー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.failed" xml:space="preserve">
+    <value>失敗</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.idle" xml:space="preserve">
+    <value>アイドル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.loading" xml:space="preserve">
+    <value>読み込み中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.markingOwned" xml:space="preserve">
+    <value>Marking as owned...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.ready" xml:space="preserve">
+    <value>準備完了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.saved" xml:space="preserve">
+    <value>保存されました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.testing" xml:space="preserve">
+    <value>テスト中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.unknown" xml:space="preserve">
+    <value>不明</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.status.upToDate" xml:space="preserve">
+    <value>最新</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.tagline" xml:space="preserve">
+    <value>オープンソースのクラウドゲームクライアント</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.bitrateMbps" xml:space="preserve">
+    <value>{{value}} Mbps</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.durationLeft" xml:space="preserve">
+    <value>{{value}} 残り</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gb" xml:space="preserve">
+    <value>{{value}} GB</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gbLeft" xml:space="preserve">
+    <value>{{value}} GB 残り</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gbTotal" xml:space="preserve">
+    <value>{{value}} GB 合計</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.gbUsed" xml:space="preserve">
+    <value>{{value}} GB が使用されています</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.hours" xml:space="preserve">
+    <value>{{value}}h</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.hoursLeft" xml:space="preserve">
+    <value>{{value}}h 残り</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.hoursUsed" xml:space="preserve">
+    <value>{{value}}h 使用</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.milliseconds" xml:space="preserve">
+    <value>{{value}}ms</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.minutes" xml:space="preserve">
+    <value>{{value}}分</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.percent" xml:space="preserve">
+    <value>{{value}}%</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="app.units.seconds" xml:space="preserve">
+    <value>{{value}}秒</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.activeAccount" xml:space="preserve">
+    <value>アクティブなアカウント</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.addAccount" xml:space="preserve">
+    <value>アカウントを追加</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.cancelAccountRemoval" xml:space="preserve">
+    <value>アカウントの削除をキャンセル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.cancelLogOut" xml:space="preserve">
+    <value>ログアウトをキャンセル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.guest" xml:space="preserve">
+    <value>ゲスト</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.kicker" xml:space="preserve">
+    <value>アカウント</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.logOutAll" xml:space="preserve">
+    <value>すべてのアカウントをログアウト</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.logOutConfirmation" xml:space="preserve">
+    <value>ログアウトの確認</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccount" xml:space="preserve">
+    <value>アカウントを削除する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountConfirmation" xml:space="preserve">
+    <value>アカウント削除の確認</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountDescription" xml:space="preserve">
+    <value>保存されたアカウントから {{name}} を削除してもよろしいですか?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountSubtext" xml:space="preserve">
+    <value>サインインすると、このアカウントを再度追加できます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeAccountTitle" xml:space="preserve">
+    <value>アカウントを削除しますか?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.removeNamedAccount" xml:space="preserve">
+    <value>{{name}} を削除</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAll" xml:space="preserve">
+    <value>すべてサインアウトする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllAccounts" xml:space="preserve">
+    <value>すべてのアカウントからサインアウトする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllDescription" xml:space="preserve">
+    <value>このデバイスから保存されているすべてのアカウントを削除し、ゲストモードに戻ろうとしています。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllSubtext" xml:space="preserve">
+    <value>クラウド セッション データはサービス上に残ります。これは、ローカルの OpenNOW アカウント セッションをクリアするだけです。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.signOutAllTitle" xml:space="preserve">
+    <value>すべてのアカウントをサインアウトしてもよろしいですか？</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.staySignedIn" xml:space="preserve">
+    <value>サインインを保持</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.switchAccount" xml:space="preserve">
+    <value>アカウントを切り替える</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.accounts.thisAccount" xml:space="preserve">
+    <value>このアカウント</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.cancelDeviceLogin" xml:space="preserve">
+    <value>サインインをキャンセル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.connecting" xml:space="preserve">
+    <value>接続中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.restoringSession" xml:space="preserve">
+    <value>セッションを復元中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.signIn" xml:space="preserve">
+    <value>サインイン</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.actions.signInWithLink" xml:space="preserve">
+    <value>リンクでサインイン</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.codeHint" xml:space="preserve">
+    <value>NVIDIAのページで求められた場合は、このコードを入力してください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.codeLabel" xml:space="preserve">
+    <value>確認コード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.copied" xml:space="preserve">
+    <value>コピーしました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.copyCode" xml:space="preserve">
+    <value>コードをコピー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.description" xml:space="preserve">
+    <value>新しいタブでNVIDIAのサインインページを開き、リクエストを承認してください。OpenNOWは自動的に続行します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.expired" xml:space="preserve">
+    <value>サインインリンクの有効期限が切れました。もう一度開始して新しいリンクを取得してください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.expiresIn" xml:space="preserve">
+    <value>リンクの有効期限: {{time}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.hideQr" xml:space="preserve">
+    <value>QRコードを隠す</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.manualUrl" xml:space="preserve">
+    <value>または、このアドレスを手動で開く</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.open" xml:space="preserve">
+    <value>NVIDIAサインインを開く</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.openAgain" xml:space="preserve">
+    <value>サインインページを開き直す</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.preparing" xml:space="preserve">
+    <value>サインインを準備中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.preparingDescription" xml:space="preserve">
+    <value>NVIDIAのサインインリンクをリクエストしています...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.showQr" xml:space="preserve">
+    <value>QRコードを表示</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.title" xml:space="preserve">
+    <value>サインインリンクを開く</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.link.waiting" xml:space="preserve">
+    <value>サインインリクエストの承認を待っています...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.provider.label" xml:space="preserve">
+    <value>プロバイダー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.provider.loading" xml:space="preserve">
+    <value>読み込み中…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.provider.select" xml:space="preserve">
+    <value>プロバイダーを選択</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.qr.alt" xml:space="preserve">
+    <value>サインイン用QRコード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.qr.description" xml:space="preserve">
+    <value>スマートフォンでスキャンし、サインインリクエストを承認してください。OpenNOWは自動的に続行します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.qr.title" xml:space="preserve">
+    <value>スキャンしてサインイン</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.missingRefreshTokenContinuing" xml:space="preserve">
+    <value>保存されたセッションには更新トークンがありません。続きます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.noSavedSessionFound" xml:space="preserve">
+    <value>No saved session found.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.restoringSavedSession" xml:space="preserve">
+    <value>保存されたセッションを復元しています...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.sessionRestoreFailed" xml:space="preserve">
+    <value>Session restore failed.再度サインインしてください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.sessionRestored" xml:space="preserve">
+    <value>セッションが復元されました。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.sessionRestoredTokenRefreshed" xml:space="preserve">
+    <value>セッションが復元されました。トークンが更新されました。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.tokenRefreshFailedContinuing" xml:space="preserve">
+    <value>Token refresh failed.保存されたセッションを続行します...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.tokenRefreshFailedUsingSaved" xml:space="preserve">
+    <value>トークンの更新に失敗しました。保存されたセッション トークンを使用します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.status.tokenRefreshedLoadingAccount" xml:space="preserve">
+    <value>トークンが更新されました。アカウントを読み込んでいます...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.subtitle.checkingSavedAccounts" xml:space="preserve">
+    <value>保存されているアカウントを確認しています。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.title.restoringSession" xml:space="preserve">
+    <value>セッションを復元中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="auth.title.signIn" xml:space="preserve">
+    <value>サインイン</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="common.back" xml:space="preserve">
+    <value>Back</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="common.clear" xml:space="preserve">
+    <value>検索をクリア</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="common.loading" xml:space="preserve">
+    <value>Loading...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.directLaunchNotFoundDescription" xml:space="preserve">
+    <value>OpenNOW could not find a game matching "{{value}}". Use --launch-app-id for exact LaunchBox entries.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.directLaunchNotFoundTitle" xml:space="preserve">
+    <value>Direct Launch Failed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.duplicateSessionDescription" xml:space="preserve">
+    <value>あなたのアカウントでは別のセッションがすでに実行されています。最初にそれを閉じるか、タイムアウトになるまで待ってから、再度起動します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.duplicateSessionTitle" xml:space="preserve">
+    <value>重複セッションが検出されました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.insufficientPlayabilityDescription" xml:space="preserve">
+    <value>Your current GeForce NOW membership is not high enough to play this game. Upgrade to a higher tier and try again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.insufficientPlayabilityTierDescription" xml:space="preserve">
+    <value>This game requires {{tier}} on GeForce NOW. Upgrade your membership to play it.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.insufficientPlayabilityTitle" xml:space="preserve">
+    <value>Membership Upgrade Required</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.launchFailedTitle" xml:space="preserve">
+    <value>起動に失敗しました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.launchUnknown" xml:space="preserve">
+    <value>ゲームを開始できませんでした。もう一度試してください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.loginFailed" xml:space="preserve">
+    <value>ログインに失敗しました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedFailed" xml:space="preserve">
+    <value>Failed to mark game as owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedFailedWithReason" xml:space="preserve">
+    <value>Failed to mark game as owned: {{reason}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedMissingVariant" xml:space="preserve">
+    <value>Select a store variant before marking it owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.markOwnedSignInRequired" xml:space="preserve">
+    <value>Sign in before marking games as owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.nativeStreamerStoppedDescription" xml:space="preserve">
+    <value>ネイティブ ストリーミング プロセスが停止し、自動的に復元できませんでした。アプリからセッションを再度再開してみてください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.nativeStreamerStoppedTitle" xml:space="preserve">
+    <value>ネイティブストリーマーが停止しました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.queueAdPlayTimeout" xml:space="preserve">
+    <value>広告再生タイムアウト</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.queueAdUrlLoad" xml:space="preserve">
+    <value>URLの読み込みエラー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.queueAdVideoStuck" xml:space="preserve">
+    <value>広告ビデオが停止します</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.resumeAttachFailedDescription" xml:space="preserve">
+    <value>メディア ハンドシェイクの前にアタッチの再開に失敗しました。もう一度再開してみてください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.sessionConnectionLostDescription" xml:space="preserve">
+    <value>実行中のセッションへの接続が失われ、自動的に復元できませんでした。アプリから再度再開してみてください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.sessionConnectionLostTitle" xml:space="preserve">
+    <value>セッション接続が失われました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.sessionResumeFailedDescription" xml:space="preserve">
+    <value>実行中のセッションへの接続が失われ、再開に失敗しました。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.switchAccountFailed" xml:space="preserve">
+    <value>アカウントの切り替えに失敗しました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.userStorageUnavailableAction" xml:space="preserve">
+    <value>Open Storage Settings</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.userStorageUnavailableDescription" xml:space="preserve">
+    <value>NVIDIA reported that Persistent Storage is unavailable for this account or storage location. Open Settings → Account → Persistent Storage, then use NVIDIA Storage Manager to reset or move the storage location. If it still fails, check NVIDIA server status.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.userStorageUnavailableTitle" xml:space="preserve">
+    <value>Persistent Storage Unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.webrtcBlockedDescription" xml:space="preserve">
+    <value>Your browser could not create any network path for the stream (0 ICE candidates). Disable any VPN, allow your browser through the firewall/antivirus, disable extensions like "WebRTC leak prevention", or try a different browser, then start the stream again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="errors.webrtcBlockedTitle" xml:space="preserve">
+    <value>WebRTC Is Blocked</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.available" xml:space="preserve">
+    <value>利用可能</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.owned" xml:space="preserve">
+    <value>所有</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.playGame" xml:space="preserve">
+    <value>{{title}}をプレイする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.selectGame" xml:space="preserve">
+    <value>{{title}}を選択します</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.status.maintenance" xml:space="preserve">
+    <value>Under maintenance</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.status.unavailable" xml:space="preserve">
+    <value>Unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.status.updating" xml:space="preserve">
+    <value>Updating</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameCard.store" xml:space="preserve">
+    <value>{{store}} ストア</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.buy" xml:space="preserve">
+    <value>購入</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.chooseStore" xml:space="preserve">
+    <value>ゲームストアを選択</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.chooseStoreHint" xml:space="preserve">
+    <value>このゲームを所有しているストアはどこで、どこでプレイしますか？</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.developer" xml:space="preserve">
+    <value>開発元</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.gallery" xml:space="preserve">
+    <value>ギャラリー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.gameNotFound" xml:space="preserve">
+    <value>ゲームが見つかりません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.gameStores" xml:space="preserve">
+    <value>ゲームストア：</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.markAsOwned" xml:space="preserve">
+    <value>所有済みとしてマーク</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.notSubscribed" xml:space="preserve">
+    <value>未購読</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.owned" xml:space="preserve">
+    <value>所有済み</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.pcDigitalVersion" xml:space="preserve">
+    <value>PCデジタル版</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.publisher" xml:space="preserve">
+    <value>パブリッシャー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.rating" xml:space="preserve">
+    <value>評価</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.storeHint" xml:space="preserve">
+    <value>ゲームを所有しているストアを選択し、所有済みとしてマークしてライブラリに追加します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.subscribed" xml:space="preserve">
+    <value>購読中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="gameDetails.subscriptions" xml:space="preserve">
+    <value>サブスクリプション：</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="games.markOwned.success" xml:space="preserve">
+    <value>Marked {{title}} as owned.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.cloudReady" xml:space="preserve">
+    <value>Cloud ready</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.emptyBody" xml:space="preserve">
+    <value>The cloud storefront returned empty panels. Try again after the catalog service refreshes.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.emptyTitle" xml:space="preserve">
+    <value>No Store collections found</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.eyebrow" xml:space="preserve">
+    <value>CONTROLLER STORE</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.featured" xml:space="preserve">
+    <value>Featured</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.hints" xml:space="preserve">
+    <value>D-pad browse / A launch / Space select</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.notOwned" xml:space="preserve">
+    <value>Not owned</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.owned" xml:space="preserve">
+    <value>所有</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.playNow" xml:space="preserve">
+    <value>Play Now</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.purchaseUnavailable" xml:space="preserve">
+    <value>Purchase unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.readyToStream" xml:space="preserve">
+    <value>Ready to stream</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.storeCount" xml:space="preserve">
+    <value>{{count}} stores</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.title" xml:space="preserve">
+    <value>Store Theater</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.controller.variant" xml:space="preserve">
+    <value>{{variant}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.loading" xml:space="preserve">
+    <value>読み込み中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shown" xml:space="preserve">
+    <value>{{shown}}件を表示中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shownSupported" xml:space="preserve">
+    <value>{{shown}} 件を表示中 · {{supported}}件対応</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shownTotal" xml:space="preserve">
+    <value>{{shown}} 件を表示中 · 合計 {{total}}件</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.count.shownTotalSupported" xml:space="preserve">
+    <value>{{shown}} 件を表示中 · 合計 {{total}}件 · {{supported}}件対応</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.allGames" xml:space="preserve">
+    <value>すべてのゲーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellGenre" xml:space="preserve">
+    <value>ジャンル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellLastPlayed" xml:space="preserve">
+    <value>最終プレイ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellPlaytime" xml:space="preserve">
+    <value>プレイ時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.cellStore" xml:space="preserve">
+    <value>ストア</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.eyebrow" xml:space="preserve">
+    <value>プレイを続ける</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.eyebrowReady" xml:space="preserve">
+    <value>プレイ準備完了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.favourites" xml:space="preserve">
+    <value>お気に入り</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.jumpBackIn" xml:space="preserve">
+    <value>続きをプレイ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.launch" xml:space="preserve">
+    <value>起動</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.ledger" xml:space="preserve">
+    <value>記録を見る</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.ledgerSessions" xml:space="preserve">
+    <value>{{count}} 件のセッションを記録</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.ledgerSessions_plural" xml:space="preserve">
+    <value>{{count}} 件のセッションを記録</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.mostPlayed" xml:space="preserve">
+    <value>よくプレイした順</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.newInLibrary" xml:space="preserve">
+    <value>ライブラリの新着</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.seeAll" xml:space="preserve">
+    <value>すべて表示</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.seeAllCount" xml:space="preserve">
+    <value>{{count}} 本をすべて表示</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.shelfCount" xml:space="preserve">
+    <value>{{count}} 本</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.shelfCount_plural" xml:space="preserve">
+    <value>{{count}} 本</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.voiceReady" xml:space="preserve">
+    <value>デッキは準備完了。タイトルを選べば、あとはクラウドにお任せ。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.deck.voiceResume" xml:space="preserve">
+    <value>累計 {{value}} — 中断した場所から再開しましょう。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.checkBackLater" xml:space="preserve">
+    <value>新しい追加情報については、後でもう一度確認してください</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.loadingGames" xml:space="preserve">
+    <value>Loading games...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.noGamesFound" xml:space="preserve">
+    <value>ゲームが見つかりません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.empty.tryAdjustingSearch" xml:space="preserve">
+    <value>検索用語やフィルターを調整してみてください</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.filters" xml:space="preserve">
+    <value>フィルター</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.clearSearch" xml:space="preserve">
+    <value>検索をクリア</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.loadMore" xml:space="preserve">
+    <value>もっと読み込む</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.resultsFor" xml:space="preserve">
+    <value>検索 · "{query}"</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.searching" xml:space="preserve">
+    <value>検索中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.search.showing" xml:space="preserve">
+    <value>{shown} / {total}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.searchPlaceholder" xml:space="preserve">
+    <value>ゲームを検索...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="home.sortAriaLabel" xml:space="preserve">
+    <value>Sort games</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.activeFilters" xml:space="preserve">
+    <value>Active filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.allStores" xml:space="preserve">
+    <value>All Stores</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.chooseStore" xml:space="preserve">
+    <value>Choose a Store</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.clearFilters" xml:space="preserve">
+    <value>Clear</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.controllerTitle" xml:space="preserve">
+    <value>Library</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.controls" xml:space="preserve">
+    <value>Controls: {{controls}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.allGames" xml:space="preserve">
+    <value>すべてのゲーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellGenre" xml:space="preserve">
+    <value>ジャンル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellLastPlayed" xml:space="preserve">
+    <value>最終プレイ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellPlaytime" xml:space="preserve">
+    <value>プレイ時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellSessions" xml:space="preserve">
+    <value>セッション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.cellStore" xml:space="preserve">
+    <value>ストア</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.chipAll" xml:space="preserve">
+    <value>すべて</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.count" xml:space="preserve">
+    <value>{{count}} 本</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.count_plural" xml:space="preserve">
+    <value>{{count}} 本</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.emptyDetail" xml:space="preserve">
+    <value>グリッドからゲームを選んでコンソールを表示。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.eyebrow" xml:space="preserve">
+    <value>ライブラリ // 選択中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.hint" xml:space="preserve">
+    <value>コンソールを見るにはタイトルを選択</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.launch" xml:space="preserve">
+    <value>起動</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.deck.viewLedger" xml:space="preserve">
+    <value>記録を見る</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.developer" xml:space="preserve">
+    <value>Developer: {{developer}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.libraryEmpty" xml:space="preserve">
+    <value>あなたのライブラリは空です</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.loadingLibrary" xml:space="preserve">
+    <value>ライブラリをロードしています...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.noFilteredGames" xml:space="preserve">
+    <value>No games match those filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.noGamesFound" xml:space="preserve">
+    <value>ゲームが見つかりません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.noGamesMatch" xml:space="preserve">
+    <value>「{{query}}」に一致するゲームはありません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.ownedGamesAppearHere" xml:space="preserve">
+    <value>あなたが所有するゲームがここに表示されます。カタログを参照してゲームを見つけます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.empty.tryAdjustingFilters" xml:space="preserve">
+    <value>Try clearing a filter or changing your search.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.favoriteToggle" xml:space="preserve">
+    <value>お気に入り切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filter" xml:space="preserve">
+    <value>Filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.activity" xml:space="preserve">
+    <value>Activity</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.controls" xml:space="preserve">
+    <value>Controls</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.platform" xml:space="preserve">
+    <value>Platform</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterGroups.playType" xml:space="preserve">
+    <value>Play Type</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.cloudLaunch" xml:space="preserve">
+    <value>Cloud Launch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.controller" xml:space="preserve">
+    <value>Controller</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.installToPlay" xml:space="preserve">
+    <value>Install to Play</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.keyboardMouse" xml:space="preserve">
+    <value>Keyboard &amp; Mouse</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.neverPlayed" xml:space="preserve">
+    <value>Never Played</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.played" xml:space="preserve">
+    <value>Played</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filterOptions.touch" xml:space="preserve">
+    <value>Touch</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filteredGameCount" xml:space="preserve">
+    <value>{{shown}} of {{total}} games</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.filters" xml:space="preserve">
+    <value>Filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.gameCount" xml:space="preserve">
+    <value>{{count}}個のゲーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.gameCount_plural" xml:space="preserve">
+    <value>{{count}}個のゲーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.genres" xml:space="preserve">
+    <value>Genres: {{genres}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.daysAgo" xml:space="preserve">
+    <value>{{count}}日前</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.hoursAgo" xml:space="preserve">
+    <value>{{count}}時間前</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.justNow" xml:space="preserve">
+    <value>たった今</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.minutesAgo" xml:space="preserve">
+    <value>{{count}} 分前</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.never" xml:space="preserve">
+    <value>未プレイ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.lastPlayed.weeksAgo" xml:space="preserve">
+    <value>{{count}}週間前</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.loadingGameDetails" xml:space="preserve">
+    <value>Loading game details...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.moreInfo" xml:space="preserve">
+    <value>More Info</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.moreOptions" xml:space="preserve">
+    <value>More Options</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.nvidiaTech" xml:space="preserve">
+    <value>NVIDIA Tech: {{tech}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.players" xml:space="preserve">
+    <value>Players: {{players}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.publisher" xml:space="preserve">
+    <value>Publisher: {{publisher}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.rating" xml:space="preserve">
+    <value>Rating: {{rating}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.removeFilter" xml:space="preserve">
+    <value>Remove {{filter}} filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.searchPlaceholder" xml:space="preserve">
+    <value>ライブラリを検索...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.selectedStore" xml:space="preserve">
+    <value>Selected Store: {{store}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.sortAriaLabel" xml:space="preserve">
+    <value>Sort library</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.storeFilter" xml:space="preserve">
+    <value>Store Filter</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.storeFilterHint" xml:space="preserve">
+    <value>Hold Y, use up/down, release Y to apply</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.storeNotListed" xml:space="preserve">
+    <value>Store not listed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="library.title" xml:space="preserve">
+    <value>私のライブラリ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.playtimeDetails" xml:space="preserve">
+    <value>プレイタイムの詳細</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.showPlaytimeDetails" xml:space="preserve">
+    <value>再生時間の詳細を表示する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.showStorageDetails" xml:space="preserve">
+    <value>ストレージの詳細を表示する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.notAvailable" xml:space="preserve">
+    <value>該当なし</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.serverRegionVpc" xml:space="preserve">
+    <value>サーバーリージョン (VPC)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageLeft" xml:space="preserve">
+    <value>残りのストレージ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageRegion" xml:space="preserve">
+    <value>ストレージ領域</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageRegionCode" xml:space="preserve">
+    <value>ストレージ地域コード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageTotal" xml:space="preserve">
+    <value>ストレージの合計</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageUsage" xml:space="preserve">
+    <value>ストレージの使用量</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storage.storageUsed" xml:space="preserve">
+    <value>使用済みストレージ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.storageDetails" xml:space="preserve">
+    <value>ストレージの詳細</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.subscriptionDetails" xml:space="preserve">
+    <value>サブスクリプションの詳細</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.allotted" xml:space="preserve">
+    <value>割り当て済み</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.firstEntitlement" xml:space="preserve">
+    <value>最初の権利</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.gameplayAllowed" xml:space="preserve">
+    <value>ゲームプレイが許可</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.no" xml:space="preserve">
+    <value>いいえ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.notifyAtGeneral" xml:space="preserve">
+    <value>通知先 (一般)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.notifyAtInSession" xml:space="preserve">
+    <value>通知先 (セッション中)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.periodEnd" xml:space="preserve">
+    <value>期間終了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.periodStart" xml:space="preserve">
+    <value>期間の開始</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.planState" xml:space="preserve">
+    <value>計画の状態</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.purchased" xml:space="preserve">
+    <value>購入済み</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.rolledOver" xml:space="preserve">
+    <value>ロールオーバー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.subType" xml:space="preserve">
+    <value>サブタイプ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.tier" xml:space="preserve">
+    <value>ティア</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.timeLeft" xml:space="preserve">
+    <value>残り時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.timeUsage" xml:space="preserve">
+    <value>時間の使い方</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.totalTime" xml:space="preserve">
+    <value>合計時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.type" xml:space="preserve">
+    <value>種類</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.unlimitedTime" xml:space="preserve">
+    <value>時間無制限</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.used" xml:space="preserve">
+    <value>{{percent}} が使用されました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.usedTime" xml:space="preserve">
+    <value>使用時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navbar.time.yes" xml:space="preserve">
+    <value>はい</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.home" xml:space="preserve">
+    <value>ストア</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.library" xml:space="preserve">
+    <value>Library</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.playtime" xml:space="preserve">
+    <value>プレイ時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="navigation.settings" xml:space="preserve">
+    <value>設定</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.refresh" xml:space="preserve">
+    <value>更新</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.reset" xml:space="preserve">
+    <value>記録をリセット</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetCancel" xml:space="preserve">
+    <value>統計を残す</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetConfirm" xml:space="preserve">
+    <value>すべて消去</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetConfirmBody" xml:space="preserve">
+    <value>この端末に記録されたすべての時間が消去されます。元に戻せません。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.resetConfirmTitle" xml:space="preserve">
+    <value>プレイ時間をリセット</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.actions.updated" xml:space="preserve">
+    <value>記録の更新: {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.daily" xml:space="preserve">
+    <value>過去{{count}}日</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.dailySr" xml:space="preserve">
+    <value>この期間に{{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.daily_plural" xml:space="preserve">
+    <value>過去{{count}}日</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.hourly" xml:space="preserve">
+    <value>時間帯</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.hourlySr" xml:space="preserve">
+    <value>ピークは{{hour}}:00で{{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.title" xml:space="preserve">
+    <value>プレイの傾向</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.weekday" xml:space="preserve">
+    <value>曜日</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.cadence.weekdaySr" xml:space="preserve">
+    <value>最も多い曜日で{{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.body" xml:space="preserve">
+    <value>ゲームを起動すると、最初のフレームが届いた瞬間から計測が始まります。キューの待機は別枠なので、実際のプレイだけが記録されます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.cta" xml:space="preserve">
+    <value>ライブラリを見る</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.eyebrow" xml:space="preserve">
+    <value>記録 // 空</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.empty.title" xml:space="preserve">
+    <value>まだプレイ時間がありません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.eyebrow" xml:space="preserve">
+    <value>OpenNOW // 記録</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.hours" xml:space="preserve">
+    <value>{{count}}時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.hoursMinutes" xml:space="preserve">
+    <value>{{hours}}時間{{minutes}}分</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.minutes" xml:space="preserve">
+    <value>{{count}}分</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.never" xml:space="preserve">
+    <value>—</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.format.seconds" xml:space="preserve">
+    <value>{{count}}秒</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.detail" xml:space="preserve">
+    <value>あと{{minutes}}分・{{sessions}}セッション・{{games}}タイトル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.label" xml:space="preserve">
+    <value>合計ストリーム時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.peakHour" xml:space="preserve">
+    <value>一番プレイした時間帯: {{hour}}:00 — {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.sr" xml:space="preserve">
+    <value>合計{{hours}}時間{{minutes}}分ストリームしました。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.unitHours" xml:space="preserve">
+    <value>時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.hero.unitMinutes" xml:space="preserve">
+    <value>分</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.live.label" xml:space="preserve">
+    <value>現在ストリーミング中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.live.unknownGame" xml:space="preserve">
+    <value>現在のセッション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.loading" xml:space="preserve">
+    <value>記録を読み込んでいます…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.count" xml:space="preserve">
+    <value>{{count}}タイトル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.count_plural" xml:space="preserve">
+    <value>{{count}}タイトル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.more" xml:space="preserve">
+    <value>ほか{{count}}タイトルは非表示</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.sessions" xml:space="preserve">
+    <value>{{count}}セッション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.sessions_plural" xml:space="preserve">
+    <value>{{count}}セッション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.share" xml:space="preserve">
+    <value>全体の{{value}}%</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.sr" xml:space="preserve">
+    <value>{{rank}}位: {{title}} — {{sessions}}セッションで{{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.ranking.title" xml:space="preserve">
+    <value>プレイ時間ランキング</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.empty" xml:space="preserve">
+    <value>完了したセッションはまだ記録されていません。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.engineNative" xml:space="preserve">
+    <value>ネイティブ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.engineWeb" xml:space="preserve">
+    <value>WebRTC</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.title" xml:space="preserve">
+    <value>最近のセッション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.recent.wait" xml:space="preserve">
+    <value>待機 {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.average" xml:space="preserve">
+    <value>平均セッション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.games" xml:space="preserve">
+    <value>プレイしたゲーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.longest" xml:space="preserve">
+    <value>最長セッション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.queue" xml:space="preserve">
+    <value>キュー待機</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.sessions" xml:space="preserve">
+    <value>セッション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.stats.setup" xml:space="preserve">
+    <value>接続時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.subtitle" xml:space="preserve">
+    <value>ストリームで実際に過ごした時間だけを記録。キューの待機時間は別枠です。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="playtime.title" xml:space="preserve">
+    <value>プレイ時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.allServers" xml:space="preserve">
+    <value>All Servers</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.cancel" xml:space="preserve">
+    <value>キャンセル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.close" xml:space="preserve">
+    <value>閉じる</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="queue.servers.wait" xml:space="preserve">
+    <value>{{duration}} wait</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.gotIt" xml:space="preserve">
+    <value>Got it</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.kicker" xml:space="preserve">
+    <value>What's new</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.settingsLink" xml:space="preserve">
+    <value>What's new</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.title" xml:space="preserve">
+    <value>OpenNOW {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.unavailable" xml:space="preserve">
+    <value>Release notes couldn't be loaded right now.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="releaseHighlights.viewOnGitHub" xml:space="preserve">
+    <value>View full release on GitHub</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.active" xml:space="preserve">
+    <value>Active Session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.activeSessionMissingServerAddress" xml:space="preserve">
+    <value>アクティブなセッションが見つかりました (サーバーアドレスがありません)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.cancelExit" xml:space="preserve">
+    <value>Cancel exit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.control" xml:space="preserve">
+    <value>Session Control</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.current" xml:space="preserve">
+    <value>現在</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.elapsed" xml:space="preserve">
+    <value>Elapsed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.elapsedTitle" xml:space="preserve">
+    <value>現在のゲームセッションの経過時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.elapsedWithValue" xml:space="preserve">
+    <value>セッション {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.endSession" xml:space="preserve">
+    <value>End session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.exitConfirmation" xml:space="preserve">
+    <value>Exit stream confirmation</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.exitStream" xml:space="preserve">
+    <value>Exit Stream?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.readyToLaunch" xml:space="preserve">
+    <value>起動準備完了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.readyToSwitch" xml:space="preserve">
+    <value>切り替え準備完了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.remainingPlaytime" xml:space="preserve">
+    <value>{{value}} 残り</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resume" xml:space="preserve">
+    <value>再開</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resumeActiveCloudSession" xml:space="preserve">
+    <value>アクティブなクラウドセッションを再開する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resumeActiveCloudSessionTitle" xml:space="preserve">
+    <value>アクティブなクラウドセッションを再開する: {{title}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.resumeCurrentStream" xml:space="preserve">
+    <value>現在のストリームを再開する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminate" xml:space="preserve">
+    <value>終了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminateActiveCloudSession" xml:space="preserve">
+    <value>アクティブなクラウドセッションを終了する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminateActiveCloudSessionTitle" xml:space="preserve">
+    <value>アクティブなクラウド セッションを終了します: {{title}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.terminateConfirmation" xml:space="preserve">
+    <value>{{title}}を終了しますか? This will end the active cloud session immediately.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.thisGame" xml:space="preserve">
+    <value>このゲーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.thisSession" xml:space="preserve">
+    <value>このセッション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.timeWarning" xml:space="preserve">
+    <value>セッション時間の警告</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.freeTier15MinutesRemaining" xml:space="preserve">
+    <value>このフリーティアセッションに残り時間は15分です。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.freeTier30MinutesRemaining" xml:space="preserve">
+    <value>このフリーティアセッションに残り時間は30分です。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.freeTierEndsSoon" xml:space="preserve">
+    <value>このフリーティアセッションはまもなく終了します</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.idleTimeoutApproaching" xml:space="preserve">
+    <value>アイドルタイムアウトが近づいています</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.maximumSessionTimeApproaching" xml:space="preserve">
+    <value>最大セッション時間が近づいています</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="session.warnings.sessionTimeLimitApproaching" xml:space="preserve">
+    <value>セッションの制限時間が近づいています</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.applicationUpdates" xml:space="preserve">
+    <value>アプリケーションのアップデート</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.automaticallyCheckForUpdates" xml:space="preserve">
+    <value>アップデートを自動的にチェックする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.automaticallyCheckForUpdatesOffHint" xml:space="preserve">
+    <value>オフにすると、以下の手動更新ボタンを使用しない限り、OpenNOW は現在のバージョンのままになります。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.automaticallyCheckForUpdatesOnHint" xml:space="preserve">
+    <value>オンにすると、パッケージ化されたビルドは起動後にバックグラウンドで、および OpenNOW の実行中に定期的に GitHub リリースをチェックします。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.availableVersion" xml:space="preserve">
+    <value>利用可能なバージョン: {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.backgroundChecksOff" xml:space="preserve">
+    <value>バックグラウンド更新チェックは、手動でチェックするまでオフになります。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.backgroundChecksOn" xml:space="preserve">
+    <value>パッケージ化されたビルドはバックグラウンドで GitHub リリースをチェックします。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.cacheCleared" xml:space="preserve">
+    <value>キャッシュが正常にクリアされました。アプリは次回起動時に更新されます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.checkForUpdates" xml:space="preserve">
+    <value>アップデートをチェックする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCache" xml:space="preserve">
+    <value>キャッシュの削除</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCacheConfirm" xml:space="preserve">
+    <value>キャッシュされたデータをすべて削除してもよろしいですか?これにより、すべてのゲームのメタデータ、画像、ライブラリ情報がクリアされます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCacheFailed" xml:space="preserve">
+    <value>キャッシュの削除に失敗しました。もう一度試してください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.deleteCacheHint" xml:space="preserve">
+    <value>キャッシュされたゲームデータ、画像、メタデータをすべてクリアします</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.downloadProgress" xml:space="preserve">
+    <value>ダウンロードの進行状況: {{percent}}%</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.downloadUpdate" xml:space="preserve">
+    <value>アップデートをダウンロード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.downloadedVersion" xml:space="preserve">
+    <value>ダウンロードしたバージョン: {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.exportLogs" xml:space="preserve">
+    <value>ログのエクスポート</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.exportLogsFailed" xml:space="preserve">
+    <value>ログのエクスポートに失敗しました。もう一度試してください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.exportLogsHint" xml:space="preserve">
+    <value>プライバシーのために編集された機密データを含むデバッグ ログをダウンロードする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.lastChecked" xml:space="preserve">
+    <value>最終チェック: {{value}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.restartToInstall" xml:space="preserve">
+    <value>再起動してインストールする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannel" xml:space="preserve">
+    <value>Update Channel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelHint" xml:space="preserve">
+    <value>Choose Stable for regular releases or Nightly to preview the latest builds from the dev branch.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelNightly" xml:space="preserve">
+    <value>Nightly</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelNightlyHint" xml:space="preserve">
+    <value>Nightly builds may be less reliable. Switching channels immediately checks for an available update.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateChannelStable" xml:space="preserve">
+    <value>Stable (Default)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.checking" xml:space="preserve">
+    <value>チェック中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.downloading" xml:space="preserve">
+    <value>ダウンロード中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.packagedBuildsOnly" xml:space="preserve">
+    <value>パッケージ化されたビルドのみ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.readyToInstall" xml:space="preserve">
+    <value>インストールの準備ができました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.updateStatus.updateAvailable" xml:space="preserve">
+    <value>アップデートが利用可能です</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.version" xml:space="preserve">
+    <value>バージョン {{version}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.whatsNew" xml:space="preserve">
+    <value>What's new</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.about.whatsNewHint" xml:space="preserve">
+    <value>View the release notes for the current version of OpenNOW.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.actionFailed" xml:space="preserve">
+    <value>Game account action failed. Please try again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.connect" xml:space="preserve">
+    <value>Connect</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.connectedAccount" xml:space="preserve">
+    <value>Connected account</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.connecting" xml:space="preserve">
+    <value>Connecting...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.description" xml:space="preserve">
+    <value>Link supported store accounts to unlock provider-required games and sync owned libraries into OpenNOW.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.empty" xml:space="preserve">
+    <value>No supported game-account providers were returned for this account.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.linkSuccess" xml:space="preserve">
+    <value>{{provider}} connected.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.loadFailed" xml:space="preserve">
+    <value>Failed to load connected game accounts.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.loading" xml:space="preserve">
+    <value>Loading connected game accounts...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.notConnectedDescription" xml:space="preserve">
+    <value>Connect this provider to GeForce NOW when a game requires it.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.recently" xml:space="preserve">
+    <value>recently</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.reconnect" xml:space="preserve">
+    <value>Reconnect</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.refresh" xml:space="preserve">
+    <value>Refresh</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.requiredForSomeGames" xml:space="preserve">
+    <value>Required for some games</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.resync" xml:space="preserve">
+    <value>Resync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.resyncSuccess" xml:space="preserve">
+    <value>{{provider}} library sync started.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.resyncing" xml:space="preserve">
+    <value>Resyncing...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.signInRequired" xml:space="preserve">
+    <value>Sign in before managing connected game accounts.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.ssoSupported" xml:space="preserve">
+    <value>Account linking</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusConnected" xml:space="preserve">
+    <value>Connected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusExpired" xml:space="preserve">
+    <value>Expired</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusNotConnected" xml:space="preserve">
+    <value>Not connected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.statusSyncError" xml:space="preserve">
+    <value>Sync issue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.sync" xml:space="preserve">
+    <value>Sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncOnlyDescription" xml:space="preserve">
+    <value>Sync this provider's supported library games without account-linking SSO.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncState" xml:space="preserve">
+    <value>Sync state: {{state}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncSummary" xml:space="preserve">
+    <value>{{count}} synced game as of {{date}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncSummary_plural" xml:space="preserve">
+    <value>{{count}} synced games as of {{date}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncSupported" xml:space="preserve">
+    <value>Library sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncUnknown" xml:space="preserve">
+    <value>Unknown</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.syncing" xml:space="preserve">
+    <value>Syncing...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.title" xml:space="preserve">
+    <value>Connected Game Accounts</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlink" xml:space="preserve">
+    <value>Unlink</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlinkConfirm" xml:space="preserve">
+    <value>Unlink {{provider}} from GeForce NOW? Synced library entries from that account may disappear until you reconnect.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlinkSuccess" xml:space="preserve">
+    <value>{{provider}} unlinked.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.accountConnections.unlinking" xml:space="preserve">
+    <value>Unlinking...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.disabled" xml:space="preserve">
+    <value>無効</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphone" xml:space="preserve">
+    <value>マイク</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneDevice" xml:space="preserve">
+    <value>マイクデバイス</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneDeviceHint" xml:space="preserve">
+    <value>ボイスチャット用の入力デバイスを選択してください</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneHint" xml:space="preserve">
+    <value>ストリーミング中にボイスチャットを有効にする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneIndexed" xml:space="preserve">
+    <value>マイク {{index}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneInputLevel" xml:space="preserve">
+    <value>マイク入力レベル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.microphoneMode" xml:space="preserve">
+    <value>マイクモード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.noMicrophoneDevicesFound" xml:space="preserve">
+    <value>マイクデバイスが見つかりません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionDenied" xml:space="preserve">
+    <value>マイクへのアクセスが拒否されました。 [システム設定] &gt; [プライバシーとセキュリティ] &gt; [マイク] で OpenNOW のマイク アクセスを有効にしてください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionRestricted" xml:space="preserve">
+    <value>マイクへのアクセスは macOS によって制限されており、OpenNOW から有効にすることはできません。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionUnavailable" xml:space="preserve">
+    <value>マイクへのアクセスはできません。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.permissionUnknown" xml:space="preserve">
+    <value>マイクの許可ステータスを判断できません。 OpenNOW の macOS マイクのプライバシー設定を確認してください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.pushToTalk" xml:space="preserve">
+    <value>プッシュツートーク</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.selectedDevice" xml:space="preserve">
+    <value>選択したデバイス</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.title" xml:space="preserve">
+    <value>オーディオ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.audio.voiceActivity" xml:space="preserve">
+    <value>音声アクティビティ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.advanced" xml:space="preserve">
+    <value>詳細 - コーデック診断</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.decode" xml:space="preserve">
+    <value>デコード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.description" xml:space="preserve">
+    <value>システムがデコード/エンコードできるコーデックと、GPU と CPU のどちらを使用するかをテストします。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.encode" xml:space="preserve">
+    <value>エンコード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.linuxHardwareHint" xml:space="preserve">
+    <value>Linux AppImage diagnostics use Chromium's WebRTC/MediaCapabilities report. Hardware decode depends on the Chromium build plus your distro GPU/video stack: x64 systems may need VA-API/NVIDIA VA-API drivers, while ARM V4L2 support depends on Chromium/Electron exposing that decoder.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.notInWebrtc" xml:space="preserve">
+    <value>WebRTC にはありません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.profiles" xml:space="preserve">
+    <value>プロフィール:</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.retest" xml:space="preserve">
+    <value>再テスト</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.testCodecs" xml:space="preserve">
+    <value>テストコーデック</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.title" xml:space="preserve">
+    <value>コーデック診断</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.codecDiagnostics.webrtcReady" xml:space="preserve">
+    <value>WebRTC 対応</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.higherBitDepth" xml:space="preserve">
+    <value>より高いビット深度</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.highestChromaAndBitDepth" xml:space="preserve">
+    <value>最高の彩度とビット深度</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.mostCompatible" xml:space="preserve">
+    <value>最も互換性のある</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.requiresH265OrAv1Title" xml:space="preserve">
+    <value>{{description}} - H265/AV1 が必要</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.colorQuality.sharperChroma" xml:space="preserve">
+    <value>よりシャープな彩度</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.inGameLanguageHint" xml:space="preserve">
+    <value>ゲーム内メニュー、字幕、オーディオの言語 (サポートされている場合)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.keyboardLayout" xml:space="preserve">
+    <value>キーボードのレイアウト</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.language" xml:space="preserve">
+    <value>言語</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.launchBehavior" xml:space="preserve">
+    <value>起動動作</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.persistInGameSettings" xml:space="preserve">
+    <value>Save in-game graphics settings</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.persistInGameSettingsHint" xml:space="preserve">
+    <value>Lets supported games keep graphics options changed inside the stream. Sent only for games that advertise NVIDIA in-game settings persistence support.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.preferredStore" xml:space="preserve">
+    <value>優先ストア</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.game.title" xml:space="preserve">
+    <value>ゲーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.clipboardPaste" xml:space="preserve">
+    <value>クリップボードの貼り付け</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.editable" xml:space="preserve">
+    <value>編集可能</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.gyroscopeControls" xml:space="preserve">
+    <value>Gyroscope Controls</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.gyroscopeControlsHint" xml:space="preserve">
+    <value>Expose controller motion sensors for gyro aiming when the input backend supports it.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.keyboardLayoutHint" xml:space="preserve">
+    <value>リモート セッション内で物理キーボードをどのようにマッピングするかを制御します。ゲーム内の言語設定とは別のものです。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseAccelerator" xml:space="preserve">
+    <value>マウスアクセラレータ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseAcceleratorHint" xml:space="preserve">
+    <value>ダイナミックターンブーストの強さ（1% = オフのような、150% = 最強）。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseAndKeyboard" xml:space="preserve">
+    <value>マウスとキーボード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseSensitivity" xml:space="preserve">
+    <value>マウスの感度</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.mouseSensitivityHint" xml:space="preserve">
+    <value>マウスの動きに適用される乗数 (1.00 = デフォルト)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.nativeCursorOverlay" xml:space="preserve">
+    <value>Native Cursor Overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.nativeCursorOverlayHint" xml:space="preserve">
+    <value>WebRTC only. Uses NVIDIA's cursor_channel for a local cursor overlay; turn this off to leave cursor rendering to the server-side stream.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.recording" xml:space="preserve">
+    <value>録音</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.resetToDefaults" xml:space="preserve">
+    <value>デフォルトにリセットする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.screenshot" xml:space="preserve">
+    <value>スクリーンショット</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutConflictBinding" xml:space="preserve">
+    <value>ショートカットが別のバインディングと競合されました。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutConflictSidebar" xml:space="preserve">
+    <value>ショートカットが設定サイドバーの切り替えと競合されました。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutEmpty" xml:space="preserve">
+    <value>ショートカットを空にすることはできません。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutHint" xml:space="preserve">
+    <value>フィールドをクリックしてキーを押してバインドするか、ショートカット ({{examples}}) を貼り付けます。エスケープするとフォーカスが解除されます。フールスクリーン: {{fullscreen}}。停止: {{stop}}。マイク：{{mic}}。スクリーンショット: {{screenshot}}。録画: {{recording}}。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcutInvalid" xml:space="preserve">
+    <value>無効なショートカット形式です。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.shortcuts" xml:space="preserve">
+    <value>ショートカット</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.steamControllerCompatibilityMode" xml:space="preserve">
+    <value>Steam Controller Compatibility Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.steamControllerCompatibilityModeHint" xml:space="preserve">
+    <value>macOS only. Restores Chromium's older HID gamepad path for Steam Controller, but may reduce Xbox controller compatibility. Applies after app restart.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.stopStream" xml:space="preserve">
+    <value>ストリームを停止</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.title" xml:space="preserve">
+    <value>入力</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleAntiAfk" xml:space="preserve">
+    <value>Anti-AFKの切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleFullscreen" xml:space="preserve">
+    <value>フルスクリーンの切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleMicrophone" xml:space="preserve">
+    <value>マイクの切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.togglePointerLock" xml:space="preserve">
+    <value>ポインタロックの切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleStats" xml:space="preserve">
+    <value>統計の切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.input.toggleStreamSidebar" xml:space="preserve">
+    <value>ストリームサイドバーの切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColor" xml:space="preserve">
+    <value>アクセントカラー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorAmber" xml:space="preserve">
+    <value>Arcade Amber</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorAzure" xml:space="preserve">
+    <value>アズール</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorHint" xml:space="preserve">
+    <value>選択したアクセントを標準デスクトップ UI 全体に適用し、次の起動まで維持します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorNeon" xml:space="preserve">
+    <value>ネオン</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorRose" xml:space="preserve">
+    <value>Pulse Rose</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorSteel" xml:space="preserve">
+    <value>スチール</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorViolet" xml:space="preserve">
+    <value>Plasma Violet</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.accentColorWhite" xml:space="preserve">
+    <value>ホワイト</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.appLanguage" xml:space="preserve">
+    <value>アプリの言語</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.appLanguageHint" xml:space="preserve">
+    <value>OpenNOW のインターフェース言語を変更します。未翻訳の文字列には英語が使用されます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.appearance" xml:space="preserve">
+    <value>外観</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.autoFullScreen" xml:space="preserve">
+    <value>自動フルスクリーン</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.autoFullScreenHint" xml:space="preserve">
+    <value>セッションへの接続または開始時に自動的にフルスクリーンを入力します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.controllerMode" xml:space="preserve">
+    <value>Controller Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.controllerModeHint" xml:space="preserve">
+    <value>Use a large-screen console-style shell with controller button hints and a horizontal library layout.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.discordRichPresence" xml:space="preserve">
+    <value>Discord のリッチなプレゼンス</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.discordRichPresenceHint" xml:space="preserve">
+    <value>Discord アクティビティとしてストリーミングしているゲームを、経過時間を含めて表示します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.escapeExitsFullscreen" xml:space="preserve">
+    <value>エスケープを押してフルスクリーンを終了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.escapeExitsFullscreenHint" xml:space="preserve">
+    <value>有効にすると、Escapeキーを押すとフルスクリーン終了します。無効にすると(デフォルト)、マウスがポインターロックされている間、Escapeはゲームに転送されます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.everyMinutes" xml:space="preserve">
+    <value>{{count}} 分ごと</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideServerSelector" xml:space="preserve">
+    <value>サーバーセレクターを非表示</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideServerSelectorHint" xml:space="preserve">
+    <value>フリーティアのサーバー選択ダイアログをスキップし、常にOpenNOWのデフォルトのルーティングで起動します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideStreamOverlayButtons" xml:space="preserve">
+    <value>ストリームオーバーレイボタンを非表示にする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.hideStreamOverlayButtonsHint" xml:space="preserve">
+    <value>ストリーミング中にマイク、フールスクリーン、セッション終了ボタンを非表示にします。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.off" xml:space="preserve">
+    <value>オフ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.posterSize" xml:space="preserve">
+    <value>ポスターサイズ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.posterSizeHint" xml:space="preserve">
+    <value>Adjusts game posters in real time across the library.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionElapsedCounter" xml:space="preserve">
+    <value>セッション経過カウンター</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionElapsedCounterHint" xml:space="preserve">
+    <value>ストリーミング中のライブ セッション経過カウンターを有効または無効にします。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerDisabledHint" xml:space="preserve">
+    <value>セッション経過カウンターを無効にすると、ライブ経過タイマーのレンダリングがまったく停止されます。残りの再生時間インジケーターは変更されません。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerReappear" xml:space="preserve">
+    <value>セッションタイマーが再表示される</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerReappearHint" xml:space="preserve">
+    <value>ストリーミング中にセッション タイマーがポップアップ表示される頻度 (0 は繰り返しを無効にします)。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerVisibleTime" xml:space="preserve">
+    <value>セッションタイマーの表示時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.sessionTimerVisibleTimeHint" xml:space="preserve">
+    <value>セッション タイマーが表示されるたびに表示される期間。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showAntiAfkIndicator" xml:space="preserve">
+    <value>Anti-AFKインジケーターを表示</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showAntiAfkIndicatorHint" xml:space="preserve">
+    <value>ストリーミング中に Anti-AFK が有効になっている間は、ANTI-AFK ON バッジを表示します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showSessionTimeRemainingInStatsOverlay" xml:space="preserve">
+    <value>Session Time in Stats Overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showSessionTimeRemainingInStatsOverlayHint" xml:space="preserve">
+    <value>The session countdown appears in the in-stream sidebar by default. Enable this to also show it in the stats overlay.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showStatsOnStreamLaunch" xml:space="preserve">
+    <value>ストリームの起動時に統計を表示する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.showStatsOnStreamLaunchHint" xml:space="preserve">
+    <value>新しいストリームが開始されると、統計オーバーレイが自動的に表示されます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.translucentUI" xml:space="preserve">
+    <value>Translucent UI</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.interface.translucentUIHint" xml:space="preserve">
+    <value>Enable glassmorphism and translucent overlays.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.bundledPathDetected" xml:space="preserve">
+    <value>バンドルされたパスが検出されました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.checkNativeStreamer" xml:space="preserve">
+    <value>ネイティブストリーマーを確認する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.codecSupportUnknown" xml:space="preserve">
+    <value>コーデックのサポートは不明</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.directxBackend" xml:space="preserve">
+    <value>DirectX バックエンド</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.directxBackendHint" xml:space="preserve">
+    <value>次のネイティブ ストリーマ プロセスに適用されます。 Auto は最速のデフォルト パスを使用します。 DirectX 11 または DirectX 12 を選択して、特定の Windows レンダラーを強制します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptAltTab" xml:space="preserve">
+    <value>Alt+Tab キーを押して OpenNOW ウィンドウに戻り、ストリームを終了するか、OpenNOW ショートカットを使用します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptBody" xml:space="preserve">
+    <value>ネイティブ ストリーマはまだ実験段階です。ネイティブ ストリーマ ウィンドウにフォーカスがある間は、OpenNOW ショートカットは機能しません。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptCancel" xml:space="preserve">
+    <value>無効のままにする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptEnable" xml:space="preserve">
+    <value>ネイティブストリーマーを有効にする</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptEsc" xml:space="preserve">
+    <value>キャンセル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptKicker" xml:space="preserve">
+    <value>実験的</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptNewSessions" xml:space="preserve">
+    <value>ネイティブ ストリーミングは新しいセッションにのみ適用されます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptShortcuts" xml:space="preserve">
+    <value>オーバーレイ、終了、全画面表示、統計、その他のショートカットは、ネイティブ ストリーマー ウィンドウ内ではトリガーされません。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.enablePromptTitle" xml:space="preserve">
+    <value>ネイティブストリーマーを有効にしますか?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.framePacing" xml:space="preserve">
+    <value>フレームペーシング</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.framePacingHint" xml:space="preserve">
+    <value>レイテンシーが最も低いと、G-Sync ペーシングが回避され、マウスの感触が最適になります。スムーズ G-Sync はティアリングを軽減できますが、レンダリングがモニターのリフレッシュ レートに制限される可能性があります。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.gstreamerReady" xml:space="preserve">
+    <value>GStreamer 対応</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.gstreamerRuntime" xml:space="preserve">
+    <value>GStreamer ランタイム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.linuxRuntimeHint" xml:space="preserve">
+    <value>Linux AppImage/プライベート GStreamer バンドルは、VAAPI/V4L2/Vulkan プラグインがホスト ディストリビューションおよび GPU ドライバー スタックと一致する必要があるため、デフォルトでは意図的に使用されません。 .deb パッケージは、Debian/Ubuntu の依存関係を自動的に宣言します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.lowestLatency" xml:space="preserve">
+    <value>最小のレイテンシ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.memoryPathUnknown" xml:space="preserve">
+    <value>メモリパスが不明</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.nativeStreaming" xml:space="preserve">
+    <value>ネイティブストリーミング</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.nativeStreamingHint" xml:space="preserve">
+    <value>ネイティブ ストリーミングは実験的なものであり、プラットフォーム固有のバグ、不具合、または Chromium/WebRTC へのフォールバックが存在する可能性があります。新しいセッションに対して GStreamer ベースのデスクトップ ストリーマをテストすることに慣れている場合にのみ有効にしてください。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.notReady" xml:space="preserve">
+    <value>準備ができていません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderMode" xml:space="preserve">
+    <value>Render Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeExternal" xml:space="preserve">
+    <value>External (Floating)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeHint" xml:space="preserve">
+    <value>Internal (default) embeds native video in the OpenNOW window. External keeps the floating GStreamer window for testing/fallback. Change applies to the next native streamer process.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeInternal" xml:space="preserve">
+    <value>Internal (One Window)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.renderModeInternalOnlyHint" xml:space="preserve">
+    <value>This platform uses Internal (one window) only. Keyboard, mouse, and controller input stay in Electron and are forwarded over IPC. External floating mode is Windows-only.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.reportOnDiscord" xml:space="preserve">
+    <value>Discordに関するレポート</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.reportOnGithubIssues" xml:space="preserve">
+    <value>GitHub の問題に関するレポート</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.runtimeDefaultHint" xml:space="preserve">
+    <value>パッケージ化された Windows/macOS ビルドは、ネイティブ ストリーマーの隣にバンドルされたランタイムを自動検出します。 Linux はディストリビューション パッケージを使用します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.showNativeStreamerStats" xml:space="preserve">
+    <value>Show Native Streamer Stats</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.showNativeStreamerStatsHint" xml:space="preserve">
+    <value>Display the native streamer's own diagnostics overlay during native sessions.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.smoothGsync" xml:space="preserve">
+    <value>スムーズな G シンク</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.statusDefaultHint" xml:space="preserve">
+    <value>OpenNOW は、このタブが開いたときに、バンドルされている GStreamer ストリーマをチェックします。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.streamerStatus" xml:space="preserve">
+    <value>ストリーマーステータス</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.title" xml:space="preserve">
+    <value>ネイティブストリーマー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportMode" xml:space="preserve">
+    <value>Transport Mode</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeHint" xml:space="preserve">
+    <value>WebRTC is the supported path. NVST (experimental) uses classic RTSPS + UDP video (Moonlight-hypothesis scaffold) while keyboard/mouse/controller stay on WebRTC SCTP datachannels. First live sessions may need SRTP/pcap validation.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeNvst" xml:space="preserve">
+    <value>NVST (Experimental)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeWebrtc" xml:space="preserve">
+    <value>WebRTC (Default)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.transportModeWindowsOnlyHint" xml:space="preserve">
+    <value>NVST transport is Windows-only for now. This platform always uses WebRTC.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.videoPath" xml:space="preserve">
+    <value>ビデオパス</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.nativeStreamer.videoPathDefaultHint" xml:space="preserve">
+    <value>OpenNOW は、GStreamer が検出された後、アクティブなハードウェア デコード パスを表示します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.noMatches" xml:space="preserve">
+    <value>「{{query}}」に一致する設定はありませんでした。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.availableLegend" xml:space="preserve">
+    <value>Available ({{value}})</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.availableLegendUnavailable" xml:space="preserve">
+    <value>Available unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.currentLocationOption" xml:space="preserve">
+    <value>{{region}} (Current)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.currentLocationUnavailable" xml:space="preserve">
+    <value>Current location</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.description" xml:space="preserve">
+    <value>Persistent Cloud Storage saves downloaded games and supported game data for future sessions.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.detected" xml:space="preserve">
+    <value>Detected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.locationTitle" xml:space="preserve">
+    <value>Storage Location</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.locationsFailed" xml:space="preserve">
+    <value>Failed to load storage locations.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.locationsLoading" xml:space="preserve">
+    <value>Loading storage locations...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.meterLabel" xml:space="preserve">
+    <value>Persistent Storage usage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.notDetected" xml:space="preserve">
+    <value>No Persistent Storage add-on was found for the active account.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.openManager" xml:space="preserve">
+    <value>Open NVIDIA</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.openManagerFailed" xml:space="preserve">
+    <value>Failed to open NVIDIA Storage Manager.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.recommended" xml:space="preserve">
+    <value>Recommended</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.region" xml:space="preserve">
+    <value>Region: {{region}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.regionUnavailable" xml:space="preserve">
+    <value>Region unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.remaining" xml:space="preserve">
+    <value>{{value}} available</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetConfirm" xml:space="preserve">
+    <value>Reset Persistent Storage in {{region}}? This will delete all installed games and persistent data from NVIDIA cloud storage. This action cannot be undone.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetFailed" xml:space="preserve">
+    <value>Failed to reset Persistent Storage. Please try again.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetHint" xml:space="preserve">
+    <value>NVIDIA Storage Manager handles reset and storage-location changes in your browser.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetRequiresBrowser" xml:space="preserve">
+    <value>NVIDIA requires its web account session for this reset. Complete reset or location changes in NVIDIA Storage Manager.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetRequiresBrowserHint" xml:space="preserve">
+    <value>Current location: {{region}}. Reset and location changes open in NVIDIA Storage Manager.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetStorage" xml:space="preserve">
+    <value>Reset Storage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetSuccess" xml:space="preserve">
+    <value>Persistent Storage reset complete.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetTitle" xml:space="preserve">
+    <value>Storage Reset</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetWillKeepLocation" xml:space="preserve">
+    <value>Reset keeps the current storage location: {{region}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetWillMoveLocation" xml:space="preserve">
+    <value>Reset will also change storage location to {{region}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.resetting" xml:space="preserve">
+    <value>Resetting...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.title" xml:space="preserve">
+    <value>Persistent Storage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.unavailable" xml:space="preserve">
+    <value>Unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usage" xml:space="preserve">
+    <value>{{used}} used of {{total}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usageUnavailable" xml:space="preserve">
+    <value>Persistent storage is active, but usage is unavailable.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usedLegend" xml:space="preserve">
+    <value>Used ({{value}})</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usedLegendUnavailable" xml:space="preserve">
+    <value>Used unavailable</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.persistentStorage.usedOutOf" xml:space="preserve">
+    <value>used out of {{total}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.autoBest" xml:space="preserve">
+    <value>オート（最高）</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.noRegionsAvailable" xml:space="preserve">
+    <value>利用可能なリージョンがありません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.noRegionsMatch" xml:space="preserve">
+    <value>「{{query}}」に一致するリージョンはありません</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.refreshPing" xml:space="preserve">
+    <value>リフレッシュping</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.retry" xml:space="preserve">
+    <value>再試行</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.searchPlaceholder" xml:space="preserve">
+    <value>地域を検索...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.region.title" xml:space="preserve">
+    <value>地域</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.saved" xml:space="preserve">
+    <value>保存されました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.searchPlaceholder" xml:space="preserve">
+    <value>検索設定...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.about" xml:space="preserve">
+    <value>このアプリについて</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.account" xml:space="preserve">
+    <value>Account</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.audio" xml:space="preserve">
+    <value>オーディオ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.game" xml:space="preserve">
+    <value>ゲーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.input" xml:space="preserve">
+    <value>入力</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.interface" xml:space="preserve">
+    <value>インターフェース</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.nativeStreamer" xml:space="preserve">
+    <value>ネイティブストリーマー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.stream" xml:space="preserve">
+    <value>ストリーム</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.sections.thanks" xml:space="preserve">
+    <value>謝辞</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.communityDataUnavailable" xml:space="preserve">
+    <value>コミュニティデータが利用不可</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.contributor" xml:space="preserve">
+    <value>投稿者</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.contributorsSubtitle" xml:space="preserve">
+    <value>OpenNOW のコード、修正、機能を改善する人々。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.contributorsTitle" xml:space="preserve">
+    <value>貢献者</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.githubSponsors" xml:space="preserve">
+    <value>GitHub Sponsors</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.loadingContributors" xml:space="preserve">
+    <value>GitHub から貢献者を読み込んでいます...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.loadingSupporters" xml:space="preserve">
+    <value>GitHub スポンサーからサポーターを読み込み中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.noContributors" xml:space="preserve">
+    <value>現在、投稿者を表示できませんでした。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.noSupporters" xml:space="preserve">
+    <value>現在、サポーターを表示できませんでした。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.privateSponsor" xml:space="preserve">
+    <value>Private sponsor</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.projectSponsor" xml:space="preserve">
+    <value>Project sponsor</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.subtitle" xml:space="preserve">
+    <value>OpenNOW は、クライアントを構築する貢献者と、プロジェクトを舞台裏で支援するサポーターによって形成されています。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.supporter" xml:space="preserve">
+    <value>サポーター</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.supportersSubtitle" xml:space="preserve">
+    <value>作業を支援するパブリック GitHub スポンサー、および利用可能な場合はプライベート サポーター。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.supportersTitle" xml:space="preserve">
+    <value>サポーター</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.thanks.title" xml:space="preserve">
+    <value>OpenNOW の成長にご協力いただきありがとうございます</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.title" xml:space="preserve">
+    <value>設定</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.appliesAfterRestart" xml:space="preserve">
+    <value>アプリの再起動後に適用されます。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.aspectRatio" xml:space="preserve">
+    <value>アスペクト比</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.codec" xml:space="preserve">
+    <value>コーデック</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.colorDepth" xml:space="preserve">
+    <value>色の濃さ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.cpu" xml:space="preserve">
+    <value>CPU</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.customBitrate" xml:space="preserve">
+    <value>Custom</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.decoder" xml:space="preserve">
+    <value>デコーダ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.encoder" xml:space="preserve">
+    <value>エンコーダ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.experimentalL4SRequest" xml:space="preserve">
+    <value>実験的な L4S リクエスト</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.experimentalL4SRequestHint" xml:space="preserve">
+    <value>新しく作成されたセッションで GeForce NOW L4S ストリーミング機能をリクエストします。これ自体ではブラウザの WebRTC の動作は変更されず、サービスまたはネットワーク パスによって無視される場合があります。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.fps" xml:space="preserve">
+    <value>FPS</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.gpu" xml:space="preserve">
+    <value>GPU</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.launchInConsoleMode" xml:space="preserve">
+    <value>Console Mode (TV / Big Picture)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.launchInConsoleModeHint" xml:space="preserve">
+    <value>Start OpenNOW fullscreen with Controller Mode enabled, like GeForce NOW's TV mode. Sessions ask NVIDIA to launch games gamepad-friendly (big picture) while Console Mode or Controller Mode is active.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.maxBitrate" xml:space="preserve">
+    <value>最大ビットレート</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.recordingBitrate" xml:space="preserve">
+    <value>Recording Bitrate</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.recordingBitrateHint" xml:space="preserve">
+    <value>Controls local recording video bitrate. Auto lets the browser choose.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.requiresH265OrAv1" xml:space="preserve">
+    <value>このモードには H265 または AV1 が必要です。コーデックは自動で切り替わります。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.resolution" xml:space="preserve">
+    <value>解像度</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.sessionProxy" xml:space="preserve">
+    <value>セッションプロキシ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.sessionProxyHint" xml:space="preserve">
+    <value>Nvidia セッションの作成とキューのポーリングにのみ使用されます。ストリーミング/シグナリング トラフィックはプロキシされません。 Zortos は、GitHub スポンサー/サポーターにプロキシを提供します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.softwareCpu" xml:space="preserve">
+    <value>ソフトウェア（CPU）</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.testing" xml:space="preserve">
+    <value>テスト中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.title" xml:space="preserve">
+    <value>ビデオ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptBody" xml:space="preserve">
+    <value>This session proxy is voluntarily provided by Zortos to help OpenNOW users reach GeForce NOW. It is optional, shared, and may be rate-limited or unavailable at times.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptContinue" xml:space="preserve">
+    <value>Continue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptCostHint" xml:space="preserve">
+    <value>Running this proxy has ongoing server costs. If it helps you, consider supporting Zortos on GitHub Sponsors.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptDonate" xml:space="preserve">
+    <value>Donate on GitHub Sponsors</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptEsc" xml:space="preserve">
+    <value>cancel</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptKicker" xml:space="preserve">
+    <value>Community service</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enablePromptTitle" xml:space="preserve">
+    <value>Use Zortos community proxy?</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.enabledBadge" xml:space="preserve">
+    <value>Using Zortos community proxy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.provisionFailed" xml:space="preserve">
+    <value>Could not activate the Zortos community proxy right now. Try again later or set up a proxy manually.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.provisioning" xml:space="preserve">
+    <value>Activating...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.video.zortosCommunityProxy.useButton" xml:space="preserve">
+    <value>Use Zortos community proxy</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.brightness" xml:space="preserve">
+    <value>Brightness</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.contrast" xml:space="preserve">
+    <value>Contrast</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.filmGrain" xml:space="preserve">
+    <value>Film Grain</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.hint" xml:space="preserve">
+    <value>GPU post-processing shaders applied to the decoded stream: sharpening, color grading, and film grain. Can also be adjusted live from the in-stream sidebar.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.nativeUnavailable" xml:space="preserve">
+    <value>Video filters do not apply while native streaming renders the video outside the app window.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.reset" xml:space="preserve">
+    <value>Reset to defaults</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.saturation" xml:space="preserve">
+    <value>Saturation</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.sharpen" xml:space="preserve">
+    <value>Sharpen</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.title" xml:space="preserve">
+    <value>Video Filters</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="settings.videoFilters.vibrance" xml:space="preserve">
+    <value>Vibrance</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.closeSettings" xml:space="preserve">
+    <value>設定を閉じる</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.sessionTimeRemaining" xml:space="preserve">
+    <value>Session Time Left</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.sessionTimeRemainingTitle" xml:space="preserve">
+    <value>Session time remaining</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.showSessionTimeRemainingInStatsOverlay" xml:space="preserve">
+    <value>Show session time remaining in stats overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.statsOverlay" xml:space="preserve">
+    <value>Stats overlay</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="sidebar.title" xml:space="preserve">
+    <value>サイドバー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.hint.allShortcuts" xml:space="preserve">
+    <value>すべてのショートカット</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.hint.commands" xml:space="preserve">
+    <value>コマンド</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.hint.move" xml:space="preserve">
+    <value>移動</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.regionAuto" xml:space="preserve">
+    <value>リージョン自動</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="statusbar.themeDeck" xml:space="preserve">
+    <value>デッキテーマ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.connectedBadge.title" xml:space="preserve">
+    <value>Connected</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.antiAfkEnabled" xml:space="preserve">
+    <value>Anti-AFKが有効になっています</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.controllerConnected" xml:space="preserve">
+    <value>{{count}} 個のコントローラーが接続されました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.controllerConnected_plural" xml:space="preserve">
+    <value>{{count}} 個のコントローラーが接続されました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.enterFullscreen" xml:space="preserve">
+    <value>フルスクリーン</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.exitFullscreen" xml:space="preserve">
+    <value>フルスクリーンを終了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.muteMicrophone" xml:space="preserve">
+    <value>マイクをミュート</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.controls.unmuteMicrophone" xml:space="preserve">
+    <value>マイクのミュートを解除</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.delete" xml:space="preserve">
+    <value>録音の削除</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.scrollLeft" xml:space="preserve">
+    <value>録画を左にスクロール</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.scrollRight" xml:space="preserve">
+    <value>録音を右にスクロール</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.recordings.title" xml:space="preserve">
+    <value>録音</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.alt" xml:space="preserve">
+    <value>スクリーンショット {{fileName}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.closePreview" xml:space="preserve">
+    <value>スクリーンショットのプレビューを閉じる</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.preview" xml:space="preserve">
+    <value>スクリーンショットのプレビュー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.scrollLeft" xml:space="preserve">
+    <value>ギャラリーを左にスクロール</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.scrollRight" xml:space="preserve">
+    <value>ギャラリーを右にスクロール</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.screenshots.title" xml:space="preserve">
+    <value>スクリーンショット</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sessionStarted.kicker" xml:space="preserve">
+    <value>Ready</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sessionStarted.title" xml:space="preserve">
+    <value>Session started</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.clickHereThenPress" xml:space="preserve">
+    <value>ここをクリックしてキーを押してください</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.clickThenPress" xml:space="preserve">
+    <value>クリックしてキーを押してください</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.conflict" xml:space="preserve">
+    <value>ショートカットが既存のバインディングと競合します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.empty" xml:space="preserve">
+    <value>ショートカットを空にすることはできません。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.examples" xml:space="preserve">
+    <value>例: F3、Ctrl+Shift+Q、Ctrl+Shift+K</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.focusAndPress" xml:space="preserve">
+    <value>フォーカスしてキーの組み合わせを押してバインドします</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.invalidFormat" xml:space="preserve">
+    <value>無効なショートカット形式です。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.shortcuts.stats" xml:space="preserve">
+    <value>統計</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.microphoneHandling" xml:space="preserve">
+    <value>マイクの取り扱い</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.microphoneInputLevel" xml:space="preserve">
+    <value>マイク入力レベル</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.microphoneMode" xml:space="preserve">
+    <value>マイクモード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.recordingShortcut" xml:space="preserve">
+    <value>録音のショートカット</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.remainingPlaytime" xml:space="preserve">
+    <value>残りのプレイ時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.screenshotShortcut" xml:space="preserve">
+    <value>スクリーンショットのショートカット</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.sections" xml:space="preserve">
+    <value>サイドバーセクション</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.stopStream" xml:space="preserve">
+    <value>ストリームを停止する</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.title" xml:space="preserve">
+    <value>設定</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.toggleMicrophone" xml:space="preserve">
+    <value>マイクの切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.toggleStats" xml:space="preserve">
+    <value>統計の切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.sidebar.toggleStreamSidebar" xml:space="preserve">
+    <value>ストリームサイドバーの切り替え</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.bitratePerformance" xml:space="preserve">
+    <value>Actual receive bitrate compared with the negotiated target</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.bitrateShort" xml:space="preserve">
+    <value>Bit</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.collapse" xml:space="preserve">
+    <value>Hide detailed stats</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.connecting" xml:space="preserve">
+    <value>接続中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.decode" xml:space="preserve">
+    <value>デコード</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.decodeTime" xml:space="preserve">
+    <value>D = デコード時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.expand" xml:space="preserve">
+    <value>Show detailed stats</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.hideAdvanced" xml:space="preserve">
+    <value>Hide advanced diagnostics</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.input" xml:space="preserve">
+    <value>入力</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.inputChannelState" xml:space="preserve">
+    <value>部分的に信頼できる入力チャネルの状態とキューに入れられたバイト数</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.inputQueuePressure" xml:space="preserve">
+    <value>入力キューのプレッシャー (バッファリングされたバイトと遅延フラッシュ)</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.jitterBuffer" xml:space="preserve">
+    <value>JB = ジッターバッファ遅延</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.live" xml:space="preserve">
+    <value>Live</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.mouseFlushCadence" xml:space="preserve">
+    <value>マウスのフラッシュ ケイデンスとパケット レート</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.network" xml:space="preserve">
+    <value>ネットワーク</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.overlayLabel" xml:space="preserve">
+    <value>Stream statistics</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.packetLoss" xml:space="preserve">
+    <value>パケットロスの割合</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.packetLossValue" xml:space="preserve">
+    <value>{{value}}% の損失</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.render" xml:space="preserve">
+    <value>レンダリング</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.renderTime" xml:space="preserve">
+    <value>R = レンダリング時間</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.roundTripLatency" xml:space="preserve">
+    <value>往復ネットワーク遅延</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.rtt" xml:space="preserve">
+    <value>RTT</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.showAdvanced" xml:space="preserve">
+    <value>Advanced diagnostics</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.stable" xml:space="preserve">
+    <value>安定</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.sync" xml:space="preserve">
+    <value>Sync</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.timeRemainingShort" xml:space="preserve">
+    <value>Left</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="stream.stats.waitingForVideo" xml:space="preserve">
+    <value>Waiting for game video…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.actions.cancelLoading" xml:space="preserve">
+    <value>Cancel loading</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.actions.tryAgain" xml:space="preserve">
+    <value>Try again</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.adTag" xml:space="preserve">
+    <value>Ad</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.advertisement" xml:space="preserve">
+    <value>Advertisement</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.advertisementInProgress" xml:space="preserve">
+    <value>広告掲載中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.availableForProgression" xml:space="preserve">
+    <value>{{count}} ad available for queue progression.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.availableForProgression_plural" xml:space="preserve">
+    <value>{{count}} ads available for queue progression.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.freeTierQueueAdsBegin" xml:space="preserve">
+    <value>Free-tier queue ads begin as soon as you enter queue.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.live" xml:space="preserve">
+    <value>Live</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.mediaWillAppear" xml:space="preserve">
+    <value>Ad media will appear here as soon as it is available.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.playbackRequired" xml:space="preserve">
+    <value>Ad playback is required while your session is queued.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.resumeToStayInQueue" xml:space="preserve">
+    <value>キューに留まるように広告を再開します。</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.sponsored" xml:space="preserve">
+    <value>Sponsored</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.ads.titledAdvertisement" xml:space="preserve">
+    <value>{{title}} 広告</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.connecting" xml:space="preserve">
+    <value>The game is ready. Waiting for the first clear frame.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.next" xml:space="preserve">
+    <value>Up next</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.queue" xml:space="preserve">
+    <value>Settle in. We'll keep your place and bring the game in when it's ready.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.setup" xml:space="preserve">
+    <value>Your cloud rig is reserved and getting comfortable for you.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.cozy.starting" xml:space="preserve">
+    <value>The game is starting on your cloud rig.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.findingCapacity" xml:space="preserve">
+    <value>Finding the best available cloud rig for this session.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.mediaHandshake" xml:space="preserve">
+    <value>Negotiating the low-latency video and input channels.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.queueMoving" xml:space="preserve">
+    <value>The live queue is moving. Your place is secured at #{{position}}.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.rigReserved" xml:space="preserve">
+    <value>A gaming rig is reserved. Applying your session configuration now.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.detail.servicesStarting" xml:space="preserve">
+    <value>Starting game services and preparing the remote display.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.editorial.keepWindowOpen" xml:space="preserve">
+    <value>Keep this window open — closing it drops your place in line.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.editorial.noInstalls" xml:space="preserve">
+    <value>No installs and no patches — the rig handles all of that while you wait.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.editorial.savesCarryOver" xml:space="preserve">
+    <value>Your saves and settings carry over automatically.</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.error.codeLabel" xml:space="preserve">
+    <value>Error code</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.aheadOfYou" xml:space="preserve">
+    <value>{{count}} player ahead of you</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.aheadOfYou_plural" xml:space="preserve">
+    <value>{{count}} players ahead of you</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.currentStage" xml:space="preserve">
+    <value>Current stage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.estWait" xml:space="preserve">
+    <value>Est. wait</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.estimatedWait" xml:space="preserve">
+    <value>Estimated wait</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.inQueue" xml:space="preserve">
+    <value>In queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.placeInQueue" xml:space="preserve">
+    <value>Your place in queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.playersAhead" xml:space="preserve">
+    <value>Players ahead</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.position" xml:space="preserve">
+    <value>Position</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.stage" xml:space="preserve">
+    <value>Stage</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.valueUnknown" xml:space="preserve">
+    <value>—</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.yourPosition" xml:space="preserve">
+    <value>Your position</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.hero.youreNext" xml:space="preserve">
+    <value>You're next</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.adQueue" xml:space="preserve">
+    <value>広告キュー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.launchError" xml:space="preserve">
+    <value>起動エラー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.launchProgress" xml:space="preserve">
+    <value>Game launch progress</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.labels.nowLoading" xml:space="preserve">
+    <value>読み込み中</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.highDemand" xml:space="preserve">
+    <value>Demand is high — holding your place in line</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.joinedQueue" xml:space="preserve">
+    <value>Joined the {platform} queue</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.launchFailed" xml:space="preserve">
+    <value>Launch failed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.launchRequested" xml:space="preserve">
+    <value>Launch requested</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.queueAdvanced" xml:space="preserve">
+    <value>Queue advanced — #{position}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.queuePosition" xml:space="preserve">
+    <value>Queue position #{position}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.rigAllocated" xml:space="preserve">
+    <value>Rig allocated — preparing session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.routeOpening" xml:space="preserve">
+    <value>Opening stream route</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.session" xml:space="preserve">
+    <value>Session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.stillTrying" xml:space="preserve">
+    <value>Still working on it — thanks for your patience</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.streamStarting" xml:space="preserve">
+    <value>Stream starting — running final checks</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.title" xml:space="preserve">
+    <value>Session log</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.log.waitingForRig" xml:space="preserve">
+    <value>Waiting for an available rig</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.gained" xml:space="preserve">
+    <value>{{count}} place gained</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.gained_plural" xml:space="preserve">
+    <value>{{count}} places gained</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.label" xml:space="preserve">
+    <value>Movement</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.updates" xml:space="preserve">
+    <value>over {{count}} update</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.movement.updates_plural" xml:space="preserve">
+    <value>over {{count}} updates</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.progress.ariaText" xml:space="preserve">
+    <value>Step {{current}} of {{total}}: {{label}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.connectingToServer" xml:space="preserve">
+    <value>Connecting to server...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.gameLaunchFailed" xml:space="preserve">
+    <value>ゲームの起動に失敗しました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.loading" xml:space="preserve">
+    <value>読み込み中...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.positionInQueue" xml:space="preserve">
+    <value>キュー内のポジション #{{position}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.queuePaused" xml:space="preserve">
+    <value>セッションキューが一時停止されました</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.settingUpRig" xml:space="preserve">
+    <value>ゲーム機器をセットアップしています...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.settingUpStream" xml:space="preserve">
+    <value>Setting up stream...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.startingStream" xml:space="preserve">
+    <value>Starting stream...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.status.waitingInQueue" xml:space="preserve">
+    <value>Waiting in queue...</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.connect" xml:space="preserve">
+    <value>Connect</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.queue" xml:space="preserve">
+    <value>キュー</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.ready" xml:space="preserve">
+    <value>準備完了</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.steps.setup" xml:space="preserve">
+    <value>セットアップ</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.calculating" xml:space="preserve">
+    <value>Calculating…</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.cleared" xml:space="preserve">
+    <value>Cleared</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.elapsed" xml:space="preserve">
+    <value>Elapsed</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.protected" xml:space="preserve">
+    <value>Secured</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.queuePosition" xml:space="preserve">
+    <value>Queue position</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.session" xml:space="preserve">
+    <value>Session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.telemetry.startedAt" xml:space="preserve">
+    <value>Started {{time}}</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.almostReady" xml:space="preserve">
+    <value>Almost ready</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.connecting" xml:space="preserve">
+    <value>Connecting</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.error" xml:space="preserve">
+    <value>Couldn't start your session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+  <data name="streamLoading.topbar.settingUp" xml:space="preserve">
+    <value>Setting up your session</value>
+    <comment>GENERATED from locales/*.json — do not edit.</comment>
+  </data>
+</root>

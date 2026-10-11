@@ -1,0 +1,221 @@
+<!-- OpenNOW shell.
+     Layout mirrors the web client: a 48px title bar, a 68px navigation rail,
+     a 72px header with search and account, the page frame, and a 40px status
+     bar. All metrics come from the generated design tokens. -->
+<Window
+    x:Class="OpenNOW.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:OpenNOW"
+    xmlns:views="using:OpenNOW.Views"
+    mc:Ignorable="d">
+
+    <Grid x:Name="Root" Background="{ThemeResource OpenNowBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+
+        <!-- ── Title bar ─────────────────────────────────────────────────── -->
+        <Grid x:Name="AppTitleBar"
+              Grid.Row="0"
+              Background="{ThemeResource OpenNowPanelBrush}"
+              BorderBrush="{ThemeResource OpenNowPanelBorderBrush}"
+              BorderThickness="0,0,0,1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="16,0,0,0" Spacing="10">
+                <Image x:Name="TitleBarLogo" Width="20" Height="20" Source="ms-appx:///Assets/opennow-logo-mark.png" />
+                <TextBlock Text="OpenNOW"
+                           Style="{StaticResource OpenNowTitleBarText}"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Draggable region: everything not covered by a control drags the window. -->
+            <Grid x:Name="DragRegion" Grid.Column="1" Background="Transparent" />
+        </Grid>
+
+        <!-- ── Body: rail + content ──────────────────────────────────────── -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="68" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Navigation rail -->
+            <Grid x:Name="NavRail"
+                  Grid.Column="0"
+                  Background="{ThemeResource OpenNowRailBrush}"
+                  BorderBrush="{ThemeResource OpenNowPanelBorderBrush}"
+                  BorderThickness="0,0,1,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Button x:Name="HomeNavButton"
+                        Grid.Row="0"
+                        Style="{StaticResource OpenNowRailButton}"
+                        Click="OnNavClicked"
+                        Tag="home"
+                        AutomationProperties.Name="Home">
+                    <StackPanel Spacing="2">
+                        <FontIcon Glyph="&#xE80F;" Style="{StaticResource OpenNowRailIcon}" />
+                        <TextBlock Text="Home" Style="{StaticResource OpenNowRailLabel}" />
+                    </StackPanel>
+                </Button>
+
+                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,8,0,0">
+                    <Button x:Name="LibraryNavButton"
+                            Style="{StaticResource OpenNowRailButton}"
+                            Click="OnNavClicked"
+                            Tag="library"
+                            AutomationProperties.Name="Library">
+                        <StackPanel Spacing="2">
+                            <FontIcon Glyph="&#xE7FC;" Style="{StaticResource OpenNowRailIcon}" />
+                            <TextBlock Text="Library" Style="{StaticResource OpenNowRailLabel}" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="PlaytimeNavButton"
+                            Style="{StaticResource OpenNowRailButton}"
+                            Click="OnNavClicked"
+                            Tag="playtime"
+                            AutomationProperties.Name="Playtime">
+                        <StackPanel Spacing="2">
+                            <FontIcon Glyph="&#xE916;" Style="{StaticResource OpenNowRailIcon}" />
+                            <TextBlock Text="Playtime" Style="{StaticResource OpenNowRailLabel}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <Button x:Name="SettingsNavButton"
+                        Grid.Row="2"
+                        Style="{StaticResource OpenNowRailButton}"
+                        Click="OnNavClicked"
+                        Tag="settings"
+                        Margin="0,0,0,12"
+                        AutomationProperties.Name="Settings">
+                    <StackPanel Spacing="2">
+                        <FontIcon Glyph="&#xE713;" Style="{StaticResource OpenNowRailIcon}" />
+                        <TextBlock Text="Settings" Style="{StaticResource OpenNowRailLabel}" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Page host -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="72" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <Grid x:Name="Header"
+                      Grid.Row="0"
+                      Padding="24,0"
+                      Background="{ThemeResource OpenNowBackgroundBrush}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                        <TextBlock x:Name="HeaderTitle"
+                                   Text="Home"
+                                   Style="{StaticResource OpenNowHeaderTitle}" />
+                        <TextBlock x:Name="HeaderCount"
+                                   Text=""
+                                   Style="{StaticResource OpenNowHeaderMeta}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                Spacing="12"
+                                VerticalAlignment="Center">
+                        <AutoSuggestBox x:Name="SearchBox"
+                                        Width="260"
+                                        PlaceholderText="Search games"
+                                        QueryIcon="Find"
+                                        TextChanged="OnSearchTextChanged"
+                                        QuerySubmitted="OnSearchSubmitted" />
+
+                        <Border x:Name="RegionChip"
+                                Style="{StaticResource OpenNowChip}"
+                                Visibility="Collapsed">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE774;" FontSize="12" />
+                                <TextBlock x:Name="RegionChipText" Style="{StaticResource OpenNowChipText}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="SubscriptionChip"
+                                Style="{StaticResource OpenNowChip}"
+                                Visibility="Collapsed">
+                            <TextBlock x:Name="SubscriptionChipText" Style="{StaticResource OpenNowChipText}" />
+                        </Border>
+
+                        <Button x:Name="AccountButton"
+                                Style="{StaticResource OpenNowAccountButton}"
+                                Click="OnAccountClicked">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PersonPicture x:Name="AccountAvatar"
+                                               Width="28"
+                                               Height="28"
+                                               DisplayName="Guest" />
+                                <TextBlock x:Name="AccountName"
+                                           Text="Sign in"
+                                           VerticalAlignment="Center"
+                                           Style="{StaticResource OpenNowBodyText}" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Pages -->
+                <Frame x:Name="ContentFrame" Grid.Row="1" />
+
+                <!-- Sign-in and streaming cover the whole page area. -->
+                <views:LoginPage x:Name="LoginOverlay"
+                                 Grid.Row="1"
+                                 Visibility="Collapsed" />
+            </Grid>
+        </Grid>
+
+        <!-- ── Status bar ────────────────────────────────────────────────── -->
+        <Grid x:Name="StatusBar"
+              Grid.Row="2"
+              Padding="24,0"
+              Background="{ThemeResource OpenNowPanelBrush}"
+              BorderBrush="{ThemeResource OpenNowPanelBorderBrush}"
+              BorderThickness="0,1,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" Spacing="16">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Ellipse x:Name="ConnectionDot" Width="8" Height="8" Fill="{ThemeResource OpenNowMutedBrush}" />
+                    <TextBlock x:Name="ConnectionText" Text="Not signed in"
+                               Style="{StaticResource OpenNowStatusBarText}" />
+                </StackPanel>
+                <TextBlock x:Name="StreamStatusText" Text="" Style="{StaticResource OpenNowStatusBarText}" />
+                <TextBlock x:Name="LatencyText" Text="" Style="{StaticResource OpenNowStatusBarText}" />
+            </StackPanel>
+
+            <TextBlock Grid.Column="2"
+                       x:Name="VersionText"
+                       Text="0.1.0 · DirectX 10"
+                       Style="{StaticResource OpenNowStatusBarText}" />
+        </Grid>
+    </Grid>
+</Window>

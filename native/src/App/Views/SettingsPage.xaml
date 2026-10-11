@@ -1,0 +1,483 @@
+<Page
+    x:Class="OpenNOW.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <!-- Settings keeps the web client's two-pane layout: a searchable section
+         list on the left, one scrollable section on the right. -->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0"
+              Background="{ThemeResource OpenNowRailBrush}"
+              BorderBrush="{ThemeResource OpenNowPanelBorderBrush}"
+              BorderThickness="0,0,1,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <AutoSuggestBox x:Name="SectionSearch"
+                            Grid.Row="0"
+                            Margin="16,16,16,8"
+                            PlaceholderText="Search settings"
+                            TextChanged="OnSearchChanged" />
+
+            <NavigationView x:Name="SectionNav"
+                            Grid.Row="1"
+                            PaneDisplayMode="Left"
+                            IsPaneOpen="True"
+                            IsSettingsVisible="False"
+                            IsBackButtonVisible="Collapsed"
+                            OpenPaneLength="224"
+                            SelectionChanged="OnSectionChanged"
+                            Background="Transparent">
+                <NavigationView.MenuItems>
+                    <NavigationViewItem Content="Account" Tag="account" Icon="Contact" />
+                    <NavigationViewItem Content="Stream" Tag="stream" Icon="Sync" />
+                    <NavigationViewItem Content="Game" Tag="game" Icon="Globe" />
+                    <NavigationViewItem Content="Audio" Tag="audio" Icon="Volume" />
+                    <NavigationViewItem Content="Input" Tag="input" Icon="Keyboard" />
+                    <NavigationViewItem Content="Interface" Tag="interface" Icon="View" />
+                    <NavigationViewItem Content="About" Tag="about" Icon="Info" />
+                    <NavigationViewItem Content="Thanks" Tag="thanks" Icon="Heart" />
+                </NavigationView.MenuItems>
+            </NavigationView>
+        </Grid>
+
+        <ScrollViewer Grid.Column="1" Padding="28">
+            <StackPanel x:Name="SectionHost" Spacing="20" MaxWidth="720">
+
+                <!-- ── Account ─────────────────────────────────────────── -->
+                <StackPanel x:Name="AccountSection" Spacing="16">
+                    <TextBlock Text="Account" Style="{StaticResource OpenNowShelfTitle}" />
+                    <Border Style="{StaticResource OpenNowSectionCard}">
+                        <StackPanel Spacing="4">
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Signed in as"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock x:Name="AccountEmail"
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <Button Grid.Column="1"
+                                        Content="Sign out"
+                                        Style="{StaticResource OpenNowDangerButton}"
+                                        Click="OnSignOut" />
+                            </Grid>
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Membership"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock x:Name="AccountTier"
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <Button Grid.Column="1"
+                                        Content="Refresh"
+                                        Style="{StaticResource OpenNowSecondaryButton}"
+                                        Click="OnRefreshSubscription" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ── Stream ──────────────────────────────────────────── -->
+                <StackPanel x:Name="StreamSection" Spacing="16">
+                    <TextBlock Text="Stream" Style="{StaticResource OpenNowShelfTitle}" />
+                    <Border Style="{StaticResource OpenNowSectionCard}">
+                        <StackPanel Spacing="4">
+
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Resolution and frame rate"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Higher values need more bandwidth."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ComboBox x:Name="ResolutionBox" Grid.Column="1"
+                                          SelectionChanged="OnStreamSettingChanged">
+                                    <ComboBoxItem Content="1280x720" />
+                                    <ComboBoxItem Content="1920x1080" />
+                                    <ComboBoxItem Content="2560x1440" />
+                                    <ComboBoxItem Content="3840x2160" />
+                                </ComboBox>
+                            </Grid>
+
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Frame rate"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                </StackPanel>
+                                <ComboBox x:Name="FpsBox" Grid.Column="1"
+                                          SelectionChanged="OnStreamSettingChanged">
+                                    <ComboBoxItem Content="30" />
+                                    <ComboBoxItem Content="60" />
+                                    <ComboBoxItem Content="120" />
+                                    <ComboBoxItem Content="240" />
+                                </ComboBox>
+                            </Grid>
+
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Maximum bitrate"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock x:Name="BitrateLabel" Text="25 Mbps"
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <Slider x:Name="BitrateSlider" Grid.Column="1"
+                                        Minimum="5" Maximum="75" StepFrequency="1"
+                                        ValueChanged="OnBitrateChanged" />
+                            </Grid>
+
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Codec"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="AV1 and HEVC need a compatible GPU."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ComboBox x:Name="CodecBox" Grid.Column="1"
+                                          SelectionChanged="OnStreamSettingChanged">
+                                    <ComboBoxItem Content="H.264" />
+                                    <ComboBoxItem Content="HEVC (H.265)" />
+                                    <ComboBoxItem Content="AV1" />
+                                </ComboBox>
+                            </Grid>
+
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Colour quality"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="10-bit and 4:4:4 are independent toggles."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ComboBox x:Name="ColorQualityBox" Grid.Column="1"
+                                          SelectionChanged="OnStreamSettingChanged">
+                                    <ComboBoxItem Content="8-bit 4:2:0" />
+                                    <ComboBoxItem Content="8-bit 4:4:4" />
+                                    <ComboBoxItem Content="10-bit 4:2:0" />
+                                    <ComboBoxItem Content="10-bit 4:4:4" />
+                                </ComboBox>
+                            </Grid>
+
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Sharpening"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Applied on the GPU by the DirectX pipeline."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <Slider x:Name="SharpeningSlider" Grid.Column="1"
+                                        Minimum="0" Maximum="10" StepFrequency="1"
+                                        ValueChanged="OnSharpeningChanged" />
+                            </Grid>
+
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Adjust for poor network conditions"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="AdaptiveToggle" Grid.Column="1"
+                                              Toggled="OnStreamSettingChanged" />
+                            </Grid>
+
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Cloud G-Sync"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Variable refresh rate on a compatible display."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="GsyncToggle" Grid.Column="1"
+                                              Toggled="OnStreamSettingChanged" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="NVIDIA Reflex"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="ReflexToggle" Grid.Column="1"
+                                              Toggled="OnStreamSettingChanged" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ── Game ────────────────────────────────────────────── -->
+                <StackPanel x:Name="GameSection" Spacing="16">
+                    <TextBlock Text="Game" Style="{StaticResource OpenNowShelfTitle}" />
+                    <Border Style="{StaticResource OpenNowSectionCard}">
+                        <StackPanel Spacing="4">
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="In-game language"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Sent to the rig when the session starts."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <TextBox x:Name="GameLanguageBox" Grid.Column="1"
+                                         TextChanged="OnGameSettingChanged" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Launch mode"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Big Picture asks NVIDIA to launch games gamepad-first."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ComboBox x:Name="LaunchModeBox" Grid.Column="1"
+                                          SelectionChanged="OnGameSettingChanged">
+                                    <ComboBoxItem Content="Default" />
+                                    <ComboBoxItem Content="Big Picture" />
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ── Audio ───────────────────────────────────────────── -->
+                <StackPanel x:Name="AudioSection" Spacing="16">
+                    <TextBlock Text="Audio" Style="{StaticResource OpenNowShelfTitle}" />
+                    <Border Style="{StaticResource OpenNowSectionCard}">
+                        <StackPanel Spacing="4">
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Volume" Style="{StaticResource OpenNowSettingsLabel}" />
+                                <Slider x:Name="VolumeSlider" Grid.Column="1"
+                                        Minimum="0" Maximum="100"
+                                        ValueChanged="OnVolumeChanged" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Microphone"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Forward your microphone into the session."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="MicrophoneToggle" Grid.Column="1"
+                                              Toggled="OnAudioSettingChanged" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ── Input ───────────────────────────────────────────── -->
+                <StackPanel x:Name="InputSection" Spacing="16">
+                    <TextBlock Text="Input" Style="{StaticResource OpenNowShelfTitle}" />
+                    <Border Style="{StaticResource OpenNowSectionCard}">
+                        <StackPanel Spacing="4">
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Gamepad"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Polls XInput controllers at 250 Hz."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="GamepadToggle" Grid.Column="1"
+                                              Toggled="OnInputSettingChanged" />
+                            </Grid>
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Capture the keyboard"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Stops Windows shortcuts reaching the desktop while you play."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="KeyboardLockToggle" Grid.Column="1"
+                                              Toggled="OnInputSettingChanged" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Mouse sensitivity"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                </StackPanel>
+                                <Slider x:Name="SensitivitySlider" Grid.Column="1"
+                                        Minimum="0.25" Maximum="3" StepFrequency="0.05"
+                                        ValueChanged="OnSensitivityChanged" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ── Interface ───────────────────────────────────────── -->
+                <StackPanel x:Name="InterfaceSection" Spacing="16">
+                    <TextBlock Text="Interface" Style="{StaticResource OpenNowShelfTitle}" />
+                    <Border Style="{StaticResource OpenNowSectionCard}">
+                        <StackPanel Spacing="4">
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Accent colour"
+                                           Style="{StaticResource OpenNowSettingsLabel}" />
+                                <ComboBox x:Name="AccentBox" Grid.Column="1"
+                                          SelectionChanged="OnAccentChanged">
+                                    <ComboBoxItem Content="Cyan" />
+                                    <ComboBoxItem Content="Lime" />
+                                    <ComboBoxItem Content="Violet" />
+                                    <ComboBoxItem Content="Amber" />
+                                    <ComboBoxItem Content="Rose" />
+                                </ComboBox>
+                            </Grid>
+                            <Grid Style="{StaticResource OpenNowSettingsRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Reduced effects"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Recommended on older GPUs."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="EffectsToggle" Grid.Column="1"
+                                              Toggled="OnInterfaceSettingChanged" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="220" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Language"
+                                               Style="{StaticResource OpenNowSettingsLabel}" />
+                                    <TextBlock Text="Applies after restarting the app."
+                                               Style="{StaticResource OpenNowSettingsHint}" />
+                                </StackPanel>
+                                <ComboBox x:Name="LocaleBox" Grid.Column="1"
+                                          SelectionChanged="OnLocaleChanged">
+                                    <ComboBoxItem Content="English" Tag="en" />
+                                    <ComboBoxItem Content="Deutsch" Tag="de" />
+                                    <ComboBoxItem Content="Español" Tag="es" />
+                                    <ComboBoxItem Content="Français" Tag="fr" />
+                                    <ComboBoxItem Content="日本語" Tag="ja" />
+                                    <ComboBoxItem Content="한국어" Tag="ko" />
+                                    <ComboBoxItem Content="Nederlands" Tag="nl" />
+                                    <ComboBoxItem Content="Polski" Tag="pl" />
+                                    <ComboBoxItem Content="Română" Tag="ro" />
+                                    <ComboBoxItem Content="Русский" Tag="ru" />
+                                    <ComboBoxItem Content="Türkçe" Tag="tr" />
+                                    <ComboBoxItem Content="简体中文" Tag="zh" />
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ── About ───────────────────────────────────────────── -->
+                <StackPanel x:Name="AboutSection" Spacing="16">
+                    <TextBlock Text="About" Style="{StaticResource OpenNowShelfTitle}" />
+                    <Border Style="{StaticResource OpenNowSectionCard}">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="OpenNOW — native Windows client"
+                                       Style="{StaticResource OpenNowSettingsLabel}" />
+                            <TextBlock x:Name="VersionLabel" Text="Version 0.1.0"
+                                       Style="{StaticResource OpenNowSettingsHint}" />
+                            <TextBlock x:Name="AdapterLabel" Text=""
+                                       Style="{StaticResource OpenNowSettingsHint}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock x:Name="DirectXLabel" Text=""
+                                       Style="{StaticResource OpenNowSettingsHint}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Text="OpenNOW is an unofficial, open-source GeForce NOW client. It is not affiliated with NVIDIA."
+                                       Style="{StaticResource OpenNowSettingsHint}"
+                                       TextWrapping="Wrap" />
+                            <Button Content="Open logs folder"
+                                    Style="{StaticResource OpenNowSecondaryButton}"
+                                    Click="OnOpenLogs" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ── Thanks ──────────────────────────────────────────── -->
+                <StackPanel x:Name="ThanksSection" Spacing="16">
+                    <TextBlock Text="Thanks" Style="{StaticResource OpenNowShelfTitle}" />
+                    <Border Style="{StaticResource OpenNowSectionCard}">
+                        <TextBlock Text="OpenNOW stands on the work of the GeForce NOW reverse-engineering community, the WebRTC project, and everyone who filed an issue against the original client. Thank you."
+                                   Style="{StaticResource OpenNowBodySoftText}"
+                                   TextWrapping="Wrap" />
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

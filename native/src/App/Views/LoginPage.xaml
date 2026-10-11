@@ -1,0 +1,111 @@
+<Page
+    x:Class="OpenNOW.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <!-- Full-bleed scrim so the shell stays visible but inert behind it. -->
+    <Grid Background="#E6070B12">
+        <Border Width="520"
+                Padding="40"
+                CornerRadius="{StaticResource rXl}"
+                Background="{ThemeResource OpenNowPanelBrush}"
+                BorderBrush="{ThemeResource OpenNowPanelBorderBrush}"
+                BorderThickness="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <StackPanel Spacing="22">
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Sign in to GeForce NOW"
+                               FontSize="24"
+                               FontWeight="SemiBold"
+                               Foreground="{ThemeResource OpenNowInkBrush}" />
+                    <TextBlock Text="OpenNOW uses NVIDIA's device authorization flow. Approve the code below in your browser — no OpenNOW account needed."
+                               Style="{StaticResource OpenNowBodySoftText}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <!-- Provider choice (NVIDIA, bro.game, ...) -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Provider" Style="{StaticResource OpenNowCaptionText}" />
+                    <ComboBox x:Name="ProviderBox"
+                              HorizontalAlignment="Stretch"
+                              SelectionChanged="OnProviderChanged" />
+                </StackPanel>
+
+                <!-- The code the user types into NVIDIA's page -->
+                <Border Padding="24,18"
+                        CornerRadius="{StaticResource rLg}"
+                        Background="{ThemeResource OpenNowAccentSurfaceBrush}"
+                        BorderBrush="{ThemeResource OpenNowAccentBrush}"
+                        BorderThickness="1">
+                    <StackPanel Spacing="8" HorizontalAlignment="Center">
+                        <TextBlock Text="Your code"
+                                   Style="{StaticResource OpenNowStatLabel}"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock x:Name="UserCodeText"
+                                   Text="········"
+                                   FontFamily="Cascadia Mono, Consolas, monospace"
+                                   FontSize="32"
+                                   FontWeight="SemiBold"
+                                   LetterSpacing="4"
+                                   Foreground="{ThemeResource OpenNowInkBrush}"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock x:Name="ExpiryText"
+                                   Style="{StaticResource OpenNowCaptionText}"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button x:Name="OpenBrowserButton"
+                            Style="{StaticResource OpenNowPrimaryButton}"
+                            Click="OnOpenBrowser">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE774;" FontSize="14" />
+                            <TextBlock Text="Open nvidia.com" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="CopyCodeButton"
+                            Style="{StaticResource OpenNowSecondaryButton}"
+                            Click="OnCopyCode"
+                            Content="Copy code" />
+                    <Button x:Name="RestartButton"
+                            Style="{StaticResource OpenNowGhostButton}"
+                            Click="OnRestart"
+                            Content="New code"
+                            Visibility="Collapsed" />
+                </StackPanel>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ProgressRing x:Name="PollingRing"
+                                  Width="16"
+                                  Height="16"
+                                  IsActive="True"
+                                  Margin="0,0,10,0" />
+                    <TextBlock x:Name="StatusText"
+                               Grid.Column="1"
+                               Text="Waiting for approval…"
+                               Style="{StaticResource OpenNowBodySoftText}" />
+                </Grid>
+
+                <TextBlock x:Name="ErrorText"
+                           Text=""
+                           Foreground="{ThemeResource OpenNowErrorBrush}"
+                           TextWrapping="Wrap"
+                           Visibility="Collapsed" />
+
+                <TextBlock Text="OpenNOW is an unofficial client. Your NVIDIA credentials never leave this device — tokens are encrypted with your Windows account."
+                           Style="{StaticResource OpenNowCaptionText}"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>
