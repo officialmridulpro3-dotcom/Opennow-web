@@ -80,4 +80,9 @@ namespace winrt::OpenNOW::factory_implementation {
 
 class HomePage : public HomePageT<HomePage, implementation::HomePage> {};
 
+// The view models are runtime classes in their own right, so each one needs
+// a factory for the activation glue cppwinrt generates.
+class GameViewModel : public GameViewModelT<GameViewModel, implementation::GameViewModel> {};
+class ShelfViewModel : public ShelfViewModelT<ShelfViewModel, implementation::ShelfViewModel> {};
+
 }  // namespace winrt::OpenNOW::factory_implementation

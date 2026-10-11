@@ -45,4 +45,8 @@ namespace winrt::OpenNOW::factory_implementation {
 
 class PlaytimePage : public PlaytimePageT<PlaytimePage, implementation::PlaytimePage> {};
 
+class PlaytimeViewModel
+
+    : public PlaytimeViewModelT<PlaytimeViewModel, implementation::PlaytimeViewModel> {};
+
 }  // namespace winrt::OpenNOW::factory_implementation
