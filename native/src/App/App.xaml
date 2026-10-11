@@ -3,10 +3,10 @@
      first (they come from the web client's stylesheet), then the control styles,
      then the accent themes which override the accent brushes at runtime. -->
 <Application
-    x:Class="OpenNOW.App"
+    x:Class="OpenNOW.Shell.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:OpenNOW">
+    xmlns:local="using:OpenNOW.Shell">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -3,7 +3,11 @@
 #include "pch.h"
 
 #include "MainWindow.h"
+#if __has_include("Shell.MainWindow.g.cpp")
+#include "Shell.MainWindow.g.cpp"
+#elif __has_include("MainWindow.g.cpp")
 #include "MainWindow.g.cpp"
+#endif
 
 #include <microsoft.ui.xaml.media.dxinterop.h>
 
@@ -34,7 +38,7 @@ std::wstring ToLower(std::wstring text) {
 
 }  // namespace
 
-namespace winrt::OpenNOW::implementation {
+namespace winrt::OpenNOW::Shell::implementation {
 
 MainWindow::MainWindow() {
     InitializeComponent();
@@ -290,4 +294,4 @@ void MainWindow::SelectNavButton(Controls::Button const& button) {
     }
 }
 
-}  // namespace winrt::OpenNOW::implementation
+}  // namespace winrt::OpenNOW::Shell::implementation

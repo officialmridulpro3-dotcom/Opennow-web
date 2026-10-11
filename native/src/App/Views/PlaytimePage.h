@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Views.PlaytimeViewModel.g.h"
-#include "Views.PlaytimePage.g.h"
+#include "PlaytimePage.g.h"
 
 #include <opennow/core/Types.hpp>
 

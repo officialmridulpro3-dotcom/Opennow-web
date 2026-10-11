@@ -3,10 +3,10 @@
 #pragma once
 
 // The view models come first: ShelfViewModel instantiates
-// IObservableVector<GameViewModel>, which asserts on an incomplete type.
+// IObservableVector<OpenNOW::Views::GameViewModel>, which asserts on an incomplete type.
 #include "Views.GameViewModel.g.h"
 #include "Views.ShelfViewModel.g.h"
-#include "Views.HomePage.g.h"
+#include "HomePage.g.h"
 
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
 
@@ -45,13 +45,13 @@ struct ShelfViewModel : ShelfViewModelT<ShelfViewModel> {
     void Title(hstring const& value);
     hstring CountLabel();
     void CountLabel(hstring const& value);
-    Windows::Foundation::Collections::IObservableVector<GameViewModel> Games();
-    void Games(Windows::Foundation::Collections::IObservableVector<GameViewModel> const& value);
+    Windows::Foundation::Collections::IObservableVector<OpenNOW::Views::GameViewModel> Games();
+    void Games(Windows::Foundation::Collections::IObservableVector<OpenNOW::Views::GameViewModel> const& value);
 
 private:
     hstring title_;
     hstring countLabel_;
-    Windows::Foundation::Collections::IObservableVector<GameViewModel> games_{nullptr};
+    Windows::Foundation::Collections::IObservableVector<OpenNOW::Views::GameViewModel> games_{nullptr};
 };
 
 class HomePage : public HomePageT<HomePage> {

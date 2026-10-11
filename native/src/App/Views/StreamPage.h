@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Views.StreamPage.g.h"
+#include "StreamPage.g.h"
 
 #include <chrono>
 #include <string>

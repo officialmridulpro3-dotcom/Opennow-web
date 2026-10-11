@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Views.LibraryPage.g.h"
+#include "LibraryPage.g.h"
 
 #include "HomePage.h"
 

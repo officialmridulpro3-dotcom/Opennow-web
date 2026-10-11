@@ -3,9 +3,12 @@
 #include "pch.h"
 
 #include "App.h"
-// The XAML compiler generates this next to App.xaml.g.h; it is absent until
-// markup compilation has run at least once.
-#if __has_include("App.g.cpp")
+// cppwinrt's activation-factory glue, named after the namespace-qualified
+// class. Both spellings are tried so the build does not hang on which one this
+// version of cppwinrt picks.
+#if __has_include("Shell.App.g.cpp")
+#include "Shell.App.g.cpp"
+#elif __has_include("App.g.cpp")
 #include "App.g.cpp"
 #endif
 #include "MainWindow.h"
@@ -18,7 +21,7 @@ using namespace winrt;
 using namespace winrt::Microsoft::UI::Xaml;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
 
-namespace winrt::OpenNOW::implementation {
+namespace winrt::OpenNOW::Shell::implementation {
 
 App::App() {
     // XAML type resolution for user controls declared only in markup.
@@ -82,4 +85,4 @@ void App::OnLaunched(Microsoft::UI::Xaml::LaunchActivatedEventArgs const&) {
     window_.Activate();
 }
 
-}  // namespace winrt::OpenNOW::implementation
+}  // namespace winrt::OpenNOW::Shell::implementation

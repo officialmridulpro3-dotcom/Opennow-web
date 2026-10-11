@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Views.SettingsPage.g.h"
+#include "SettingsPage.g.h"
 
 namespace winrt::OpenNOW::Views::implementation {
 

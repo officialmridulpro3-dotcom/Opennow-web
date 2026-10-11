@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Views.LoginPage.g.h"
+#include "LoginPage.g.h"
 
 #include <opennow/core/gfn/Auth.hpp>
 

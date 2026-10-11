@@ -3,12 +3,12 @@
      a 72px header with search and account, the page frame, and a 40px status
      bar. All metrics come from the generated design tokens. -->
 <Window
-    x:Class="OpenNOW.MainWindow"
+    x:Class="OpenNOW.Shell.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="using:OpenNOW"
+    xmlns:local="using:OpenNOW.Shell"
     xmlns:views="using:OpenNOW.Views"
     mc:Ignorable="d">
 
