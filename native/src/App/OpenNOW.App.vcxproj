@@ -11,6 +11,10 @@
     <RootNamespace>OpenNOW</RootNamespace>
     <WindowsAppContainer>false</WindowsAppContainer>
     <AppContainerApplication>false</AppContainerApplication>
+    <!-- Loads the XAML compiler targets. Without it nothing compiles the
+         markup: no .xbf is produced and no page gets an InitializeComponent. -->
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
     <TargetPlatformVersion>10.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
@@ -108,9 +112,6 @@
        code-behind for a .xaml file; without it no InitializeComponent is
        generated. -->
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="App.cpp">
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>

@@ -18,6 +18,7 @@
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.Streams.h>
 #include <winrt/Windows.System.h>
+#include <winrt/Windows.UI.Xaml.Interop.h>  // xaml_typename
 
 // C++/WinRT helpers
 #include <wil/cppwinrt.h>

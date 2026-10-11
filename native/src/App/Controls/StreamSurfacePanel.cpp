@@ -28,7 +28,9 @@ bool StreamSurfacePanel::EnsureSurface() {
     // ISwapChainPanelNative is the interop interface that lets a DXGI swap
     // chain be presented inside the XAML tree.
     winrt::com_ptr<ISwapChainPanelNative> panelNative;
-    if (FAILED(as<IUnknown>()->QueryInterface(IID_PPV_ARGS(panelNative.put()))) ||
+    // m_inner is the SwapChainPanel this class composes; the interop interface
+    // hangs off the panel, not off the outer object.
+    if (FAILED(winrt::get_unknown(m_inner)->QueryInterface(IID_PPV_ARGS(panelNative.put()))) ||
         panelNative == nullptr) {
         lastError_ = "SwapChainPanel does not expose ISwapChainPanelNative.";
         opennow::core::LogError("StreamSurface", lastError_);

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Views.PlaytimePage.g.h"
 #include "Views.PlaytimeViewModel.g.h"
+#include "Views.PlaytimePage.g.h"
 
 #include <opennow/core/Types.hpp>
 

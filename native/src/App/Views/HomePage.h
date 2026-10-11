@@ -2,9 +2,11 @@
 
 #pragma once
 
-#include "Views.HomePage.g.h"
+// The view models come first: ShelfViewModel instantiates
+// IObservableVector<GameViewModel>, which asserts on an incomplete type.
 #include "Views.GameViewModel.g.h"
 #include "Views.ShelfViewModel.g.h"
+#include "Views.HomePage.g.h"
 
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
 
