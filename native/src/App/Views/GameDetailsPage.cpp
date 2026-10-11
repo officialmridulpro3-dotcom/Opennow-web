@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "GameDetailsPage.h"
-#include "Views..g.cpp"GameDetailsPage
+#include "Views.GameDetailsPage.g.cpp"
 
 #include "StreamPage.h"
 
