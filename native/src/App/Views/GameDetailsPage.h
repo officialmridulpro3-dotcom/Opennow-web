@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "GameDetailsPage.g.h"
+#include "Views.GameDetailsPage.g.h"
 
 #include <opennow/core/Types.hpp>
 

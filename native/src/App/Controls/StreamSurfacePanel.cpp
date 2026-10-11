@@ -3,6 +3,7 @@
 #include "pch.h"
 
 #include "StreamSurfacePanel.h"
+#include "Controls.StreamSurfacePanel.g.cpp"
 
 #include <microsoft.ui.xaml.media.dxinterop.h>
 

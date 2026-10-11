@@ -1,8 +1,10 @@
+// OpenNOW native client — application class.
+//
+// Intentionally empty. App is declared by its markup (x:Class="OpenNOW.App" in
+// App.xaml), and the XAML compiler owns App.xaml.g.h — that is where
+// InitializeComponent comes from. Declaring the class here as well would make
+// cppwinrt emit a competing App.g.h with no XAML members.
+
 namespace OpenNOW
 {
-    [default_interface]
-    runtimeclass App : Microsoft.UI.Xaml.Application
-    {
-        App();
-    }
 }

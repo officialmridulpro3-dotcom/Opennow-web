@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "PlaytimePage.h"
-#include "PlaytimePage.g.cpp"
+#include "Views..g.cpp"PlaytimePage
 
 #include <algorithm>
 #include <sstream>

@@ -2,7 +2,9 @@
 
 #pragma once
 
-#include "HomePage.g.h"
+#include "Views.HomePage.g.h"
+#include "Views.GameViewModel.g.h"
+#include "Views.ShelfViewModel.g.h"
 
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
 

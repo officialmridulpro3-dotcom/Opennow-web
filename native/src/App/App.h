@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "App.g.h"
+#include "App.xaml.g.h"
 
 namespace winrt::OpenNOW::implementation {
 

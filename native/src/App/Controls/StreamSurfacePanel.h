@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "StreamSurfacePanel.g.h"
+#include "Controls.StreamSurfacePanel.g.h"
 
 #include <memory>
 

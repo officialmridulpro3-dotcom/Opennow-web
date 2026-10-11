@@ -104,37 +104,81 @@
   </ItemGroup>
 
   <!-- ── sources ─────────────────────────────────────────────────────────── -->
+  <!-- DependentUpon is what tells the XAML compiler which .cpp is the
+       code-behind for a .xaml file; without it no InitializeComponent is
+       generated. -->
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
-    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="App.cpp">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="Controls\StreamSurfacePanel.cpp" />
     <ClCompile Include="Services\AppServices.cpp" />
-    <ClCompile Include="Views\HomePage.cpp" />
-    <ClCompile Include="Views\LibraryPage.cpp" />
-    <ClCompile Include="Views\LoginPage.cpp" />
-    <ClCompile Include="Views\GameDetailsPage.cpp" />
-    <ClCompile Include="Views\PlaytimePage.cpp" />
-    <ClCompile Include="Views\SettingsPage.cpp" />
-    <ClCompile Include="Views\StreamPage.cpp" />
+    <ClCompile Include="Views\HomePage.cpp">
+      <DependentUpon>HomePage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Views\LibraryPage.cpp">
+      <DependentUpon>LibraryPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Views\LoginPage.cpp">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Views\GameDetailsPage.cpp">
+      <DependentUpon>GameDetailsPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Views\PlaytimePage.cpp">
+      <DependentUpon>PlaytimePage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Views\SettingsPage.cpp">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Views\StreamPage.cpp">
+      <DependentUpon>StreamPage.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="..\DirectX\src\StreamSurface.cpp">
       <!-- Lives in the DirectX tree and is also built by that project: it
            includes its own headers, not this project's precompiled header. -->
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
+    <!-- cppwinrt's activation-factory glue for the authored WinRT types. -->
+    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
   </ItemGroup>
 
   <ItemGroup>
-    <ClInclude Include="App.h" />
-    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="App.h">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="Controls\StreamSurfacePanel.h" />
     <ClInclude Include="Services\AppServices.h" />
-    <ClInclude Include="Views\HomePage.h" />
-    <ClInclude Include="Views\LibraryPage.h" />
-    <ClInclude Include="Views\LoginPage.h" />
-    <ClInclude Include="Views\GameDetailsPage.h" />
-    <ClInclude Include="Views\PlaytimePage.h" />
-    <ClInclude Include="Views\SettingsPage.h" />
-    <ClInclude Include="Views\StreamPage.h" />
+    <ClInclude Include="Views\HomePage.h">
+      <DependentUpon>HomePage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Views\LibraryPage.h">
+      <DependentUpon>LibraryPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Views\LoginPage.h">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Views\GameDetailsPage.h">
+      <DependentUpon>GameDetailsPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Views\PlaytimePage.h">
+      <DependentUpon>PlaytimePage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Views\SettingsPage.h">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Views\StreamPage.h">
+      <DependentUpon>StreamPage.xaml</DependentUpon>
+    </ClInclude>
   </ItemGroup>
 
   <!-- ── XAML ────────────────────────────────────────────────────────────── -->

@@ -3,7 +3,11 @@
 #include "pch.h"
 
 #include "App.h"
+// The XAML compiler generates this next to App.xaml.g.h; it is absent until
+// markup compilation has run at least once.
+#if __has_include("App.g.cpp")
 #include "App.g.cpp"
+#endif
 #include "MainWindow.h"
 
 #include <opennow/core/Logging.hpp>

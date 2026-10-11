@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "StreamPage.h"
-#include "StreamPage.g.cpp"
+#include "Views..g.cpp"StreamPage
 
 #include <winrt/Microsoft.UI.Windowing.h>
 
