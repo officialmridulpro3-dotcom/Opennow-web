@@ -76,9 +76,11 @@
        mixing the two fails the linker with LNK2038 (C++/WinRT version). -->
   <PropertyGroup>
     <CppWinRTPackage>false</CppWinRTPackage>
-    <CppWinRTPath Condition="Exists('$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64\cppwinrt.exe')">$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64\</CppWinRTPath>
-    <CppWinRTPath Condition="'$(CppWinRTPath)' == '' And Exists('$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\cppwinrt.exe')">$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\</CppWinRTPath>
-    <CppWinRTPath Condition="'$(CppWinRTPath)' == '' And Exists('$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x86\cppwinrt.exe')">$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x86\</CppWinRTPath>
+    <!-- WindowsTargetPlatformVersion is the family ("10.0"); the installed
+         build lives in WindowsSDKVersion ("10.0.26100.0\\"). -->
+    <CppWinRTPath Condition="Exists('$(WindowsSdkDir)bin\$(WindowsSDKVersion)x64\cppwinrt.exe')">$(WindowsSdkDir)bin\$(WindowsSDKVersion)x64\</CppWinRTPath>
+    <CppWinRTPath Condition="'$(CppWinRTPath)' == '' And Exists('$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\cppwinrt.exe')">$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\</CppWinRTPath>
+    <CppWinRTPath Condition="'$(CppWinRTPath)' == '' And Exists('$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64\cppwinrt.exe')">$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64\</CppWinRTPath>
   </PropertyGroup>
 
   <!-- Windows App SDK + WIL. Bump these in lockstep with Directory.Build.props. -->
