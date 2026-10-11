@@ -61,9 +61,12 @@
         $(MSBuildProjectDirectory)\..;
         $(MSBuildProjectDirectory)\..\Core\include;
         $(MSBuildProjectDirectory)\..\DirectX\include;
+        $(IntDir);
         $(IntDir)Generated Files\;
         $(IntDir)Generated Files\Views\;
         $(IntDir)Generated Files\Controls\;
+        $(IntDir)Views\;
+        $(IntDir)Controls\;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -193,8 +196,9 @@
        #include "HomePage.g.h" wherever it lives. -->
   <Target Name="OpenNOWFlattenGeneratedHeaders" BeforeTargets="ClCompile">
     <ItemGroup>
-      <OpenNOWGeneratedHeader Include="$(IntDir)Generated Files\**\*.g.h" />
-      <OpenNOWGeneratedHeader Include="$(IntDir)Generated Files\**\*.g.hpp" />
+      <OpenNOWGeneratedHeader Include="$(IntDir)**\*.g.h" />
+      <OpenNOWGeneratedHeader Include="$(IntDir)**\*.g.hpp" />
+      <OpenNOWGeneratedHeader Include="$(MSBuildProjectDirectory)\**\*.g.h" />
     </ItemGroup>
     <Copy SourceFiles="@(OpenNOWGeneratedHeader)"
           DestinationFolder="$(IntDir)Generated Files\"

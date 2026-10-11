@@ -287,6 +287,10 @@ jobs:
             }
           }
 
+          Publish-File 'ci-report.txt'            'ci-report.txt'
+          Publish-File 'native-build-stdout.log'   'native-build-stdout.log.txt'
+          Publish-File 'toolchain.txt'             'toolchain.txt'
+
           # The git push is the fallback: it writes into logs/ only, so it can
           # never pick up build outputs, and RUN.txt makes a stale branch
           # obvious instead of looking like the current failure.
@@ -297,7 +301,7 @@ jobs:
             git checkout --orphan ci-buildlog 2>&1 | Out-Null
             git rm -rf . 2>&1 | Out-Null
             New-Item -ItemType Directory -Force -Path logs | Out-Null
-            foreach ($pair in @(@('native-build-stdout.log', 'stdout.log'), @('toolchain.txt', 'toolchain.txt'), @('ci-report.txt', 'ci-report.txt'))) {
+            foreach ($pair in @(@('native-build-stdout.log', 'stdout.log'), @('toolchain.txt', 'toolchain.txt'), @('ci-report.txt', 'ci-report.txt'), @('generated.txt', 'generated.txt'))) {
               if (Test-Path $pair[0]) { Copy-Item $pair[0] ('logs/' + $pair[1]) -Force }
             }
             Set-Content -Path logs/RUN.txt -Value ("run $env:GITHUB_RUN_ID`n$(Get-Date -Format o)")
@@ -324,11 +328,23 @@ jobs:
             $report += '--- tail of build output ---'
             $report += (Get-Content $log -Tail 40)
           }
+          $generated = @()
+          $generated += '--- every file under native\obj ---'
+          $generated += ((Get-ChildItem -Path native\obj -Recurse -File -ErrorAction SilentlyContinue |
+                          Select-Object -ExpandProperty FullName) -join "`n")
+          $generated += '--- files declaring InitializeComponent ---'
+          $genFiles = Get-ChildItem -Path native\obj -Recurse -File -Include *.g.h,*.g.hpp,*.g.cpp,*.xaml.g.h -ErrorAction SilentlyContinue
+          $generated += ((Select-String -Path $genFiles.FullName -Pattern 'InitializeComponent' -List -ErrorAction SilentlyContinue |
+                          ForEach-Object { $_.Path + ': ' + $_.Line.Trim() }) -join "`n")
+          $generated += '--- head of every App.g.* ---'
+          foreach ($g in (Get-ChildItem -Path native\obj -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'App.g.*' })) {
+            $generated += ('===== ' + $g.FullName)
+            $generated += (Get-Content $g.FullName -TotalCount 25)
+          }
+          ($generated -join "`n") | Out-File -FilePath generated.txt -Encoding utf8
+
           ($report -join "`n") | Out-File -FilePath ci-report.txt -Encoding utf8
 
-          Publish-File 'ci-report.txt'            'ci-report.txt'
-          Publish-File 'native-build-stdout.log'   'native-build-stdout.log.txt'
-          Publish-File 'toolchain.txt'             'toolchain.txt'
 
   # ── Rolling release ────────────────────────────────────────────────────────
   # Workflow artifacts expire and need a signed-in session; release assets are
