@@ -25,6 +25,12 @@ namespace {
 
 std::wstring Utf8ToWide(const std::string& text) { return winrt::to_hstring(text).c_str(); }
 
+// A Window is not a FrameworkElement, so it carries no resource dictionary of
+// its own; every OpenNOW brush lives in the application's dictionary.
+Microsoft::UI::Xaml::ResourceDictionary AppResources() {
+    return Microsoft::UI::Xaml::Application::Current().Resources();
+}
+
 std::wstring ToLower(std::wstring text) {
     std::transform(text.begin(), text.end(), text.begin(), [](wchar_t c) {
         return static_cast<wchar_t>(std::towlower(c));
@@ -92,26 +98,26 @@ void MainWindow::ApplyAccentTheme() {
     Microsoft::UI::Xaml::Media::SolidColorBrush accentBrush{};
     switch (settings.interface_.accent) {
         case opennow::core::AccentTheme::Lime:
-            accentBrush = Resources().TryLookup(box_value(L"OpenNowAccentLimeBrush"))
+            accentBrush = AppResources().TryLookup(box_value(L"OpenNowAccentLimeBrush"))
                               .as<Microsoft::UI::Xaml::Media::SolidColorBrush>();
             break;
         case opennow::core::AccentTheme::Violet:
-            accentBrush = Resources().TryLookup(box_value(L"OpenNowAccentVioletBrush"))
+            accentBrush = AppResources().TryLookup(box_value(L"OpenNowAccentVioletBrush"))
                               .as<Microsoft::UI::Xaml::Media::SolidColorBrush>();
             break;
         case opennow::core::AccentTheme::Amber:
-            accentBrush = Resources().TryLookup(box_value(L"OpenNowAccentAmberBrush"))
+            accentBrush = AppResources().TryLookup(box_value(L"OpenNowAccentAmberBrush"))
                               .as<Microsoft::UI::Xaml::Media::SolidColorBrush>();
             break;
         case opennow::core::AccentTheme::Rose:
-            accentBrush = Resources().TryLookup(box_value(L"OpenNowAccentRoseBrush"))
+            accentBrush = AppResources().TryLookup(box_value(L"OpenNowAccentRoseBrush"))
                               .as<Microsoft::UI::Xaml::Media::SolidColorBrush>();
             break;
         default:
             return;  // Cyan is the dictionary default.
     }
     if (accentBrush != nullptr) {
-        Resources().Insert(box_value(L"OpenNowAccentBrush"), accentBrush);
+        AppResources().Insert(box_value(L"OpenNowAccentBrush"), accentBrush);
     }
 }
 
@@ -232,9 +238,9 @@ void MainWindow::ShowLoginOverlay(bool show) {
 void MainWindow::SetStatus(hstring const& text, bool connected) {
     ConnectionText().Text(text);
     ConnectionDot().Fill(connected
-                             ? Resources().TryLookup(box_value(L"OpenNowSuccessBrush"))
+                             ? AppResources().TryLookup(box_value(L"OpenNowSuccessBrush"))
                                    .as<Microsoft::UI::Xaml::Media::Brush>()
-                             : Resources().TryLookup(box_value(L"OpenNowMutedBrush"))
+                             : AppResources().TryLookup(box_value(L"OpenNowMutedBrush"))
                                    .as<Microsoft::UI::Xaml::Media::Brush>());
 }
 

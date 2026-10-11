@@ -2,6 +2,14 @@
 
 #pragma once
 
+// The Windows headers have to come first: the XAML compiler's XamlUserType
+// implements the classic COM IXamlUserType, and C++/WinRT only supports that
+// when unknwn.h is already in scope.
+#include <windows.h>
+#include <unknwn.h>
+#include <restrictederrorinfo.h>
+#include <hstring.h>
+
 // Windows App SDK (WinUI 3)
 #include <winrt/Microsoft.UI.Xaml.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
@@ -22,10 +30,6 @@
 
 // C++/WinRT helpers
 #include <wil/cppwinrt.h>
-#include <windows.h>
-#include <unknwn.h>
-#include <restrictederrorinfo.h>
-#include <hstring.h>
 
 // OpenNOW Core
 #include <opennow/core/Json.hpp>
@@ -40,3 +44,24 @@
 #include <opennow/core/gfn/DeviceId.hpp>
 #include <opennow/core/gfn/Signaling.hpp>
 #include <opennow/core/gfn/Subscription.hpp>
+
+#include <cctype>
+#include <cwctype>
+
+namespace winrt {
+
+// C++/WinRT only ships resume_foreground for the system dispatcher queue; the
+// WinUI 3 one is a different type, so provide the equivalent awaiter.
+inline auto resume_foreground(Microsoft::UI::Dispatching::DispatcherQueue const& queue) {
+    struct awaitable {
+        Microsoft::UI::Dispatching::DispatcherQueue queue;
+        bool await_ready() const noexcept { return false; }
+        void await_resume() const noexcept {}
+        void await_suspend(std::experimental::coroutine_handle<> handle) const {
+            queue.TryEnqueue([handle] { handle(); });
+        }
+    };
+    return awaitable{queue};
+}
+
+}  // namespace winrt
