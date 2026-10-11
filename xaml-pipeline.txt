@@ -1,0 +1,210 @@
+preprocessed file: 22805 lines
+607 [$(XamlCompilerPropsAndTargetsDirectory)Microsoft.UI.Xaml.Markup.Compiler.props] <Import Project="$(XamlCompilerPropsAndTargetsDirectory)Microsoft.UI.Xaml.Markup.Compiler.props" Condition="'$(MSBuildProjectExtension)'!='.wapproj'">
+609 [$(XamlCompilerPropsAndTargetsDirectory)Microsoft.UI.Xaml.Markup.Compiler.props] C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.props
+623 [$(XamlCompilerPropsAndTargetsDirectory)Microsoft.UI.Xaml.Markup.Compiler.props] <CustomBeforeMicrosoftCommonTargets>$(MSBuildThisFileDirectory)Microsoft.UI.Xaml.Markup.Compiler.BeforeCommon.targets</CustomBeforeMicrosoftCommonTargets>
+628 [$(XamlCompilerPropsAndTargetsDirectory)Microsoft.UI.Xaml.Markup.Compiler.props] See 'Microsoft.UI.Xaml.Markup.Compiler.BeforeCommon.targets'. -->
+839 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.props] <XamlLanguage Condition="'$(XamlLanguage)' == ''">CppWinRT</XamlLanguage>
+866 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.props] <ProjectReference Condition="'$(XamlLanguage)' != 'C++' and '$(CppWinRTEnableDefaultCopyLocalFalse)' == 'true'">
+872 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.props] <Reference Condition="'$(XamlLanguage)' != 'C++' and '$(CppWinRTEnableDefaultCopyLocalFalse)' == 'true'">
+1562 [$(ForceImportAfterCppDefaultProps)] <XamlLanguage>CppWinRT</XamlLanguage>
+4324 [$(ForceImportAfterCppProps)] <XamlLanguage>CppWinRT</XamlLanguage>
+4328 [$(ForceImportAfterCppProps)] <Message Importance="high" Text="OpenNOW: XamlLanguage=$(XamlLanguage) CppWinRTProjectLanguage=$(CppWinRTProjectLanguage) GeneratedFilesDir=$(GeneratedFilesDir)" />
+4983 [$(CustomBeforeMicrosoftCommonTargets)] C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.BeforeCommon.targets
+5061 [$(MsixCppProps)] C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.BeforeCommon.targets
+11609 [$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.targets\ImportAfter\*] <_VSXlsPackageRoot>$(MSBuildThisFileDirectory)..\..\..\..\Common7\IDE\CommonExtensions\Microsoft\XamlLanguageService</_VSXlsPackageRoot>
+11613 [$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.targets\ImportAfter\*] <Analyzer Include="$(_VSPrivateAssemblies)\Microsoft.VisualStudio.DesignTools.XamlLanguageServiceBase.dll" />
+15441 [$(XamlCompilerPropsAndTargetsDirectory)Microsoft.UI.Xaml.Markup.Compiler.targets] <Import Project="$(XamlCompilerPropsAndTargetsDirectory)Microsoft.UI.Xaml.Markup.Compiler.targets" Condition="Exists('$(XamlCompilerPropsAndTargetsDirectory)Microsoft.UI.Xaml.Markup.Compiler.targets') and '$(MSBuildProjectExtension)'!='.wapproj' and '$(UseWPF)'!='true' and '$(UseUwpTools)' != 'true'">
+15443 [$(XamlCompilerPropsAndTargetsDirectory)Microsoft.UI.Xaml.Markup.Compiler.targets] C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.targets
+15451 [$(MSBuildThisFileDirectory)Microsoft.UI.Xaml.Markup.Compiler.interop.targets] <Import Project="$(MSBuildThisFileDirectory)Microsoft.UI.Xaml.Markup.Compiler.interop.targets">
+15453 [$(MSBuildThisFileDirectory)Microsoft.UI.Xaml.Markup.Compiler.interop.targets] C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.interop.targets
+15489 [ImportBefore\*] <XamlLanguage Condition="'$(XamlLanguage)' == ''">$(Language)</XamlLanguage>
+15506 [ImportBefore\*] <EnableTypeInfoReflection Condition="'$(XamlLanguage)' == 'CppWinRT' OR '$(XamlLanguage)' == 'C++'">false</EnableTypeInfoReflection>
+15595 [ImportBefore\*] <XamlCompilerTaskPath>$(_MuxPackageToolsFolder)Microsoft.UI.Xaml.Markup.Compiler.dll</XamlCompilerTaskPath>
+15598 [ImportBefore\*] <XamlCompilerJsonTaskPath>$(_MuxPackageToolsFolder)Microsoft.UI.Xaml.Markup.Compiler.IO.dll</XamlCompilerJsonTaskPath>
+15603 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.Tasks.CompileXaml" AssemblyFile="$(XamlCompilerTaskPath)" />
+15604 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.Tasks.AddDefaultXamlLinkMetadata" AssemblyFile="$(XamlCompilerTaskPath)" />
+15605 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.Tasks.GetXamlCppIncludeDirectories" AssemblyFile="$(XamlCompilerTaskPath)" />
+15606 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.IO.InputSerializer" AssemblyFile="$(XamlCompilerJsonTaskPath)" />
+15607 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.IO.OutputDeserializer" AssemblyFile="$(XamlCompilerJsonTaskPath)" />
+15770 [ImportBefore\*] <CompileXaml Condition="'$(UseXamlCompilerExecutable)' != 'true'" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="True" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" CIncludeDirectories="$(XamlCppIncludeDirectories)" ProjectPath="$(MSBuildProjectFullPath)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(ReferencePath)" ForceSharedStateShutdown="False" ContinueOnError="True" CompileMode="DesignTimeBuild" XAMLFingerprint="$(XAMLFingerprint)" UseVCMetaManaged="$(UseVCMetaManaged)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" SavedStateFile="$(XamlSavedStateFilePath)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" WindowsSdkPath="$(WindowsSdkPath)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)">
+15785 [ImportBefore\*] <InputSerializer Condition="'$(UseXamlCompilerExecutable)' == 'true'" JsonFilePath="$(XamlCompilerExeInputJson)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="True" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" CIncludeDirectories="$(XamlCppIncludeDirectories)" ProjectPath="$(MSBuildProjectFullPath)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(ReferencePath)" ForceSharedStateShutdown="False" ContinueOnError="True" CompileMode="DesignTimeBuild" XAMLFingerprint="$(XAMLFingerprint)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" SavedStateFile="$(XamlSavedStateFilePath)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" WindowsSdkPath="$(WindowsSdkPath)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)" />
+15811 [ImportBefore\*] <Target Name="MarkupCompilePass1" DependsOnTargets="$(MarkupCompilePass1DependsOn)" Condition="'@(Page)' != '' Or '@(ApplicationDefinition)' != '' ">
+15817 [ImportBefore\*] <CompileXaml Condition="'$(UseXamlCompilerExecutable)' != 'true'" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="True" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" ProjectPath="$(MSBuildProjectFullPath)" CIncludeDirectories="$(XamlCppIncludeDirectories)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(ReferencePath)" ForceSharedStateShutdown="False" CompileMode="RealBuildPass1" XAMLFingerprint="$(XAMLFingerprint)" UseVCMetaManaged="$(UseVCMetaManaged)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" SavedStateFile="$(XamlSavedStateFilePath)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" WindowsSdkPath="$(WindowsSdkPath)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)">
+15833 [ImportBefore\*] <InputSerializer Condition="'$(UseXamlCompilerExecutable)' == 'true'" JsonFilePath="$(XamlCompilerExeInputJson)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="True" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" ProjectPath="$(MSBuildProjectFullPath)" CIncludeDirectories="$(XamlCppIncludeDirectories)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(ReferencePath)" ForceSharedStateShutdown="False" CompileMode="RealBuildPass1" XAMLFingerprint="$(XAMLFingerprint)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" SavedStateFile="$(XamlSavedStateFilePath)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" WindowsSdkPath="$(WindowsSdkPath)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)" />
+15865 [ImportBefore\*] <Target Name="MarkupCompilePass2" DependsOnTargets="$(MarkupCompilePass2DependsOn)" Condition="'@(Page)' != '' Or '@(ApplicationDefinition)' != '' ">
+15889 [ImportBefore\*] <CompileXaml Condition="'$(UseXamlCompilerExecutable)' != 'true'" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" SdkXamlPages="@(SdkXamlItems)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="False" DisableXbfGeneration="$(DisableXbfGeneration)" DisableXbfLineInfo="$(DisableXbfLineInfo)" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" ClIncludeFiles="@(ClInclude)" CIncludeDirectories="$(XamlCppIncludeDirectories)" LocalAssembly="$(XamlLocalAssembly)" ProjectPath="$(MSBuildProjectFullPath)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(XamlReferencesToCompile)" ForceSharedStateShutdown="False" CompileMode="RealBuildPass2" XAMLFingerprint="$(XAMLFingerprint)" UseVCMetaManaged="$(UseVCMetaManaged)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" WindowsSdkPath="$(WindowsSdkPath)" SavedStateFile="$(XamlSavedStateFilePath)" RootsLog="$(XamlRootsLog)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)">
+15908 [ImportBefore\*] <InputSerializer Condition="'$(UseXamlCompilerExecutable)' == 'true'" JsonFilePath="$(XamlCompilerExeInputJson)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" SdkXamlPages="@(SdkXamlItems)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="False" DisableXbfGeneration="$(DisableXbfGeneration)" DisableXbfLineInfo="$(DisableXbfLineInfo)" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" ClIncludeFiles="@(ClInclude)" CIncludeDirectories="$(XamlCppIncludeDirectories)" LocalAssembly="$(XamlLocalAssembly)" ProjectPath="$(MSBuildProjectFullPath)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(XamlReferencesToCompile)" ForceSharedStateShutdown="False" CompileMode="RealBuildPass2" XAMLFingerprint="$(XAMLFingerprint)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" WindowsSdkPath="$(WindowsSdkPath)" SavedStateFile="$(XamlSavedStateFilePath)" RootsLog="$(XamlRootsLog)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)" />
+15942 [ImportBefore\*] <CompileXaml Condition="'$(UseXamlCompilerExecutable)' != 'true'" ProjectPath="$(MSBuildProjectFullPath)" Language="$(XamlLanguage)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" OutputPath="$(XamlGeneratedOutputPath)" ReferenceAssemblies="@(ReferencePath)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" ForceSharedStateShutdown="True" CompileMode="OnErrorShutdown" SavedStateFile="$(XamlSavedStateFilePath)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" GenXbfPath="$(GenXbfPath)" />
+15947 [ImportBefore\*] <InputSerializer Condition="'$(UseXamlCompilerExecutable)' == 'true'" JsonFilePath="$(XamlCompilerExeInputJson)" ProjectPath="$(MSBuildProjectFullPath)" Language="$(XamlLanguage)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" OutputPath="$(XamlGeneratedOutputPath)" ReferenceAssemblies="@(ReferencePath)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" ForceSharedStateShutdown="True" CompileMode="OnErrorShutdown" SavedStateFile="$(XamlSavedStateFilePath)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" GenXbfPath="$(GenXbfPath)" />
+16159 [ImportAfter\*] C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.targets
+16488 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets] <XamlLanguage Condition="'$(CppWinRTProjectLanguage)' == 'C++/CX'">C++</XamlLanguage>
+16500 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets] <CppWinRTGenerateWindowsMetadata Condition="'$(CppWinRTGenerateWindowsMetadata)' == '' AND '$(XamlLanguage)' == 'C++' ">false</CppWinRTGenerateWindowsMetadata>
+16502 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets] <CppWinRTEnableComponentProjection Condition="'$(CppWinRTEnableComponentProjection)' == '' AND '$(XamlLanguage)' == 'C++' ">false</CppWinRTEnableComponentProjection>
+16778 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets] <Target Name="CppWinRTComputeXamlGeneratedMidlInputs" DependsOnTargets="$(CppWinRTComputeXamlGeneratedMidlInputsDependsOn)" Condition="'@(Page)@(ApplicationDefinition)' != '' and '$(XamlLanguage)' == 'CppWinRT' and '$(CppWinRTAddXamlMetaDataProviderIdl)' == 'true'">
+16792 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets] <Target Name="CppWinRTComputeXamlGeneratedCompileInputs" DependsOnTargets="$(CppWinRTComputeXamlGeneratedCompileInputsDependsOn)" Condition="'@(Page)@(ApplicationDefinition)' != '' and '$(XamlLanguage)' == 'CppWinRT' and '$(CppWinRTAddXamlMetaDataProviderIdl)' == 'true'">
+16801 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets] <Target Name="CppWinRTAddXamlMetaDataProviderIdl" Condition="'@(Page)@(ApplicationDefinition)' != '' and '$(XamlLanguage)' == 'CppWinRT' and '$(CppWinRTAddXamlMetaDataProviderIdl)' == 'true'">
+16823 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets] <Target Name="CppWinRTAddXamlMetaDataProviderCpp" Condition="'@(Page)@(ApplicationDefinition)' != '' and '$(XamlLanguage)' == 'CppWinRT' and '$(CppWinRTAddXamlMetaDataProviderIdl)' == 'true'">
+17126 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets] <Target Name="CppWinRTAddXamlReferences" Condition="'@(Page)@(ApplicationDefinition)' != '' and '$(XamlLanguage)' == 'CppWinRT'" DependsOnTargets="$(CppWinRTAddXamlReferencesDependsOn);CppWinRTGetResolvedWinMD;GetCppWinRTProjectWinMDReferences">
+17135 [$(NuGetPackageRoot)microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets] <Target Name="CppWinRTSetXamlLocalAssembly" Condition="'@(Page)@(ApplicationDefinition)' != '' and '$(XamlLanguage)' == 'CppWinRT'" DependsOnTargets="$(CppWinRTSetXamlLocalAssemblyDependsOn)">
+19792 [$(MicrosoftNETSdkAfterCommonTargets)] <Target Name="CompileXamlGeneratedFiles">
+20856 [ImportBefore\*] <Target Name="MarkupCompilePass1" DependsOnTargets="$(MarkupCompilePass1DependsOn)" Condition="'@(Page)' != '' Or '@(ApplicationDefinition)' != '' ">
+20887 [ImportBefore\*] <Target Name="MarkupCompilePass2" DependsOnTargets="$(MarkupCompilePass2DependsOn)" Condition="'@(Page)' != '' Or '@(ApplicationDefinition)' != '' ">
+22094 [$(NuGetPackageRoot)microsoft.windowsappsdk\$(WindowsAppSDKPackageVersion)\build\Microsoft.UI.Xaml.Markup.Compiler.interop.targets] <Import Project="$(NuGetPackageRoot)microsoft.windowsappsdk\$(WindowsAppSDKPackageVersion)\build\Microsoft.UI.Xaml.Markup.Compiler.interop.targets" Condition="'$(NuGetPackageRoot)' != '' and '$(WindowsAppSDKPackageVersion)' != '' and Exists('$(NuGetPackageRoot)microsoft.windowsappsdk\$(WindowsAppSDKPackageVersion)\build\Microsoft.UI.Xaml.Markup.Compiler.interop.targets')">
+22096 [$(NuGetPackageRoot)microsoft.windowsappsdk\$(WindowsAppSDKPackageVersion)\build\Microsoft.UI.Xaml.Markup.Compiler.interop.targets] C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\build\Microsoft.UI.Xaml.Markup.Compiler.interop.targets
+22132 [ImportBefore\*] <XamlLanguage Condition="'$(XamlLanguage)' == ''">$(Language)</XamlLanguage>
+22149 [ImportBefore\*] <EnableTypeInfoReflection Condition="'$(XamlLanguage)' == 'CppWinRT' OR '$(XamlLanguage)' == 'C++'">false</EnableTypeInfoReflection>
+22238 [ImportBefore\*] <XamlCompilerTaskPath>$(_MuxPackageToolsFolder)Microsoft.UI.Xaml.Markup.Compiler.dll</XamlCompilerTaskPath>
+22241 [ImportBefore\*] <XamlCompilerJsonTaskPath>$(_MuxPackageToolsFolder)Microsoft.UI.Xaml.Markup.Compiler.IO.dll</XamlCompilerJsonTaskPath>
+22246 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.Tasks.CompileXaml" AssemblyFile="$(XamlCompilerTaskPath)" />
+22247 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.Tasks.AddDefaultXamlLinkMetadata" AssemblyFile="$(XamlCompilerTaskPath)" />
+22248 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.Tasks.GetXamlCppIncludeDirectories" AssemblyFile="$(XamlCompilerTaskPath)" />
+22249 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.IO.InputSerializer" AssemblyFile="$(XamlCompilerJsonTaskPath)" />
+22250 [ImportBefore\*] <UsingTask TaskName="Microsoft.UI.Xaml.Markup.Compiler.IO.OutputDeserializer" AssemblyFile="$(XamlCompilerJsonTaskPath)" />
+22413 [ImportBefore\*] <CompileXaml Condition="'$(UseXamlCompilerExecutable)' != 'true'" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="True" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" CIncludeDirectories="$(XamlCppIncludeDirectories)" ProjectPath="$(MSBuildProjectFullPath)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(ReferencePath)" ForceSharedStateShutdown="False" ContinueOnError="True" CompileMode="DesignTimeBuild" XAMLFingerprint="$(XAMLFingerprint)" UseVCMetaManaged="$(UseVCMetaManaged)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" SavedStateFile="$(XamlSavedStateFilePath)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" WindowsSdkPath="$(WindowsSdkPath)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)">
+22428 [ImportBefore\*] <InputSerializer Condition="'$(UseXamlCompilerExecutable)' == 'true'" JsonFilePath="$(XamlCompilerExeInputJson)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="True" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" CIncludeDirectories="$(XamlCppIncludeDirectories)" ProjectPath="$(MSBuildProjectFullPath)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(ReferencePath)" ForceSharedStateShutdown="False" ContinueOnError="True" CompileMode="DesignTimeBuild" XAMLFingerprint="$(XAMLFingerprint)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" SavedStateFile="$(XamlSavedStateFilePath)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" WindowsSdkPath="$(WindowsSdkPath)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)" />
+22454 [ImportBefore\*] <Target Name="MarkupCompilePass1" DependsOnTargets="$(MarkupCompilePass1DependsOn)" Condition="'@(Page)' != '' Or '@(ApplicationDefinition)' != '' ">
+22460 [ImportBefore\*] <CompileXaml Condition="'$(UseXamlCompilerExecutable)' != 'true'" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="True" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" ProjectPath="$(MSBuildProjectFullPath)" CIncludeDirectories="$(XamlCppIncludeDirectories)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(ReferencePath)" ForceSharedStateShutdown="False" CompileMode="RealBuildPass1" XAMLFingerprint="$(XAMLFingerprint)" UseVCMetaManaged="$(UseVCMetaManaged)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" SavedStateFile="$(XamlSavedStateFilePath)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" WindowsSdkPath="$(WindowsSdkPath)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)">
+22476 [ImportBefore\*] <InputSerializer Condition="'$(UseXamlCompilerExecutable)' == 'true'" JsonFilePath="$(XamlCompilerExeInputJson)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="True" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" ProjectPath="$(MSBuildProjectFullPath)" CIncludeDirectories="$(XamlCppIncludeDirectories)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(ReferencePath)" ForceSharedStateShutdown="False" CompileMode="RealBuildPass1" XAMLFingerprint="$(XAMLFingerprint)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" SavedStateFile="$(XamlSavedStateFilePath)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" WindowsSdkPath="$(WindowsSdkPath)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)" />
+22508 [ImportBefore\*] <Target Name="MarkupCompilePass2" DependsOnTargets="$(MarkupCompilePass2DependsOn)" Condition="'@(Page)' != '' Or '@(ApplicationDefinition)' != '' ">
+22532 [ImportBefore\*] <CompileXaml Condition="'$(UseXamlCompilerExecutable)' != 'true'" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" SdkXamlPages="@(SdkXamlItems)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="False" DisableXbfGeneration="$(DisableXbfGeneration)" DisableXbfLineInfo="$(DisableXbfLineInfo)" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" ClIncludeFiles="@(ClInclude)" CIncludeDirectories="$(XamlCppIncludeDirectories)" LocalAssembly="$(XamlLocalAssembly)" ProjectPath="$(MSBuildProjectFullPath)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(XamlReferencesToCompile)" ForceSharedStateShutdown="False" CompileMode="RealBuildPass2" XAMLFingerprint="$(XAMLFingerprint)" UseVCMetaManaged="$(UseVCMetaManaged)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" WindowsSdkPath="$(WindowsSdkPath)" SavedStateFile="$(XamlSavedStateFilePath)" RootsLog="$(XamlRootsLog)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)">
+22551 [ImportBefore\*] <InputSerializer Condition="'$(UseXamlCompilerExecutable)' == 'true'" JsonFilePath="$(XamlCompilerExeInputJson)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" Language="$(XamlLanguage)" RootNamespace="$(RootNamespace)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" SdkXamlPages="@(SdkXamlItems)" PriIndexName="$(PriIndexName)" ProjectName="$(XamlProjectName)" IsPass1="False" DisableXbfGeneration="$(DisableXbfGeneration)" DisableXbfLineInfo="$(DisableXbfLineInfo)" CodeGenerationControlFlags="$(XamlCodeGenerationControlFlags)" ClIncludeFiles="@(ClInclude)" CIncludeDirectories="$(XamlCppIncludeDirectories)" LocalAssembly="$(XamlLocalAssembly)" ProjectPath="$(MSBuildProjectFullPath)" OutputPath="$(XamlGeneratedOutputPath)" OutputType="$(OutputType)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" ReferenceAssemblies="@(XamlReferencesToCompile)" ForceSharedStateShutdown="False" CompileMode="RealBuildPass2" XAMLFingerprint="$(XAMLFingerprint)" FingerprintIgnorePaths="$(XAMLFingerprintIgnorePaths)" VCInstallDir="$(VCInstallDir)" WindowsSdkPath="$(WindowsSdkPath)" SavedStateFile="$(XamlSavedStateFilePath)" RootsLog="$(XamlRootsLog)" SuppressWarnings="$(SuppressXamlWarnings)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" FeatureControlFlags="@(XamlFeatureControlFlags)" VCInstallPath32="$(VCInstallPath32)" VCInstallPath64="$(VCInstallPath64)" GenXbfPath="$(GenXbfPath)" PrecompiledHeaderFile="$(PrecompiledHeaderFile)" />
+22585 [ImportBefore\*] <CompileXaml Condition="'$(UseXamlCompilerExecutable)' != 'true'" ProjectPath="$(MSBuildProjectFullPath)" Language="$(XamlLanguage)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" OutputPath="$(XamlGeneratedOutputPath)" ReferenceAssemblies="@(ReferencePath)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" ForceSharedStateShutdown="True" CompileMode="OnErrorShutdown" SavedStateFile="$(XamlSavedStateFilePath)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" GenXbfPath="$(GenXbfPath)" />
+22590 [ImportBefore\*] <InputSerializer Condition="'$(UseXamlCompilerExecutable)' == 'true'" JsonFilePath="$(XamlCompilerExeInputJson)" ProjectPath="$(MSBuildProjectFullPath)" Language="$(XamlLanguage)" LanguageSourceExtension="$(DefaultLanguageSourceExtension)" OutputPath="$(XamlGeneratedOutputPath)" ReferenceAssemblies="@(ReferencePath)" ReferenceAssemblyPaths="@(ReferenceAssemblyPaths)" XamlPages="@(Page)" XamlApplications="@(ApplicationDefinition)" ForceSharedStateShutdown="True" CompileMode="OnErrorShutdown" SavedStateFile="$(XamlSavedStateFilePath)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)" XamlResourceMapName="$(XamlResourceMapName)" XamlComponentResourceLocation="$(XamlComponentResourceLocation)" GenXbfPath="$(GenXbfPath)" />
+===== C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\build\Microsoft.UI.Xaml.Markup.Compiler.interop.targets lines 1-120 =====
+<!--
+***********************************************************************************************
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (c) Microsoft Corporation.
+Licensed under the MIT License. See LICENSE in the project root for license information.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <Import Project="ImportBefore\*"/>
+
+    <PropertyGroup>
+        <XamlProjectName Condition=" '$(XamlProjectName)' == '' ">$(MSBuildProjectName)</XamlProjectName>
+        <WindowsSdkPath Condition="'$(MSbuildRuntimeType)' != 'Core' And '$(WindowsSdkPath)'==''">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\$(SDKIdentifier)\v$(SDKVersion)', 'InstallationFolder', null, RegistryView.Registry32, RegistryView.Default))</WindowsSdkPath>
+
+        <XAMLFingerprint Condition="'$(XAMLFingerprint)' == ''">true</XAMLFingerprint>
+        <UseVCMetaManaged Condition="'$(UseVCMetaManaged)' == ''">true</UseVCMetaManaged>
+        <DisableXbfGeneration Condition="'$(DisableXbfGeneration)' == '' AND '$(TargetPlatformVersion)' == '8.0'">true</DisableXbfGeneration>
+        <DisableXbfGeneration Condition="'$(DisableXbfGeneration)' == ''">false</DisableXbfGeneration>
+        <_MuxPackageToolsFolder Condition=" '$(MSbuildRuntimeType)' == 'Core' ">$(MSBuildThisFileDirectory)..\tools\net6.0\</_MuxPackageToolsFolder>
+        <_MuxPackageToolsFolder Condition=" '$(_MuxPackageToolsFolder)' == '' ">$(MSBuildThisFileDirectory)..\tools\net472\</_MuxPackageToolsFolder>
+        <GenXbfPath Condition="$(GenXbfPath) == ''">$(_MuxPackageToolsFolder)..\</GenXbfPath>
+        <UseXamlCompilerExecutable Condition=" '$(MSbuildRuntimeType)' == 'Core' ">true</UseXamlCompilerExecutable>
+
+        <XamlSavedStateFileName Condition="'$(XamlSavedStateFileName)' == ''">XamlSaveStateFile.xml</XamlSavedStateFileName>
+        <XamlSavedStateFilePath>$(IntermediateOutputPath)\$(XamlSavedStateFileName)</XamlSavedStateFilePath>
+
+        <XAMLFingerprintIgnorePaths Condition="'$(XAMLFingerprintIgnorePaths)'==''">
+            @(ReferenceAssemblyPaths);
+            $(WindowsSdkPath)
+        </XAMLFingerprintIgnorePaths>
+
+        <TPVFacadeWinmdPath>$(WindowsSdkPath)UnionMetadata\$(TargetPlatformVersion)\Facade\Windows.winmd</TPVFacadeWinmdPath>
+        <!-- Favor a per-SDK Facade winmd. -->
+        <FacadeWinmdPath Condition="'$(FacadeWinmdPath)' == '' AND Exists('$(TPVFacadeWinmdPath)')">$(TPVFacadeWinmdPath)</FacadeWinmdPath>
+        <!-- If we can't find a per-SDK Facade winmd, use the one we used before. -->
+        <FacadeWinmdPath Condition="'$(FacadeWinmdPath)' == ''">$(WindowsSdkPath)UnionMetadata\facade\Windows.winmd</FacadeWinmdPath>
+
+        <XamlLanguage Condition="'$(XamlLanguage)' == ''">$(Language)</XamlLanguage>
+
+        <!-- If building a C++\WinRT project, we need the cppwinrt.exe compiler to generate an IDL for our metadata provider -->
+        <CppWinRTAddXamlMetaDataProviderIdl Condition="$(CppWinRTAddXamlMetaDataProviderIdl) != 'false'">true</CppWinRTAddXamlMetaDataProviderIdl>
+
+      <!-- Turning CppWinRTHeapEnforcement back on by default for Xaml Projects.
+           It had been previously turned off because of a bug in compiler code-gen. -->
+      <CppWinRTHeapEnforcement Condition="'$(CppWinRTHeapEnforcement)' == ''">true</CppWinRTHeapEnforcement>
+
+      <!-- Assume we're managed by default -->
+        <IsNativeLanguage Condition="'$(IsNativeLanguage)' == ''">false</IsNativeLanguage>
+        <IsNativeLanguage Condition="'$(IsNativeLanguage)' == 'false' AND '$(Language)' == 'C++'">true</IsNativeLanguage>
+
+        <!-- If DisableGenXbfLineInfo is explicitly set, we should respect that value -->
+        <!-- Otherwise, only enable XBF line info for debug builds -->
+        <DisableXbfLineInfo Condition="'$(DisableXbfLineInfo)' == '' AND '$(Configuration)' != 'Debug'">true</DisableXbfLineInfo>
+        <DisableXbfLineInfo Condition="'$(DisableXbfLineInfo)' == ''">false</DisableXbfLineInfo>
+
+        <!-- Keep the reflection provider disabled for WinUI 3.0's initial release -->
+        <EnableTypeInfoReflection>false</EnableTypeInfoReflection>
+
+        <!-- Type info reflection for CppWinRT isn't supported yet, always disable it.  Additionally, disable it for CX until the implementation stabilizes -->
+        <!-- This leaves type info reflection enabled for C# and VB -->
+        <EnableTypeInfoReflection Condition="'$(XamlLanguage)' == 'CppWinRT' OR '$(XamlLanguage)' == 'C++'">false</EnableTypeInfoReflection>
+
+        <!-- By default, we only enable type info reflection for debug CoreCLR builds.  We should respect if a project wants to enable/disable it in other cases -->
+        <EnableTypeInfoReflection Condition="'$(EnableTypeInfoReflection)' == '' AND '$(Configuration)' == 'Debug' AND '$(UseDotNetNativeToolChain)' != 'true'">true</EnableTypeInfoReflection>
+        <EnableTypeInfoReflection Condition="'$(EnableTypeInfoReflection)' == ''">false</EnableTypeInfoReflection>
+
+        <!-- By default, XBindDiagnostics should not be generated on builds where E&C and Designer are likely not going to run -->
+        <EnableXBindDiagnostics Condition="'$(EnableXBindDiagnostics)' == '' and '$(DisableXbfLineInfo)' == 'false'">true</EnableXBindDiagnostics>
+
+        <!-- If EnableDefaultValidationContextGeneration is set, respect that value. Otherwise, we always generate it-->
+        <EnableDefaultValidationContextGeneration Condition="'$(EnableDefaultValidationContextGeneration)' == ''">true</EnableDefaultValidationContextGeneration>
+
+        <!-- Determine whether we are building for Win32 or UWP, while respecting any overrides..-->
+
+        <!-- For native apps, AppContainerApplication is set to false for Win32 -->
+        <EnableWin32Codegen  Condition="'$(EnableWin32Codegen)' == '' AND '$(AppContainerApplication)' == 'false'">true</EnableWin32Codegen >
+
+        <!-- For managed apps, OutputType is WinExe for Win32 -->
+        <EnableWin32Codegen  Condition="'$(EnableWin32Codegen)' == '' AND '$(OutputType)' == 'WinExe'">true</EnableWin32Codegen >
+
+        <!-- If we couldn't determine whether we're building UWP or Win32, assume UWP. -->
+        <EnableWin32Codegen  Condition="'$(EnableWin32Codegen)' == ''">false</EnableWin32Codegen>
+
+        <!-- Determine whether we're using CSWinRT.  This is based off whether the property UsingMicrosoftNETSdk is set, meaning we're using .NET 5 (and therefore CSWinRT) -->
+        <_UsingCSWinRT>$(UsingMicrosoftNETSdk)</_UsingCSWinRT>
+
+        <!-- For CppWinRT projects, ensure the metadata provider is generated in the MUX namespace -->
+        <XamlNamespace>Microsoft.UI.Xaml</XamlNamespace>
+    </PropertyGroup>
+
+    <!-- Construct the FeatureControlFlags property based off of the values of EnableTypeInfoReflection, EnableXBindDiagnostics, EnableDefaultValidationContextGeneration, EnableWin32Codegen, and UsingCSWinRT -->
+    <ItemGroup>
+      <XamlFeatureControlFlags Include="EnableTypeInfoReflection" Condition="'$(EnableTypeInfoReflection)' == 'true'" />
+      <XamlFeatureControlFlags Include="EnableXBindDiagnostics" Condition="'$(EnableXBindDiagnostics)' == 'true'" />
+      <XamlFeatureControlFlags Include="EnableDefaultValidationContextGeneration" Condition="'$(EnableDefaultValidationContextGeneration)' == 'true'" />
+      <XamlFeatureControlFlags Include="EnableWin32Codegen" Condition="'$(EnableWin32Codegen)' == 'true'" />
+      <XamlFeatureControlFlags Include="UsingCSWinRT" Condition="'$(_UsingCSWinRT)' == 'true'" />
+    </ItemGroup>
+
+    <!-- When using reflection for our metadata provider, we need to include the reflection helper DLL which is in the same folder as this targets file -->
+    <Choose>
+        <When Condition="'$(EnableTypeInfoReflection)' == 'true'">
+            <ItemGroup>
+                <Reference Include="Microsoft.UI.Xaml.Markup">
+                    <HintPath>$(_MuxPackageToolsFolder)Microsoft.UI.Xaml.Markup.winmd</HintPath>
+                </Reference>
+            </ItemGroup>
+        </When>
+    </Choose>
+
+    <ItemGroup Condition="'$(BuildingInsideVisualStudio)'=='true'">
+        <AvailableItemName Include="PRIResource" />
+        <AvailableItemName Include="AppxManifest" />
+        <AvailableItemName Include="ApplicationDefinition" />
+        <AvailableItemName Include="Page" />
+===== targets defined in it =====
+<Target Name="GetVCInstallPath" Condition="'$(VCInstallPath32)' == '' and '$(VCInstallPath64)' == ''">
+<Target Name="GetXamlCppIncludeDirectories" Condition="'$(ManagedAssembly)'=='false' and '$(XamlCppIncludeDirectories)' == ''">
+<Target Name="GetPriIndexName">
+<Target Name="GetPrecompiledHeaderFile">
+<Target Name="DesignTimeMarkupCompilation">
+<Target Name="DesignTimeMarkupCompilationCT"
+<Target Name="MarkupCompilePass1"
+<Target Name="MarkupCompilePass2"
+<Target Name="_OnXamlPreCompileError"
+<Target Name="Prep_ComputeProcessXamlFiles"
+<Target Name="CopyGeneratedXaml" BeforeTargets="CopyFilesToOutputDirectory" DependsOnTargets="Prep_ComputeProcessXamlFiles"
+<Target Name="ComputeProcessXamlFiles" Returns="@(ProcessedXamlFiles)" DependsOnTargets="Prep_ComputeProcessXamlFiles">
+<Target Name="CustomOutputGroupForPackaging"
+<Target Name="PrepareLibraryLayout"
+<Target Name="ImplicitlyExpandTargetFramework"
+<Target Name="ImplicitlyExpandTargetPlatform"
