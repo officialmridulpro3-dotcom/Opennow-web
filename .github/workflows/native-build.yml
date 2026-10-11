@@ -250,6 +250,33 @@ jobs:
       # cppwinrt writes the generated header for an .idl in a subfolder, and
       # which generated file declares InitializeComponent. Dump the tree and
       # grep it, guarded, so an empty result cannot abort the step.
+      - name: Diagnose the XAML pipeline
+        if: always()
+        shell: pwsh
+        run: |
+          & msbuild native\src\App\OpenNOW.App.vcxproj /pp:pp.xml /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v145 | Out-Null
+          if (Test-Path pp.xml) {
+            $lines = @(Get-Content -Path pp.xml)
+            $cur = ''
+            $hits = @()
+            for ($i = 0; $i -lt $lines.Count; $i++) {
+              $l = $lines[$i]
+              if ($l -match '<Import Project="(.+?)"') { $cur = $matches[1] }
+              if ($l -match 'Target Name="(MarkupCompilePass1|MarkupCompilePass2|CompileXamlGeneratedFiles|XamlPreCompile|MarkupCompilePass1UpdateCodeBehind)"' -or $l -match 'XamlLanguage' -or $l -match 'Microsoft.UI.Xaml.Markup.Compiler') {
+                $hits += "$($i+1) [$cur] $($l.Trim())"
+              }
+            }
+            "preprocessed file: $($lines.Count) lines" | Out-File -FilePath xaml-pipeline.txt -Encoding utf8
+            Add-Content -Path xaml-pipeline.txt -Value (@($hits) -join "`n")
+          }
+          $interop = Get-ChildItem -Path (Join-Path $env:USERPROFILE '.nuget\packages\microsoft.windowsappsdk') -Recurse -Filter 'Microsoft.UI.Xaml.Markup.Compiler.interop.targets' -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($null -ne $interop) {
+            Add-Content -Path xaml-pipeline.txt -Value "===== $($interop.FullName) lines 1-120 ====="
+            Add-Content -Path xaml-pipeline.txt -Value ((@(Get-Content $interop.FullName -TotalCount 120)) -join "`n")
+            Add-Content -Path xaml-pipeline.txt -Value "===== targets defined in it ====="
+            Add-Content -Path xaml-pipeline.txt -Value ((@(Get-Content $interop.FullName | Select-String -Pattern 'Target Name=' -SimpleMatch | ForEach-Object { $_.Line.Trim() })) -join "`n")
+          }
+
       - name: Dump generated file tree
         if: always()
         shell: pwsh
@@ -338,6 +365,7 @@ jobs:
 
           Publish-File 'ci-report.txt'  'ci-report.txt'
           Publish-File 'generated.txt'  'generated.txt'
+          Publish-File 'xaml-pipeline.txt' 'xaml-pipeline.txt'
 
           try {
             git config user.name  'ci' | Out-Null
@@ -348,7 +376,8 @@ jobs:
             foreach ($pair in @(@('native-build-stdout.log', 'stdout.log'),
                                 @('toolchain.txt', 'toolchain.txt'),
                                 @('ci-report.txt', 'ci-report.txt'),
-                                @('generated.txt', 'generated.txt'))) {
+                                @('generated.txt', 'generated.txt'),
+                                @('xaml-pipeline.txt', 'xaml-pipeline.txt'))) {
               if (Test-Path $pair[0]) { Copy-Item $pair[0] ('logs/' + $pair[1]) -Force }
             }
             Set-Content -Path logs/RUN.txt -Value ("run $env:GITHUB_RUN_ID`n$(Get-Date -Format o)")

@@ -61,6 +61,7 @@
          which cannot compile in a C++/WinRT project. -->
     <CppWinRTProjectLanguage>C++/WinRT</CppWinRTProjectLanguage>
     <XamlLanguage>CppWinRT</XamlLanguage>
+    <WindowsAppSDKPackageVersion>1.6.241114003</WindowsAppSDKPackageVersion>
     <!-- Both cppwinrt and the XAML compiler write here; keep it out of the
          source tree. -->
     <GeneratedFilesDir>$(IntDir)Generated Files\</GeneratedFilesDir>
@@ -290,4 +291,10 @@
   </Target>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+
+  <!-- Microsoft.Cpp.targets imports the classic UWP XAML compiler, whose
+       MarkupCompilePass1 emits C++/CX code. Re-import the WinUI 3 XAML
+       compiler's targets last so its MarkupCompilePass1 definition wins. -->
+  <Import Project="$(NuGetPackageRoot)microsoft.windowsappsdk\$(WindowsAppSDKPackageVersion)\build\Microsoft.UI.Xaml.Markup.Compiler.interop.targets"
+          Condition="'$(NuGetPackageRoot)' != '' and '$(WindowsAppSDKPackageVersion)' != '' and Exists('$(NuGetPackageRoot)microsoft.windowsappsdk\$(WindowsAppSDKPackageVersion)\build\Microsoft.UI.Xaml.Markup.Compiler.interop.targets')" />
 </Project>
