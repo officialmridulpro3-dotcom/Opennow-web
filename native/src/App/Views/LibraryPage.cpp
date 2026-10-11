@@ -117,7 +117,7 @@ void LibraryPage::OnGameClicked(Windows::Foundation::IInspectable const&,
                                 Microsoft::UI::Xaml::Controls::ItemClickEventArgs const& args) {
     if (auto model = args.ClickedItem().try_as<winrt::OpenNOW::GameViewModel>()) {
         if (auto frame = Frame()) {
-            frame.Navigate(xaml_typename<GameDetailsPage>(), box_value(model.Id()));
+            frame.Navigate(xaml_typename<winrt::OpenNOW::GameDetailsPage>(), box_value(model.Id()));
         }
     }
 }

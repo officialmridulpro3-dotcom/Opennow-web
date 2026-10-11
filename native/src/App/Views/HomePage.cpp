@@ -157,7 +157,7 @@ void HomePage::OpenDetails(const std::string& gameId) {
     if (gameId.empty()) return;
     // The shell owns navigation: the page asks its parent frame to move.
     if (auto frame = Frame()) {
-        frame.Navigate(xaml_typename<GameDetailsPage>(), box_value(to_hstring(gameId)));
+        frame.Navigate(xaml_typename<winrt::OpenNOW::GameDetailsPage>(), box_value(to_hstring(gameId)));
     }
 }
 

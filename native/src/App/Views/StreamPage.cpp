@@ -23,8 +23,8 @@ namespace winrt::OpenNOW::implementation {
 StreamPage::StreamPage() {
     InitializeComponent();
 
-    KeyDown({this, &StreamPage::OnKeyDown});
-    PointerMoved({this, &StreamPage::OnPointerMoved});
+    KeyDown({this, &StreamPage::OnShortcutKeyDown});
+    PointerMoved({this, &StreamPage::OnPointerActivity});
     // Key events only arrive when the page itself has focus.
     Loaded([this](auto&&, auto&&) { Focus(FocusState::Programmatic); });
 
@@ -209,7 +209,7 @@ void StreamPage::OnToggleFullscreen(Windows::Foundation::IInspectable const&,
                                       : AppWindowPresenterKind::FullScreen);
 }
 
-void StreamPage::OnKeyDown(Windows::Foundation::IInspectable const&,
+void StreamPage::OnShortcutKeyDown(Windows::Foundation::IInspectable const&,
                            Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& args) {
     const auto Down = Windows::UI::Core::CoreVirtualKeyStates::Down;
     const auto shift =
@@ -236,7 +236,7 @@ void StreamPage::OnKeyDown(Windows::Foundation::IInspectable const&,
     }
 }
 
-void StreamPage::OnPointerMoved(Windows::Foundation::IInspectable const&,
+void StreamPage::OnPointerActivity(Windows::Foundation::IInspectable const&,
                                 Microsoft::UI::Xaml::Input::PointerRoutedEventArgs const&) {
     ShowControls();
     HideControlsSoon();

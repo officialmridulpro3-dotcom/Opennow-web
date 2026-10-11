@@ -31,11 +31,12 @@ public:
     void OnToggleFullscreen(Windows::Foundation::IInspectable const& sender,
                             Microsoft::UI::Xaml::RoutedEventArgs const& args);
 
-    // Keyboard shortcuts (Ctrl+Shift+S, F11, Escape).
-    void OnKeyDown(Windows::Foundation::IInspectable const& sender,
-                   Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& args);
-    void OnPointerMoved(Windows::Foundation::IInspectable const& sender,
-                        Microsoft::UI::Xaml::Input::PointerRoutedEventArgs const& args);
+    // Keyboard shortcuts (Ctrl+Shift+S, F11, Escape). These are event handlers,
+    // not the Control virtuals of the same name, so they carry the sender.
+    void OnShortcutKeyDown(Windows::Foundation::IInspectable const& sender,
+                           Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& args);
+    void OnPointerActivity(Windows::Foundation::IInspectable const& sender,
+                           Microsoft::UI::Xaml::Input::PointerRoutedEventArgs const& args);
 
 private:
     void StartSession();

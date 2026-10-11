@@ -114,7 +114,7 @@ void GameDetailsPage::OnPlay(Windows::Foundation::IInspectable const&,
                              Microsoft::UI::Xaml::RoutedEventArgs const&) {
     if (!game_) return;
     if (Frame() != nullptr) {
-        Frame().Navigate(xaml_typename<StreamPage>(),
+        Frame().Navigate(xaml_typename<winrt::OpenNOW::StreamPage>(),
                          box_value(to_hstring(game_->id + "\n" + game_->title)));
     }
 }
