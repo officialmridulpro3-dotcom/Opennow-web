@@ -14,6 +14,9 @@
     <NuGetTargetMoniker>native,Version=v0.0</NuGetTargetMoniker>
     <NuGetTargetPlatformIdentifier>Windows</NuGetTargetPlatformIdentifier>
     <NuGetTargetPlatformVersion>$(WindowsTargetPlatformVersion)</NuGetTargetPlatformVersion>
+    <!-- NuGet needs the platform's RID listed once the project is a Windows
+         Store project. -->
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <PropertyGroup Label="Globals">
