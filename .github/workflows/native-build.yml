@@ -219,7 +219,10 @@ jobs:
           New-Item -ItemType Directory -Force -Path $portable | Out-Null
           Copy-Item "$out\*" $portable -Recurse -Force
           Compress-Archive -Path $portable -DestinationPath "portable\OpenNOW-native-windows-x64.zip"
-          Get-ChildItem -Recurse $portable -File | Select-Object -ExpandProperty Name
+          (@(Get-ChildItem -Recurse $portable -File | ForEach-Object {
+               $_.FullName.Substring((Resolve-Path $portable).Path.Length + 1)
+             }) -join "`n") | Out-File -FilePath portable-files.txt -Encoding utf8
+          Get-Content portable-files.txt
 
       - name: Upload portable build
         uses: actions/upload-artifact@v4
@@ -250,33 +253,6 @@ jobs:
       # cppwinrt writes the generated header for an .idl in a subfolder, and
       # which generated file declares InitializeComponent. Dump the tree and
       # grep it, guarded, so an empty result cannot abort the step.
-      - name: Diagnose the XAML pipeline
-        if: always()
-        shell: pwsh
-        run: |
-          & msbuild native\src\App\OpenNOW.App.vcxproj /pp:pp.xml /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v145 | Out-Null
-          if (Test-Path pp.xml) {
-            $lines = @(Get-Content -Path pp.xml)
-            $cur = ''
-            $hits = @()
-            for ($i = 0; $i -lt $lines.Count; $i++) {
-              $l = $lines[$i]
-              if ($l -match '<Import Project="(.+?)"') { $cur = $matches[1] }
-              if ($l -match 'Target Name="(MarkupCompilePass1|MarkupCompilePass2|CompileXamlGeneratedFiles|XamlPreCompile|MarkupCompilePass1UpdateCodeBehind)"' -or $l -match 'XamlLanguage' -or $l -match 'Microsoft.UI.Xaml.Markup.Compiler') {
-                $hits += "$($i+1) [$cur] $($l.Trim())"
-              }
-            }
-            "preprocessed file: $($lines.Count) lines" | Out-File -FilePath xaml-pipeline.txt -Encoding utf8
-            Add-Content -Path xaml-pipeline.txt -Value (@($hits) -join "`n")
-          }
-          $interop = Get-ChildItem -Path (Join-Path $env:USERPROFILE '.nuget\packages\microsoft.windowsappsdk') -Recurse -Filter 'Microsoft.UI.Xaml.Markup.Compiler.interop.targets' -ErrorAction SilentlyContinue | Select-Object -First 1
-          if ($null -ne $interop) {
-            Add-Content -Path xaml-pipeline.txt -Value "===== $($interop.FullName) lines 1-120 ====="
-            Add-Content -Path xaml-pipeline.txt -Value ((@(Get-Content $interop.FullName -TotalCount 120)) -join "`n")
-            Add-Content -Path xaml-pipeline.txt -Value "===== targets defined in it ====="
-            Add-Content -Path xaml-pipeline.txt -Value ((@(Get-Content $interop.FullName | Select-String -Pattern 'Target Name=' -SimpleMatch | ForEach-Object { $_.Line.Trim() })) -join "`n")
-          }
-
       - name: Dump generated file tree
         if: always()
         shell: pwsh
@@ -291,44 +267,10 @@ jobs:
             $hits = @(Select-String -Path $targets.FullName -Pattern 'InitializeComponent' -List -ErrorAction SilentlyContinue)
             foreach ($hit in $hits) { $out += ($hit.Path + ' :: ' + $hit.Line.Trim()) }
           }
-          $out += '--- includes in XamlTypeInfo.g.cpp ---'
-          $xti = 'native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp'
-          if (Test-Path $xti) {
-            $out += (@(Get-Content $xti | Where-Object { $_ -match '^#include' }) -join "`n")
-            $lines = @(Get-Content $xti)
-            $out += '--- XamlTypeInfo.g.cpp 1290-1300 ---'
-            $numbered = @()
-            for ($i = 1289; $i -le [Math]::Min($lines.Count - 1, 1299); $i++) { $numbered += ("{0}: {1}" -f ($i + 1), $lines[$i]) }
-            $out += (@($numbered) -join "`n")
-          }
-          $out += '--- cppwinrt.exe copies on the runner ---'
-          $out += (@(Get-ChildItem -Path 'C:\Program Files (x86)\Windows Kits\10\bin' -Recurse -Filter 'cppwinrt.exe' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName) -join "`n")
-          $out += '--- xaml compiler targets mentioning cppwinrt / language ---'
-          $pkgs = Join-Path $env:USERPROFILE '.nuget\packages'
-          $files = @(Get-ChildItem -Path $pkgs -Recurse -File -Include '*.targets','*.props' -ErrorAction SilentlyContinue |
-                     Where-Object { $_.Name -match 'Xaml|Markup|WinUI|AppSDK' })
-          $out += (@($files | Select-Object -ExpandProperty FullName) -join "`n")
-          foreach ($f in $files) {
-            $hits = @(Select-String -Path $f.FullName -Pattern 'CppWinRT|XamlLanguage|CompileAsWinRT|CodeGen.*Cpp|C\+\+/CX' -ErrorAction SilentlyContinue)
-            if ($hits.Count -gt 0) {
-              $out += "===== $($f.FullName) ====="
-              $out += (@($hits | ForEach-Object { "$($_.LineNumber): $($_.Line.Trim())" }) -join "`n")
-            }
-          }
-          $out += '--- Microsoft.UI.Xaml.Media.Animation.h around the failure ---'
-          $anim = 'native\obj\OpenNOW.App\x64\Release\Generated Files\winrt\Microsoft.UI.Xaml.Media.Animation.h'
-          if (Test-Path $anim) {
-            $all = @(Get-Content $anim)
-            $numbered = @()
-            for ($i = 5935; $i -le [Math]::Min($all.Count - 1, 5960); $i++) { $numbered += ("{0}: {1}" -f ($i + 1), $all[$i]) }
-            $out += (@($numbered) -join "`n")
-          }
           $out += '--- head of App.xaml.g.h ---'
           $appx = 'native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml.g.h'
           if (Test-Path $appx) {
             $out += (@(Get-Content $appx -TotalCount 60) -join "`n")
-            $out += '--- AppT / namespace lines in App.xaml.g.h ---'
-            $out += (@(Get-Content $appx | Where-Object { $_ -match 'AppT|namespace|^#include|struct ' }) -join "`n")
           } else {
             $out += 'App.xaml.g.h is missing'
           }
@@ -394,7 +336,7 @@ jobs:
 
           Publish-File 'ci-report.txt'  'ci-report.txt'
           Publish-File 'generated.txt'  'generated.txt'
-          Publish-File 'xaml-pipeline.txt' 'xaml-pipeline.txt'
+          Publish-File 'portable-files.txt' 'portable-files.txt'
 
           try {
             git config user.name  'ci' | Out-Null
@@ -406,7 +348,7 @@ jobs:
                                 @('toolchain.txt', 'toolchain.txt'),
                                 @('ci-report.txt', 'ci-report.txt'),
                                 @('generated.txt', 'generated.txt'),
-                                @('xaml-pipeline.txt', 'xaml-pipeline.txt'))) {
+                                @('portable-files.txt', 'portable-files.txt'))) {
               if (Test-Path $pair[0]) { Copy-Item $pair[0] ('logs/' + $pair[1]) -Force }
             }
             Set-Content -Path logs/RUN.txt -Value ("run $env:GITHUB_RUN_ID`n$(Get-Date -Format o)")
