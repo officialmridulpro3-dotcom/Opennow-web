@@ -246,11 +246,36 @@ jobs:
             toolchain.txt
           if-no-files-found: warn
 
-      # Log downloads need a GitHub session or the artifact blob host, and the
-      # earlier "push the log to an orphan branch with git" step can fail on its
-      # own and then leave last run's log in place, which reads as a stale
-      # failure. Publishing through the contents API is one PUT and is readable
-      # from anywhere with `gh api .../contents/<file>?ref=ci-buildlog`.
+      # Two unknowns decide how the remaining compile errors get fixed: where
+      # cppwinrt writes the generated header for an .idl in a subfolder, and
+      # which generated file declares InitializeComponent. Dump the tree and
+      # grep it, guarded, so an empty result cannot abort the step.
+      - name: Dump generated file tree
+        if: always()
+        shell: pwsh
+        run: |
+          $out  = @()
+          $files = @(Get-ChildItem -Path native\obj -Recurse -File -ErrorAction SilentlyContinue)
+          $out += '--- every file under native\obj ---'
+          $out += ($files.FullName -join "`n")
+          $out += '--- grep InitializeComponent in generated sources ---'
+          $targets = @($files | Where-Object { $_.Name -match '\.(g\.h|g\.hpp|g\.cpp|h|hpp|cpp)$' })
+          if ($targets.Count -gt 0) {
+            $hits = @(Select-String -Path $targets.FullName -Pattern 'InitializeComponent' -List -ErrorAction SilentlyContinue)
+            foreach ($hit in $hits) { $out += ($hit.Path + ' :: ' + $hit.Line.Trim()) }
+          }
+          $out += '--- content of every App.g.* ---'
+          foreach ($g in @($files | Where-Object { $_.Name -like 'App.g.*' })) {
+            $out += ('===== ' + $g.FullName)
+            $out += @(Get-Content $g.FullName -TotalCount 30 -ErrorAction SilentlyContinue)
+          }
+          ($out -join "`n") | Out-File -FilePath generated.txt -Encoding utf8
+          Write-Output ("generated.txt: " + (Get-Item generated.txt).Length + " bytes")
+
+      # Log downloads need a GitHub session or the artifact blob host, and a
+      # plain "push the log to an orphan branch" step can fail on its own and
+      # leave last run's log in place. Publish through the contents API and fall
+      # back to git, and stamp the run id so a stale branch is obvious.
       - name: Publish build report to the ci-buildlog branch
         if: always()
         shell: pwsh
@@ -258,24 +283,29 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Continue'
-          $headers = @{
-            Authorization  = "Bearer $env:GITHUB_TOKEN"
-            Accept         = 'application/vnd.github+json'
-            'User-Agent'   = 'opennow-ci'
-          }
-          $base = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/contents"
 
+          $report = @()
+          if (Test-Path toolchain.txt) { $report += @(Get-Content toolchain.txt -ErrorAction SilentlyContinue) }
+          $report += '--- errors ---'
+          $log = @('native-build-stdout.log', 'native-build.log') | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if ($log) {
+            $report += @(Select-String -Path $log -Pattern 'error [A-Z]+[0-9]+|: error |MSB[0-9]+:|fatal error' -ErrorAction SilentlyContinue |
+                         ForEach-Object { $_.Line } | Sort-Object -Unique | Select-Object -First 80)
+          }
+          ($report -join "`n") | Out-File -FilePath ci-report.txt -Encoding utf8
+
+          $headers = @{
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            Accept        = 'application/vnd.github+json'
+            'User-Agent'  = 'opennow-ci'
+          }
           function Publish-File([string]$source, [string]$target) {
             if (-not (Test-Path $source)) { Write-Output "skip (absent): $source"; return }
             $bytes   = [IO.File]::ReadAllBytes($source)
             $content = [Convert]::ToBase64String($bytes)
             $uri     = 'https://api.github.com/repos/' + $env:GITHUB_REPOSITORY + '/contents/' + $target + '?ref=ci-buildlog'
             $sha     = $null
-            try {
-              $sha = (Invoke-RestMethod -Headers $headers -Uri $uri -ErrorAction Stop).sha
-            } catch {
-              Write-Output ('no existing revision for ' + $target)
-            }
+            try { $sha = (Invoke-RestMethod -Headers $headers -Uri $uri -ErrorAction Stop).sha } catch { }
             $payload = @{ message = 'CI report for run ' + $env:GITHUB_RUN_ID; content = $content }
             if ($sha) { $payload['sha'] = $sha }
             try {
@@ -287,64 +317,29 @@ jobs:
             }
           }
 
-          Publish-File 'ci-report.txt'            'ci-report.txt'
-          Publish-File 'native-build-stdout.log'   'native-build-stdout.log.txt'
-          Publish-File 'toolchain.txt'             'toolchain.txt'
+          Publish-File 'ci-report.txt'  'ci-report.txt'
+          Publish-File 'generated.txt'  'generated.txt'
 
-          # The git push is the fallback: it writes into logs/ only, so it can
-          # never pick up build outputs, and RUN.txt makes a stale branch
-          # obvious instead of looking like the current failure.
-          $gitLog = @()
           try {
             git config user.name  'ci' | Out-Null
             git config user.email 'ci@users.noreply.github.com' | Out-Null
             git checkout --orphan ci-buildlog 2>&1 | Out-Null
             git rm -rf . 2>&1 | Out-Null
             New-Item -ItemType Directory -Force -Path logs | Out-Null
-            foreach ($pair in @(@('native-build-stdout.log', 'stdout.log'), @('toolchain.txt', 'toolchain.txt'), @('ci-report.txt', 'ci-report.txt'), @('generated.txt', 'generated.txt'))) {
+            foreach ($pair in @(@('native-build-stdout.log', 'stdout.log'),
+                                @('toolchain.txt', 'toolchain.txt'),
+                                @('ci-report.txt', 'ci-report.txt'),
+                                @('generated.txt', 'generated.txt'))) {
               if (Test-Path $pair[0]) { Copy-Item $pair[0] ('logs/' + $pair[1]) -Force }
             }
             Set-Content -Path logs/RUN.txt -Value ("run $env:GITHUB_RUN_ID`n$(Get-Date -Format o)")
             git add -A logs 2>&1 | Out-Null
             git commit -q -m "build log for run $env:GITHUB_RUN_ID ($env:GITHUB_REF_NAME)" 2>&1 | Out-Null
             git push --force origin ci-buildlog 2>&1 | Out-Null
+            Write-Output 'git fallback published logs/'
           } catch {
             Write-Output ('git publish failed: ' + $_.Exception.Message)
           }
-
-          # A compact error summary is what a failing build is actually read for;
-          # the two full logs are published alongside it.
-          $report = @()
-          if (Test-Path toolchain.txt) { $report += (Get-Content toolchain.txt) }
-          $report += '--- generated files ---'
-          $report += ((Get-ChildItem -Path native\obj -Recurse -File -ErrorAction SilentlyContinue |
-                       Where-Object { $_.Name -match '\.g\.(h|hpp|cpp)$' } |
-                       Select-Object -ExpandProperty FullName) -join "`n")
-          $report += '--- errors ---'
-          $log = @('native-build-stdout.log', 'native-build.log') | Where-Object { Test-Path $_ } | Select-Object -First 1
-          if ($log) {
-            $report += (Select-String -Path $log -Pattern 'error [A-Z]+[0-9]+|: error |MSB[0-9]+:|fatal error' |
-                        Select-Object -ExpandProperty Line | Sort-Object -Unique | Select-Object -First 80)
-            $report += '--- tail of build output ---'
-            $report += (Get-Content $log -Tail 40)
-          }
-          $generated = @()
-          $generated += '--- every file under native\obj ---'
-          $generated += ((Get-ChildItem -Path native\obj -Recurse -File -ErrorAction SilentlyContinue |
-                          Select-Object -ExpandProperty FullName) -join "`n")
-          $generated += '--- files declaring InitializeComponent ---'
-          $genFiles = Get-ChildItem -Path native\obj -Recurse -File -Include *.g.h,*.g.hpp,*.g.cpp,*.xaml.g.h -ErrorAction SilentlyContinue
-          $generated += ((Select-String -Path $genFiles.FullName -Pattern 'InitializeComponent' -List -ErrorAction SilentlyContinue |
-                          ForEach-Object { $_.Path + ': ' + $_.Line.Trim() }) -join "`n")
-          $generated += '--- head of every App.g.* ---'
-          foreach ($g in (Get-ChildItem -Path native\obj -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'App.g.*' })) {
-            $generated += ('===== ' + $g.FullName)
-            $generated += (Get-Content $g.FullName -TotalCount 25)
-          }
-          ($generated -join "`n") | Out-File -FilePath generated.txt -Encoding utf8
-
-          ($report -join "`n") | Out-File -FilePath ci-report.txt -Encoding utf8
-
 
   # ── Rolling release ────────────────────────────────────────────────────────
   # Workflow artifacts expire and need a signed-in session; release assets are
