@@ -6,6 +6,16 @@
      the UWP container's restrictions. Set EnableMsixTooling=true and add a
      Package.appxmanifest if you want a packaged build; nothing else changes. -->
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- ApplicationType=Windows Store is what loads the XAML compiler, but it
+       also makes NuGet infer a "UAP,Version=v10.0" framework, which then
+       refuses to restore. This is a native project: say so explicitly. -->
+  <PropertyGroup Label="NuGet">
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <NuGetTargetMoniker>native,Version=v0.0</NuGetTargetMoniker>
+    <NuGetTargetPlatformIdentifier>Windows</NuGetTargetPlatformIdentifier>
+    <NuGetTargetPlatformVersion>$(WindowsTargetPlatformVersion)</NuGetTargetPlatformVersion>
+  </PropertyGroup>
+
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6F2A1B7C-4B31-4C9E-9A64-0E1B2C3D4E5F}</ProjectGuid>
     <RootNamespace>OpenNOW</RootNamespace>
