@@ -25,11 +25,6 @@ namespace {
 
 std::wstring Utf8ToWide(const std::string& text) { return winrt::to_hstring(text).c_str(); }
 
-// A Window is not a FrameworkElement, so it carries no resource dictionary of
-// its own; every OpenNOW brush lives in the application's dictionary.
-Microsoft::UI::Xaml::ResourceDictionary AppResources() {
-    return Microsoft::UI::Xaml::Application::Current().Resources();
-}
 
 std::wstring ToLower(std::wstring text) {
     std::transform(text.begin(), text.end(), text.begin(), [](wchar_t c) {
@@ -41,6 +36,14 @@ std::wstring ToLower(std::wstring text) {
 }  // namespace
 
 namespace winrt::OpenNOW::implementation {
+
+// A Window is not a FrameworkElement, so it carries no resource dictionary of
+// its own; every OpenNOW brush lives in the application's dictionary. It has to
+// live inside this namespace: at global scope "Microsoft" is ambiguous between
+// winrt::Microsoft and the classic COM Microsoft::WRL namespace.
+Microsoft::UI::Xaml::ResourceDictionary AppResources() {
+    return Microsoft::UI::Xaml::Application::Current().Resources();
+}
 
 MainWindow::MainWindow() {
     InitializeComponent();
