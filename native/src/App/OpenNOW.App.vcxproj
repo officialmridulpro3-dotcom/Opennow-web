@@ -313,6 +313,16 @@
 
   <!-- Belt and braces: something in the Windows App SDK targets resets the
        XAML dialect, and in CX mode the generated code cannot compile here. -->
+  <!-- Where do the .xbf files get their bytes? The app shipped with 0-byte
+       .xbf files, which the XAML runtime cannot parse; probe the generated
+       tree right after each compiler pass. -->
+  <Target Name="OpenNOWProbeAfterPass1" AfterTargets="MarkupCompilePass1">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\probe-xbf.sizes.ps1&quot; Pass1 &quot;$(GeneratedFilesDir)&quot;" />
+  </Target>
+  <Target Name="OpenNOWProbeAfterPass2" AfterTargets="MarkupCompilePass2">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\probe-xbf.sizes.ps1&quot; Pass2 &quot;$(GeneratedFilesDir)&quot;" />
+  </Target>
+
   <Target Name="OpenNOWForceCppWinRtXaml" BeforeTargets="MarkupCompilePass1;MarkupCompilePass2">
     <PropertyGroup>
       <XamlLanguage>CppWinRT</XamlLanguage>
