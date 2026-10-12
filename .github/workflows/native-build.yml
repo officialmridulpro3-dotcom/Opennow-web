@@ -239,6 +239,15 @@ jobs:
               $out += '--- string literals naming executables or extensions ---'
               $out += @($lines | Select-String '"[^"]*(\.exe|\.xbf|\.dll|XamlC)"' |
                         ForEach-Object { $_.Line.Trim() } | Select-Object -First 30)
+              $out += '--- context around the empty-file create (line 92566) ---'
+              $out += @(62400..62470 | ForEach-Object { '{0}: {1}' -f $_, $lines[$_-1] })
+              $out += '--- context around line 92566 ---'
+              $out += @(92530..92620 | ForEach-Object { '{0}: {1}' -f $_, $lines[$_-1] })
+              $out += '--- context around line 74940 ---'
+              $out += @(74930..75010 | ForEach-Object { '{0}: {1}' -f $_, $lines[$_-1] })
+              $out += '--- GenXbf references ---'
+              $out += @($lines | Select-String 'GenXbf|XbfGen|GenXaml|XamlBaml' |
+                        ForEach-Object { $_.LineNumber.ToString() + ': ' + $_.Line.Trim() } | Select-Object -First 30)
               $out += '--- file writing call sites ---'
               $out += @($lines | Select-String 'File\.Create|FileStream|BinaryWriter|WriteAllBytes|WriteAllText|using \(File' |
                         ForEach-Object { $_.LineNumber.ToString() + ': ' + $_.Line.Trim() } | Select-Object -First 40)
