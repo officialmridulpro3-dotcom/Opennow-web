@@ -219,8 +219,8 @@ jobs:
           $out += ('compiler dll: ' + $dll)
           $out += '--- nuget package files (tools and exes) ---'
           $out += @(Get-ChildItem $pkg -Recurse -File -ErrorAction SilentlyContinue |
-                    Where-Object { ($_.FullName -split '\')[-2] -eq 'tools' -or $_.Name -like '*.exe' } |
-                    ForEach-Object { $_.FullName.Substring($pkg.Length + 1) } | Select-Object -First 50)
+                    Where-Object { $_.FullName -match '\\tools\\' -or $_.Name -like '*.exe' } |
+                    ForEach-Object { $_.FullName.Substring($pkg.Length + 1) } | Select-Object -First 60)
           $out += (dotnet tool install --global ilspycmd 2>&1 | Select-Object -Last 1)
           $tool = Join-Path $env:USERPROFILE '.dotnet\tools\ilspycmd.exe'
           if (Test-Path $tool) {
@@ -239,6 +239,12 @@ jobs:
               $out += '--- string literals naming executables or extensions ---'
               $out += @($lines | Select-String '"[^"]*(\.exe|\.xbf|\.dll|XamlC)"' |
                         ForEach-Object { $_.Line.Trim() } | Select-Object -First 30)
+              $out += '--- file writing call sites ---'
+              $out += @($lines | Select-String 'File\.Create|FileStream|BinaryWriter|WriteAllBytes|WriteAllText|using \(File' |
+                        ForEach-Object { $_.LineNumber.ToString() + ': ' + $_.Line.Trim() } | Select-Object -First 40)
+              $out += '--- ITask implementations ---'
+              $out += @($lines | Select-String 'class [A-Za-z0-9_]+( :|,).*ITask' |
+                        ForEach-Object { $_.Line.Trim() } | Select-Object -First 20)
               $out += '--- task and entry classes ---'
               $out += @($lines | Select-String 'public (partial )?class |public (partial )?interface ' |
                         ForEach-Object { $_.Line.Trim() } | Select-Object -First 40)
@@ -387,8 +393,9 @@ jobs:
               $cdbLog = Join-Path $dir 'cdb-output.txt'
               $localPdb = 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release'
               if (-not (Test-Path $localPdb)) { $localPdb = (Resolve-Path 'native\obj\OpenNOW.App\x64\Release').Path }
-              $cdbCommand = ('.symserver SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols; ' +
-                             '.sympath + ' + $localPdb + '; .reload /f; .ecxr; kb 60; q')
+              $localPdbForward = $localPdb -replace '\\', '/'
+              $cdbCommand = ('.symserver SRV*C:/opensnow-symbols*https://msdl.microsoft.com/download/symbols; ' +
+                             '.sympath + ' + $localPdbForward + '; .reload /f; .ecxr; kb 60; q')
               $cdbArgs = @('-g', '-G', '-yn', '-noLogo', '-c', $cdbCommand, $exe)
               $out += ('cdb args: ' + (($cdbArgs | ForEach-Object { '[' + $_ + ']' }) -join ' '))
               & $cdb @cdbArgs 2>&1 | Out-File $cdbLog -Encoding utf8
