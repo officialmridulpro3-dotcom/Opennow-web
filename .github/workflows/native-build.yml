@@ -239,6 +239,16 @@ jobs:
               $out += '--- string literals naming executables or extensions ---'
               $out += @($lines | Select-String '"[^"]*(\.exe|\.xbf|\.dll|XamlC)"' |
                         ForEach-Object { $_.Line.Trim() } | Select-Object -First 30)
+              $out += '--- what feeds the xbf input list (62330-62410) ---'
+              $out += @(62330..62410 | ForEach-Object { '{0}: {1}' -f $_, $lines[$_-1] })
+              $out += '--- XbfGenerator class body ---'
+              $xg = @($lines | Select-String 'class XbfGenerator' | Select-Object -First 1)
+              if ($xg) {
+                $i = $xg[0].LineNumber - 1
+                $out += @($lines[$i..([Math]::Min($i + 260, $lines.Count - 1))] | ForEach-Object { $_ })
+              }
+              $out += '--- P/Invoke entries ---'
+              $out += @($lines | Select-String 'DllImport' | ForEach-Object { $_.Line.Trim() } | Select-Object -First 20)
               $out += '--- context around the empty-file create (line 92566) ---'
               $out += @(62400..62470 | ForEach-Object { '{0}: {1}' -f $_, $lines[$_-1] })
               $out += '--- context around line 92566 ---'
@@ -276,6 +286,9 @@ jobs:
           $out += @(Get-ChildItem $release -Recurse -File -Include *.xbf, *.pri -ErrorAction SilentlyContinue |
                     ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.FullName.Substring($release.Length + 1) })
 
+          $out += '--- leftover .backup files from the compiler ---'
+          $out += @(Get-ChildItem (Join-Path $intDir 'Generated Files') -Recurse -Filter '*.backup' -ErrorAction SilentlyContinue |
+                    ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.Name })
           $out += '--- embed directory ---'
           $out += @(Get-ChildItem (Join-Path $intDir 'embed') -Recurse -File -ErrorAction SilentlyContinue |
                     ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.Name })
