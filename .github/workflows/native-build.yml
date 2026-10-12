@@ -448,27 +448,26 @@ jobs:
               # any https URL inside a command) and PowerShell's splatting
               # mangles its switch arguments, so the whole invocation goes
               # through a batch file with the symbol path attached to -y.
-              $localPdbForward = $localPdb -replace '\\', '/'
               $bat = Join-Path $dir 'run-cdb.bat'
               $cmdFile = Join-Path $dir 'cdb-commands.txt'
               Set-Content -Path $cmdFile -Encoding ascii @(
-                  '.sympath',
-                  ('.sympath +' + $localPdbForward),
                   '.reload /f',
                   '.ecxr',
+                  'ub 8',
+                  'u 12',
                   'kb 60',
                   'q')
               $batLine = ('"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe" -g -G -cf ' +
                           '"' + $cmdFile + '" ' + '"' + $exe + '"')
               Set-Content -Path $bat -Encoding ascii @(
                   '@echo off',
-                  'set "_NT_SYMBOL_PATH=SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols"',
+                  ('set "_NT_SYMBOL_PATH=SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols;' + $localPdb + '"'),
                   $batLine)
               $out += ('bat: ' + (Get-Content $bat | Select-Object -Last 1))
               cmd /c $bat 2>&1 | Out-File $cdbLog -Encoding utf8
               $out += ('cdb exit code: ' + $LASTEXITCODE)
               $out += @(Get-Content $cdbLog -ErrorAction SilentlyContinue |
-                        Select-String 'Fatal|c000027b|ret |OpenNOW|Xaml|<base>' |
+                        Select-String 'Fatal|c000027b|c0000005|ret |OpenNOW|Xaml|: .*:|<base>' |
                         Select-Object -First 70 | ForEach-Object { $_.Line })
               Copy-Item $cdbLog 'crash-stack.txt' -Force
             } else { $out += 'cdb not found' }
