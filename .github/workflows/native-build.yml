@@ -452,7 +452,8 @@ jobs:
               $bat = Join-Path $dir 'run-cdb.bat'
               $cmdFile = Join-Path $dir 'cdb-commands.txt'
               Set-Content -Path $cmdFile -Encoding ascii @(
-                  ('.sympath + ' + $localPdbForward),
+                  '.sympath',
+                  ('.sympath +' + $localPdbForward),
                   '.reload /f',
                   '.ecxr',
                   'kb 60',

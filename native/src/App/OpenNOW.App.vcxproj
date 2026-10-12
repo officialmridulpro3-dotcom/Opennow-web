@@ -328,11 +328,18 @@
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\probe-xbf.sizes.ps1&quot; Pass2 &quot;$(GeneratedFilesDir.TrimEnd('\').TrimEnd(' '))&quot;" />
   </Target>
 
+  <!-- The Windows Store application-type props reset TargetPlatformMinVersion
+       to 10.0.0.0 during props evaluation, which is what the XAML compiler
+       turns into the target OS version it compiles the .xbf for. An invalid
+       version makes GenXbf emit empty files, so restore the real value right
+       before the compiler runs. -->
   <Target Name="OpenNOWForceCppWinRtXaml" BeforeTargets="MarkupCompilePass1;MarkupCompilePass2">
     <PropertyGroup>
       <XamlLanguage>CppWinRT</XamlLanguage>
       <CppWinRTProjectLanguage>C++/WinRT</CppWinRTProjectLanguage>
       <GeneratedFilesDir>$(IntDir)Generated Files\</GeneratedFilesDir>
+      <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+      <WindowsTargetPlatformMinVersion>10.0.17763.0</WindowsTargetPlatformMinVersion>
     </PropertyGroup>
     <Message Importance="high"
              Text="OpenNOW: XamlLanguage=$(XamlLanguage) CppWinRTProjectLanguage=$(CppWinRTProjectLanguage) GeneratedFilesDir=$(GeneratedFilesDir) CppWinRTPath=$(CppWinRTPath) AppContainer=$(AppContainer) AppContainerApplication=$(AppContainerApplication) WindowsAppContainer=$(WindowsAppContainer)" />
