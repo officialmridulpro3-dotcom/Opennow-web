@@ -204,6 +204,36 @@ jobs:
       # unpackaged build each one must be embedded in the app's .pri. Verify
       # what the config references, what the sizes are, and what actually made
       # it in.
+      # The XAML compiler writes 0-byte .xbf files here while a real
+      # XamlTypeInfo.g.cpp. Read the task's own code to see when it does that.
+      - name: Inspect the XAML compiler task
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          $pkg = Join-Path $env:USERPROFILE '.nuget\packages\microsoft.windowsappsdk'
+          $dll = @(Get-ChildItem $pkg -Recurse -Filter 'Microsoft.UI.Xaml.Markup.Compiler.dll' -ErrorAction SilentlyContinue |
+                   Select-Object -First 1).FullName
+          $out = @()
+          $out += ('compiler dll: ' + $dll)
+          $out += (dotnet tool install --global ilspycmd 2>&1 | Select-Object -Last 1)
+          $tool = Join-Path $env:USERPROFILE '.dotnet\tools\ilspycmd.exe'
+          if (Test-Path $tool) {
+            & $tool $dll -o 'xamlc-decompiled' 2>&1 | Select-Object -Last 2 | ForEach-Object { $out += \$_ }
+            $out += '--- decompiled files mentioning xbf ---'
+            $hits = @(Get-ChildItem 'xamlc-decompiled' -Recurse -Filter '*.cs' -ErrorAction SilentlyContinue |
+                      Select-String -Pattern '\.xbf|XbfFiles|WriteXbf|EmitXbf|XamlBaml' -List -ErrorAction SilentlyContinue |
+                      ForEach-Object { \($_.Path) })
+            $out += $hits
+            foreach ($file in ($hits | Select-Object -First 4)) {
+              $out += ('===== ' + $file + ' =====')
+              $out += @(Select-String -Path $file -Pattern 'xbf' -Context 3, 3 -ErrorAction SilentlyContinue |
+                        ForEach-Object { \($_.Context.PreContext + $_.Line + $_.Context.PostContext) } |
+                        Select-Object -First 80)
+            }
+          } else { $out += 'ilspycmd failed to install' }
+          (@($out) -join "`n") | Out-File -FilePath xamlc-notes.txt -Encoding utf8
+          Get-Content xamlc-notes.txt
+
       - name: Verify the app's PRI
         shell: pwsh
         run: |
@@ -340,7 +370,9 @@ jobs:
             if (Test-Path $cdb) {
               $out += '--- running under cdb to capture the crash stack ---'
               $cdbLog = Join-Path $dir 'cdb-output.txt'
-              & $cdb -g -G -yn -noLogo -c '.ecxr; kb 40; q' $exe 2>&1 | Out-File $cdbLog -Encoding utf8
+              $localPdb = (Resolve-Path 'native\obj\OpenNOW.App\x64\Release').Path
+              $symPath = 'SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols;' + $localPdb
+              & $cdb -g -G -noLogo -y $symPath -c '.ecxr; kb 60; q' $exe 2>&1 | Out-File $cdbLog -Encoding utf8
               $out += @(Get-Content $cdbLog -ErrorAction SilentlyContinue |
                         Select-String 'Fatal|c000027b|ret |OpenNOW|Xaml|<base>' |
                         Select-Object -First 70 | ForEach-Object { $_.Line })
@@ -482,6 +514,7 @@ jobs:
           Publish-File 'smoke.txt'        'smoke.txt'
           Publish-File 'screenshot.png'   'screenshot.png'
           Publish-File 'pri-verify.txt'   'pri-verify.txt'
+          Publish-File 'xamlc-notes.txt'  'xamlc-notes.txt'
           Publish-File 'crash-dump.dmp'   'crash-dump.dmp'
           Publish-File 'crash-stack.txt'  'crash-stack.txt'
 
@@ -499,6 +532,7 @@ jobs:
                                 @('smoke.txt', 'smoke.txt'),
                                 @('screenshot.png', 'screenshot.png'),
                                 @('pri-verify.txt', 'pri-verify.txt'),
+                                @('xamlc-notes.txt', 'xamlc-notes.txt'),
                                 @('crash-dump.dmp', 'crash-dump.dmp'),
                                 @('crash-stack.txt', 'crash-stack.txt'))) {
               if (Test-Path $pair[0]) { Copy-Item $pair[0] ('logs/' + $pair[1]) -Force }
