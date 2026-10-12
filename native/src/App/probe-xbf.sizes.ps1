@@ -1,5 +1,5 @@
 param([string]$Label, [string]$Dir)
-$Dir = $Dir.TrimEnd('\', ' ')
+$Dir = $Dir.TrimEnd('"', '\', ' ')
 if (-not (Test-Path $Dir)) {
     Write-Output "PROBE $Label : directory missing: $Dir"
     exit 0
