@@ -1,0 +1,6 @@
+launching D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\OpenNOW.App.exe
+hasExited=True
+screenshot=1024x768
+--- startup.log ---
+2026-10-12 11:35:07  entry point reached
+2026-10-12 11:35:07  apartment initialised
