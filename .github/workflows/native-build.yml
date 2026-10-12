@@ -226,12 +226,15 @@ jobs:
               $main = $csFiles | Sort-Object Length -Descending | Select-Object -First 1
               $out += '--- first 12 lines of ' + $main.Name + ' ---'
               $out += @(Get-Content $main.FullName -TotalCount 12)
-              $out += '--- classes in the compiler assembly ---'
-              $out += @(Select-String -Path $main.FullName -Pattern '^public (partial )?class |^class ' -ErrorAction SilentlyContinue |
-                        ForEach-Object { \($_.Line.Trim()) } | Select-Object -First 40)
-              $out += '--- referenced assemblies ---'
-              $out += @(Select-String -Path $main.FullName -Pattern 'typeof\([^)]*\)|AssemblyName|using Microsoft' -ErrorAction SilentlyContinue |
-                        ForEach-Object { \($_.Line.Trim()) } | Select-Object -First 25)
+              $out += '--- process launches in the compiler assembly ---'
+              $out += @(Select-String -Path $main.FullName -Pattern 'ProcessStartInfo|Start\(\)|UseShellExecute|CreateNoWindow|XamlC|XamlCompiler|MarkupCompiler' -ErrorAction SilentlyContinue |
+                        ForEach-Object { \($_.LineNumber.ToString() + ': ' + $_.Line.Trim()) } | Select-Object -First 40)
+              $out += '--- string literals with exe or extension ---'
+              $out += @(Select-String -Path $main.FullName -Pattern '\"[^\"]*\.(exe|xbf|dll)[^\"]*\"' -ErrorAction SilentlyContinue |
+                        ForEach-Object { \($_.LineNumber.ToString() + ': ' + $_.Line.Trim()) } | Select-Object -First 40)
+              $out += '--- public types ---'
+              $out += @(Select-String -Path $main.FullName -Pattern 'class [A-Z][A-Za-z0-9_]+|interface [A-Z][A-Za-z0-9_]+' -ErrorAction SilentlyContinue |
+                        ForEach-Object { \($_.Line.Trim()) } | Select-Object -First 50)
             }
             $hits = @($csFiles | Select-String -Pattern 'xbf' -List -ErrorAction SilentlyContinue | ForEach-Object { \($_.Path) })
             $out += '--- files mentioning xbf ---'
@@ -384,10 +387,15 @@ jobs:
               $cdbLog = Join-Path $dir 'cdb-output.txt'
               $localPdb = 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release'
               if (-not (Test-Path $localPdb)) { $localPdb = (Resolve-Path 'native\obj\OpenNOW.App\x64\Release').Path }
-              $symServer = 'SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols'
               $scriptFile = Join-Path $dir 'cdb-commands.txt'
-              Set-Content -Path $scriptFile -Value @('.sympath + *' + $localPdb, '.ecxr', 'kb 60', 'q') -Encoding ascii
-              $cdbArgs = @('-g', '-G', ('-y' + $symServer), '-cf', $scriptFile, $exe)
+              Set-Content -Path $scriptFile -Value @(
+                  '.symserver SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols',
+                  ('.sympath + ' + $localPdb),
+                  '.reload /f',
+                  '.ecxr',
+                  'kb 60',
+                  'q') -Encoding ascii
+              $cdbArgs = @('-g', '-G', '-yn', '-cf', $scriptFile, $exe)
               $out += ('cdb args: ' + (($cdbArgs | ForEach-Object { '[' + $_ + ']' }) -join ' '))
               & $cdb @cdbArgs 2>&1 | Out-File $cdbLog -Encoding utf8
               $out += ('cdb exit code: ' + $LASTEXITCODE)
