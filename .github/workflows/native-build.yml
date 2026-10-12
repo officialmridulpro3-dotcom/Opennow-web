@@ -312,6 +312,27 @@ jobs:
           $bitmap.Dispose()
           $out += "screenshot=$($bounds.Width)x$($bounds.Height)"
 
+          $out += "dwm running: $(@(Get-Process dwm -ErrorAction SilentlyContinue).Count)"
+          $out += "session: $([System.Environment]::UserInteractive) interactive=$([Environment]::GetEnvironmentVariable('SESSIONNAME'))"
+
+          # A crash before the first window leaves no log of its own, so make
+          # Windows Error Reporting leave a minidump where the app can read it.
+          $dumpDir = $dir
+          $dumpPath = Join-Path $dumpDir 'OpenNOW.App.dmp'
+          if (Test-Path $dumpPath) { Remove-Item $dumpPath -Force }
+          try {
+            $ler = 'HKCU:\Software\Microsoft\Windows\Windows Error Reporting\LocalDumps'
+            New-Item -Path $ler -Force | Out-Null
+            Set-ItemProperty -Path $ler -Name Application -Value $exe
+            Set-ItemProperty -Path $ler -Name DumpType -Value 1
+            Set-ItemProperty -Path $ler -Name DumpCount -Value 1
+            Set-ItemProperty -Path $ler -Name DumpFolder -Value $dumpDir
+          } catch { $out += ("LocalDumps setup failed: " + $_.Exception.Message) }
+          if (Test-Path $dumpPath) {
+            $out += ("dump: {0} bytes" -f (Get-Item $dumpPath).Length)
+            Copy-Item $dumpPath 'crash-dump.dmp' -Force
+          } else { $out += 'no crash dump' }
+
           $log = Join-Path $env:LOCALAPPDATA 'OpenNOW\startup.log'
           if (Test-Path $log) { $out += '--- startup.log ---'; $out += @(Get-Content $log) }
           else { $out += '--- no startup.log was written ---' }
@@ -446,6 +467,7 @@ jobs:
           Publish-File 'smoke.txt'        'smoke.txt'
           Publish-File 'screenshot.png'   'screenshot.png'
           Publish-File 'pri-verify.txt'   'pri-verify.txt'
+          Publish-File 'crash-dump.dmp'   'crash-dump.dmp'
 
           try {
             git config user.name  'ci' | Out-Null
@@ -459,7 +481,9 @@ jobs:
                                 @('generated.txt', 'generated.txt'),
                                 @('portable-files.txt', 'portable-files.txt'),
                                 @('smoke.txt', 'smoke.txt'),
-                                @('screenshot.png', 'screenshot.png'))) {
+                                @('screenshot.png', 'screenshot.png'),
+                                @('pri-verify.txt', 'pri-verify.txt'),
+                                @('crash-dump.dmp', 'crash-dump.dmp'))) {
               if (Test-Path $pair[0]) { Copy-Item $pair[0] ('logs/' + $pair[1]) -Force }
             }
             Set-Content -Path logs/RUN.txt -Value ("run $env:GITHUB_RUN_ID`n$(Get-Date -Format o)")

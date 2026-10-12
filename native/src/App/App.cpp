@@ -58,9 +58,13 @@ void App::ApplyStartupTheme() {
 }
 
 void App::OnLaunched(Microsoft::UI::Xaml::LaunchActivatedEventArgs const&) {
+    WriteStartupLog(L"OnLaunched entered");
     ConfigureLogging();
+    WriteStartupLog(L"logging configured");
 
     const auto adapter = opennow::dx::QueryAdapterInfo();
+    WriteStartupLog(adapter.directx10Capable ? L"directx 10 adapter found"
+                                             : L"no directx 10 adapter; falling back");
     if (adapter.directx10Capable) {
         opennow::core::LogInfo("App", "DirectX 10 device present at feature level " +
                                           std::to_string(adapter.d3d10FeatureLevel) + ".");
@@ -76,6 +80,7 @@ void App::OnLaunched(Microsoft::UI::Xaml::LaunchActivatedEventArgs const&) {
         settings.interface_.effects = opennow::core::EffectsProfile::Reduced;
         opennow::core::SettingsStore::Instance().Save(settings);
     }
+    WriteStartupLog(L"settings loaded");
 
     WriteStartupLog(L"creating the main window");
     try {
@@ -98,8 +103,10 @@ void App::OnLaunched(Microsoft::UI::Xaml::LaunchActivatedEventArgs const&) {
     if (auto content = window_.try_as<Microsoft::UI::Xaml::FrameworkElement>()) {
         content.RequestedTheme(ElementTheme::Dark);
     }
+    WriteStartupLog(L"theme applied, activating the window");
 
     window_.Activate();
+    WriteStartupLog(L"window activated");
 }
 
 }  // namespace winrt::OpenNOW::implementation
