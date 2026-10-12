@@ -327,6 +327,16 @@ jobs:
           $out += '--- head of the markup generated App.g.h ---'
           $app = 'native\obj\OpenNOW.App\x64\Release\Generated Files\App.g.h'
           if (Test-Path $app) { $out += (@(Get-Content $app -TotalCount 40) -join "`n") }
+          $out += '--- generated entry point in XamlTypeInfo.g.cpp ---'
+          $xti = 'native\\obj\\OpenNOW.App\\x64\\Release\\Generated Files\\XamlTypeInfo.g.cpp'
+          if (Test-Path $xti) {
+            $lines = @(Get-Content $xti)
+            for ($i = 0; $i -lt $lines.Count; $i++) {
+              if ($lines[$i] -match 'wWinMain|DISABLE_XAML_GENERATED_MAIN|#if|#endif') {
+                $out += ("{0}: {1}" -f ($i + 1), $lines[$i])
+              }
+            }
+          }
           $out += '--- markup compiler output in the source tree ---'
           $out += (@(Get-ChildItem -Path native\src\App\Generated Files -Recurse -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName) -join "`n")
           $out += '--- xbf files anywhere in the workspace ---'

@@ -111,7 +111,10 @@
         $(IntDir)Controls\;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <!-- DISABLE_XAML_GENERATED_MAIN keeps the XAML compiler from emitting its
+           own wWinMain. That stub is what made the earlier build start, do
+           nothing and exit: it never called Application::Start. -->
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;DISABLE_XAML_GENERATED_MAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <!-- Generated sources (XamlTypeInfo.Impl.g.cpp and friends) are added by
            the XAML compiler and have no #include of their own, so force pch.h
            into every translation unit rather than relying on /Yu. -->
