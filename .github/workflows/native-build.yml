@@ -333,6 +333,21 @@ jobs:
             Copy-Item $dumpPath 'crash-dump.dmp' -Force
           } else { $out += 'no crash dump' }
 
+          # WER is disabled on the runners, so when the app dies, run it again
+          # under the Windows Debugger and let it stop at the fastfail.
+          if ($process.HasExited) {
+            $cdb = 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe'
+            if (Test-Path $cdb) {
+              $out += '--- running under cdb to capture the crash stack ---'
+              $cdbLog = Join-Path $dir 'cdb-output.txt'
+              & $cdb -g -G -yn -noLogo -c '.ecxr; kb 40; q' $exe 2>&1 | Out-File $cdbLog -Encoding utf8
+              $out += @(Get-Content $cdbLog -ErrorAction SilentlyContinue |
+                        Select-String 'Fatal|c000027b|ret |OpenNOW|Xaml|<base>' |
+                        Select-Object -First 70 | ForEach-Object { $_.Line })
+              Copy-Item $cdbLog 'crash-stack.txt' -Force
+            } else { $out += 'cdb not found' }
+          }
+
           $log = Join-Path $env:LOCALAPPDATA 'OpenNOW\startup.log'
           if (Test-Path $log) { $out += '--- startup.log ---'; $out += @(Get-Content $log) }
           else { $out += '--- no startup.log was written ---' }
@@ -468,6 +483,7 @@ jobs:
           Publish-File 'screenshot.png'   'screenshot.png'
           Publish-File 'pri-verify.txt'   'pri-verify.txt'
           Publish-File 'crash-dump.dmp'   'crash-dump.dmp'
+          Publish-File 'crash-stack.txt'  'crash-stack.txt'
 
           try {
             git config user.name  'ci' | Out-Null
@@ -483,7 +499,8 @@ jobs:
                                 @('smoke.txt', 'smoke.txt'),
                                 @('screenshot.png', 'screenshot.png'),
                                 @('pri-verify.txt', 'pri-verify.txt'),
-                                @('crash-dump.dmp', 'crash-dump.dmp'))) {
+                                @('crash-dump.dmp', 'crash-dump.dmp'),
+                                @('crash-stack.txt', 'crash-stack.txt'))) {
               if (Test-Path $pair[0]) { Copy-Item $pair[0] ('logs/' + $pair[1]) -Force }
             }
             Set-Content -Path logs/RUN.txt -Value ("run $env:GITHUB_RUN_ID`n$(Get-Date -Format o)")
