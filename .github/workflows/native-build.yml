@@ -442,10 +442,10 @@ jobs:
               # through a batch file with the symbol path attached to -y.
               $localPdbForward = $localPdb -replace '\\', '/'
               $bat = Join-Path $dir 'run-cdb.bat'
-              Set-Content -Path $bat -Encoding ascii @(
-                  '@echo off',
-                  ('"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe" -g -G -ySRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols -c \".sympath + ' + $localPdbForward + '; .reload /f; .ecxr; kb 60; q\" "' + $exe + '"')
-              )
+              $batLine = ('"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe" -g -G -ySRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols -c ' +
+                          '"' + '.sympath + ' + $localPdbForward + '; .reload /f; .ecxr; kb 60; q' + '" ' +
+                          '"' + $exe + '"')
+              Set-Content -Path $bat -Encoding ascii @('@echo off', $batLine)
               $out += ('bat: ' + (Get-Content $bat | Select-Object -Last 1))
               cmd /c $bat 2>&1 | Out-File $cdbLog -Encoding utf8
               $out += ('cdb exit code: ' + $LASTEXITCODE)
