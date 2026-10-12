@@ -1,3 +1,5 @@
+#include "StartupLog.h"
+
 // OpenNOW native client — application entry point.
 
 #include "pch.h"
@@ -22,8 +24,11 @@ using namespace winrt::Microsoft::UI::Xaml::Controls;
 namespace winrt::OpenNOW::implementation {
 
 App::App() {
+    WriteStartupLog(L"App constructor entered");
+
     // XAML type resolution for user controls declared only in markup.
     InitializeComponent();
+    WriteStartupLog(L"App markup loaded");
 
 #if defined(_DEBUG) && !defined(DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION)
     UnhandledException([](IInspectable const&, UnhandledExceptionEventArgs const& event) {
@@ -72,7 +77,21 @@ void App::OnLaunched(Microsoft::UI::Xaml::LaunchActivatedEventArgs const&) {
         opennow::core::SettingsStore::Instance().Save(settings);
     }
 
-    window_ = make<MainWindow>();
+    WriteStartupLog(L"creating the main window");
+    try {
+        window_ = make<MainWindow>();
+    }
+    catch (winrt::hresult_error const& error) {
+        const auto code = static_cast<unsigned>(error.code());
+        wchar_t hex[16]{};
+        swprintf_s(hex, L"0x%08X", code);
+        WriteStartupLog(L"creating the main window failed: " + std::wstring(error.message().c_str()));
+        MessageBoxW(nullptr,
+                    (std::wstring(error.message().c_str()) + L"\n\nError code: " + hex).c_str(),
+                    L"OpenNOW failed to start", MB_OK | MB_ICONERROR);
+        throw;
+    }
+    WriteStartupLog(L"main window created");
 
     // RequestedTheme is applied to the window's content so the root element and
     // every child resolve the dark theme dictionaries.

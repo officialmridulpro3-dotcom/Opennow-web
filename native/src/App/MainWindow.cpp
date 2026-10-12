@@ -1,3 +1,5 @@
+#include "../StartupLog.h"
+
 // OpenNOW native client — main window (app shell).
 
 #include "pch.h"
@@ -46,11 +48,14 @@ Microsoft::UI::Xaml::ResourceDictionary AppResources() {
 }
 
 MainWindow::MainWindow() {
+    WriteStartupLog(L"MainWindow constructor entered");
     InitializeComponent();
+    WriteStartupLog(L"MainWindow markup loaded");
 
     // Custom title bar: the drag region is the empty part of the top row, and
     // the window buttons keep their system placement.
     ExtendsContentIntoTitleBar(true);
+    WriteStartupLog(L"title bar extended");
     SetTitleBar(AppTitleBar());
 
     auto& services = opennow::app::AppServices::Instance();
@@ -60,8 +65,10 @@ MainWindow::MainWindow() {
     WireSignInHandlers();
     WireStreamHandlers();
 
+    WriteStartupLog(L"starting the initial load");
     LoadAsync();
     NavigateTo(L"home");
+    WriteStartupLog(L"MainWindow constructed");
 }
 
 winrt::fire_and_forget MainWindow::LoadAsync() {

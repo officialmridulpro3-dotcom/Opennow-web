@@ -14,30 +14,30 @@
     <!-- Backgrounds: the web client layers three blues so panels read as depth
          rather than as separate cards. -->
     <LinearGradientBrush x:Key="OpenNowBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="{StaticResource bgAColor}" Offset="0" />
-        <GradientStop Color="{StaticResource bgBColor}" Offset="0.55" />
-        <GradientStop Color="{StaticResource bgCColor}" Offset="1" />
+        <GradientStop Color="#070b12" Offset="0" />
+        <GradientStop Color="#0f1427" Offset="0.55" />
+        <GradientStop Color="#161c38" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="OpenNowPanelBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="{StaticResource panelColor}" Offset="0" />
-        <GradientStop Color="{StaticResource bgBColor}" Offset="1" />
+        <GradientStop Color="#0e1223" Offset="0" />
+        <GradientStop Color="#0f1427" Offset="1" />
     </LinearGradientBrush>
 
-    <SolidColorBrush x:Key="OpenNowRailBrush" Color="{StaticResource bgAColor}" />
-    <SolidColorBrush x:Key="OpenNowPanelBorderBrush" Color="{StaticResource panelBorderSolidColor}" />
-    <SolidColorBrush x:Key="OpenNowInkBrush" Color="{StaticResource inkColor}" />
-    <SolidColorBrush x:Key="OpenNowInkSoftBrush" Color="{StaticResource inkSoftColor}" />
-    <SolidColorBrush x:Key="OpenNowMutedBrush" Color="{StaticResource inkMutedColor}" />
-    <SolidColorBrush x:Key="OpenNowAccentBrush" Color="{StaticResource accentColor}" />
-    <SolidColorBrush x:Key="OpenNowSuccessBrush" Color="{StaticResource successColor}" />
-    <SolidColorBrush x:Key="OpenNowWarningBrush" Color="{StaticResource warningColor}" />
-    <SolidColorBrush x:Key="OpenNowErrorBrush" Color="{StaticResource errorColor}" />
-    <SolidColorBrush x:Key="OpenNowCardBrush" Color="{StaticResource cardColor}" />
-    <SolidColorBrush x:Key="OpenNowCardHoverBrush" Color="{StaticResource cardHoverColor}" />
+    <SolidColorBrush x:Key="OpenNowRailBrush" Color="#070b12" />
+    <SolidColorBrush x:Key="OpenNowPanelBorderBrush" Color="#39414f" />
+    <SolidColorBrush x:Key="OpenNowInkBrush" Color="#f4f7ff" />
+    <SolidColorBrush x:Key="OpenNowInkSoftBrush" Color="#9aabc5" />
+    <SolidColorBrush x:Key="OpenNowMutedBrush" Color="#acbad1" />
+    <SolidColorBrush x:Key="OpenNowAccentBrush" Color="#42d8ff" />
+    <SolidColorBrush x:Key="OpenNowSuccessBrush" Color="#b5f66c" />
+    <SolidColorBrush x:Key="OpenNowWarningBrush" Color="#ffc45e" />
+    <SolidColorBrush x:Key="OpenNowErrorBrush" Color="#ff627f" />
+    <SolidColorBrush x:Key="OpenNowCardBrush" Color="#9aabc5" Opacity="0.08" />
+    <SolidColorBrush x:Key="OpenNowCardHoverBrush" Color="#9aabc5" Opacity="0.14" />
 
-    <SolidColorBrush x:Key="OpenNowAccentSurfaceBrush" Color="{StaticResource accentColor}" Opacity="0.08" />
-    <SolidColorBrush x:Key="OpenNowAccentSurfaceStrongBrush" Color="{StaticResource accentColor}" Opacity="0.16" />
+    <SolidColorBrush x:Key="OpenNowAccentSurfaceBrush" Color="#42d8ff" Opacity="0.08" />
+    <SolidColorBrush x:Key="OpenNowAccentSurfaceStrongBrush" Color="#42d8ff" Opacity="0.16" />
 
     <!-- ── Typography ─────────────────────────────────────────────────────── -->
 
@@ -198,7 +198,7 @@
 
     <Style x:Key="OpenNowPrimaryButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
         <Setter Property="Background" Value="{ThemeResource OpenNowAccentBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource accentOnColor}" />
+        <Setter Property="Foreground" Value="{StaticResource accentOnBrush}" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="CornerRadius" Value="{StaticResource rMd}" />
         <Setter Property="Padding" Value="18,9" />

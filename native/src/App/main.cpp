@@ -9,6 +9,7 @@
 // writes %LOCALAPPDATA%\OpenNOW\startup.log and puts a message on screen.
 
 #include "pch.h"
+#include "StartupLog.h"
 
 #include "App.h"
 
@@ -17,90 +18,99 @@
 #include <fstream>
 #include <string>
 
-namespace
-{
-    std::wstring StartupLogPath()
-    {
-        wchar_t localAppData[MAX_PATH]{};
-        std::wstring directory = L"OpenNOW";
-        if (GetEnvironmentVariableW(L"LOCALAPPDATA", localAppData, MAX_PATH) != 0) {
-            directory = std::wstring(localAppData) + L"\\OpenNOW";
-        }
-        CreateDirectoryW(directory.c_str(), nullptr);
-        return directory + L"\\startup.log";
-    }
+namespace {
 
-    void WriteLog(std::wstring const& message)
-    {
-        std::wofstream log(StartupLogPath(), std::ios::app);
-        if (!log) {
-            return;
-        }
-        const auto now = std::chrono::system_clock::now();
-        const auto time = std::chrono::system_clock::to_time_t(now);
-        std::tm local{};
-        localtime_s(&local, &time);
-        wchar_t stamp[32]{};
-        wcsftime(stamp, std::size(stamp), L"%Y-%m-%d %H:%M:%S", &local);
-        log << stamp << L"  " << message << L"\n";
+std::wstring StartupLogPath() {
+    wchar_t localAppData[MAX_PATH]{};
+    std::wstring directory = L"OpenNOW";
+    if (GetEnvironmentVariableW(L"LOCALAPPDATA", localAppData, MAX_PATH) != 0) {
+        directory = std::wstring(localAppData) + L"\\OpenNOW";
     }
+    CreateDirectoryW(directory.c_str(), nullptr);
+    return directory + L"\\startup.log";
+}
 
-    int Report(std::wstring const& message)
-    {
-        WriteLog(message);
-        MessageBoxW(nullptr, message.c_str(), L"OpenNOW", MB_OK | MB_ICONERROR);
-        return 1;
-    }
+std::wstring Timestamp() {
+    const auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::tm local{};
+    localtime_s(&local, &now);
 
-    std::wstring Describe(winrt::hresult_error const& error)
-    {
-        return L"OpenNOW could not start.\n\n" + std::wstring(error.message().c_str()) +
-               L"\n\nHRESULT: 0x" + std::to_wstring(static_cast<uint32_t>(error.code())) +
-               L"\nDetails are in " + StartupLogPath();
-    }
+    wchar_t stamp[64]{};
+    wcsftime(stamp, std::size(stamp), L"%Y-%m-%d %H:%M:%S", &local);
+    return stamp;
+}
 
-    std::wstring Describe(std::exception const& error)
-    {
-        std::wstring text(error.what(), error.what() + std::strlen(error.what()));
-        return L"OpenNOW could not start.\n\n" + text + L"\n\nDetails are in " + StartupLogPath();
+void Append(std::wstring const& message) {
+    std::wofstream log(StartupLogPath(), std::ios::app);
+    if (!log) {
+        return;
     }
+    log << Timestamp() << L"  " << message << L"\n";
+}
+
+void Report(std::wstring const& title, std::wstring const& detail) {
+    Append(title + L": " + detail);
+    MessageBoxW(nullptr, detail.c_str(), title.c_str(), MB_OK | MB_ICONERROR);
+}
+
 }  // namespace
 
-int __stdcall wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
-{
-    WriteLog(L"entry point reached");
+// Declared in StartupLog.h: the app and the main window trace their own
+// construction here, before any logger or window exists.
+void WriteStartupLog(std::wstring const& message) {
+    Append(message);
+}
 
+int __stdcall wWinMain(HINSTANCE, HINSTANCE, PWSTR, int) {
     try {
-        winrt::init_apartment(winrt::apartment_type::single_threaded);
-        WriteLog(L"apartment initialised");
+        Append(L"entry point reached");
 
-        WriteLog(L"calling Application::Start");
+        // WinUI needs a COM apartment on this thread before any XAML object can
+        // be created, and the XAML thread must be a single-threaded one.
+        winrt::init_apartment(winrt::apartment_type::single_threaded);
+        Append(L"apartment initialised");
+
+        Append(L"calling Application::Start");
 
         // Qualified: at global scope "Microsoft" is also the classic COM WRL
         // namespace that windows.h declares.
         winrt::Microsoft::UI::Xaml::Application::Start([](auto&&) {
-            WriteLog(L"start callback entered");
+            Append(L"start callback entered");
             try {
                 winrt::make<winrt::OpenNOW::implementation::App>();
-                WriteLog(L"application instance created");
+                Append(L"application instance created");
             }
             catch (winrt::hresult_error const& error) {
-                WriteLog(L"make failed: " + std::wstring(error.message().c_str()));
+                Append(L"creating the application failed: " + std::wstring(error.message().c_str()));
                 throw;
             }
         });
-        WriteLog(L"application exited cleanly");
 
+        Append(L"application exited cleanly");
         winrt::uninit_apartment();
         return 0;
     }
     catch (winrt::hresult_error const& error) {
-        return Report(Describe(error));
+        wchar_t code[16]{};
+        swprintf_s(code, L"0x%08X", static_cast<unsigned>(error.code()));
+        Report(L"OpenNOW failed to start",
+               L"Windows reported an error while starting OpenNOW.\n\n" +
+                   std::wstring(error.message().c_str()) + L"\n\nError code: " + code +
+                   L"\n\nDetails are in %LOCALAPPDATA%\\OpenNOW\\startup.log.");
+        return static_cast<int>(error.code());
     }
     catch (std::exception const& error) {
-        return Report(Describe(error));
+        const auto* const text = error.what();
+        std::wstring wide(text ? text : "", text ? std::strlen(text) : 0);
+        Report(L"OpenNOW failed to start",
+               L"OpenNOW could not start:\n\n" + wide +
+                   L"\n\nDetails are in %LOCALAPPDATA%\\OpenNOW\\startup.log.");
+        return 1;
     }
     catch (...) {
-        return Report(L"OpenNOW could not start: an unknown exception was thrown during startup.");
+        Report(L"OpenNOW failed to start",
+               L"OpenNOW could not start because of an unknown error.\n\nDetails are in "
+               L"%LOCALAPPDATA%\\OpenNOW\\startup.log.");
+        return 1;
     }
 }
