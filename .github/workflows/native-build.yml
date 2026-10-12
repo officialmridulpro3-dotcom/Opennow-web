@@ -420,9 +420,10 @@ jobs:
               $cdbLog = Join-Path $dir 'cdb-output.txt'
               $localPdb = 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release'
               if (-not (Test-Path $localPdb)) { $localPdb = (Resolve-Path 'native\obj\OpenNOW.App\x64\Release').Path }
-              $localPdbForward = $localPdb -replace '\\', '/'
-              $cdbCommand = ('.symserver SRV*C:/opensnow-symbols*https://msdl.microsoft.com/download/symbols; ' +
-                             '.sympath + ' + $localPdbForward + '; .reload /f; .ecxr; kb 60; q')
+              # Minimal command list: the SRV*cache*server form and .sympath
+              # both trip cdb's command parser, so set only the bare symbol
+              # server and let it download Microsoft.UI.Xaml's PDB.
+              $cdbCommand = '.symserver https://msdl.microsoft.com/download/symbols; .reload /f; .ecxr; kb 60; q'
               $cdbArgs = @('-g', '-G', '-yn', '-noLogo', '-c', $cdbCommand, $exe)
               $out += ('cdb args: ' + (($cdbArgs | ForEach-Object { '[' + $_ + ']' }) -join ' '))
               & $cdb @cdbArgs 2>&1 | Out-File $cdbLog -Encoding utf8
