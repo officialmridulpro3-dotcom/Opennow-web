@@ -215,6 +215,10 @@ jobs:
                    Select-Object -First 1).FullName
           $out = @()
           $out += ('compiler dll: ' + $dll)
+          $out += '--- nuget tools tree ---'
+          $out += @(Get-ChildItem $pkg -Recurse -File -ErrorAction SilentlyContinue |
+                    ForEach-Object { $_.FullName.Substring($pkg.Length + 1) } |
+                    Where-Object { \($_ -match 'tools|XamlC|xamlc') } | Select-Object -First 40)
           $out += (dotnet tool install --global ilspycmd 2>&1 | Select-Object -Last 1)
           $tool = Join-Path $env:USERPROFILE '.dotnet\tools\ilspycmd.exe'
           if (Test-Path $tool) {
