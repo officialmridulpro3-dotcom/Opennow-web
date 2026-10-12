@@ -206,6 +206,8 @@ jobs:
       # it in.
       # The XAML compiler writes 0-byte .xbf files here while a real
       # XamlTypeInfo.g.cpp. Read the task's own code to see when it does that.
+      # The XAML compiler writes 0-byte .xbf files here while a real
+      # XamlTypeInfo.g.cpp. Read the task's own code to see when it does that.
       - name: Inspect the XAML compiler task
         shell: pwsh
         run: |
@@ -215,39 +217,33 @@ jobs:
                    Select-Object -First 1).FullName
           $out = @()
           $out += ('compiler dll: ' + $dll)
-          $out += '--- nuget tools tree ---'
+          $out += '--- nuget package files (tools and exes) ---'
           $out += @(Get-ChildItem $pkg -Recurse -File -ErrorAction SilentlyContinue |
-                    ForEach-Object { $_.FullName.Substring($pkg.Length + 1) } |
-                    Where-Object { \($_ -match 'tools|XamlC|xamlc') } | Select-Object -First 40)
+                    Where-Object { ($_.FullName -split '\')[-2] -eq 'tools' -or $_.Name -like '*.exe' } |
+                    ForEach-Object { $_.FullName.Substring($pkg.Length + 1) } | Select-Object -First 50)
           $out += (dotnet tool install --global ilspycmd 2>&1 | Select-Object -Last 1)
           $tool = Join-Path $env:USERPROFILE '.dotnet\tools\ilspycmd.exe'
           if (Test-Path $tool) {
-            & $tool $dll -o 'xamlc-decompiled' 2>&1 | ForEach-Object { $out += \$_ }
-            $csFiles = @(Get-ChildItem 'xamlc-decompiled' -Recurse -Filter '*.cs' -ErrorAction SilentlyContinue)
-            $out += ('decompiled ' + $csFiles.Count + ' cs files')
-            $out += @($csFiles | ForEach-Object { $_.FullName + '  ' + $_.Length + ' bytes' })
-            if ($csFiles.Count -gt 0) {
-              $main = $csFiles | Sort-Object Length -Descending | Select-Object -First 1
-              $out += '--- first 12 lines of ' + $main.Name + ' ---'
-              $out += @(Get-Content $main.FullName -TotalCount 12)
-              $out += '--- process launches in the compiler assembly ---'
-              $out += @(Select-String -Path $main.FullName -Pattern 'ProcessStartInfo|Start\(\)|UseShellExecute|CreateNoWindow|XamlC|XamlCompiler|MarkupCompiler' -ErrorAction SilentlyContinue |
-                        ForEach-Object { \($_.LineNumber.ToString() + ': ' + $_.Line.Trim()) } | Select-Object -First 40)
-              $out += '--- string literals with exe or extension ---'
-              $out += @(Select-String -Path $main.FullName -Pattern '\"[^\"]*\.(exe|xbf|dll)[^\"]*\"' -ErrorAction SilentlyContinue |
-                        ForEach-Object { \($_.LineNumber.ToString() + ': ' + $_.Line.Trim()) } | Select-Object -First 40)
-              $out += '--- public types ---'
-              $out += @(Select-String -Path $main.FullName -Pattern 'class [A-Z][A-Za-z0-9_]+|interface [A-Z][A-Za-z0-9_]+' -ErrorAction SilentlyContinue |
-                        ForEach-Object { \($_.Line.Trim()) } | Select-Object -First 50)
-            }
-            $hits = @($csFiles | Select-String -Pattern 'xbf' -List -ErrorAction SilentlyContinue | ForEach-Object { \($_.Path) })
-            $out += '--- files mentioning xbf ---'
-            $out += $hits
-            foreach ($file in ($hits | Select-Object -First 3)) {
-              $out += ('===== ' + $file + ' =====')
-              $out += @(Select-String -Path $file -Pattern 'xbf' -Context 4, 4 -ErrorAction SilentlyContinue |
-                        ForEach-Object { \($_.Context.PreContext -join ' | ') + ' >> ' + $_.Line + ' << ' + (\($_.Context.PostContext -join ' | ')) } |
-                        Select-Object -First 60)
+            & $tool $dll -o 'xamlc-decompiled' 2>&1 | ForEach-Object { $out += $_ }
+            $main = @(Get-ChildItem 'xamlc-decompiled' -Recurse -Filter '*.cs' -ErrorAction SilentlyContinue |
+                      Sort-Object Length -Descending | Select-Object -First 1)
+            if ($main) {
+              $out += ('decompiled: ' + $main.FullName + ' ' + $main.Length + ' bytes')
+              $lines = @(Get-Content $main.FullName -ErrorAction SilentlyContinue)
+              $out += ('total lines: ' + $lines.Count)
+              $out += '--- first 20 non-using lines ---'
+              $out += @($lines | Where-Object { $_ -notmatch '^using ' } | Select-Object -First 20)
+              $out += '--- process launches ---'
+              $out += @($lines | Select-String 'ProcessStartInfo|Process\.|XamlC|XamlCompiler' |
+                        ForEach-Object { $_.Line.Trim() } | Select-Object -First 30)
+              $out += '--- string literals naming executables or extensions ---'
+              $out += @($lines | Select-String '"[^"]*(\.exe|\.xbf|\.dll|XamlC)"' |
+                        ForEach-Object { $_.Line.Trim() } | Select-Object -First 30)
+              $out += '--- task and entry classes ---'
+              $out += @($lines | Select-String 'public (partial )?class |public (partial )?interface ' |
+                        ForEach-Object { $_.Line.Trim() } | Select-Object -First 40)
+            } else {
+              $out += 'no decompiled output'
             }
           } else { $out += 'ilspycmd failed to install' }
           (@($out) -join "`n") | Out-File -FilePath xamlc-notes.txt -Encoding utf8
@@ -391,15 +387,9 @@ jobs:
               $cdbLog = Join-Path $dir 'cdb-output.txt'
               $localPdb = 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release'
               if (-not (Test-Path $localPdb)) { $localPdb = (Resolve-Path 'native\obj\OpenNOW.App\x64\Release').Path }
-              $scriptFile = Join-Path $dir 'cdb-commands.txt'
-              Set-Content -Path $scriptFile -Value @(
-                  '.symserver SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols',
-                  ('.sympath + ' + $localPdb),
-                  '.reload /f',
-                  '.ecxr',
-                  'kb 60',
-                  'q') -Encoding ascii
-              $cdbArgs = @('-g', '-G', '-yn', '-cf', $scriptFile, $exe)
+              $cdbCommand = ('.symserver SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols; ' +
+                             '.sympath + ' + $localPdb + '; .reload /f; .ecxr; kb 60; q')
+              $cdbArgs = @('-g', '-G', '-yn', '-noLogo', '-c', $cdbCommand, $exe)
               $out += ('cdb args: ' + (($cdbArgs | ForEach-Object { '[' + $_ + ']' }) -join ' '))
               & $cdb @cdbArgs 2>&1 | Out-File $cdbLog -Encoding utf8
               $out += ('cdb exit code: ' + $LASTEXITCODE)
