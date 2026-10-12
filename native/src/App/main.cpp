@@ -101,7 +101,13 @@ int __stdcall wWinMain(HINSTANCE, HINSTANCE, PWSTR, int) {
     }
     catch (std::exception const& error) {
         const auto* const text = error.what();
-        std::wstring wide(text ? text : "", text ? std::strlen(text) : 0);
+        std::wstring wide;
+        if (text != nullptr) {
+            // std::wstring has no (char const*, size_t) constructor, so widen it.
+            for (const auto* cursor = text; *cursor != '\0'; ++cursor) {
+                wide.push_back(static_cast<wchar_t>(static_cast<unsigned char>(*cursor)));
+            }
+        }
         Report(L"OpenNOW failed to start",
                L"OpenNOW could not start:\n\n" + wide +
                    L"\n\nDetails are in %LOCALAPPDATA%\\OpenNOW\\startup.log.");
