@@ -309,6 +309,9 @@ jobs:
               $out += @($content[$i..$end] | ForEach-Object { $_.Trim() } | Where-Object { $_ -match 'Task Parameter|Task "CompileXaml|Done executing|Xbf|Xaml' })
             }
           }
+          $out += '--- TargetPlatformMinVersion in the diagnostic log ---'
+          $out += @(Select-String -Path 'native-build.log' -Pattern 'TargetPlatformMinVersion|MinWinRTTargetPlatformVersion|XbfGenerationFlags' -ErrorAction SilentlyContinue |
+                    ForEach-Object { $_.Line.Trim() } | Select-Object -First 60)
           $out += '--- every .xbf on the workspace (with size) ---'
           $out += @(Get-ChildItem 'D:\a\Opennow-web\Opennow-web' -Recurse -Filter '*.xbf' -File -ErrorAction SilentlyContinue |
                     ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.FullName } | Select-Object -First 60)
@@ -447,10 +450,19 @@ jobs:
               # through a batch file with the symbol path attached to -y.
               $localPdbForward = $localPdb -replace '\\', '/'
               $bat = Join-Path $dir 'run-cdb.bat'
-              $batLine = ('"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe" -g -G -ySRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols -c ' +
-                          '"' + '.sympath + ' + $localPdbForward + '; .reload /f; .ecxr; kb 60; q' + '" ' +
-                          '"' + $exe + '"')
-              Set-Content -Path $bat -Encoding ascii @('@echo off', $batLine)
+              $cmdFile = Join-Path $dir 'cdb-commands.txt'
+              Set-Content -Path $cmdFile -Encoding ascii @(
+                  ('.sympath + ' + $localPdbForward),
+                  '.reload /f',
+                  '.ecxr',
+                  'kb 60',
+                  'q')
+              $batLine = ('"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe" -g -G -cf ' +
+                          '"' + $cmdFile + '" ' + '"' + $exe + '"')
+              Set-Content -Path $bat -Encoding ascii @(
+                  '@echo off',
+                  'set "_NT_SYMBOL_PATH=SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols"',
+                  $batLine)
               $out += ('bat: ' + (Get-Content $bat | Select-Object -Last 1))
               cmd /c $bat 2>&1 | Out-File $cdbLog -Encoding utf8
               $out += ('cdb exit code: ' + $LASTEXITCODE)
