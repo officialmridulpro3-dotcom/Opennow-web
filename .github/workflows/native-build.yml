@@ -224,6 +224,56 @@ jobs:
              }) -join "`n") | Out-File -FilePath portable-files.txt -Encoding utf8
           Get-Content portable-files.txt
 
+      # A GUI app that fails before its first window shows nothing, so launch the
+      # packaged layout, wait for a window, and capture both the outcome and a
+      # screenshot of whatever came up.
+      - name: Smoke test the executable
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          $dir = (Resolve-Path 'portable\OpenNOW-native').Path
+          $exe = Join-Path $dir 'OpenNOW.App.exe'
+          $out = @()
+          $out += "launching $exe"
+
+          $process = Start-Process -FilePath $exe -WorkingDirectory $dir -PassThru
+          $handle = 0
+          for ($i = 0; $i -lt 60; $i++) {
+            Start-Sleep -Milliseconds 500
+            $process.Refresh()
+            if ($process.HasExited) { break }
+            if ($process.MainWindowHandle -ne 0) { $handle = $process.MainWindowHandle; break }
+          }
+          Start-Sleep -Seconds 4
+
+          $out += "hasExited=$($process.HasExited)"
+          if ($process.HasExited) {
+            $out += "exitCode=0x{0:X8}" -f [uint32]$process.ExitCode
+          } else {
+            $process.Refresh()
+            $out += "mainWindowHandle=$($process.MainWindowHandle)"
+            $out += "mainWindowTitle=$($process.MainWindowTitle)"
+            $out += "responding=$($process.Responding)"
+          }
+
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $bitmap = New-Object System.Drawing.Bitmap $bounds.Width, $bounds.Height
+          $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+          $graphics.CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size)
+          $bitmap.Save('screenshot.png', [System.Drawing.Imaging.ImageFormat]::Png)
+          $graphics.Dispose()
+          $bitmap.Dispose()
+          $out += "screenshot=$($bounds.Width)x$($bounds.Height)"
+
+          $log = Join-Path $env:LOCALAPPDATA 'OpenNOW\startup.log'
+          if (Test-Path $log) { $out += '--- startup.log ---'; $out += @(Get-Content $log) }
+          else { $out += '--- no startup.log was written ---' }
+
+          if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force }
+          (@($out) -join "`n") | Out-File -FilePath smoke.txt -Encoding utf8
+          Get-Content smoke.txt
+
       - name: Upload portable build
         uses: actions/upload-artifact@v4
         with:
@@ -337,6 +387,8 @@ jobs:
           Publish-File 'ci-report.txt'  'ci-report.txt'
           Publish-File 'generated.txt'  'generated.txt'
           Publish-File 'portable-files.txt' 'portable-files.txt'
+          Publish-File 'smoke.txt'        'smoke.txt'
+          Publish-File 'screenshot.png'   'screenshot.png'
 
           try {
             git config user.name  'ci' | Out-Null
@@ -348,7 +400,9 @@ jobs:
                                 @('toolchain.txt', 'toolchain.txt'),
                                 @('ci-report.txt', 'ci-report.txt'),
                                 @('generated.txt', 'generated.txt'),
-                                @('portable-files.txt', 'portable-files.txt'))) {
+                                @('portable-files.txt', 'portable-files.txt'),
+                                @('smoke.txt', 'smoke.txt'),
+                                @('screenshot.png', 'screenshot.png'))) {
               if (Test-Path $pair[0]) { Copy-Item $pair[0] ('logs/' + $pair[1]) -Force }
             }
             Set-Content -Path logs/RUN.txt -Value ("run $env:GITHUB_RUN_ID`n$(Get-Date -Format o)")

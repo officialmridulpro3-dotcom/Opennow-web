@@ -66,6 +66,7 @@
          source tree. -->
     <GeneratedFilesDir>$(IntDir)Generated Files\</GeneratedFilesDir>
     <EnableMsixTooling>false</EnableMsixTooling>
+    <AppContainerApplication>false</AppContainerApplication>
     <WindowsPackageType>None</WindowsPackageType>
     <!-- Unpackaged, so carry the Windows App SDK runtime alongside the exe:
          the target machines do not have it installed. -->
@@ -116,6 +117,8 @@
            into every translation unit rather than relying on /Yu. -->
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ForcedIncludeFiles>$(MSBuildProjectDirectory)\pch.h</ForcedIncludeFiles>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'!='Debug'">MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,6 +157,7 @@
        code-behind for a .xaml file; without it no InitializeComponent is
        generated. -->
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="App.cpp">
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
