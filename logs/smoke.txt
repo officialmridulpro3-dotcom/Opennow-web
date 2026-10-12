@@ -1,0 +1,122 @@
+launching D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\OpenNOW.App.exe
+hasExited=True
+--- Application Error events in the last 10 minutes ---
+2026-10-12T18:09:26  Faulting application name: OpenNOW.App.exe, version: 0.0.0.0, time stamp: 0x6acd2221 | Faulting module name: OpenNOW.App.exe, version: 0.0.0.0, time stamp: 0x6acd2221 | Exception code: 0xc0000005 | Fault offset: 0x00000000000aec07 | Faulting process id: 0x1A74 | Faulting application start time: 0x1DD5A74D11FA2C9 | Faulting application path: D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\OpenNOW.App.exe | Faulting module path: D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\OpenNOW.App.exe | Report Id: f3670036-1a3c-4b90-b68a-de207af14598 | Faulting package full name:  | Faulting package-relative application ID: 
+screenshot=1024x768
+dwm running: 1
+session: True interactive=
+no crash dump
+--- running under cdb to capture the crash stack ---
+bat: "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe" -g -G -cf "D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\cdb-commands.txt" "D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\OpenNOW.App.exe"
+cdb exit code: 0
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 30
+CommandLine: "D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\OpenNOW.App.exe"
+OK                                             D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release
+OK                                             D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release
+Symbol search path is: SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release
+ModLoad: 00007ff6`aeb90000 00007ff6`aed85000   OpenNOW.App.exe
+ModLoad: 00007ffa`aade0000 00007ffa`aaea9000   C:\Windows\System32\KERNEL32.DLL
+ModLoad: 00007ffa`a9e00000 00007ffa`aa1ee000   C:\Windows\System32\KERNELBASE.dll
+ModLoad: 00007ffa`abd40000 00007ffa`abf05000   C:\Windows\System32\USER32.dll
+ModLoad: 00007ffa`aa630000 00007ffa`aa657000   C:\Windows\System32\win32u.dll
+ModLoad: 00007ffa`a5400000 00007ffa`a5662000   C:\Windows\SYSTEM32\d3d11.dll
+ModLoad: 00007ffa`7ce10000 00007ffa`7ce44000   C:\Windows\SYSTEM32\d3d10_1.dll
+ModLoad: 00007ffa`ab120000 00007ffa`ab14b000   C:\Windows\System32\GDI32.dll
+ModLoad: 00007ffa`aaf50000 00007ffa`aaff9000   C:\Windows\System32\msvcrt.dll
+ModLoad: 00007ffa`a7cf0000 00007ffa`a7e2b000   C:\Windows\SYSTEM32\dxgi.dll
+ModLoad: 00007ffa`aa2c0000 00007ffa`aa363000   C:\Windows\System32\msvcp_win.dll
+ModLoad: 00007ffa`aa930000 00007ffa`aaa5b000   C:\Windows\System32\gdi32full.dll
+ModLoad: 00007ffa`aa7e0000 00007ffa`aa92b000   C:\Windows\System32\ucrtbase.dll
+ModLoad: 00000245`e3fc0000 00000245`e410b000   C:\Windows\System32\ucrtbase.dll
+ModLoad: 00007ffa`a4470000 00007ffa`a48ef000   C:\Windows\SYSTEM32\D3DCOMPILER_47.dll
+ModLoad: 00007ffa`ab000000 00007ffa`ab118000   C:\Windows\System32\RPCRT4.dll
+ModLoad: 00007ffa`ac1a0000 00007ffa`ac526000   C:\Windows\System32\combase.dll
+ModLoad: 00007ffa`82770000 00007ffa`8277e000   C:\Windows\SYSTEM32\d3d10_1core.dll
+ModLoad: 00007ffa`aa660000 00007ffa`aa7d7000   C:\Windows\System32\CRYPT32.dll
+ModLoad: 00007ffa`a9c70000 00007ffa`a9cce000   C:\Windows\SYSTEM32\powrprof.dll
+ModLoad: 00007ffa`a9470000 00007ffa`a948b000   C:\Windows\SYSTEM32\cryptsp.dll
+ModLoad: 00007ffa`ab150000 00007ffa`ab8a3000   C:\Windows\System32\SHELL32.dll
+ModLoad: 00007ffa`a4320000 00007ffa`a4446000   C:\Windows\SYSTEM32\WINHTTP.dll
+ModLoad: 00007ffa`a8d90000 00007ffa`a8dd9000   C:\Windows\SYSTEM32\SspiCli.dll
+ModLoad: 00007ffa`aa4c0000 00007ffa`aa62a000   C:\Windows\System32\wintypes.dll
+ModLoad: 00007ffa`abc90000 00007ffa`abd37000   C:\Windows\System32\sechost.dll
+ModLoad: 00007ffa`ab8d0000 00007ffa`ab9a7000   C:\Windows\System32\OLEAUT32.dll
+ModLoad: 00007ffa`abf80000 00007ffa`abfb1000   C:\Windows\System32\IMM32.DLL
+ModLoad: 00007ffa`a9c50000 00007ffa`a9c64000   C:\Windows\SYSTEM32\UMPDC.dll
+ModLoad: 00007ffa`744c0000 00007ffa`74641000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.WindowsAppRuntime.dll
+ModLoad: 00007ffa`ac530000 00007ffa`ac5e4000   C:\Windows\System32\ADVAPI32.dll
+ModLoad: 00007ffa`ac5f0000 00007ffa`ac787000   C:\Windows\System32\ole32.dll
+ModLoad: 00007ffa`a9110000 00007ffa`a913b000   C:\Windows\SYSTEM32\USERENV.dll
+ModLoad: 00007ffa`aac60000 00007ffa`aacc7000   C:\Windows\System32\SHLWAPI.dll
+ModLoad: 00007ffa`a8000000 00007ffa`a801b000   C:\Windows\SYSTEM32\kernel.appcore.dll
+ModLoad: 00007ffa`a71f0000 00007ffa`a722a000   C:\Windows\SYSTEM32\XmlLite.dll
+ModLoad: 00007ffa`78fd0000 00007ffa`79009000   C:\Windows\SYSTEM32\RoMetadata.dll
+ModLoad: 00007ffa`abb90000 00007ffa`abc84000   C:\Windows\System32\shcore.dll
+ModLoad: 00007ffa`aa370000 00007ffa`aa41c000   C:\Windows\System32\bcryptPrimitives.dll
+ModLoad: 00007ffa`a79c0000 00007ffa`a7a6b000   C:\Windows\system32\uxtheme.dll
+ModLoad: 00000245`e5cc0000 00000245`e6a79000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Xaml.dll
+ModLoad: 00000245`e5cc0000 00000245`e6a79000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Xaml.dll
+ModLoad: 00007ffa`732f0000 00007ffa`733ee000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\CoreMessagingXP.dll
+ModLoad: 00007ffa`7ca50000 00007ffa`7cacb000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Windowing.Core.dll
+ModLoad: 00007ffa`a3510000 00007ffa`a36f0000   C:\Windows\SYSTEM32\urlmon.dll
+ModLoad: 00007ffa`a4b40000 00007ffa`a4da9000   C:\Windows\SYSTEM32\DWrite.dll
+ModLoad: 00007ffa`73bf0000 00007ffa`73cbf000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.Internal.FrameworkUdk.dll
+ModLoad: 00007ffa`a0e40000 00007ffa`a0e4b000   C:\Windows\SYSTEM32\VERSION.dll
+ModLoad: 00007ffa`a4db0000 00007ffa`a53ec000   C:\Windows\SYSTEM32\d2d1.dll
+ModLoad: 00007ffa`a2b30000 00007ffa`a2df4000   C:\Windows\SYSTEM32\iertutil.dll
+ModLoad: 00007ffa`a2260000 00007ffa`a2ac1000   C:\Windows\SYSTEM32\windows.storage.dll
+ModLoad: 00007ffa`a8c10000 00007ffa`a8c46000   C:\Windows\SYSTEM32\ntmarta.dll
+ModLoad: 00007ffa`a9d10000 00007ffa`a9d39000   C:\Windows\SYSTEM32\profapi.dll
+ModLoad: 00007ffa`a5f70000 00007ffa`a5fce000   C:\Windows\SYSTEM32\Bcp47Langs.dll
+ModLoad: 00007ffa`a56e0000 00007ffa`a5903000   C:\Windows\SYSTEM32\dcomp.dll
+ModLoad: 00007ffa`a5dd0000 00007ffa`a5ef7000   C:\Windows\SYSTEM32\CoreMessaging.dll
+ModLoad: 00007ffa`a8640000 00007ffa`a864d000   C:\Windows\SYSTEM32\netutils.dll
+ModLoad: 00007ffa`a5690000 00007ffa`a56b9000   C:\Windows\SYSTEM32\srvcli.dll
+ModLoad: 00007ffa`a6ac0000 00007ffa`a6ad9000   C:\Windows\SYSTEM32\Microsoft.Internal.WarpPal.dll
+ModLoad: 00007ffa`73240000 00007ffa`732df000   C:\Windows\SYSTEM32\Microsoft.Internal.FrameworkUdk.System.dll
+ModLoad: 00007ffa`8d110000 00007ffa`8d11b000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.WindowsAppRuntime.Insights.Resource.dll
+ModLoad: 00007ffa`aba50000 00007ffa`abb00000   C:\Windows\System32\clbcatq.dll
+--- startup.log ---
+2026-10-12 18:09:26  entry point reached
+2026-10-12 18:09:26  apartment initialised
+2026-10-12 18:09:26  calling Application::Start
+2026-10-12 18:09:26  start callback entered
+2026-10-12 18:09:26  App constructor entered
+2026-10-12 18:09:26  App markup loaded
+2026-10-12 18:09:26  application instance created
+2026-10-12 18:09:26  OnLaunched entered
+2026-10-12 18:09:26  logging configured
+2026-10-12 18:09:26  directx 10 adapter found
+2026-10-12 18:09:26  settings loaded
+2026-10-12 18:09:26  creating the main window
+2026-10-12 18:09:26  MainWindow constructor entered
+2026-10-12 18:09:26  MainWindow markup loaded
+2026-10-12 18:09:26  title bar extended
+2026-10-12 18:09:26  starting the initial load
+2026-10-12 18:09:26  MainWindow constructed
+2026-10-12 18:09:26  main window created
+2026-10-12 18:09:26  theme applied, activating the window
+2026-10-12 18:09:26  window activated
+2026-10-12 18:09:36  entry point reached
+2026-10-12 18:09:36  apartment initialised
+2026-10-12 18:09:36  calling Application::Start
+2026-10-12 18:09:36  start callback entered
+2026-10-12 18:09:36  App constructor entered
+2026-10-12 18:09:36  App markup loaded
+2026-10-12 18:09:36  application instance created
+2026-10-12 18:09:37  OnLaunched entered
+2026-10-12 18:09:37  logging configured
+2026-10-12 18:09:37  directx 10 adapter found
+2026-10-12 18:09:37  settings loaded
+2026-10-12 18:09:37  creating the main window
+2026-10-12 18:09:37  MainWindow constructor entered
+2026-10-12 18:09:37  MainWindow markup loaded
+2026-10-12 18:09:37  title bar extended
+2026-10-12 18:09:37  starting the initial load
+2026-10-12 18:09:37  MainWindow constructed
+2026-10-12 18:09:37  main window created
+2026-10-12 18:09:37  theme applied, activating the window
+2026-10-12 18:09:37  window activated

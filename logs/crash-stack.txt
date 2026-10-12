@@ -1,0 +1,224 @@
+
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+
+   EnableRedirectToV8JsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.063 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.703 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 30
+
+Microsoft (R) Windows Debugger Version 10.0.26100.8249 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+CommandLine: "D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\OpenNOW.App.exe"
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols
+OK                                             D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols
+OK                                             D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release
+Symbol search path is: SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release
+Executable search path is: 
+ModLoad: 00007ff6`aeb90000 00007ff6`aed85000   OpenNOW.App.exe
+ModLoad: 00007ffa`acce0000 00007ffa`acf44000   ntdll.dll
+ModLoad: 00007ffa`aade0000 00007ffa`aaea9000   C:\Windows\System32\KERNEL32.DLL
+ModLoad: 00007ffa`a9e00000 00007ffa`aa1ee000   C:\Windows\System32\KERNELBASE.dll
+ModLoad: 00007ffa`abd40000 00007ffa`abf05000   C:\Windows\System32\USER32.dll
+ModLoad: 00007ffa`aa630000 00007ffa`aa657000   C:\Windows\System32\win32u.dll
+ModLoad: 00007ffa`a5400000 00007ffa`a5662000   C:\Windows\SYSTEM32\d3d11.dll
+ModLoad: 00007ffa`7ce10000 00007ffa`7ce44000   C:\Windows\SYSTEM32\d3d10_1.dll
+ModLoad: 00007ffa`ab120000 00007ffa`ab14b000   C:\Windows\System32\GDI32.dll
+ModLoad: 00007ffa`aaf50000 00007ffa`aaff9000   C:\Windows\System32\msvcrt.dll
+ModLoad: 00007ffa`a7cf0000 00007ffa`a7e2b000   C:\Windows\SYSTEM32\dxgi.dll
+ModLoad: 00007ffa`aa2c0000 00007ffa`aa363000   C:\Windows\System32\msvcp_win.dll
+ModLoad: 00007ffa`aa930000 00007ffa`aaa5b000   C:\Windows\System32\gdi32full.dll
+ModLoad: 00007ffa`aa7e0000 00007ffa`aa92b000   C:\Windows\System32\ucrtbase.dll
+ModLoad: 00000245`e3fc0000 00000245`e410b000   C:\Windows\System32\ucrtbase.dll
+ModLoad: 00007ffa`a4470000 00007ffa`a48ef000   C:\Windows\SYSTEM32\D3DCOMPILER_47.dll
+ModLoad: 00007ffa`ab000000 00007ffa`ab118000   C:\Windows\System32\RPCRT4.dll
+ModLoad: 00007ffa`ac1a0000 00007ffa`ac526000   C:\Windows\System32\combase.dll
+ModLoad: 00007ffa`82770000 00007ffa`8277e000   C:\Windows\SYSTEM32\d3d10_1core.dll
+ModLoad: 00007ffa`aa660000 00007ffa`aa7d7000   C:\Windows\System32\CRYPT32.dll
+ModLoad: 00007ffa`a9c70000 00007ffa`a9cce000   C:\Windows\SYSTEM32\powrprof.dll
+ModLoad: 00007ffa`a9470000 00007ffa`a948b000   C:\Windows\SYSTEM32\cryptsp.dll
+ModLoad: 00007ffa`ab150000 00007ffa`ab8a3000   C:\Windows\System32\SHELL32.dll
+ModLoad: 00007ffa`a4320000 00007ffa`a4446000   C:\Windows\SYSTEM32\WINHTTP.dll
+ModLoad: 00007ffa`a8d90000 00007ffa`a8dd9000   C:\Windows\SYSTEM32\SspiCli.dll
+ModLoad: 00007ffa`aa4c0000 00007ffa`aa62a000   C:\Windows\System32\wintypes.dll
+ModLoad: 00007ffa`abc90000 00007ffa`abd37000   C:\Windows\System32\sechost.dll
+ModLoad: 00007ffa`ab8d0000 00007ffa`ab9a7000   C:\Windows\System32\OLEAUT32.dll
+ModLoad: 00007ffa`abf80000 00007ffa`abfb1000   C:\Windows\System32\IMM32.DLL
+ModLoad: 00007ffa`a9c50000 00007ffa`a9c64000   C:\Windows\SYSTEM32\UMPDC.dll
+ModLoad: 00007ffa`744c0000 00007ffa`74641000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.WindowsAppRuntime.dll
+ModLoad: 00007ffa`ac530000 00007ffa`ac5e4000   C:\Windows\System32\ADVAPI32.dll
+ModLoad: 00007ffa`ac5f0000 00007ffa`ac787000   C:\Windows\System32\ole32.dll
+ModLoad: 00007ffa`a9110000 00007ffa`a913b000   C:\Windows\SYSTEM32\USERENV.dll
+ModLoad: 00007ffa`aac60000 00007ffa`aacc7000   C:\Windows\System32\SHLWAPI.dll
+ModLoad: 00007ffa`a8000000 00007ffa`a801b000   C:\Windows\SYSTEM32\kernel.appcore.dll
+ModLoad: 00007ffa`a71f0000 00007ffa`a722a000   C:\Windows\SYSTEM32\XmlLite.dll
+ModLoad: 00007ffa`78fd0000 00007ffa`79009000   C:\Windows\SYSTEM32\RoMetadata.dll
+ModLoad: 00007ffa`abb90000 00007ffa`abc84000   C:\Windows\System32\shcore.dll
+ModLoad: 00007ffa`aa370000 00007ffa`aa41c000   C:\Windows\System32\bcryptPrimitives.dll
+ModLoad: 00007ffa`a79c0000 00007ffa`a7a6b000   C:\Windows\system32\uxtheme.dll
+ModLoad: 00000245`e5cc0000 00000245`e6a79000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Xaml.dll
+ModLoad: 00000245`e5cc0000 00000245`e6a79000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Xaml.dll
+ModLoad: 00007ffa`732f0000 00007ffa`733ee000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\CoreMessagingXP.dll
+ModLoad: 00007ffa`7ca50000 00007ffa`7cacb000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Windowing.Core.dll
+ModLoad: 00007ffa`a3510000 00007ffa`a36f0000   C:\Windows\SYSTEM32\urlmon.dll
+ModLoad: 00007ffa`a4b40000 00007ffa`a4da9000   C:\Windows\SYSTEM32\DWrite.dll
+ModLoad: 00007ffa`73bf0000 00007ffa`73cbf000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.Internal.FrameworkUdk.dll
+ModLoad: 00007ffa`a0e40000 00007ffa`a0e4b000   C:\Windows\SYSTEM32\VERSION.dll
+ModLoad: 00007ffa`a4db0000 00007ffa`a53ec000   C:\Windows\SYSTEM32\d2d1.dll
+ModLoad: 00007ffa`a2b30000 00007ffa`a2df4000   C:\Windows\SYSTEM32\iertutil.dll
+ModLoad: 00007ffa`a2260000 00007ffa`a2ac1000   C:\Windows\SYSTEM32\windows.storage.dll
+ModLoad: 00007ffa`a8c10000 00007ffa`a8c46000   C:\Windows\SYSTEM32\ntmarta.dll
+ModLoad: 00007ffa`a9d10000 00007ffa`a9d39000   C:\Windows\SYSTEM32\profapi.dll
+ModLoad: 00007ffa`a5f70000 00007ffa`a5fce000   C:\Windows\SYSTEM32\Bcp47Langs.dll
+ModLoad: 00007ffa`a56e0000 00007ffa`a5903000   C:\Windows\SYSTEM32\dcomp.dll
+ModLoad: 00007ffa`a5dd0000 00007ffa`a5ef7000   C:\Windows\SYSTEM32\CoreMessaging.dll
+ModLoad: 00007ffa`a8640000 00007ffa`a864d000   C:\Windows\SYSTEM32\netutils.dll
+ModLoad: 00007ffa`a5690000 00007ffa`a56b9000   C:\Windows\SYSTEM32\srvcli.dll
+ModLoad: 00007ffa`a6ac0000 00007ffa`a6ad9000   C:\Windows\SYSTEM32\Microsoft.Internal.WarpPal.dll
+ModLoad: 00007ffa`73240000 00007ffa`732df000   C:\Windows\SYSTEM32\Microsoft.Internal.FrameworkUdk.System.dll
+ModLoad: 00007ffa`8d110000 00007ffa`8d11b000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.WindowsAppRuntime.Insights.Resource.dll
+ModLoad: 00007ffa`aba50000 00007ffa`abb00000   C:\Windows\System32\clbcatq.dll
+ModLoad: 00007ffa`8dd30000 00007ffa`8df75000   C:\Windows\System32\twinapi.appcore.dll
+ModLoad: 00007ffa`a7ba0000 00007ffa`a7be4000   C:\Windows\SYSTEM32\dxcore.dll
+ModLoad: 00007ffa`80420000 00007ffa`80572000   C:\Windows\System32\Windows.UI.dll
+ModLoad: 00007ffa`a7ee0000 00007ffa`a7ef4000   C:\Windows\SYSTEM32\resourcepolicyclient.dll
+ModLoad: 00007ffa`93d40000 00007ffa`93e18000   C:\Windows\System32\Windows.ApplicationModel.dll
+ModLoad: 00007ffa`a65d0000 00007ffa`a6632000   C:\Windows\SYSTEM32\directxdatabasehelper.dll
+ModLoad: 00007ffa`7d920000 00007ffa`7da71000   C:\Windows\System32\Windows.UI.Immersive.dll
+ModLoad: 00007ffa`a9980000 00007ffa`a99d7000   C:\Windows\SYSTEM32\cfgmgr32.dll
+ModLoad: 00007ffa`825f0000 00007ffa`82616000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.Windows.ApplicationModel.Resources.dll
+ModLoad: 00007ffa`8ed80000 00007ffa`8edb4000   C:\Windows\SYSTEM32\bcp47mrm.dll
+ModLoad: 00007ffa`7c080000 00007ffa`7c0cc000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\MRM.dll
+onecoreuap\windows\frameworkudk\mrtcore.cpp(388)\Microsoft.Internal.FrameworkUdk.System.dll!00007FFA7327E0DF: (caller: 00007FFA73C69932) ReturnHr(1) tid(2320) 80073D54 The process has no package identity.
+ModLoad: 00007ffa`8eee0000 00007ffa`8f48e000   C:\Windows\SYSTEM32\d3d10warp.dll
+ModLoad: 00007ffa`8c300000 00007ffa`8c48f000   C:\Windows\System32\Windows.Globalization.dll
+ModLoad: 00007ffa`8d240000 00007ffa`8d2f6000   C:\Windows\SYSTEM32\TextShaping.dll
+ModLoad: 00007ffa`6d5d0000 00007ffa`6db60000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Xaml.Controls.dll
+(7e4.2320): Windows Runtime Originate Error - code 40080201 (first chance)
+ModLoad: 00007ffa`a9ce0000 00007ffa`a9d0a000   C:\Windows\SYSTEM32\bcrypt.dll
+C:\__w\1\s\dev\UndockedRegFreeWinRT\catalog.cpp(384)\Microsoft.WindowsAppRuntime.dll!00007FFA74534BA0: (caller: 00007FFA745376A0) ReturnHr(1) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\urfw.cpp(244)\Microsoft.WindowsAppRuntime.dll!00007FFA74537684: (caller: 00000245E6231556) ReturnHr(2) tid(2320) 80004002 No such interface supported
+2026-10-12 18:09:37 [INF] [App] OpenNOW native client starting.
+2026-10-12 18:09:37 [INF] [App] DirectX 10 device present at feature level 1010.
+ModLoad: 00007ffa`70fa0000 00007ffa`7112d000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\dcompi.dll
+ModLoad: 00007ffa`82710000 00007ffa`8271e000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Composition.OSSupport.dll
+ModLoad: 00007ffa`78680000 00007ffa`786f9000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\marshal.dll
+ModLoad: 00007ffa`6ded0000 00007ffa`6e17c000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\dwmcorei.dll
+ModLoad: 00007ffa`73f50000 00007ffa`73fb8000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.InputStateManager.dll
+ModLoad: 00007ffa`70e10000 00007ffa`70f93000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Input.dll
+onecore\internal\sdk\inc\wil/resource.h(955)\dwmcorei.dll!00007FFA6DF0268A: (caller: 00007FFA6DF099E5) ReturnNt(1) tid(1084) C0000022 ModLoad: 00007ffa`aaaf0000 00007ffa`aac4f000   C:\Windows\System32\msctf.dll
+ModLoad: 00007ffa`72990000 00007ffa`72a01000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Windowing.dll
+ModLoad: 00007ffa`816d0000 00007ffa`81af2000   C:\Windows\SYSTEM32\uiautomationcore.dll
+ModLoad: 00007ffa`9ae00000 00007ffa`9ae5a000   C:\Windows\system32\DataExchange.dll
+ModLoad: 00007ffa`9a780000 00007ffa`9adcf000   C:\Windows\System32\OneCoreUAPCommonProxyStub.dll
+C:\__w\1\s\dev\UndockedRegFreeWinRT\catalog.cpp(384)\Microsoft.WindowsAppRuntime.dll!00007FFA74534BA0: (caller: 00007FFA745376A0) ReturnHr(3) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\urfw.cpp(244)\Microsoft.WindowsAppRuntime.dll!00007FFA74537684: (caller: 00000245E6231556) ReturnHr(4) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\catalog.cpp(384)\Microsoft.WindowsAppRuntime.dll!00007FFA74534BA0: (caller: 00007FFA745376A0) ReturnHr(5) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\urfw.cpp(244)\Microsoft.WindowsAppRuntime.dll!00007FFA74537684: (caller: 00000245E6231556) ReturnHr(6) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\catalog.cpp(384)\Microsoft.WindowsAppRuntime.dll!00007FFA74534BA0: (caller: 00007FFA745376A0) ReturnHr(7) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\urfw.cpp(244)\Microsoft.WindowsAppRuntime.dll!00007FFA74537684: (caller: 00000245E6231556) ReturnHr(8) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\catalog.cpp(384)\Microsoft.WindowsAppRuntime.dll!00007FFA74534BA0: (caller: 00007FFA745376A0) ReturnHr(9) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\urfw.cpp(244)\Microsoft.WindowsAppRuntime.dll!00007FFA74537684: (caller: 00000245E6231556) ReturnHr(10) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\catalog.cpp(384)\Microsoft.WindowsAppRuntime.dll!00007FFA74534BA0: (caller: 00007FFA745376A0) ReturnHr(11) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\urfw.cpp(244)\Microsoft.WindowsAppRuntime.dll!00007FFA74537684: (caller: 00000245E6231556) ReturnHr(12) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\catalog.cpp(384)\Microsoft.WindowsAppRuntime.dll!00007FFA74534BA0: (caller: 00007FFA745376A0) ReturnHr(13) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\urfw.cpp(244)\Microsoft.WindowsAppRuntime.dll!00007FFA74537684: (caller: 00000245E6231556) ReturnHr(14) tid(2320) 80004002 No such interface supported
+ModLoad: 00007ffa`aaa60000 00007ffa`aaade000   C:\Windows\System32\WS2_32.dll
+ModLoad: 00007ffa`a92b0000 00007ffa`a92bc000   C:\Windows\SYSTEM32\CRYPTBASE.DLL
+ModLoad: 00007ffa`a9060000 00007ffa`a90cb000   C:\Windows\system32\mswsock.dll
+ModLoad: 00007ffa`a8660000 00007ffa`a8694000   C:\Windows\SYSTEM32\IPHLPAPI.DLL
+ModLoad: 00007ffa`a7900000 00007ffa`a790e000   C:\Windows\SYSTEM32\WINNSI.DLL
+ModLoad: 00007ffa`aaeb0000 00007ffa`aaeba000   C:\Windows\System32\NSI.dll
+ModLoad: 00007ffa`a4220000 00007ffa`a423e000   C:\Windows\SYSTEM32\dhcpcsvc6.DLL
+ModLoad: 00007ffa`a3fc0000 00007ffa`a3fe5000   C:\Windows\SYSTEM32\dhcpcsvc.DLL
+ModLoad: 00007ffa`a0a70000 00007ffa`a0b3b000   C:\Windows\SYSTEM32\webio.dll
+ModLoad: 00007ffa`a86a0000 00007ffa`a87cc000   C:\Windows\SYSTEM32\DNSAPI.dll
+ModLoad: 00007ffa`a7230000 00007ffa`a723b000   C:\Windows\System32\rasadhlp.dll
+ModLoad: 00007ffa`a3c80000 00007ffa`a3d06000   C:\Windows\System32\fwpuclnt.dll
+ModLoad: 00007ffa`a4900000 00007ffa`a4b2f000   C:\Windows\System32\windowscodecs.dll
+ModLoad: 00007ffa`a8a40000 00007ffa`a8b08000   C:\Windows\system32\schannel.DLL
+C:\__w\1\s\dev\UndockedRegFreeWinRT\catalog.cpp(384)\Microsoft.WindowsAppRuntime.dll!00007FFA74534BA0: (caller: 00007FFA745376A0) ReturnHr(15) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\urfw.cpp(244)\Microsoft.WindowsAppRuntime.dll!00007FFA74537684: (caller: 00000245E6231556) ReturnHr(16) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\catalog.cpp(384)\Microsoft.WindowsAppRuntime.dll!00007FFA74534BA0: (caller: 00007FFA745376A0) ReturnHr(17) tid(2320) 80004002 No such interface supported
+C:\__w\1\s\dev\UndockedRegFreeWinRT\urfw.cpp(244)\Microsoft.WindowsAppRuntime.dll!00007FFA74537684: (caller: 00000245E6231556) ReturnHr(18) tid(2320) 80004002 No such interface supported
+ModLoad: 00007ffa`a9520000 00007ffa`a9550000   C:\Windows\SYSTEM32\ncrypt.dll
+ModLoad: 00007ffa`a94d0000 00007ffa`a950f000   C:\Windows\SYSTEM32\NTASN1.dll
+ModLoad: 00007ffa`9a280000 00007ffa`9a2c8000   C:\Windows\system32\ncryptsslp.dll
+ModLoad: 00007ffa`a9570000 00007ffa`a9583000   C:\Windows\SYSTEM32\MSASN1.dll
+ModLoad: 00007ffa`9b340000 00007ffa`9b488000   C:\Windows\SYSTEM32\textinputframework.dll
+ModLoad: 00007ffa`a7e50000 00007ffa`a7e80000   C:\Windows\SYSTEM32\dwmapi.dll
+ModLoad: 00007ffa`8e4b0000 00007ffa`8e695000   C:\Windows\System32\InputHost.dll
+ModLoad: 00007ffa`6de20000 00007ffa`6debf000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.DirectManipulation.dll
+ModLoad: 00007ffa`a99e0000 00007ffa`a99ea000   C:\Windows\SYSTEM32\DPAPI.DLL
+ModLoad: 00007ffa`6dd30000 00007ffa`6de16000   D:\a\Opennow-web\Opennow-web\portable\OpenNOW-native\Microsoft.UI.Xaml.Internal.dll
+(7e4.1ad0): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+*** WARNING: Unable to verify checksum for OpenNOW.App.exe
+OpenNOW_App!opennow::core::json::Value::AsString+0x17:
+00007ff6`aec3ec07 0fb609          movzx   ecx,byte ptr [rcx] ds:00000000`00000000=??
+0:019> .reload /f
+Reloading current modules
+..*** WARNING: Unable to verify checksum for OpenNOW.App.exe
+.
+
+Press ctrl-c (cdb, kd, ntsd) or ctrl-break (windbg) to abort symbol loads that take too long.
+Run !sym noisy before .reload to track down problems loading symbols.
+
+.............................................................
+...............................................
+0:019> .ecxr
+Unable to get exception context, HRESULT 0x8000FFFF
+0:019> ub 8
+          ^ Unable to find valid previous instruction for 'ub 8'
+0:019> u 12
+00000000`00000012 ??              ???
+          ^ Memory access error in 'u 12'
+0:019> kb 60
+RetAddr               : Args to Child                                                           : Call Site
+00007ff6`aec273d9     : 00000000`00000000 00000062`dc2feda0 00000000`00000000 00000000`00000070 : OpenNOW_App!opennow::core::json::Value::AsString+0x17
+00007ff6`aebaf425     : 00000245`e3de0000 00000245`ebe359b0 00000062`dc2ff180 00000245`ebe359a0 : OpenNOW_App!opennow::core::gfn::CatalogService::FetchVpcId+0xd19
+00007ff6`aebaf567     : 00000000`80000000 00000000`00000000 00000245`eda43080 00000000`00000000 : OpenNOW_App!opennow::app::AppServices::EnsureVpcId+0x75
+00007ff6`aec7909d     : 00000245`ebec8d50 00000245`eda43020 00000245`eda43020 00000245`ebebed30 : OpenNOW_App!opennow::app::AppServices::RefreshHome+0x37
+00007ff6`aeb9ee29     : 00000245`eda43020 00000245`ede16d50 00000245`ede16e18 00000062`dc2ff788 : OpenNOW_App!winrt::OpenNOW::implementation::HomePage::LoadAsync$_ResumeCoro$1+0x18d
+(Inline Function)     : --------`-------- --------`-------- --------`-------- --------`-------- : OpenNOW_App!std::coroutine_handle<void>::operator()+0x5
+00007ffa`acdba8ad     : 00007ffa`acd52c10 00000000`0000ffff 00000000`00000000 00007ffa`acdba760 : OpenNOW_App!winrt::impl::resume_background_callback+0x9
+00007ffa`acd563d9     : 00000000`0000ffff 00000245`ede116f0 00000000`00000000 00007ffa`acd54ea0 : ntdll!TppSimplepExecuteCallback+0x14d
+00007ffa`aae0e987     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!TppWorkerThread+0x819
+00007ffa`acd6c53c     : 00000000`00000000 00000000`00000000 000004f0`fffffb30 000004d0`fffffb30 : KERNEL32!BaseThreadInitThunk+0x17
+00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x2c
+0:019> q
+quit:
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\atlmfc.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\ObjectiveC.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\concurrency.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\cpp_rest.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\stl.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Data.Json.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Media.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\windows.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\winrt.natvis'

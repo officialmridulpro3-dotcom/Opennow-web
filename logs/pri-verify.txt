@@ -1,0 +1,579 @@
+--- xaml resources in the build output ---
+      1434  Themes\Accents.xbf
+      2337  Themes\GeneratedTokens.xbf
+      6085  Themes\Styles.xbf
+      4047  Views\GameDetailsPage.xbf
+      3156  Views\HomePage.xbf
+      2397  Views\LibraryPage.xbf
+      3399  Views\LoginPage.xbf
+      2336  Views\PlaytimePage.xbf
+     10630  Views\SettingsPage.xbf
+      4124  Views\StreamPage.xbf
+       916  App.xbf
+      4912  MainWindow.xbf
+    101560  Microsoft.UI.pri
+   1244128  Microsoft.UI.Xaml.Controls.pri
+   1377616  OpenNOW.App.pri
+--- XBF-related lines in the diagnostic log ---
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(999,5): message :             ;CppWinRTAddXamlMetaDataProviderCpp;CppWinRTMakeProjections;
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(999,5): message :             ;CppWinRTAddXamlMetaDataProviderCpp;CppWinRTMakeProjections;
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\WindowsXaml\v18.0\8.2\Microsoft.Windows.UI.Xaml.Cpp.targets(15,9): message :             ;CppWinRTAddXamlMetaDataProviderCpp;CppWinRTMakeProjections;
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\WindowsXaml\v18.0\8.2\Microsoft.Windows.UI.Xaml.Cpp.targets(15,9): message :             ;CppWinRTAddXamlMetaDataProviderCpp;CppWinRTMakeProjections;
+;CppWinRTAddXamlMetaDataProviderCpp;CppWinRTMakeProjections;
+;CppWinRTAddXamlMetaDataProviderIdl;
+CppWinRTAddXamlMetaDataProviderIdl = true
+DisableXbfGeneration = false
+GenXbfPath = C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\tools\net472\..\
+XamlMetaDataProviderCpp = D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+XamlMetaDataProviderIdl = D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl
+;CppWinRTAddXamlMetaDataProviderCpp;CppWinRTMakeProjections;
+;CppWinRTAddXamlMetaDataProviderIdl;
+CppWinRTAddXamlMetaDataProviderIdl = true
+DisableXbfGeneration = false
+GenXbfPath = C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\tools\net472\..\
+XamlMetaDataProviderCpp = D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+XamlMetaDataProviderIdl = D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl
+Target "CppWinRTAddXamlMetaDataProviderIdl: (TargetId:187)" in file "C:\Users\runneradmin\.nuget\packages\microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets" from project "D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj" (target "_Midl" depends on it):
+Set Property: XamlMetaDataProviderIdlLines=
+runtimeclass XamlMetaDataProvider : [default] Microsoft.UI.Xaml.Markup.IXamlMetadataProvider
+XamlMetaDataProvider()%3b
+runtimeclass XamlMetaDataProvider : [default] Microsoft.UI.Xaml.Markup.IXamlMetadataProvider
+XamlMetaDataProvider();
+Task Parameter:File=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl (TaskId:133)
+Done building target "CppWinRTAddXamlMetaDataProviderIdl" in project "OpenNOW.App.vcxproj".: (TargetId:187)
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl
+Added Item(s): MidlDirsToMake=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+Task Parameter:Source=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl (TaskId:149)
+Task Parameter:MetadataFileName=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd (TaskId:149)
+No output for D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\GENERATED FILES\XAMLMETADATAPROVIDER.IDL was found in the tracking log; source compilation required. (TaskId:149)
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl will be compiled because not all outputs are available. (TaskId:149)
+C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\midl.exe /metadata_dir "C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0\windows.foundation.foundationcontract\4.0.0.0" /winrt /W1 /nologo /char signed /env x64 /winmd "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd" /h "nul" /dlldata "nul" /iid "nul" /proxy "nul" /notlb /client none /server none /enum_class /ns_prefix /target "NT60"  /nomidl @"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\OpenNOW.App.vcxproj.midlrt.rsp" "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl"  (TaskId:149)
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\15.0\FileTracker\FileTracker32.dll" /i D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\OpenNOW.App.tlog /r "D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\GENERATED FILES\XAMLMETADATAPROVIDER.IDL" /b MSBuildConsole_CancelEventa887d8ac47784225b33949b76a9a5227  /c "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\midl.exe"  /metadata_dir "C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0\windows.foundation.foundationcontract\4.0.0.0" /winrt /W1 /nologo /char signed /env x64 /winmd "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd" /h "nul" /dlldata "nul" /iid "nul" /proxy "nul" /notlb /client none /server none /enum_class /ns_prefix /target "NT60"  /nomidl @"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\OpenNOW.App.vcxproj.midlrt.rsp" "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl"  (TaskId:149)
+64 bit MIDLRT Processing D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl (TaskId:149)
+XamlMetaDataProvider.idl (TaskId:149)
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.idl
+WinMDPath=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+WinMDPath=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+Task Parameter:Text=CppWinRTMdMergeInputs: D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\App.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\MainWindow.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\StreamSurfacePanel.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\HomePage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\LibraryPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\LoginPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\GameDetailsPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\PlaytimePage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\SettingsPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\StreamPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd (TaskId:150)
+CppWinRTMdMergeInputs: D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\App.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\MainWindow.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\StreamSurfacePanel.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\HomePage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\LibraryPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\LoginPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\GameDetailsPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\PlaytimePage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\SettingsPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\StreamPage.winmd;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd (TaskId:150)
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+WinMDPath=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+-i "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd"
+-i "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd" -o "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Merged" -partial -n:1
+-i "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd" -o "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Merged" -partial -n:1 (TaskId:154)
+Processing input metadata file D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd. (TaskId:157)
+Task "CompileXaml" (TaskId:163)
+Task Parameter:GenXbfPath=C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\tools\net472\..\ (TaskId:163)
+Done executing task "CompileXaml". (TaskId:163)
+PROBE Pass1 :       1914  XamlMetaDataProvider.h (TaskId:168)
+PROBE Pass1 :        225  XamlMetaDataProvider.idl (TaskId:168)
+Target "CppWinRTAddXamlMetaDataProviderCpp: (TargetId:220)" in file "C:\Users\runneradmin\.nuget\packages\microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets" from project "D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj" (target "_ClCompile" depends on it):
+Set Property: XamlMetaDataProviderPch=#include "pch.h"
+Set Property: XamlMetaDataProviderCppLines=
+#include "XamlMetaDataProvider.h"
+#include "XamlMetaDataProvider.g.cpp"
+#include "XamlMetaDataProvider.h"
+#include "XamlMetaDataProvider.g.cpp" (TaskId:180)
+Task Parameter:File=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp (TaskId:180)
+Done building target "CppWinRTAddXamlMetaDataProviderCpp" in project "OpenNOW.App.vcxproj".: (TargetId:220)
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+WinMDPath=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Unmerged\XamlMetaDataProvider.winmd
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+OriginalItemSpec=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+OriginalItemSpec=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+OriginalItemSpec=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+Task "CompileXaml" (TaskId:212)
+Task Parameter:GenXbfPath=C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\tools\net472\..\ (TaskId:212)
+Task Parameter:DisableXbfGeneration=False (TaskId:212)
+Done executing task "CompileXaml". (TaskId:212)
+Task Parameter:Text=(Out) ClCompile: 'pch.cpp;main.cpp;App.cpp;MainWindow.cpp;Controls\StreamSurfacePanel.cpp;Services\AppServices.cpp;Views\HomePage.cpp;Views\LibraryPage.cpp;Views\LoginPage.cpp;Views\GameDetailsPage.cpp;Views\PlaytimePage.cpp;Views\SettingsPage.cpp;Views\StreamPage.cpp;..\DirectX\src\StreamSurface.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\module.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.Impl.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp;C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include\UndockedRegFreeWinRT-AutoInitializer.cpp' (TaskId:217)
+(Out) ClCompile: 'pch.cpp;main.cpp;App.cpp;MainWindow.cpp;Controls\StreamSurfacePanel.cpp;Services\AppServices.cpp;Views\HomePage.cpp;Views\LibraryPage.cpp;Views\LoginPage.cpp;Views\GameDetailsPage.cpp;Views\PlaytimePage.cpp;Views\SettingsPage.cpp;Views\StreamPage.cpp;..\DirectX\src\StreamSurface.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\module.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.Impl.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp;C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include\UndockedRegFreeWinRT-AutoInitializer.cpp' (TaskId:217)
+PROBE Pass2 :        150  XamlMetaDataProvider.cpp (TaskId:218)
+PROBE Pass2 :        434  XamlMetaDataProvider.g.cpp (TaskId:218)
+PROBE Pass2 :       1590  XamlMetaDataProvider.g.h (TaskId:218)
+PROBE Pass2 :       1914  XamlMetaDataProvider.h (TaskId:218)
+PROBE Pass2 :        225  XamlMetaDataProvider.idl (TaskId:218)
+PROBE Pass2 :       1672  sources\XamlMetaDataProvider.cpp (TaskId:218)
+PROBE Pass2 :       1755  sources\XamlMetaDataProvider.h (TaskId:218)
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+OriginalItemSpec=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+Outputs for D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\GENERATED FILES\XAMLMETADATAPROVIDER.CPP|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\GENERATED FILES\XAMLTYPEINFO.G.CPP: (TaskId:219)
+D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\XAMLMETADATAPROVIDER.OBJ (TaskId:219)
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp will be compiled because it was not found in the tracking log. (TaskId:219)
+No output for D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\GENERATED FILES\XAMLMETADATAPROVIDER.CPP|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\GENERATED FILES\XAMLTYPEINFO.G.CPP was found in the tracking log; source compilation required. (TaskId:219)
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /IC:\Users\runneradmin\.nuget\packages\microsoft.windows.implementationlibrary\1.0.240803.1\build\native\..\..\include\ /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\include\ /I"C:\Users\runneradmin\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\native\include-winrt\\" /IC:\Users\runneradmin\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\native\include\ /I"D:\a\Opennow-web\Opennow-web\native\src\App\.." /I"D:\a\Opennow-web\Opennow-web\native\src\App\..\Core\include" /I"D:\a\Opennow-web\Opennow-web\native\src\App\..\DirectX\include" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Controls\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Views\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Controls\\" /I"D:\a\Opennow-web\Opennow-web\native\src\App\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\" /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include\ /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\" /Zi /nologo /W4 /WX- /diagnostics:column /sdl /MP /O2 /Oi /Oy- /GL /D MICROSOFT_WINDOWSAPPSDK_UNDOCKEDREGFREEWINRT_AUTO_INITIALIZE_LOADLIBRARY /D WIN32 /D _WINDOWS /D UNICODE /D _UNICODE /D DISABLE_XAML_GENERATED_MAIN /D _UNICODE /D UNICODE /D __WRL_NO_DEFAULT_LIB__ /D MICROSOFT_WINDOWSAPPSDK_SELFCONTAINED=1 /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /Fo"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\" /Fd"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\vc145.pdb" /external:W4 /Gd /TP /FI"D:\a\Opennow-web\Opennow-web\native\src\App\pch.h" /FU"C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x86\store\references\platform.winmd" /analyze- /FC /errorReport:queue  /bigobj /utf-8 /bigobj "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp" "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp" (TaskId:219)
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\15.0\FileTracker\FileTracker32.dll" /i D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\OpenNOW.App.tlog /r "D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\GENERATED FILES\XAMLMETADATAPROVIDER.CPP|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\GENERATED FILES\XAMLTYPEINFO.G.CPP" /b MSBuildConsole_CancelEvent73b711def07442e690726da800f7d415  /c "C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe"  /c /IC:\Users\runneradmin\.nuget\packages\microsoft.windows.implementationlibrary\1.0.240803.1\build\native\..\..\include\ /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\include\ /I"C:\Users\runneradmin\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\native\include-winrt\\" /IC:\Users\runneradmin\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\native\include\ /I"D:\a\Opennow-web\Opennow-web\native\src\App\.." /I"D:\a\Opennow-web\Opennow-web\native\src\App\..\Core\include" /I"D:\a\Opennow-web\Opennow-web\native\src\App\..\DirectX\include" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Controls\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Views\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Controls\\" /I"D:\a\Opennow-web\Opennow-web\native\src\App\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\" /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include\ /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include /IC:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\" /I"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\" /Zi /nologo /W4 /WX- /diagnostics:column /sdl /MP /O2 /Oi /Oy- /GL /D MICROSOFT_WINDOWSAPPSDK_UNDOCKEDREGFREEWINRT_AUTO_INITIALIZE_LOADLIBRARY /D WIN32 /D _WINDOWS /D UNICODE /D _UNICODE /D DISABLE_XAML_GENERATED_MAIN /D _UNICODE /D UNICODE /D __WRL_NO_DEFAULT_LIB__ /D MICROSOFT_WINDOWSAPPSDK_SELFCONTAINED=1 /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /Fo"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\" /Fd"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\vc145.pdb" /external:W4 /Gd /TP /FI"D:\a\Opennow-web\Opennow-web\native\src\App\pch.h" /FU"C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x86\store\references\platform.winmd" /analyze- /FC /errorReport:queue  /bigobj /utf-8 /bigobj "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp" "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp" (TaskId:219)
+XamlMetaDataProvider.cpp (TaskId:219)
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\XamlMetaDataProvider.obj
+OriginalItemSpec=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\XamlMetaDataProvider.obj
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\XamlMetaDataProvider.obj
+"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\XamlMetaDataProvider.obj" (TaskId:462)
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\Tracker.exe /a /d "C:\Program Files (x86)\MSBuild\15.0\FileTracker\FileTracker32.dll" /i D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\OpenNOW.App.tlog /r "D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\BUILD\X64\RELEASE\OPENNOW.CORE.LIB|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\APP.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\APPSERVICES.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\GAMEDETAILSPAGE.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\HOMEPAGE.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\LIBRARYPAGE.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\LOGINPAGE.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\MAIN.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\MAINWINDOW.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\MODULE.G.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\PCH.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\PLAYTIMEPAGE.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\SETTINGSPAGE.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\STREAMPAGE.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\STREAMSURFACE.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\STREAMSURFACEPANEL.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\UNDOCKEDREGFREEWINRT-AUTOINITIALIZER.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\XAMLMETADATAPROVIDER.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\XAMLTYPEINFO.G.OBJ|D:\A\OPENNOW-WEB\OPENNOW-WEB\NATIVE\OBJ\OPENNOW.APP\X64\RELEASE\XAMLTYPEINFO.IMPL.G.OBJ" /b MSBuildConsole_CancelEventc28c484281f14553b3aabc7038246683  /c "C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\link.exe"  /ERRORREPORT:QUEUE /OUT:"D:\a\Opennow-web\Opennow-web\native\build\x64\Release\OpenNOW.App.exe" /NOLOGO /LIBPATH:C:\Users\runneradmin\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\native\x64 /LIBPATH:"C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\lib\win10-x64" /NATVIS:C:\Users\runneradmin\.nuget\packages\microsoft.windows.implementationlibrary\1.0.240803.1\build\native\..\..\natvis\wil.natvis "C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\lib\native\win10-x64\Microsoft.UI.Dispatching.lib" WebView2Loader.dll.lib d3d10_1.lib d3d11.lib dxgi.lib d3dcompiler.lib windowsapp.lib crypt32.lib winhttp.lib shell32.lib ole32.lib kernel32.lib user32.lib "C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\lib\win10-x64\Microsoft.WindowsAppRuntime.Bootstrap.lib" "C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\lib\win10-x64\Microsoft.WindowsAppRuntime.lib" "C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\lib\win10-x64\mrm.lib" DWriteCore.lib WindowsApp.lib /MANIFEST /MANIFESTUAC:NO /manifest:embed /manifestinput:app.manifest /manifestinput:"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Manifests\app.manifest" /DEBUG:FULL /PDB:"D:\a\Opennow-web\Opennow-web\native\build\x64\Release\OpenNOW.App.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG:incremental /LTCGOUT:"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\OpenNOW.App.iobj" /TLBID:1 /WINMD:NO /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\a\Opennow-web\Opennow-web\native\build\x64\Release\OpenNOW.App.lib" /MACHINE:X64  /APPCONTAINER:NO "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\pch.obj"
+"D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\XamlMetaDataProvider.obj" (TaskId:462)
+D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+OriginalItemSpec=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp
+--- CompileXaml task blocks (full) ---
+found 4 CompileXaml executions
+===== CompileXaml execution 1 =====
+Task "CompileXaml" (TaskId:163)
+Task Parameter:OutputPath=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\ (TaskId:163)
+Task Parameter:OutputType=exe (TaskId:163)
+Task Parameter:Language=CppWinRT (TaskId:163)
+Task Parameter:GenXbfPath=C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\tools\net472\..\ (TaskId:163)
+Task Parameter:CompileMode=RealBuildPass1 (TaskId:163)
+Task Parameter:VCInstallPath64=C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\vcmeta.dll (TaskId:163)
+Task Parameter:VCInstallPath32=C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX86\x86\vcmeta.dll (TaskId:163)
+Task Parameter:FeatureControlFlags=EnableDefaultValidationContextGeneration;EnableWin32Codegen;EnableDefaultValidationContextGeneration;EnableWin32Codegen (TaskId:163)
+Task Parameter:RootNamespace=OpenNOW (TaskId:163)
+Task Parameter:ForceSharedStateShutdown=False (TaskId:163)
+Task Parameter:WindowsSdkPath=C:\Program Files (x86)\Windows Kits\10\ (TaskId:163)
+Task Parameter:SavedStateFile=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\XamlSaveStateFile.xml (TaskId:163)
+Task Parameter:VCInstallDir=C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\ (TaskId:163)
+Task Parameter:LanguageSourceExtension=.cpp (TaskId:163)
+Task Parameter:IsPass1=True (TaskId:163)
+Task Parameter:XAMLFingerprint=True (TaskId:163)
+Task Parameter:TargetPlatformMinVersion=10.0.17763.0 (TaskId:163)
+Task Parameter:ProjectPath=D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj (TaskId:163)
+Task Parameter:ProjectName=OpenNOW.App (TaskId:163)
+Task Parameter:FingerprintIgnorePaths=C:\Program Files (x86)\Windows Kits\10\ (TaskId:163)
+Task Parameter:
+XamlApplications=
+App.xaml
+Task Parameter:
+XamlPages=
+MainWindow.xaml
+Views\HomePage.xaml
+Views\LibraryPage.xaml
+Views\LoginPage.xaml
+Views\GameDetailsPage.xaml
+Views\PlaytimePage.xaml
+Views\SettingsPage.xaml
+Views\StreamPage.xaml
+Themes\GeneratedTokens.xaml
+Themes\Styles.xaml
+Themes\Accents.xaml
+Task Parameter:
+C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\lib\uap10.0\Microsoft.UI.Xaml.winmd
+FusionName=Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime
+OriginalItemSpec=C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\lib\uap10.0\Microsoft.UI.Xaml.winmd
+===== CompileXaml execution 2 =====
+Done executing task "CompileXaml". (TaskId:163)
+Set Property: XamlCompilerExeInputJson=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\input.json
+Set Property: XamlCompilerExeOutputJson=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\output.json
+Added Item(s): FileWrites=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\XamlSaveStateFile.xml
+Task Parameter:Text=(Out) GeneratedCodeFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlLibMetadataProvider.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.Impl.g.cpp' (TaskId:164)
+(Out) GeneratedCodeFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlLibMetadataProvider.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.Impl.g.cpp' (TaskId:164)
+Done executing task "Message". (TaskId:164)
+Task Parameter:Text=(Out) GeneratedXamlFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xaml' (TaskId:165)
+(Out) GeneratedXamlFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xaml' (TaskId:165)
+Done executing task "Message". (TaskId:165)
+Task Parameter:Text=(Out) GeneratedXbfFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xbf' (TaskId:166)
+(Out) GeneratedXbfFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xbf' (TaskId:166)
+Done executing task "Message". (TaskId:166)
+Task Parameter:Text=(Out) ClCompile: 'pch.cpp;main.cpp;App.cpp;MainWindow.cpp;Controls\StreamSurfacePanel.cpp;Services\AppServices.cpp;Views\HomePage.cpp;Views\LibraryPage.cpp;Views\LoginPage.cpp;Views\GameDetailsPage.cpp;Views\PlaytimePage.cpp;Views\SettingsPage.cpp;Views\StreamPage.cpp;..\DirectX\src\StreamSurface.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\module.g.cpp' (TaskId:167)
+Done executing task "Message". (TaskId:167)
+Task Parameter:Command=powershell -NoProfile -ExecutionPolicy Bypass -File "D:\a\Opennow-web\Opennow-web\native\src\App\probe-xbf.sizes.ps1" Pass1 "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files" (TaskId:168)
+powershell -NoProfile -ExecutionPolicy Bypass -File "D:\a\Opennow-web\Opennow-web\native\src\App\probe-xbf.sizes.ps1" Pass1 "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files" (TaskId:168)
+PROBE Pass1 :       2288  App.xaml.g.h (TaskId:168)
+PROBE Pass1 :      12007  MainWindow.xaml.g.h (TaskId:168)
+PROBE Pass1 :      10785  XamlBindingInfo.xaml.g.h (TaskId:168)
+PROBE Pass1 :          5  XamlLibMetadataProvider.g.cpp (TaskId:168)
+PROBE Pass1 :       1914  XamlMetaDataProvider.h (TaskId:168)
+PROBE Pass1 :        225  XamlMetaDataProvider.idl (TaskId:168)
+PROBE Pass1 :      17300  XamlTypeInfo.Impl.g.cpp (TaskId:168)
+PROBE Pass1 :       9198  XamlTypeInfo.xaml.g.h (TaskId:168)
+PROBE Pass1 :          6  Themes\Accents.xaml.g.h (TaskId:168)
+PROBE Pass1 :          6  Themes\GeneratedTokens.xaml.g.h (TaskId:168)
+PROBE Pass1 :          6  Themes\Styles.xaml.g.h (TaskId:168)
+PROBE Pass1 :       8399  Views\GameDetailsPage.xaml.g.h (TaskId:168)
+PROBE Pass1 :       6063  Views\HomePage.xaml.g.h (TaskId:168)
+PROBE Pass1 :       4257  Views\LibraryPage.xaml.g.h (TaskId:168)
+PROBE Pass1 :       5183  Views\LoginPage.xaml.g.h (TaskId:168)
+PROBE Pass1 :       3630  Views\PlaytimePage.xaml.g.h (TaskId:168)
+PROBE Pass1 :      15138  Views\SettingsPage.xaml.g.h (TaskId:168)
+PROBE Pass1 :       8889  Views\StreamPage.xaml.g.h (TaskId:168)
+Done executing task "Exec". (TaskId:168)
+Target "OpenNOWDumpXamlItemMetadata: (TargetId:219)" in project "D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj" (target "_ClCompile" depends on it):
+Task Parameter:Importance=High (TaskId:169)
+Task Parameter:Text=PAGEMETA: MainWindow.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:169)
+PAGEMETA: MainWindow.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:169)
+Done executing task "Message". (TaskId:169)
+Task Parameter:Importance=High (TaskId:170)
+Task Parameter:Text=PAGEMETA: Views\HomePage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:170)
+PAGEMETA: Views\HomePage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:170)
+Done executing task "Message". (TaskId:170)
+Task Parameter:Importance=High (TaskId:171)
+Task Parameter:Text=PAGEMETA: Views\LibraryPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:171)
+PAGEMETA: Views\LibraryPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:171)
+Done executing task "Message". (TaskId:171)
+Task Parameter:Importance=High (TaskId:172)
+Task Parameter:Text=PAGEMETA: Views\LoginPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:172)
+PAGEMETA: Views\LoginPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:172)
+Done executing task "Message". (TaskId:172)
+Task Parameter:Importance=High (TaskId:173)
+Task Parameter:Text=PAGEMETA: Views\GameDetailsPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:173)
+PAGEMETA: Views\GameDetailsPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:173)
+Done executing task "Message". (TaskId:173)
+Task Parameter:Importance=High (TaskId:174)
+Task Parameter:Text=PAGEMETA: Views\PlaytimePage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:174)
+PAGEMETA: Views\PlaytimePage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:174)
+Done executing task "Message". (TaskId:174)
+Task Parameter:Importance=High (TaskId:175)
+Task Parameter:Text=PAGEMETA: Views\SettingsPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:175)
+PAGEMETA: Views\SettingsPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:175)
+Done executing task "Message". (TaskId:175)
+Task Parameter:Importance=High (TaskId:176)
+Task Parameter:Text=PAGEMETA: Views\StreamPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:176)
+PAGEMETA: Views\StreamPage.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:176)
+Done executing task "Message". (TaskId:176)
+Task Parameter:Importance=High (TaskId:177)
+Task Parameter:Text=PAGEMETA: Themes\GeneratedTokens.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:177)
+PAGEMETA: Themes\GeneratedTokens.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:177)
+Done executing task "Message". (TaskId:177)
+Task Parameter:Importance=High (TaskId:178)
+Task Parameter:Text=PAGEMETA: Themes\Styles.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:178)
+PAGEMETA: Themes\Styles.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:178)
+Done executing task "Message". (TaskId:178)
+Task Parameter:Importance=High (TaskId:179)
+Task Parameter:Text=PAGEMETA: Themes\Accents.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:179)
+PAGEMETA: Themes\Accents.xaml | Src= | Given= | XamlOut= | XbfOut= | XbfPath= (TaskId:179)
+Done executing task "Message". (TaskId:179)
+Done building target "OpenNOWDumpXamlItemMetadata" in project "OpenNOW.App.vcxproj".: (TargetId:219)
+Target "CppWinRTAddXamlMetaDataProviderCpp: (TargetId:220)" in file "C:\Users\runneradmin\.nuget\packages\microsoft.windows.cppwinrt\2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets" from project "D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj" (target "_ClCompile" depends on it):
+Set Property: XamlMetaDataProviderPch=#include "pch.h"
+Set Property: XamlMetaDataProviderCppLines=
+// This file is generated by the build to support Xaml apps
+#include "XamlMetaDataProvider.h"
+#include "XamlMetaDataProvider.g.cpp"
+Task Parameter:WriteOnlyWhenDifferent=True (TaskId:180)
+Task Parameter:Lines=// This file is generated by the build to support Xaml apps
+#include "XamlMetaDataProvider.h"
+#include "XamlMetaDataProvider.g.cpp" (TaskId:180)
+Task Parameter:Overwrite=True (TaskId:180)
+Task Parameter:File=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp (TaskId:180)
+Done executing task "WriteLinesToFile". (TaskId:180)
+Done building target "CppWinRTAddXamlMetaDataProviderCpp" in project "OpenNOW.App.vcxproj".: (TargetId:220)
+===== CompileXaml execution 3 =====
+Task "CompileXaml" (TaskId:212)
+Task Parameter:OutputPath=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\ (TaskId:212)
+Task Parameter:OutputType=exe (TaskId:212)
+Task Parameter:Language=CppWinRT (TaskId:212)
+Task Parameter:GenXbfPath=C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\..\tools\net472\..\ (TaskId:212)
+Task Parameter:CompileMode=RealBuildPass2 (TaskId:212)
+Task Parameter:VCInstallPath64=C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\vcmeta.dll (TaskId:212)
+Task Parameter:VCInstallPath32=C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX86\x86\vcmeta.dll (TaskId:212)
+Task Parameter:FeatureControlFlags=EnableDefaultValidationContextGeneration;EnableWin32Codegen;EnableDefaultValidationContextGeneration;EnableWin32Codegen (TaskId:212)
+Task Parameter:RootNamespace=OpenNOW (TaskId:212)
+Task Parameter:DisableXbfLineInfo=True (TaskId:212)
+Task Parameter:ForceSharedStateShutdown=False (TaskId:212)
+Task Parameter:WindowsSdkPath=C:\Program Files (x86)\Windows Kits\10\ (TaskId:212)
+Task Parameter:LocalAssembly=D:\a\Opennow-web\Opennow-web\native\build\x64\Release\OpenNOW.winmd (TaskId:212)
+Task Parameter:SavedStateFile=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\XamlSaveStateFile.xml (TaskId:212)
+Task Parameter:VCInstallDir=C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\ (TaskId:212)
+Task Parameter:LanguageSourceExtension=.cpp (TaskId:212)
+Task Parameter:IsPass1=False (TaskId:212)
+Task Parameter:XAMLFingerprint=True (TaskId:212)
+Task Parameter:TargetPlatformMinVersion=10.0.17763.0 (TaskId:212)
+Task Parameter:
+DependentUpon=App.xaml
+DependentUpon=MainWindow.xaml
+DependentUpon=HomePage.xaml
+DependentUpon=LibraryPage.xaml
+DependentUpon=LoginPage.xaml
+DependentUpon=GameDetailsPage.xaml
+DependentUpon=PlaytimePage.xaml
+DependentUpon=SettingsPage.xaml
+DependentUpon=StreamPage.xaml (TaskId:212)
+Task Parameter:DisableXbfGeneration=False (TaskId:212)
+Task Parameter:ProjectPath=D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj (TaskId:212)
+Task Parameter:ProjectName=OpenNOW.App (TaskId:212)
+Task Parameter:FingerprintIgnorePaths=C:\Program Files (x86)\Windows Kits\10\ (TaskId:212)
+Task Parameter:
+XamlApplications=
+App.xaml
+Task Parameter:
+XamlPages=
+MainWindow.xaml
+Views\HomePage.xaml
+Views\LibraryPage.xaml
+Views\LoginPage.xaml
+Views\GameDetailsPage.xaml
+Views\PlaytimePage.xaml
+Views\SettingsPage.xaml
+Views\StreamPage.xaml
+Themes\GeneratedTokens.xaml
+Themes\Styles.xaml
+Themes\Accents.xaml
+Task Parameter:
+C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\lib\uap10.0\Microsoft.UI.Xaml.winmd
+FusionName=Microsoft.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime
+OriginalItemSpec=C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\lib\uap10.0\Microsoft.UI.Xaml.winmd
+ReferenceAssembly=C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\lib\uap10.0\Microsoft.UI.Xaml.winmd
+===== CompileXaml execution 4 =====
+Done executing task "CompileXaml". (TaskId:212)
+Set Property: XamlCompilerExeInputJson=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\input.json
+Set Property: XamlCompilerExeOutputJson=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\\output.json
+Added Item(s): FileWrites=D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\\XamlSaveStateFile.xml
+Task Parameter:Text=(Out) GeneratedCodeFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlLibMetadataProvider.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.Impl.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp' (TaskId:213)
+(Out) GeneratedCodeFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlLibMetadataProvider.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.Impl.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml.g.h;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp' (TaskId:213)
+Done executing task "Message". (TaskId:213)
+Task Parameter:Text=(Out) GeneratedXamlFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xaml' (TaskId:214)
+(Out) GeneratedXamlFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xaml;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xaml' (TaskId:214)
+Done executing task "Message". (TaskId:214)
+Task Parameter:Text=(Out) GeneratedXbfFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xbf' (TaskId:215)
+(Out) GeneratedXbfFiles: 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xbf;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xbf' (TaskId:215)
+Done executing task "Message". (TaskId:215)
+Task Parameter:Text=(Out) GeneratedXamlPagesFiles: '' (TaskId:216)
+(Out) GeneratedXamlPagesFiles: '' (TaskId:216)
+Done executing task "Message". (TaskId:216)
+Task Parameter:Text=(Out) ClCompile: 'pch.cpp;main.cpp;App.cpp;MainWindow.cpp;Controls\StreamSurfacePanel.cpp;Services\AppServices.cpp;Views\HomePage.cpp;Views\LibraryPage.cpp;Views\LoginPage.cpp;Views\GameDetailsPage.cpp;Views\PlaytimePage.cpp;Views\SettingsPage.cpp;Views\StreamPage.cpp;..\DirectX\src\StreamSurface.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\module.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.Impl.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp;C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include\UndockedRegFreeWinRT-AutoInitializer.cpp' (TaskId:217)
+(Out) ClCompile: 'pch.cpp;main.cpp;App.cpp;MainWindow.cpp;Controls\StreamSurfacePanel.cpp;Services\AppServices.cpp;Views\HomePage.cpp;Views\LibraryPage.cpp;Views\LoginPage.cpp;Views\GameDetailsPage.cpp;Views\PlaytimePage.cpp;Views\SettingsPage.cpp;Views\StreamPage.cpp;..\DirectX\src\StreamSurface.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\module.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlTypeInfo.Impl.g.cpp;D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\XamlMetaDataProvider.cpp;C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\buildTransitive\native\..\..\include\UndockedRegFreeWinRT-AutoInitializer.cpp' (TaskId:217)
+Done executing task "Message". (TaskId:217)
+Task Parameter:Command=powershell -NoProfile -ExecutionPolicy Bypass -File "D:\a\Opennow-web\Opennow-web\native\src\App\probe-xbf.sizes.ps1" Pass2 "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files" (TaskId:218)
+powershell -NoProfile -ExecutionPolicy Bypass -File "D:\a\Opennow-web\Opennow-web\native\src\App\probe-xbf.sizes.ps1" Pass2 "D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files" (TaskId:218)
+PROBE Pass2 :          6  Accents.xaml.g.h (TaskId:218)
+PROBE Pass2 :       1042  App.xaml (TaskId:218)
+PROBE Pass2 :       2288  App.xaml.g.h (TaskId:218)
+PROBE Pass2 :       2328  App.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :        916  App.xbf (TaskId:218)
+PROBE Pass2 :       8399  GameDetailsPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :          6  GeneratedTokens.xaml.g.h (TaskId:218)
+PROBE Pass2 :       6063  HomePage.xaml.g.h (TaskId:218)
+PROBE Pass2 :       4257  LibraryPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :       5183  LoginPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :      11864  MainWindow.xaml (TaskId:218)
+PROBE Pass2 :      12007  MainWindow.xaml.g.h (TaskId:218)
+PROBE Pass2 :      11662  MainWindow.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       4912  MainWindow.xbf (TaskId:218)
+PROBE Pass2 :       3630  PlaytimePage.xaml.g.h (TaskId:218)
+PROBE Pass2 :      15138  SettingsPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :       8889  StreamPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :          6  Styles.xaml.g.h (TaskId:218)
+PROBE Pass2 :      10785  XamlBindingInfo.xaml.g.h (TaskId:218)
+PROBE Pass2 :       7788  XamlBindingInfo.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :          5  XamlLibMetadataProvider.g.cpp (TaskId:218)
+PROBE Pass2 :        150  XamlMetaDataProvider.cpp (TaskId:218)
+PROBE Pass2 :        434  XamlMetaDataProvider.g.cpp (TaskId:218)
+PROBE Pass2 :       1590  XamlMetaDataProvider.g.h (TaskId:218)
+PROBE Pass2 :       1914  XamlMetaDataProvider.h (TaskId:218)
+PROBE Pass2 :        225  XamlMetaDataProvider.idl (TaskId:218)
+PROBE Pass2 :     111551  XamlTypeInfo.g.cpp (TaskId:218)
+PROBE Pass2 :      17300  XamlTypeInfo.Impl.g.cpp (TaskId:218)
+PROBE Pass2 :       9198  XamlTypeInfo.xaml.g.h (TaskId:218)
+PROBE Pass2 :       1672  sources\XamlMetaDataProvider.cpp (TaskId:218)
+PROBE Pass2 :       1755  sources\XamlMetaDataProvider.h (TaskId:218)
+PROBE Pass2 :       1853  Themes\Accents.xaml (TaskId:218)
+PROBE Pass2 :          6  Themes\Accents.xaml.g.h (TaskId:218)
+PROBE Pass2 :          6  Themes\Accents.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       1434  Themes\Accents.xbf (TaskId:218)
+PROBE Pass2 :       3125  Themes\GeneratedTokens.xaml (TaskId:218)
+PROBE Pass2 :          6  Themes\GeneratedTokens.xaml.g.h (TaskId:218)
+PROBE Pass2 :          6  Themes\GeneratedTokens.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       2337  Themes\GeneratedTokens.xbf (TaskId:218)
+PROBE Pass2 :      17487  Themes\Styles.xaml (TaskId:218)
+PROBE Pass2 :          6  Themes\Styles.xaml.g.h (TaskId:218)
+PROBE Pass2 :          6  Themes\Styles.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       6085  Themes\Styles.xbf (TaskId:218)
+PROBE Pass2 :      10105  Views\GameDetailsPage.xaml (TaskId:218)
+PROBE Pass2 :       8399  Views\GameDetailsPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :       8832  Views\GameDetailsPage.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       4047  Views\GameDetailsPage.xbf (TaskId:218)
+PROBE Pass2 :       8286  Views\HomePage.xaml (TaskId:218)
+PROBE Pass2 :       6063  Views\HomePage.xaml.g.h (TaskId:218)
+PROBE Pass2 :       6390  Views\HomePage.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       3156  Views\HomePage.xbf (TaskId:218)
+PROBE Pass2 :       4966  Views\LibraryPage.xaml (TaskId:218)
+PROBE Pass2 :       4257  Views\LibraryPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :       5585  Views\LibraryPage.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       2397  Views\LibraryPage.xbf (TaskId:218)
+PROBE Pass2 :       5955  Views\LoginPage.xaml (TaskId:218)
+PROBE Pass2 :       5183  Views\LoginPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :       6207  Views\LoginPage.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       3399  Views\LoginPage.xbf (TaskId:218)
+PROBE Pass2 :       5014  Views\PlaytimePage.xaml (TaskId:218)
+PROBE Pass2 :       3630  Views\PlaytimePage.xaml.g.h (TaskId:218)
+PROBE Pass2 :       3645  Views\PlaytimePage.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       2336  Views\PlaytimePage.xbf (TaskId:218)
+PROBE Pass2 :      32124  Views\SettingsPage.xaml (TaskId:218)
+PROBE Pass2 :      15138  Views\SettingsPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :      21860  Views\SettingsPage.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :      10630  Views\SettingsPage.xbf (TaskId:218)
+PROBE Pass2 :       8894  Views\StreamPage.xaml (TaskId:218)
+PROBE Pass2 :       8889  Views\StreamPage.xaml.g.h (TaskId:218)
+PROBE Pass2 :      10158  Views\StreamPage.xaml.g.hpp (TaskId:218)
+PROBE Pass2 :       4124  Views\StreamPage.xbf (TaskId:218)
+PROBE Pass2 :     407306  winrt\Microsoft.UI.Xaml.Automation.h (TaskId:218)
+PROBE Pass2 :     766359  winrt\Microsoft.UI.Xaml.Automation.Peers.h (TaskId:218)
+PROBE Pass2 :     206824  winrt\Microsoft.UI.Xaml.Automation.Provider.h (TaskId:218)
+PROBE Pass2 :        664  winrt\Microsoft.UI.Xaml.Automation.Text.h (TaskId:218)
+PROBE Pass2 :       5316  winrt\Microsoft.UI.Xaml.Controls.AnimatedVisuals.h (TaskId:218)
+PROBE Pass2 :    8035897  winrt\Microsoft.UI.Xaml.Controls.h (TaskId:218)
+PROBE Pass2 :    1686459  winrt\Microsoft.UI.Xaml.Controls.Primitives.h (TaskId:218)
+PROBE Pass2 :     179704  winrt\Microsoft.UI.Xaml.Data.h (TaskId:218)
+PROBE Pass2 :     538305  winrt\Microsoft.UI.Xaml.Documents.h (TaskId:218)
+PROBE Pass2 :    1417760  winrt\Microsoft.UI.Xaml.h (TaskId:218)
+PROBE Pass2 :      77672  winrt\Microsoft.UI.Xaml.Hosting.h (TaskId:218)
+PROBE Pass2 :     438424  winrt\Microsoft.UI.Xaml.Input.h (TaskId:218)
+PROBE Pass2 :      51540  winrt\Microsoft.UI.Xaml.Interop.h (TaskId:218)
+PROBE Pass2 :     136463  winrt\Microsoft.UI.Xaml.Markup.h (TaskId:218)
+PROBE Pass2 :     786112  winrt\Microsoft.UI.Xaml.Media.Animation.h (TaskId:218)
+PROBE Pass2 :     672454  winrt\Microsoft.UI.Xaml.Media.h (TaskId:218)
+PROBE Pass2 :     144286  winrt\Microsoft.UI.Xaml.Media.Imaging.h (TaskId:218)
+PROBE Pass2 :      87164  winrt\Microsoft.UI.Xaml.Media.Media3D.h (TaskId:218)
+PROBE Pass2 :      59107  winrt\Microsoft.UI.Xaml.Navigation.h (TaskId:218)
+PROBE Pass2 :      41186  winrt\Microsoft.UI.Xaml.Printing.h (TaskId:218)
+PROBE Pass2 :      12542  winrt\Microsoft.UI.Xaml.Resources.h (TaskId:218)
+PROBE Pass2 :     111189  winrt\Microsoft.UI.Xaml.Shapes.h (TaskId:218)
+PROBE Pass2 :       3696  winrt\Microsoft.UI.Xaml.XamlTypeInfo.h (TaskId:218)
+--- TargetPlatformMinVersion in the diagnostic log ---
+TargetPlatformMinVersion =
+TargetPlatformMinVersion =
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Application Type\Windows Store\10.0\Default.props(30,5): message : Property reassignment: $(TargetPlatformMinVersion)="" (previous value: "10.0.17763.0") at C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Application Type\Windows Store\10.0\Default.props (30,5)
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Microsoft.Cpp.WindowsSDK.props(127,5): message : Property reassignment: $(TargetPlatformMinVersion)="10.0.0.0" (previous value: "") at C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Microsoft\VC\v180\Microsoft.Cpp.WindowsSDK.props (127,5)
+TargetPlatformMinVersion = 10.0.0.0
+WindowsTargetPlatformMinVersion = 10.0.0.0
+TargetPlatformMinVersion = 10.0.0.0
+WindowsTargetPlatformMinVersion = 10.0.0.0
+TargetPlatformMinVersion =
+D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj(341,7): message : Property reassignment: $(TargetPlatformMinVersion)="10.0.17763.0" (previous value: "10.0.0.0") at D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj (341,7)
+Set Property: TargetPlatformMinVersion=10.0.17763.0
+D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj(342,7): message : Property reassignment: $(WindowsTargetPlatformMinVersion)="10.0.17763.0" (previous value: "10.0.0.0") at D:\a\Opennow-web\Opennow-web\native\src\App\OpenNOW.App.vcxproj (342,7)
+Set Property: WindowsTargetPlatformMinVersion=10.0.17763.0
+Task Parameter:TargetPlatformMinVersion=10.0.17763.0 (TaskId:163)
+TargetPlatformMinVersion =
+Task Parameter:TargetPlatformMinVersion=10.0.17763.0 (TaskId:212)
+TargetPlatformMinVersion =
+TargetPlatformMinVersion =
+--- every .xbf on the workspace (with size) ---
+       916  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\App.xbf
+      4912  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\MainWindow.xbf
+      1434  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Themes\Accents.xbf
+      2337  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Themes\GeneratedTokens.xbf
+      6085  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Themes\Styles.xbf
+      4047  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Views\GameDetailsPage.xbf
+      3156  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Views\HomePage.xbf
+      2397  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Views\LibraryPage.xbf
+      3399  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Views\LoginPage.xbf
+      2336  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Views\PlaytimePage.xbf
+     10630  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Views\SettingsPage.xbf
+      4124  D:\a\Opennow-web\Opennow-web\native\build\x64\Release\Views\StreamPage.xbf
+       916  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\App.xbf
+      4912  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\MainWindow.xbf
+      1434  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Themes\Accents.xbf
+      2337  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Themes\GeneratedTokens.xbf
+      6085  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Themes\Styles.xbf
+      4047  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Views\GameDetailsPage.xbf
+      3156  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Views\HomePage.xbf
+      2397  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Views\LibraryPage.xbf
+      3399  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Views\LoginPage.xbf
+      2336  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Views\PlaytimePage.xbf
+     10630  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Views\SettingsPage.xbf
+      4124  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed\Views\StreamPage.xbf
+       916  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\App.xbf
+      4912  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\MainWindow.xbf
+      1434  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Accents.xbf
+      2337  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\GeneratedTokens.xbf
+      6085  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Themes\Styles.xbf
+      4047  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\GameDetailsPage.xbf
+      3156  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\HomePage.xbf
+      2397  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LibraryPage.xbf
+      3399  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\LoginPage.xbf
+      2336  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\PlaytimePage.xbf
+     10630  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\SettingsPage.xbf
+      4124  D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\Generated Files\Views\StreamPage.xbf
+--- leftover .backup files from the compiler ---
+--- embed directory ---
+       916  App.xbf
+       253  embed.resfiles
+       253  embed.resfiles.intermediate
+      4912  MainWindow.xbf
+      1434  Accents.xbf
+      2337  GeneratedTokens.xbf
+      6085  Styles.xbf
+      4047  GameDetailsPage.xbf
+      3156  HomePage.xbf
+      2397  LibraryPage.xbf
+      3399  LoginPage.xbf
+      2336  PlaytimePage.xbf
+     10630  SettingsPage.xbf
+      4124  StreamPage.xbf
+--- priconfig.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<resources targetOsVersion="10.0.0" majorVersion="1">
+  <index root="\" startIndexAt="D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\filtered.layout.resfiles">
+    <default>
+      <qualifier name="Language" value="en-US" />
+      <qualifier name="Contrast" value="standard" />
+      <qualifier name="Scale" value="200" />
+      <qualifier name="HomeRegion" value="001" />
+      <qualifier name="TargetSize" value="256" />
+      <qualifier name="LayoutDirection" value="LTR" />
+      <qualifier name="DXFeatureLevel" value="DX9" />
+      <qualifier name="Configuration" value="" />
+      <qualifier name="AlternateForm" value="" />
+      <qualifier name="Platform" value="UAP" />
+    </default>
+    <indexer-config type="RESFILES" qualifierDelimiter="." />
+  </index>
+  <index root="\" startIndexAt="D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\resources.resfiles">
+    <default>
+      <qualifier name="Language" value="en-US" />
+      <qualifier name="Contrast" value="standard" />
+      <qualifier name="Scale" value="200" />
+      <qualifier name="HomeRegion" value="001" />
+      <qualifier name="TargetSize" value="256" />
+      <qualifier name="LayoutDirection" value="LTR" />
+      <qualifier name="DXFeatureLevel" value="DX9" />
+      <qualifier name="Configuration" value="" />
+      <qualifier name="AlternateForm" value="" />
+      <qualifier name="Platform" value="UAP" />
+    </default>
+    <indexer-config type="RESW" convertDotsToSlashes="true" />
+    <indexer-config type="RESJSON" />
+    <indexer-config type="RESFILES" qualifierDelimiter="." />
+  </index>
+  <index root="\" startIndexAt="D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\pri.resfiles">
+    <default>
+      <qualifier name="Language" value="en-US" />
+      <qualifier name="Contrast" value="standard" />
+      <qualifier name="Scale" value="200" />
+      <qualifier name="HomeRegion" value="001" />
+      <qualifier name="TargetSize" value="256" />
+      <qualifier name="LayoutDirection" value="LTR" />
+      <qualifier name="DXFeatureLevel" value="DX9" />
+      <qualifier name="Configuration" value="" />
+      <qualifier name="AlternateForm" value="" />
+      <qualifier name="Platform" value="UAP" />
+    </default>
+    <indexer-config type="PRI" />
+    <indexer-config type="RESFILES" qualifierDelimiter="." />
+  </index>
+  <index root="D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed" startIndexAt="embed.resfiles">
+    <default>
+      <qualifier name="Language" value="en-US" />
+      <qualifier name="Contrast" value="standard" />
+      <qualifier name="Scale" value="200" />
+      <qualifier name="HomeRegion" value="001" />
+      <qualifier name="TargetSize" value="256" />
+      <qualifier name="LayoutDirection" value="LTR" />
+      <qualifier name="DXFeatureLevel" value="DX9" />
+      <qualifier name="Configuration" value="" />
+      <qualifier name="AlternateForm" value="" />
+      <qualifier name="Platform" value="UAP" />
+    </default>
+    <indexer-config type="RESFILES" qualifierDelimiter="." />
+    <indexer-config type="EMBEDFILES" />
+  </index>
+</resources>
+makepri: C:\Users\runneradmin\.nuget\packages\microsoft.windows.sdk.buildtools\10.0.22621.756\bin\10.0.22621.0\x86\makepri.exe
+--- resources actually in OpenNOW.App.pri ---

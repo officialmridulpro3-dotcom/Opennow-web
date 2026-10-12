@@ -1,0 +1,848 @@
+compiler dll: C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\tools\net472\Microsoft.UI.Xaml.Markup.Compiler.dll
+--- XBF settings in the shipped targets ---
+--- nuget package files (tools and exes) ---
+1.6.241114003\tools\NOTICE.txt
+1.6.241114003\tools\arm64\GenXbf.dll
+1.6.241114003\tools\MSIX\win10-arm64\Microsoft.WindowsAppRuntime.1.6.msix
+1.6.241114003\tools\MSIX\win10-arm64\Microsoft.WindowsAppRuntime.DDLM.1.6.msix
+1.6.241114003\tools\MSIX\win10-arm64\Microsoft.WindowsAppRuntime.Main.1.6.msix
+1.6.241114003\tools\MSIX\win10-arm64\Microsoft.WindowsAppRuntime.Singleton.1.6.msix
+1.6.241114003\tools\MSIX\win10-arm64\MSIX.inventory
+1.6.241114003\tools\MSIX\win10-x64\Microsoft.WindowsAppRuntime.1.6.msix
+1.6.241114003\tools\MSIX\win10-x64\Microsoft.WindowsAppRuntime.DDLM.1.6.msix
+1.6.241114003\tools\MSIX\win10-x64\Microsoft.WindowsAppRuntime.Main.1.6.msix
+1.6.241114003\tools\MSIX\win10-x64\Microsoft.WindowsAppRuntime.Singleton.1.6.msix
+1.6.241114003\tools\MSIX\win10-x64\MSIX.inventory
+1.6.241114003\tools\MSIX\win10-x86\Microsoft.WindowsAppRuntime.1.6.msix
+1.6.241114003\tools\MSIX\win10-x86\Microsoft.WindowsAppRuntime.DDLM.1.6.msix
+1.6.241114003\tools\MSIX\win10-x86\Microsoft.WindowsAppRuntime.Main.1.6.msix
+1.6.241114003\tools\MSIX\win10-x86\Microsoft.WindowsAppRuntime.Singleton.1.6.msix
+1.6.241114003\tools\MSIX\win10-x86\MSIX.inventory
+1.6.241114003\tools\net472\Microsoft.Bcl.AsyncInterfaces.dll
+1.6.241114003\tools\net472\Microsoft.Build.dll
+1.6.241114003\tools\net472\Microsoft.Build.Framework.dll
+1.6.241114003\tools\net472\Microsoft.Build.Msix.dll
+1.6.241114003\tools\net472\Microsoft.Build.Utilities.Core.dll
+1.6.241114003\tools\net472\Microsoft.Cci.dll
+1.6.241114003\tools\net472\Microsoft.UI.Xaml.Markup.Compiler.dll
+1.6.241114003\tools\net472\Microsoft.UI.Xaml.Markup.Compiler.IO.dll
+1.6.241114003\tools\net472\Microsoft.UI.Xaml.Markup.Compiler.MSBuildInterop.dll
+1.6.241114003\tools\net472\Microsoft.VisualStudio.RemoteControl.dll
+1.6.241114003\tools\net472\Microsoft.VisualStudio.Telemetry.dll
+1.6.241114003\tools\net472\Microsoft.VisualStudio.Utilities.Internal.dll
+1.6.241114003\tools\net472\Newtonsoft.Json.dll
+1.6.241114003\tools\net472\System.Buffers.dll
+1.6.241114003\tools\net472\System.Collections.Immutable.dll
+1.6.241114003\tools\net472\System.Memory.dll
+1.6.241114003\tools\net472\System.Numerics.Vectors.dll
+1.6.241114003\tools\net472\System.Reflection.Metadata.dll
+1.6.241114003\tools\net472\System.Runtime.CompilerServices.Unsafe.dll
+1.6.241114003\tools\net472\System.Text.Encodings.Web.dll
+1.6.241114003\tools\net472\System.Text.Json.dll
+1.6.241114003\tools\net472\System.Threading.Tasks.Dataflow.dll
+1.6.241114003\tools\net472\System.Threading.Tasks.Extensions.dll
+1.6.241114003\tools\net472\XamlCompiler.exe
+1.6.241114003\tools\net472\XamlCompiler.exe.config
+1.6.241114003\tools\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+1.6.241114003\tools\net6.0\Microsoft.Build.Msix.dll
+1.6.241114003\tools\net6.0\Microsoft.Cci.dll
+1.6.241114003\tools\net6.0\Microsoft.UI.Xaml.Markup.Compiler.dll
+1.6.241114003\tools\net6.0\Microsoft.UI.Xaml.Markup.Compiler.IO.dll
+1.6.241114003\tools\net6.0\Microsoft.UI.Xaml.Markup.Compiler.MSBuildInterop.dll
+1.6.241114003\tools\net6.0\Microsoft.VisualStudio.RemoteControl.dll
+1.6.241114003\tools\net6.0\Microsoft.VisualStudio.Telemetry.dll
+1.6.241114003\tools\net6.0\Microsoft.VisualStudio.Utilities.Internal.dll
+1.6.241114003\tools\net6.0\Newtonsoft.Json.dll
+1.6.241114003\tools\net6.0\System.Runtime.CompilerServices.Unsafe.dll
+1.6.241114003\tools\net6.0\System.Text.Encodings.Web.dll
+1.6.241114003\tools\net6.0\System.Text.Json.dll
+1.6.241114003\tools\x64\GenXbf.dll
+1.6.241114003\tools\x86\GenXbf.dll
+Tool 'ilspycmd' (version '11.1.0.9782') was successfully installed.
+decompiled: D:\a\Opennow-web\Opennow-web\xamlc-decompiled\Microsoft.UI.Xaml.Markup.Compiler.decompiled.cs 1 bytes
+total lines: 111357
+--- first 20 non-using lines ---
+
+[assembly: CompilationRelaxations(8)]
+[assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]
+[assembly: Debuggable(DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints)]
+[assembly: Dependency("mscorlib,", LoadHint.Always)]
+[assembly: Dependency("System,", LoadHint.Always)]
+[assembly: Dependency("System.Xml,", LoadHint.Sometimes)]
+[assembly: XmlnsDefinition("http://schemas.microsoft.com/winfx/2006/xaml", "System.Windows.Markup")]
+[assembly: AssemblyTitle("Microsoft.UI.Xaml.Markup.Compiler")]
+[assembly: InternalsVisibleTo("VSProject.Tests.Component.XamlCompiler, PublicKey=002400000480000094000000060200000024000052534131000400000100010007d1fa57c4aed9f0a32e84aa0faefd0de9e8fd6aec8f87fb03766c834c99921eb23be79ad9d5dcc1dd9ad236132102900b723cf980957fc4e177108fc607774f29e8320e92ea05ece4e821c0a5efe8f1645c4c0c93c1ab99285d622caa652c1dfad63d745d6f2de5f17e5eaf0fc4963d261c8a12436518206dc093344d5ad293")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
+[assembly: TargetFramework(".NETFramework,Version=v4.7.2", FrameworkDisplayName = ".NET Framework 4.7.2")]
+[assembly: AssemblyCompany("Microsoft Corporation")]
+[assembly: AssemblyConfiguration("Release")]
+[assembly: AssemblyCopyright("Copyright (c) Microsoft Corporation. All rights reserved.")]
+[assembly: AssemblyFileVersion("3.0.0.2411")]
+[assembly: AssemblyInformationalVersion("3.0.0.2411+f6b3531dce4818fb5bf5130a6cd96bca2d3de762")]
+[assembly: AssemblyProduct("Windows App SDK")]
+[assembly: AssemblyMetadata("RepositoryUrl", "https://github.com/microsoft/WindowsAppSDK")]
+[assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]
+--- process launches ---
+[assembly: InternalsVisibleTo("VSProject.Tests.Component.XamlCompiler, PublicKey=002400000480000094000000060200000024000052534131000400000100010007d1fa57c4aed9f0a32e84aa0faefd0de9e8fd6aec8f87fb03766c834c99921eb23be79ad9d5dcc1dd9ad236132102900b723cf980957fc4e177108fc607774f29e8320e92ea05ece4e821c0a5efe8f1645c4c0c93c1ab99285d622caa652c1dfad63d745d6f2de5f17e5eaf0fc4963d261c8a12436518206dc093344d5ad293")]
+private ObjectWriterContext _xamlContext;
+return _xamlContext.BaseUri;
+XamlSchemaContext IXamlSchemaContextProvider.SchemaContext => _xamlContext.SchemaContext;
+object IProvideValueTarget.TargetObject => _xamlContext.ParentInstance;
+object IProvideValueTarget.TargetProperty => ContextServices.GetTargetProperty(_xamlContext);
+object IRootObjectProvider.RootObject => _xamlContext.RootInstance;
+bool IXamlNameResolver.IsFixupTokenAvailable => !_xamlContext.NameResolutionComplete;
+if (_xamlContext.LineNumber == 0)
+return _xamlContext.LinePosition != 0;
+public int LineNumber => _xamlContext.LineNumber;
+public int LinePosition => _xamlContext.LinePosition;
+_xamlContext.AddNameScopeInitializationCompleteSubscriber(value);
+_xamlContext.RemoveNameScopeInitializationCompleteSubscriber(value);
+_xamlContext = context;
+return new XamlObjectWriterFactory(_xamlContext);
+return _xamlContext.ServiceProvider_Resolve(qName);
+return _xamlContext.ServiceProvider_GetFirstAmbientValue(ceilingTypes, properties);
+return _xamlContext.ServiceProvider_GetFirstAmbientValue(types);
+return _xamlContext.ServiceProvider_GetAllAmbientValues(ceilingTypes, properties);
+return _xamlContext.ServiceProvider_GetAllAmbientValues(types);
+return _xamlContext.ServiceProvider_GetAllAmbientValues(ceilingTypes, searchLiveStackOnly, types, properties);
+return _xamlContext.FindNamespaceByPrefix(prefix);
+return _xamlContext.GetNamespacePrefixes();
+return _xamlContext.ResolveName(name, out isFullyInitialized);
+return _xamlContext.ResolveName(name, out isFullyInitialized);
+if (_xamlContext.NameResolutionComplete)
+if (_xamlContext.CurrentType == null)
+if (_xamlContext.ParentProperty == XamlLanguage.Initialization)
+nameFixupToken.Target.Instance = _xamlContext.GrandParentInstance;
+--- string literals naming executables or extensions ---
+private const string Kernel32LibraryName = "kernel32.dll";
+[DllImport("kernel32.dll", BestFitMapping = false, CharSet = CharSet.Auto, SetLastError = true)]
+[DllImport("kernel32.dll")]
+[DllImport("kernel32.dll", SetLastError = true)]
+[DllImport("kernel32.dll", SetLastError = true)]
+[DllImport("kernel32.dll", BestFitMapping = false, SetLastError = true)]
+[DllImport("kernel32.dll", SetLastError = true)]
+[DllImport("kernel32.dll", SetLastError = true)]
+projectInfo.GenXbf32Path = Path.Combine(GenXbfPath, "x86\\genxbf.dll");
+projectInfo.GenXbf64Path = Path.Combine(GenXbfPath, "x64\\genxbf.dll");
+projectInfo.GenXbfArm64Path = Path.Combine(GenXbfPath, "arm64\\genxbf.dll");
+string fileName = ((e.Name.ContentType != AssemblyContentType.WindowsRuntime) ? (e.Name.Name + ".dll") : (e.Name.Name + ".winmd"));
+string outputXbf = Path.Combine(targetFolder, codeFileName + ".xbf");
+case "microsoft.winui.dll":
+case "mscorlib.dll":
+case "microsoft.csharp.dll":
+case "microsoft.visualbasic.dll":
+case "system.runtime.windowsruntime.ui.xaml.dll":
+case "system.runtime.windowsruntime.dll":
+bool flag2 = text.Equals("mscorlib.dll", StringComparison.OrdinalIgnoreCase);
+PerformanceUtility.FireCodeMarker(CodeMarkerEvent.perfXC_FingerprintCheck, "Using HashForWinMD from vcmeta.dll");
+XbfOutputFilename = Path.Combine(TargetFolder, FileNameNoExtension + ".xbf");
+public const string XbfExtension = ".xbf";
+text = Path.Combine(path, "mscorlib.dll");
+[DllImport("user32.dll", BestFitMapping = false)]
+path32bit = Path.Combine(vsInstallDir, "bin\\VcMeta.dll");
+path64bit = Path.Combine(vsInstallDir, "bin\\amd64\\VcMeta.dll");
+path32bit = Path.Combine(vsInstallDir, "vcpackages\\vcmeta.dll");
+[DllImport("vcmeta.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
+--- what feeds the xbf input list (62330-62410) ---
+62330: 				if (flag)
+62331: 				{
+62332: 					list.Add(bindUniverse);
+62333: 				}
+62334: 			}
+62335: 			foreach (BindUniverse item in list)
+62336: 			{
+62337: 				classCodeInfo.BindUniverses.Remove(item);
+62338: 				foreach (BindUniverse bindUniverse2 in classCodeInfo.BindUniverses)
+62339: 				{
+62340: 					if (bindUniverse2.Children.Contains(item))
+62341: 					{
+62342: 						bindUniverse2.Children.Remove(item);
+62343: 					}
+62344: 					if (bindUniverse2.Parent == item)
+62345: 					{
+62346: 						bindUniverse2.Parent = null;
+62347: 					}
+62348: 				}
+62349: 			}
+62350: 		}
+62351: 
+62352: 		private bool GeneratePageOutputFiles(XamlClassCodeInfo classCodeInfo)
+62353: 		{
+62354: 			List<FileNameAndContentPair> list = null;
+62355: 			List<FileNameAndContentPair> generatedSources = null;
+62356: 			PerformanceUtility.FireCodeMarker(CodeMarkerEvent.perfXC_PageCodeGenStart, classCodeInfo.BaseFileName);
+62357: 			if (!IsPass1 && (classCodeInfo.HasBindAssignments || classCodeInfo.HasBoundEventAssignments))
+62358: 			{
+62359: 				List<XamlCompileErrorBase> list2 = new List<XamlCompileErrorBase>();
+62360: 				foreach (BindUniverse bindUniverse in classCodeInfo.BindUniverses)
+62361: 				{
+62362: 					IEnumerable<XamlCompileErrorBase> collection = bindUniverse.Parse(classCodeInfo, _projectInfo.TargetPlatformMinVersion);
+62363: 					list2.AddRange(collection);
+62364: 				}
+62365: 				PruneBindUniverses(classCodeInfo);
+62366: 				foreach (XamlCompileError item in list2.OfType<XamlCompileError>())
+62367: 				{
+62368: 					XamlCompileError xamlCompileError = item;
+62369: 					LogError("XamlCompiler", xamlCompileError.Code, null, xamlCompileError.FileName, xamlCompileError.LineNumber, xamlCompileError.LineOffset, 0, 0, xamlCompileError.Message);
+62370: 				}
+62371: 				foreach (XamlCompileWarning item2 in list2.OfType<XamlCompileWarning>())
+62372: 				{
+62373: 					XamlCompileWarning warning = item2;
+62374: 					LogWarning(warning);
+62375: 				}
+62376: 				if (list2.OfType<XamlCompileError>().Any())
+62377: 				{
+62378: 					return false;
+62379: 				}
+62380: 			}
+62381: 			list = _codeGenerator.GenerateCodeBehind(classCodeInfo, out var xamlFilesChecksumPairs);
+62382: 			if (!classCodeInfo.IsApplication && ShouldSuppressPageCodeGen())
+62383: 			{
+62384: 				list = null;
+62385: 			}
+62386: 			PerformanceUtility.FireCodeMarker(CodeMarkerEvent.perfXC_PageCodeGenEnd, classCodeInfo.BaseFileName);
+62387: 			if (IsPass1 && !IsDesignTimeBuild)
+62388: 			{
+62389: 				string text = Path.Combine(classCodeInfo.TargetFolder, classCodeInfo.BaseFileName + Language.Pass2Extension);
+62390: 				if (File.Exists(text))
+62391: 				{
+62392: 					FileHelpers.BackupFile(text);
+62393: 					File.Delete(text);
+62394: 				}
+62395: 			}
+62396: 			if (!IsPass1)
+62397: 			{
+62398: 				foreach (XamlFileCodeInfo fileCodeInfo in classCodeInfo.PerXamlFileInfo)
+62399: 				{
+62400: 					if (!GenerateEditedXamlFile(ref generatedSources, classCodeInfo, fileCodeInfo))
+62401: 					{
+62402: 						return false;
+62403: 					}
+62404: 					TaskItemFilename taskItemFilename = SourceFileManager.FindTaskItemByFullPath(fileCodeInfo.FullPathToXamlFile);
+62405: 					string checksum = xamlFilesChecksumPairs.Where((FileNameAndChecksumPair x) => x.FileName == fileCodeInfo.FullPathToXamlFile).FirstOrDefault().Checksum;
+62406: 					_newlyGeneratedXamlFiles.Add(new XbfFileNameInfo(taskItemFilename.SourceXamlFullPath, taskItemFilename.XamlGivenPath, taskItemFilename.XamlOutputFilename, taskItemFilename.XbfOutputFilename, checksum));
+62407: 				}
+62408: 			}
+62409: 			if (!IsPass1)
+62410: 			{
+--- XbfGenerator class body ---
+	internal class XbfGenerator
+	{
+		private static Dictionary<Version, IntPtr> s_GenXbfDllHandles = new InstanceCache<Version, IntPtr>(ClearCache);
+
+		private List<IXbfFileNameInfo> xamlFiles = new List<IXbfFileNameInfo>();
+
+		private IXbfMetadataProvider xbfMetadataProvider;
+
+		private XamlProjectInfo projectInfo;
+
+		private Lazy<List<XamlCompileWarning>> warningMessages = new Lazy<List<XamlCompileWarning>>(() => new List<XamlCompileWarning>());
+
+		private Lazy<List<XamlCompileError>> errorMessages = new Lazy<List<XamlCompileError>>(() => new List<XamlCompileError>());
+
+		public List<XamlCompileWarning> XbfWarnings => warningMessages.Value;
+
+		public List<XamlCompileError> XbfErrors => errorMessages.Value;
+
+		public XbfGenerator(XamlProjectInfo projectInfo, IXbfMetadataProvider xbfMetadataProvider)
+		{
+			this.projectInfo = projectInfo;
+			this.xbfMetadataProvider = xbfMetadataProvider;
+		}
+
+		public void SetXamlInputFilesFromTaskItems(IEnumerable<TaskItemFilename> tifs, bool isSdk = false)
+		{
+			foreach (TaskItemFilename tif in tifs)
+			{
+				xamlFiles.Add(new XbfFileNameInfo(tif.SourceXamlFullPath, tif.XamlGivenPath, isSdk ? tif.XamlGivenPath : tif.XamlOutputFilename, tif.XbfOutputFilename));
+			}
+		}
+
+		public void SetXamlInputFiles(IEnumerable<IXbfFileNameInfo> xamlFiles)
+		{
+			this.xamlFiles.AddRange(xamlFiles);
+		}
+
+		public bool GenerateXbfFiles(uint xbfGenerationFlags, bool v80Compat = false)
+		{
+			IntPtr value = IntPtr.Zero;
+			string empty = string.Empty;
+			empty = RuntimeInformation.ProcessArchitecture switch
+			{
+				Architecture.Arm64 => projectInfo.GenXbfArm64Path, 
+				Architecture.X64 => projectInfo.GenXbf64Path, 
+				_ => projectInfo.GenXbf32Path, 
+			};
+			if (string.IsNullOrWhiteSpace(projectInfo.GenXbf32Path))
+			{
+				XbfErrors.Add(new XbfGeneration_NoWindowsSdk());
+				return false;
+			}
+			if (!s_GenXbfDllHandles.TryGetValue(projectInfo.TargetPlatformMinVersion, out value))
+			{
+				value = Microsoft.UI.Xaml.Markup.Compiler.Utilities.NativeMethods.LoadLibraryEx(empty, IntPtr.Zero, Microsoft.UI.Xaml.Markup.Compiler.Utilities.NativeMethods.LOAD_WITH_ALTERED_SEARCH_PATH);
+				s_GenXbfDllHandles.Add(projectInfo.TargetPlatformMinVersion, value);
+			}
+			if (value == IntPtr.Zero)
+			{
+				XbfErrors.Add(new XbfGeneration_CouldNotLoadXbfGenerator(empty));
+				return false;
+			}
+			foreach (IXbfFileNameInfo xamlFile in xamlFiles)
+			{
+				if (!xamlFile.GivenXamlName.EndsWith(".xaml", StringComparison.OrdinalIgnoreCase))
+				{
+					XbfErrors.Add(new XamlFileMustEndInDotXaml(xamlFile.GivenXamlName));
+					return false;
+				}
+			}
+			bool setAirityOnGenericTypeNames = XamlSchemaCodeInfo.SetAirityOnGenericTypeNames;
+			XamlSchemaCodeInfo.SetAirityOnGenericTypeNames = !v80Compat;
+			bool result = GenerateAll(value, xbfGenerationFlags);
+			XamlSchemaCodeInfo.SetAirityOnGenericTypeNames = setAirityOnGenericTypeNames;
+			return result;
+		}
+
+		internal virtual List<IStream> GetInputOutputStreams()
+		{
+			List<IStream> list = new List<IStream>();
+			foreach (XbfFileNameInfo xamlFile in xamlFiles)
+			{
+				string inputXamlName = xamlFile.InputXamlName;
+				try
+				{
+					list.Add(new StreamXamlInput(inputXamlName));
+				}
+				catch (Exception ex)
+				{
+					XbfErrors.Add(new XbfInputFileOpenFailure(inputXamlName, ex.Message));
+					return null;
+				}
+				string outputXbfName = xamlFile.OutputXbfName;
+				try
+				{
+					string directoryName = Path.GetDirectoryName(outputXbfName);
+					Directory.CreateDirectory(directoryName);
+					list.Add(new StreamXbfOutput(outputXbfName));
+				}
+				catch (Exception ex2)
+				{
+					XbfErrors.Add(new XbfOutputFileOpenFailure(outputXbfName, ex2.Message));
+					return null;
+				}
+			}
+			return list;
+		}
+
+		internal virtual bool GenerateXbfFromStreams(IntPtr dllHandle, IStream[] inputStreams, IStream[] outputStreams, uint xbfGenerationFlags, string[] checksums, TargetOSVersion targetOS, out int errorCode, out int errorFile, out int errorLine, out int errorPosition)
+		{
+			errorCode = (errorFile = (errorLine = (errorPosition = 0)));
+			try
+			{
+				int num = NativeMethodsHelper.Write(dllHandle, inputStreams, inputStreams.Count(), checksums, 64, xbfMetadataProvider, targetOS, xbfGenerationFlags, outputStreams, out errorCode, out errorFile, out errorLine, out errorPosition);
+			}
+			catch (Exception ex)
+			{
+				XbfErrors.Add(new XbfGenerationGeneralFailure(ex.Message));
+				return false;
+			}
+			return true;
+		}
+
+		internal virtual string GetTextLine(string fileName, int line)
+		{
+			using TextReader textReader = File.OpenText(fileName);
+			string result = string.Empty;
+			for (int i = 0; i < line; i++)
+			{
+				result = textReader.ReadLine();
+			}
+			return result;
+		}
+
+		private string[] GetAllXamlFilesChecksums()
+		{
+			IList<string> list = new List<string>();
+			foreach (IXbfFileNameInfo xamlFile in xamlFiles)
+			{
+				list.Add(xamlFile.XamlFileChecksum);
+			}
+			return list.ToArray();
+		}
+
+		private bool GenerateAll(IntPtr dllHandle, uint xbfGenerationFlags)
+		{
+			List<IStream> inputOutputStreams = GetInputOutputStreams();
+			if (inputOutputStreams == null || inputOutputStreams.Count == 0)
+			{
+				return false;
+			}
+			try
+			{
+				IEnumerable<IStream> source = inputOutputStreams.Where((IStream s) => s is IXamlStream && ((IXamlStream)s).StreamType == StreamType.Input);
+				IEnumerable<IStream> source2 = inputOutputStreams.Where((IStream s) => s is IXamlStream && ((IXamlStream)s).StreamType == StreamType.Output);
+				if (!GenerateXbfFromStreams(dllHandle, source.ToArray(), source2.ToArray(), xbfGenerationFlags, GetAllXamlFilesChecksums(), projectInfo.TargetPlatformMinVersion.ToTargetOSVersion(), out var errorCode, out var errorFile, out var errorLine, out var errorPosition))
+				{
+					return false;
+				}
+				if (errorCode != 0)
+				{
+					LogXbfError(errorCode, errorFile, errorLine, errorPosition);
+					return false;
+				}
+			}
+			finally
+			{
+				foreach (StreamImpl item in inputOutputStreams.OfType<StreamImpl>())
+				{
+					item.Dispose();
+				}
+			}
+			return true;
+		}
+
+		private void LogXbfError(int errorCode, int errorFile, int errorLine, int errorPosition)
+		{
+			string givenXamlName = xamlFiles[errorFile].GivenXamlName;
+			if (IsMarkupExtensionAssignmentError(givenXamlName, errorLine, errorPosition, out var additional))
+			{
+				XbfErrors.Add(new XbfGeneration_NonMeInCurlyBraces(givenXamlName, errorLine, errorPosition, additional, errorCode));
+			}
+			else if (errorCode == 2500)
+			{
+				XbfErrors.Add(new XbfGenerationPropertyNotFoundError(givenXamlName, errorLine, errorPosition));
+			}
+			else
+			{
+				XbfErrors.Add(new XbfGenerationParseError(givenXamlName, errorLine, errorPosition, errorCode));
+			}
+		}
+
+		private bool IsMarkupExtensionAssignmentError(string fileName, int line, int pos, out string additional)
+		{
+			string textLine = GetTextLine(fileName, line);
+			if (LookslikeMarkupExtensionAssigment(textLine, pos, out var meName))
+			{
+				additional = meName;
+				return true;
+			}
+			additional = string.Empty;
+			return false;
+		}
+
+		private bool LookslikeMarkupExtensionAssigment(string textLine, int pos, out string meName)
+		{
+			if (pos < textLine.Length)
+			{
+				int num = textLine.IndexOf('\'', pos);
+				int num2 = textLine.IndexOf('"', pos);
+				int num3;
+				if (num == -1)
+				{
+					num3 = num2;
+				}
+				else if (num2 == -1)
+				{
+					num3 = num;
+				}
+				else
+				{
+					num3 = ((num < num2) ? num : num2);
+				}
+				if (num3 != -1 && num3 < textLine.Length - 3 && textLine[num3 + 1] == '{')
+				{
+					meName = ScanIdentifierToken(textLine, num3 + 2);
+					if (!string.IsNullOrWhiteSpace(meName))
+					{
+						return true;
+					}
+				}
+			}
+			meName = string.Empty;
+			return false;
+		}
+
+		private string ScanIdentifierToken(string textLine, int start)
+		{
+			string text = textLine.Substring(start);
+			XamlDomValidator.IsValidIdentifierName(text, out var idx);
+			return text.Substring(0, idx);
+		}
+
+		private static void ClearCache()
+		{
+			foreach (IntPtr value in s_GenXbfDllHandles.Values)
+			{
+				Microsoft.UI.Xaml.Markup.Compiler.Utilities.NativeMethods.FreeLibrary(value);
+			}
+			s_GenXbfDllHandles.Clear();
+		}
+	}
+	internal class XbfXamlMember : IXbfMember
+	{
+		private DirectUIXamlMember _xamlMember;
+
+		private IXmpXamlType _xmp;
+
+		public bool IsAttachable => _xamlMember.IsAttachable;
+
+		public bool IsDependencyProperty => _xamlMember.IsDependencyProperty;
+--- P/Invoke entries ---
+[DllImport("kernel32.dll", BestFitMapping = false, CharSet = CharSet.Auto, SetLastError = true)]
+[DllImport("kernel32.dll")]
+[DllImport("kernel32.dll", SetLastError = true)]
+[DllImport("kernel32.dll", SetLastError = true)]
+[DllImport("kernel32.dll", BestFitMapping = false, SetLastError = true)]
+[DllImport("kernel32.dll", SetLastError = true)]
+[DllImport("kernel32.dll", SetLastError = true)]
+[DllImport("user32.dll", BestFitMapping = false)]
+[DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
+[DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+[DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+[DllImport("vcmeta.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)]
+Write("\r\n\r\n#if defined _DEBUG && !defined DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION\r\nextern \"C\" __declspec(dllimport) int __stdcall IsDebuggerPresent();\r\n#endif\r\n\r\n");
+Write("\r\n#pragma warning(push)\r\n#pragma warning(disable: 4100) // unreferenced formal parameter\r\n\r\n#if defined _DEBUG && !defined DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT\r\nextern \"C\" __declspec(dllimport) int __stdcall IsDebuggerPresent();\r\n#endif\r\n\r\n");
+Write("\r\n#if defined _DEBUG && !defined DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION\r\nextern \"C\" __declspec(dllimport) int __stdcall IsDebuggerPresent();\r\n#endif\r\n\r\n");
+--- context around the empty-file create (line 92566) ---
+62400: 					if (!GenerateEditedXamlFile(ref generatedSources, classCodeInfo, fileCodeInfo))
+62401: 					{
+62402: 						return false;
+62403: 					}
+62404: 					TaskItemFilename taskItemFilename = SourceFileManager.FindTaskItemByFullPath(fileCodeInfo.FullPathToXamlFile);
+62405: 					string checksum = xamlFilesChecksumPairs.Where((FileNameAndChecksumPair x) => x.FileName == fileCodeInfo.FullPathToXamlFile).FirstOrDefault().Checksum;
+62406: 					_newlyGeneratedXamlFiles.Add(new XbfFileNameInfo(taskItemFilename.SourceXamlFullPath, taskItemFilename.XamlGivenPath, taskItemFilename.XamlOutputFilename, taskItemFilename.XbfOutputFilename, checksum));
+62407: 				}
+62408: 			}
+62409: 			if (!IsPass1)
+62410: 			{
+62411: 				string fullPathFileName = Path.Combine(classCodeInfo.TargetFolder, classCodeInfo.BaseFileName + Language.Pass2Extension);
+62412: 				FileHelpers.RestoreBackupFile(fullPathFileName);
+62413: 			}
+62414: 			PerformanceUtility.FireCodeMarker(CodeMarkerEvent.perfXC_WriteFilesToDiskStart);
+62415: 			WriteOutputFilesToDisk(list, classCodeInfo.TargetFolder, updateOnlyIfContentNew: true);
+62416: 			WriteOutputFilesToDisk(generatedSources, classCodeInfo.TargetFolder, updateOnlyIfContentNew: true);
+62417: 			PerformanceUtility.FireCodeMarker(CodeMarkerEvent.perfXC_WriteFilesToDiskEnd);
+62418: 			return true;
+62419: 		}
+62420: 
+62421: 		private void CreateDirectoryIfNecessary(DirectoryInfo directoryInfo)
+62422: 		{
+62423: 			if (!directoryInfo.Exists)
+62424: 			{
+62425: 				CreateDirectoryIfNecessary(directoryInfo.Parent);
+62426: 				directoryInfo.Create();
+62427: 			}
+62428: 		}
+62429: 
+62430: 		private void CreateFileIfNecessary(string filename)
+62431: 		{
+62432: 			FileInfo fileInfo = new FileInfo(filename);
+62433: 			CreateDirectoryIfNecessary(fileInfo.Directory);
+62434: 			if (!fileInfo.Exists)
+62435: 			{
+62436: 				using (fileInfo.Create())
+62437: 				{
+62438: 				}
+62439: 			}
+62440: 		}
+62441: 
+62442: 		private bool GenerateEditedXamlFile(ref List<FileNameAndContentPair> generatedSources, XamlClassCodeInfo classCodeInfo, XamlFileCodeInfo fileCodeInfo)
+62443: 		{
+62444: 			PerformanceUtility.FireCodeMarker(CodeMarkerEvent.perfXC_PageEditStart, fileCodeInfo.SourceXamlGivenPath);
+62445: 			XamlConnectionIdRewriter xamlConnectionIdRewriter = new XamlConnectionIdRewriter();
+62446: 			string contents = xamlConnectionIdRewriter.Edit(fileCodeInfo.FullPathToXamlFile, classCodeInfo, fileCodeInfo);
+62447: 			if (xamlConnectionIdRewriter.Errors.Count > 0)
+62448: 			{
+62449: 				foreach (XamlCompileError error in xamlConnectionIdRewriter.Errors)
+62450: 				{
+62451: 					LogError("XamlCompiler", error.Code, null, fileCodeInfo.SourceXamlGivenPath, error.LineNumber, error.LineOffset, 0, 0, error.Message);
+62452: 				}
+62453: 				return false;
+62454: 			}
+62455: 			string relativePath = FileHelpers.GetRelativePath(classCodeInfo.TargetFolder, fileCodeInfo.XamlOutputFilename);
+62456: 			if (generatedSources == null)
+62457: 			{
+62458: 				generatedSources = new List<FileNameAndContentPair>();
+62459: 			}
+62460: 			generatedSources.Add(new FileNameAndContentPair(relativePath, contents));
+62461: 			PerformanceUtility.FireCodeMarker(CodeMarkerEvent.perfXC_PageEditEnd, fileCodeInfo.SourceXamlGivenPath);
+62462: 			return true;
+62463: 		}
+62464: 
+62465: 		private bool GenerateXbfFiles(IEnumerable<IXbfFileNameInfo> xamlList)
+62466: 		{
+62467: 			if (xamlList.Any())
+62468: 			{
+62469: 				PerformanceUtility.FireCodeMarker(CodeMarkerEvent.perfXC_GenerateXBFStart, xamlList.Count().ToString());
+62470: 				XbfGenerator xbfGenerator = new XbfGenerator(_projectInfo, _xamlMetadataProvider);
+--- context around line 92566 ---
+92530: 			if (File.Exists(text))
+92531: 			{
+92532: 				File.Delete(text);
+92533: 			}
+92534: 			FileInfo fileInfo = new FileInfo(fullPathFileName);
+92535: 			DateTime lastWriteTime = fileInfo.LastWriteTime;
+92536: 			File.Move(fullPathFileName, text);
+92537: 			File.SetLastWriteTime(text, lastWriteTime);
+92538: 		}
+92539: 
+92540: 		public static bool RestoreBackupFile(string fullPathFileName)
+92541: 		{
+92542: 			string text = fullPathFileName + ".backup";
+92543: 			if (File.Exists(text))
+92544: 			{
+92545: 				if (File.Exists(fullPathFileName))
+92546: 				{
+92547: 					File.Delete(fullPathFileName);
+92548: 				}
+92549: 				FileInfo fileInfo = new FileInfo(text);
+92550: 				DateTime lastWriteTime = fileInfo.LastWriteTime;
+92551: 				File.Move(text, fullPathFileName);
+92552: 				File.SetLastWriteTime(fullPathFileName, lastWriteTime);
+92553: 				return true;
+92554: 			}
+92555: 			return false;
+92556: 		}
+92557: 
+92558: 		public static void BackupIfExistsAndTruncateToNull(string filename)
+92559: 		{
+92560: 			FileInfo fileInfo = new FileInfo(filename);
+92561: 			if (fileInfo.Exists && fileInfo.Length > 0)
+92562: 			{
+92563: 				BackupFile(filename);
+92564: 			}
+92565: 			DateTime lastWriteTime = fileInfo.LastWriteTime;
+92566: 			using (File.Create(filename))
+92567: 			{
+92568: 			}
+92569: 			File.SetLastWriteTime(filename, lastWriteTime);
+92570: 		}
+92571: 
+92572: 		public static string GetSafeName(string ProjectName)
+92573: 		{
+92574: 			if (ProjectName == null)
+92575: 			{
+92576: 				return null;
+92577: 			}
+92578: 			StringBuilder stringBuilder = new StringBuilder(ProjectName);
+92579: 			for (int i = 0; i < stringBuilder.Length; i++)
+92580: 			{
+92581: 				UnicodeCategory unicodeCategory = char.GetUnicodeCategory(stringBuilder[i]);
+92582: 				bool flag = unicodeCategory == UnicodeCategory.UppercaseLetter || unicodeCategory == UnicodeCategory.LowercaseLetter || unicodeCategory == UnicodeCategory.TitlecaseLetter || unicodeCategory == UnicodeCategory.OtherLetter || unicodeCategory == UnicodeCategory.LetterNumber || stringBuilder[i] == '_';
+92583: 				bool flag2 = unicodeCategory == UnicodeCategory.NonSpacingMark || unicodeCategory == UnicodeCategory.SpacingCombiningMark || unicodeCategory == UnicodeCategory.ModifierLetter || unicodeCategory == UnicodeCategory.DecimalDigitNumber;
+92584: 				if (i == 0)
+92585: 				{
+92586: 					if (!flag)
+92587: 					{
+92588: 						stringBuilder[i] = '_';
+92589: 					}
+92590: 				}
+92591: 				else if (!(flag | flag2))
+92592: 				{
+92593: 					stringBuilder[i] = '_';
+92594: 				}
+92595: 			}
+92596: 			return stringBuilder.ToString();
+92597: 		}
+92598: 
+92599: 		public static string GetRelativePath(string currentDir, string filePath)
+92600: 		{
+92601: 			string[] array = Path.GetFullPath(currentDir).Split(DirectorySeparators, StringSplitOptions.RemoveEmptyEntries);
+92602: 			string fileName = Path.GetFileName(filePath);
+92603: 			string directoryName = Path.GetDirectoryName(Path.GetFullPath(filePath));
+92604: 			string[] array2 = directoryName.Split(DirectorySeparators);
+92605: 			if (array[0] != array2[0])
+92606: 			{
+92607: 				return Path.GetFullPath(filePath);
+92608: 			}
+92609: 			int num = Math.Min(array.Length, array2.Length);
+92610: 			int i;
+92611: 			for (i = 0; i < num && !(array[i] != array2[i]); i++)
+92612: 			{
+92613: 			}
+92614: 			List<string> list = new List<string>();
+92615: 			if (array.Length > i)
+92616: 			{
+92617: 				for (int j = i; j < array.Length; j++)
+92618: 				{
+92619: 					list.Add("..");
+92620: 				}
+--- context around line 74940 ---
+74930: 
+74931: 		public StreamXamlInput(string filePath)
+74932: 		{
+74933: 			_underlyingStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+74934: 		}
+74935: 	}
+74936: 	internal class StreamXbfOutput : StreamImpl, IXamlStream
+74937: 	{
+74938: 		private string _filePath;
+74939: 
+74940: 		private MemoryStream _memoryStream;
+74941: 
+74942: 		public StreamType StreamType => StreamType.Output;
+74943: 
+74944: 		public StreamXbfOutput(string filePath)
+74945: 		{
+74946: 			_filePath = filePath;
+74947: 			_underlyingStream = (_memoryStream = new MemoryStream());
+74948: 		}
+74949: 
+74950: 		private bool ContentChanged()
+74951: 		{
+74952: 			FileInfo fileInfo = new FileInfo(_filePath);
+74953: 			if (!fileInfo.Exists || fileInfo.Length != _memoryStream.Length)
+74954: 			{
+74955: 				return true;
+74956: 			}
+74957: 			ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(File.ReadAllBytes(_filePath));
+74958: 			ReadOnlySpan<byte> other = new ReadOnlySpan<byte>(_memoryStream.GetBuffer(), 0, (int)_memoryStream.Length);
+74959: 			return !span.SequenceEqual(other);
+74960: 		}
+74961: 
+74962: 		protected override void Dispose(bool disposing)
+74963: 		{
+74964: 			if (_underlyingStream != null && ContentChanged())
+74965: 			{
+74966: 				using FileStream stream = new FileStream(_filePath, FileMode.Create, FileAccess.Write);
+74967: 				_memoryStream.WriteTo(stream);
+74968: 			}
+74969: 			base.Dispose(disposing);
+74970: 		}
+74971: 	}
+74972: 	internal interface IXamlStream
+74973: 	{
+74974: 		StreamType StreamType { get; }
+74975: 	}
+74976: 	internal enum StreamType
+74977: 	{
+74978: 		Input,
+74979: 		Output
+74980: 	}
+74981: }
+74982: namespace Microsoft.UI.Xaml.Markup.Compiler.DirectUI
+74983: {
+74984: 	internal class MemberProxyMetadata
+74985: 	{
+74986: 		public string Name { get; private set; }
+74987: 
+74988: 		public XamlMemberInvoker Invoker { get; private set; }
+74989: 
+74990: 		public XamlValueConverter<XamlDeferringLoader> DeferringLoader { get; internal set; }
+74991: 
+74992: 		public XamlValueConverter<TypeConverter> TypeConverter { get; private set; }
+74993: 
+74994: 		public XamlValueConverter<ValueSerializer> ValueSerializer { get; private set; }
+74995: 
+74996: 		public IList<XamlMember> DependsOn { get; private set; }
+74997: 
+74998: 		public bool IsAmbient { get; private set; }
+74999: 
+75000: 		public bool IsEvent { get; private set; }
+75001: 
+75002: 		public bool IsReadPublic { get; private set; }
+75003: 
+75004: 		public bool IsReadOnly { get; private set; }
+75005: 
+75006: 		public bool IsUnknown { get; private set; }
+75007: 
+75008: 		public bool IsWriteOnly { get; private set; }
+75009: 
+75010: 		public bool IsWritePublic { get; private set; }
+--- GenXbf references ---
+60884: public bool DisableXbfGeneration { get; set; }
+60948: public uint XbfGenerationFlags { get; set; }
+60954: public string GenXbfPath { get; set; }
+61081: DisableXbfGeneration = i.DisableXbfGeneration;
+61086: GenXbfPath = i.GenXbfPath;
+61110: XbfGenerationFlags = (i.DisableXbfLineInfo ? 1u : 0u);
+61309: if (!DisableXbfGeneration)
+61397: if (SourceFileManager.SdkXamlTaskItems != null && SourceFileManager.SdkXamlTaskItems.Count > 0 && !DisableXbfGeneration)
+61608: if (!IsPass1 && !DisableXbfGeneration)
+61610: DetermineGenXbfPath(_projectInfo);
+61623: LogError("CompileXaml", ErrorCode.WMC9998, null, GeneratedXamlFiles[0], 0, 0, 0, 0, XamlCompilerResources.XbfGeneration_MissingXbfApi);
+61662: private void DetermineGenXbfPath(XamlProjectInfo projectInfo)
+61664: if (!string.IsNullOrEmpty(GenXbfPath))
+61666: projectInfo.GenXbf32Path = Path.Combine(GenXbfPath, "x86\\genxbf.dll");
+61667: projectInfo.GenXbf64Path = Path.Combine(GenXbfPath, "x64\\genxbf.dll");
+61668: projectInfo.GenXbfArm64Path = Path.Combine(GenXbfPath, "arm64\\genxbf.dll");
+62132: private bool ReportXbfErrors(XbfGenerator xbfGenerator)
+62134: if (xbfGenerator.XbfErrors.Count > 0)
+62136: foreach (XamlCompileError xbfError in xbfGenerator.XbfErrors)
+62141: if (xbfGenerator.XbfWarnings.Count > 0)
+62143: foreach (XamlCompileWarning xbfWarning in xbfGenerator.XbfWarnings)
+62148: xbfGenerator.XbfWarnings.Clear();
+62149: bool result = xbfGenerator.XbfErrors.Count == 0;
+62150: xbfGenerator.XbfErrors.Clear();
+62470: XbfGenerator xbfGenerator = new XbfGenerator(_projectInfo, _xamlMetadataProvider);
+62471: xbfGenerator.SetXamlInputFiles(xamlList);
+62472: bool flag = xbfGenerator.GenerateXbfFiles(XbfGenerationFlags);
+62478: bool flag2 = ReportXbfErrors(xbfGenerator);
+62490: XbfGenerator xbfGenerator = new XbfGenerator(_projectInfo, _xamlMetadataProvider);
+62493: xbfGenerator.SetXamlInputFilesFromTaskItems(SourceFileManager.SdkNon80XamlTaskItems, isSdk: true);
+--- file writing call sites ---
+13750: public class AntlrFileStream : AntlrInputStream
+13756: public AntlrFileStream(string fileName)
+13761: public AntlrFileStream(string fileName, Encoding encoding)
+58431: public override FileStream[] GetFiles(bool getResourceModules)
+58436: public override FileStream[] GetFiles()
+58441: public override FileStream GetFile(string name)
+62436: using (fileInfo.Create())
+62894: using (TextReader fileStream = TaskFileService.GetFileContents(text))
+62896: text2 = XamlNodeStreamHelper.ReadXClassFromXamlFileStream(fileStream, _schemaContext);
+65005: using (TextReader fileStream = TaskFileService.GetFileContents(projectXamlTaskItem.SourceXamlFullPath))
+65007: text = XamlNodeStreamHelper.ReadXClassFromXamlFileStream(fileStream, context);
+74933: _underlyingStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+74966: using FileStream stream = new FileStream(_filePath, FileMode.Create, FileAccess.Write);
+80738: return new FileStream(path, FileMode.Open);
+80910: public override FileStream[] GetFiles(bool getResourceModules)
+80929: public override FileStream GetFile(string name)
+80936: return new FileStream(module.FullyQualifiedName, FileMode.Open, FileAccess.Read, FileShare.Read);
+80939: private static FileStream[] ConvertFileNamesToStreams(string[] filenames)
+80941: return Array.ConvertAll(filenames, (string n) => new FileStream(n, FileMode.Open, FileAccess.Read, FileShare.Read));
+92566: using (File.Create(filename))
+92920: public static string ReadXClassFromXamlFileStream(TextReader fileStream, XamlSchemaContext schemaContext)
+92923: using XmlReader xmlReader = XmlReader.Create(fileStream);
+93068: using (FileStream inputStream = File.Open(fullXamlFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+--- ITask implementations ---
+--- task and entry classes ---
+public class XPathLexer : Lexer
+public class BindingPathBaseListener : IBindingPathListener, IParseTreeListener
+public class BindingPathLexer : Lexer
+public interface IBindingPathListener : IParseTreeListener
+public class BindingPathParser : Parser
+public class ProgramContext : ParserRuleContext
+public class Decimal_valueContext : ParserRuleContext
+public class Boolean_valueContext : ParserRuleContext
+public class Namespace_qualifierContext : ParserRuleContext
+public class Static_typeContext : ParserRuleContext
+public class Attached_exprContext : ParserRuleContext
+public class Cast_exprContext : ParserRuleContext
+public class FunctionContext : ParserRuleContext
+public class PathContext : ParserRuleContext
+public class PathStaticFuctionContext : PathContext
+public class PathCastContext : PathContext
+public class PathPathToFunctionContext : PathContext
+public class PathIndexerContext : PathContext
+public class PathCastInvalidContext : PathContext
+public class PathCastPathParenContext : PathContext
+public class PathFunctionContext : PathContext
+public class PathStringIndexerContext : PathContext
+public class PathIdentifierContext : PathContext
+public class PathCastPathContext : PathContext
+public class PathStaticIdentifierContext : PathContext
+public class PathDotIdentifierContext : PathContext
+public class PathDotAttachedContext : PathContext
+public class Function_paramContext : ParserRuleContext
+public class FunctionParamNumberContext : Function_paramContext
+public class FunctionParamBoolContext : Function_paramContext
+public class FunctionParameterInvalidContext : Function_paramContext
+public class FunctionParamStringContext : Function_paramContext
+public class FunctionParamPathContext : Function_paramContext
+public class FunctionParamNullValueContext : Function_paramContext
+public class SuccinctCollectionSyntaxBaseListener : ISuccinctCollectionSyntaxListener, IParseTreeListener
+public class SuccinctCollectionSyntaxLexer : Lexer
+public interface ISuccinctCollectionSyntaxListener : IParseTreeListener
+public class SuccinctCollectionSyntaxParser : Parser
+public class ProgramContext : ParserRuleContext
+public class ItemsContext : ParserRuleContext
