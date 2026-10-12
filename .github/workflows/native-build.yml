@@ -293,9 +293,16 @@ jobs:
 
           $out += ('diagnostic log: ' + (if (Test-Path 'native-build.log') { (Get-Item 'native-build.log').Length } else { 'missing' }))
           if (Test-Path 'native-build.log') {
-            $out += '--- CompileXaml task executions in the diagnostic log ---'
-            $out += @(Select-String -Path 'native-build.log' -Pattern 'Task Parameter|Task "?CompileXaml|GenXbfPath|DisableXbfGeneration|XbfGenerationFlags|XbfOutputFilename|XamlOutputFilename|SourceXamlFullPath|XamlGivenPath' -ErrorAction SilentlyContinue |
-                      ForEach-Object { $_.Line.Trim() } | Select-Object -First 120)
+            $out += '--- XBF-related lines in the diagnostic log ---'
+            $out += @(Select-String -Path 'native-build.log' -Pattern 'GenXbfPath|DisableXbfGeneration|XbfGenerationFlags|XbfOutputFilename|XamlMetadataProvider|Task "CompileXaml' -ErrorAction SilentlyContinue |
+                      ForEach-Object { $_.Line.Trim() } | Select-Object -First 200)
+            $out += '--- CompileXaml task block ---'
+            $content = @(Get-Content 'native-build.log' -ErrorAction SilentlyContinue)
+            $idx = @($content | Select-String 'Task "CompileXaml' | Select-Object -First 1)
+            if ($idx) {
+              $i = $idx[0].LineNumber - 1
+              $out += @($content[$i..([Math]::Min($i + 120, $content.Count - 1))] | ForEach-Object { $_.Trim() })
+            }
           }
           $out += '--- every .xbf on the workspace (with size) ---'
           $out += @(Get-ChildItem 'D:\a\Opennow-web\Opennow-web' -Recurse -Filter '*.xbf' -File -ErrorAction SilentlyContinue |
