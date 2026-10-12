@@ -143,7 +143,7 @@ class AppServices {
 public:
     static AppServices& Instance();
 
-    void Initialize();
+
     void Shutdown();
 
     // ---- settings ------------------------------------------------------------------
@@ -196,7 +196,11 @@ public:
     StreamController& stream();
 
 private:
-    AppServices() = default;
+    // The constructor does the real work: the singleton must be fully formed
+    // before Instance() returns, because the login overlay is part of the
+    // main window's XAML tree and starts its device flow the moment the tree
+    // is built - before any caller gets a chance to call an initialiser.
+    AppServices();
 
     core::Result<void> EnsureVpcId();
 

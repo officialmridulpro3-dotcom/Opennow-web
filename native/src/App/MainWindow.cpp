@@ -58,8 +58,8 @@ MainWindow::MainWindow() {
     WriteStartupLog(L"title bar extended");
     SetTitleBar(AppTitleBar());
 
-    auto& services = opennow::app::AppServices::Instance();
-    services.Initialize();
+    // The services singleton initialises itself on first use; the login
+    // overlay needs it before this constructor has finished.
 
     ApplyAccentTheme();
     WireSignInHandlers();

@@ -289,7 +289,10 @@ AppServices& AppServices::Instance() {
     return instance;
 }
 
-void AppServices::Initialize() {
+AppServices::AppServices() {
+    // Everything reachable from Instance() must already work: the login
+    // overlay's device flow runs on a background thread as soon as the main
+    // window's XAML tree is constructed.
     http_ = core::CreateHttpClient();
     auth_ = std::make_unique<gfn::AuthService>(http_);
     catalog_ = std::make_unique<gfn::CatalogService>(http_);
