@@ -1,0 +1,3 @@
+compiler dll: C:\Users\runneradmin\.nuget\packages\microsoft.windowsappsdk\1.6.241114003\tools\net472\Microsoft.UI.Xaml.Markup.Compiler.dll
+Tool 'ilspycmd' (version '11.1.0.9782') was successfully installed.
+--- decompiled files mentioning xbf ---
