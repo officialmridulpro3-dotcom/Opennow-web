@@ -319,6 +319,11 @@
   <Target Name="OpenNOWProbeAfterPass1" AfterTargets="MarkupCompilePass1">
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\probe-xbf.sizes.ps1&quot; Pass1 &quot;$(GeneratedFilesDir.TrimEnd('\').TrimEnd(' '))&quot;" />
   </Target>
+  <Target Name="OpenNOWDumpXamlItemMetadata" AfterTargets="MarkupCompilePass1;MarkupCompilePass2">
+    <Message Importance="High"
+             Text="PAGEMETA: %(Page.Identity) | Src=%(Page.SourceXamlFullPath) | Given=%(Page.XamlGivenPath) | XamlOut=%(Page.XamlOutputFilename) | XbfOut=%(Page.XbfOutputFilename) | XbfPath=%(Page.XamlBamlOutputPath)" />
+  </Target>
+
   <Target Name="OpenNOWProbeAfterPass2" AfterTargets="MarkupCompilePass2">
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\probe-xbf.sizes.ps1&quot; Pass2 &quot;$(GeneratedFilesDir.TrimEnd('\').TrimEnd(' '))&quot;" />
   </Target>

@@ -291,6 +291,9 @@ jobs:
           $out += @(Get-ChildItem $release -Recurse -File -Include *.xbf, *.pri -ErrorAction SilentlyContinue |
                     ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.FullName.Substring($release.Length + 1) })
 
+          $out += '--- every .xbf on the workspace (with size) ---'
+          $out += @(Get-ChildItem 'D:\a\Opennow-web\Opennow-web' -Recurse -Filter '*.xbf' -File -ErrorAction SilentlyContinue |
+                    ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.FullName } | Select-Object -First 60)
           $out += '--- leftover .backup files from the compiler ---'
           $out += @(Get-ChildItem (Join-Path $intDir 'Generated Files') -Recurse -Filter '*.backup' -ErrorAction SilentlyContinue |
                     ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.Name })
