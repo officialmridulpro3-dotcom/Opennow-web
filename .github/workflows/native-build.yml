@@ -291,6 +291,12 @@ jobs:
           $out += @(Get-ChildItem $release -Recurse -File -Include *.xbf, *.pri -ErrorAction SilentlyContinue |
                     ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.FullName.Substring($release.Length + 1) })
 
+          $out += ('diagnostic log: ' + (if (Test-Path 'native-build.log') { (Get-Item 'native-build.log').Length } else { 'missing' }))
+          if (Test-Path 'native-build.log') {
+            $out += '--- CompileXaml task executions in the diagnostic log ---'
+            $out += @(Select-String -Path 'native-build.log' -Pattern 'Task Parameter|Task "?CompileXaml|GenXbfPath|DisableXbfGeneration|XbfGenerationFlags|XbfOutputFilename|XamlOutputFilename|SourceXamlFullPath|XamlGivenPath' -ErrorAction SilentlyContinue |
+                      ForEach-Object { $_.Line.Trim() } | Select-Object -First 120)
+          }
           $out += '--- every .xbf on the workspace (with size) ---'
           $out += @(Get-ChildItem 'D:\a\Opennow-web\Opennow-web' -Recurse -Filter '*.xbf' -File -ErrorAction SilentlyContinue |
                     ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.FullName } | Select-Object -First 60)
