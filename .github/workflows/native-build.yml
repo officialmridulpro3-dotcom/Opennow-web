@@ -296,12 +296,17 @@ jobs:
             $out += '--- XBF-related lines in the diagnostic log ---'
             $out += @(Select-String -Path 'native-build.log' -Pattern 'GenXbfPath|DisableXbfGeneration|XbfGenerationFlags|XbfOutputFilename|XamlMetadataProvider|Task "CompileXaml' -ErrorAction SilentlyContinue |
                       ForEach-Object { $_.Line.Trim() } | Select-Object -First 200)
-            $out += '--- CompileXaml task block ---'
+            $out += '--- CompileXaml task blocks (full) ---'
             $content = @(Get-Content 'native-build.log' -ErrorAction SilentlyContinue)
-            $idx = @($content | Select-String 'Task "CompileXaml' | Select-Object -First 1)
-            if ($idx) {
-              $i = $idx[0].LineNumber - 1
-              $out += @($content[$i..([Math]::Min($i + 120, $content.Count - 1))] | ForEach-Object { $_.Trim() })
+            $occurrences = @($content | Select-String 'Task "CompileXaml')
+            $out += ('found ' + $occurrences.Count + ' CompileXaml executions')
+            $n = 0
+            foreach ($match in $occurrences) {
+              $n++
+              $i = $match.LineNumber - 1
+              $end = [Math]::Min($i + 220, $content.Count - 1)
+              $out += ('===== CompileXaml execution ' + $n + ' =====')
+              $out += @($content[$i..$end] | ForEach-Object { $_.Trim() } | Where-Object { $_ -match 'Task Parameter|Task "CompileXaml|Done executing|Xbf|Xaml' })
             }
           }
           $out += '--- every .xbf on the workspace (with size) ---'
