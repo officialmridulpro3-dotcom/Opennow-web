@@ -1,0 +1,101 @@
+--- xaml resources in the build output ---
+         0  Themes\Accents.xbf
+         0  Themes\GeneratedTokens.xbf
+         0  Themes\Styles.xbf
+         0  Views\GameDetailsPage.xbf
+         0  Views\HomePage.xbf
+         0  Views\LibraryPage.xbf
+         0  Views\LoginPage.xbf
+         0  Views\PlaytimePage.xbf
+         0  Views\SettingsPage.xbf
+         0  Views\StreamPage.xbf
+         0  App.xbf
+         0  MainWindow.xbf
+    101560  Microsoft.UI.pri
+   1244128  Microsoft.UI.Xaml.Controls.pri
+   1332056  OpenNOW.App.pri
+--- embed directory ---
+         0  App.xbf
+       253  embed.resfiles
+       253  embed.resfiles.intermediate
+         0  MainWindow.xbf
+         0  Accents.xbf
+         0  GeneratedTokens.xbf
+         0  Styles.xbf
+         0  GameDetailsPage.xbf
+         0  HomePage.xbf
+         0  LibraryPage.xbf
+         0  LoginPage.xbf
+         0  PlaytimePage.xbf
+         0  SettingsPage.xbf
+         0  StreamPage.xbf
+--- priconfig.xml ---
+<?xml version="1.0" encoding="utf-8"?>
+<resources targetOsVersion="10.0.0" majorVersion="1">
+  <index root="\" startIndexAt="D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\filtered.layout.resfiles">
+    <default>
+      <qualifier name="Language" value="en-US" />
+      <qualifier name="Contrast" value="standard" />
+      <qualifier name="Scale" value="200" />
+      <qualifier name="HomeRegion" value="001" />
+      <qualifier name="TargetSize" value="256" />
+      <qualifier name="LayoutDirection" value="LTR" />
+      <qualifier name="DXFeatureLevel" value="DX9" />
+      <qualifier name="Configuration" value="" />
+      <qualifier name="AlternateForm" value="" />
+      <qualifier name="Platform" value="UAP" />
+    </default>
+    <indexer-config type="RESFILES" qualifierDelimiter="." />
+  </index>
+  <index root="\" startIndexAt="D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\resources.resfiles">
+    <default>
+      <qualifier name="Language" value="en-US" />
+      <qualifier name="Contrast" value="standard" />
+      <qualifier name="Scale" value="200" />
+      <qualifier name="HomeRegion" value="001" />
+      <qualifier name="TargetSize" value="256" />
+      <qualifier name="LayoutDirection" value="LTR" />
+      <qualifier name="DXFeatureLevel" value="DX9" />
+      <qualifier name="Configuration" value="" />
+      <qualifier name="AlternateForm" value="" />
+      <qualifier name="Platform" value="UAP" />
+    </default>
+    <indexer-config type="RESW" convertDotsToSlashes="true" />
+    <indexer-config type="RESJSON" />
+    <indexer-config type="RESFILES" qualifierDelimiter="." />
+  </index>
+  <index root="\" startIndexAt="D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\pri.resfiles">
+    <default>
+      <qualifier name="Language" value="en-US" />
+      <qualifier name="Contrast" value="standard" />
+      <qualifier name="Scale" value="200" />
+      <qualifier name="HomeRegion" value="001" />
+      <qualifier name="TargetSize" value="256" />
+      <qualifier name="LayoutDirection" value="LTR" />
+      <qualifier name="DXFeatureLevel" value="DX9" />
+      <qualifier name="Configuration" value="" />
+      <qualifier name="AlternateForm" value="" />
+      <qualifier name="Platform" value="UAP" />
+    </default>
+    <indexer-config type="PRI" />
+    <indexer-config type="RESFILES" qualifierDelimiter="." />
+  </index>
+  <index root="D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release\embed" startIndexAt="embed.resfiles">
+    <default>
+      <qualifier name="Language" value="en-US" />
+      <qualifier name="Contrast" value="standard" />
+      <qualifier name="Scale" value="200" />
+      <qualifier name="HomeRegion" value="001" />
+      <qualifier name="TargetSize" value="256" />
+      <qualifier name="LayoutDirection" value="LTR" />
+      <qualifier name="DXFeatureLevel" value="DX9" />
+      <qualifier name="Configuration" value="" />
+      <qualifier name="AlternateForm" value="" />
+      <qualifier name="Platform" value="UAP" />
+    </default>
+    <indexer-config type="RESFILES" qualifierDelimiter="." />
+    <indexer-config type="EMBEDFILES" />
+  </index>
+</resources>
+makepri: C:\Users\runneradmin\.nuget\packages\microsoft.windows.sdk.buildtools\10.0.22621.756\bin\10.0.22621.0\x86\makepri.exe
+--- resources actually in OpenNOW.App.pri ---
