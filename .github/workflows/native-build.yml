@@ -221,7 +221,18 @@ jobs:
             & $tool $dll -o 'xamlc-decompiled' 2>&1 | ForEach-Object { $out += \$_ }
             $csFiles = @(Get-ChildItem 'xamlc-decompiled' -Recurse -Filter '*.cs' -ErrorAction SilentlyContinue)
             $out += ('decompiled ' + $csFiles.Count + ' cs files')
-            $out += @($csFiles | Select-Object -First 15 | ForEach-Object { $_.FullName })
+            $out += @($csFiles | ForEach-Object { $_.FullName + '  ' + $_.Length + ' bytes' })
+            if ($csFiles.Count -gt 0) {
+              $main = $csFiles | Sort-Object Length -Descending | Select-Object -First 1
+              $out += '--- first 12 lines of ' + $main.Name + ' ---'
+              $out += @(Get-Content $main.FullName -TotalCount 12)
+              $out += '--- classes in the compiler assembly ---'
+              $out += @(Select-String -Path $main.FullName -Pattern '^public (partial )?class |^class ' -ErrorAction SilentlyContinue |
+                        ForEach-Object { \($_.Line.Trim()) } | Select-Object -First 40)
+              $out += '--- referenced assemblies ---'
+              $out += @(Select-String -Path $main.FullName -Pattern 'typeof\([^)]*\)|AssemblyName|using Microsoft' -ErrorAction SilentlyContinue |
+                        ForEach-Object { \($_.Line.Trim()) } | Select-Object -First 25)
+            }
             $hits = @($csFiles | Select-String -Pattern 'xbf' -List -ErrorAction SilentlyContinue | ForEach-Object { \($_.Path) })
             $out += '--- files mentioning xbf ---'
             $out += $hits
@@ -373,8 +384,10 @@ jobs:
               $cdbLog = Join-Path $dir 'cdb-output.txt'
               $localPdb = 'D:\a\Opennow-web\Opennow-web\native\obj\OpenNOW.App\x64\Release'
               if (-not (Test-Path $localPdb)) { $localPdb = (Resolve-Path 'native\obj\OpenNOW.App\x64\Release').Path }
-              $symPath = 'SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols;' + $localPdb
-              $cdbArgs = @('-g', '-G', ('-y' + $symPath), '-c', '.ecxr; kb 60; q', $exe)
+              $symServer = 'SRV*C:\opensnow-symbols*https://msdl.microsoft.com/download/symbols'
+              $scriptFile = Join-Path $dir 'cdb-commands.txt'
+              Set-Content -Path $scriptFile -Value @('.sympath + *' + $localPdb, '.ecxr', 'kb 60', 'q') -Encoding ascii
+              $cdbArgs = @('-g', '-G', ('-y' + $symServer), '-cf', $scriptFile, $exe)
               $out += ('cdb args: ' + (($cdbArgs | ForEach-Object { '[' + $_ + ']' }) -join ' '))
               & $cdb @cdbArgs 2>&1 | Out-File $cdbLog -Encoding utf8
               $out += ('cdb exit code: ' + $LASTEXITCODE)
