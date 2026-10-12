@@ -217,6 +217,11 @@ jobs:
                    Select-Object -First 1).FullName
           $out = @()
           $out += ('compiler dll: ' + $dll)
+          $out += '--- XBF settings in the shipped targets ---'
+          $out += @(Get-ChildItem $pkg -Recurse -Include '*.targets', '*.props' -ErrorAction SilentlyContinue |
+                    Select-String -Pattern 'GenXbf|DisableXbf|XbfGeneration|XbfFiles' -ErrorAction SilentlyContinue |
+                    ForEach-Object { \($_.Filename + ':' + $_.LineNumber + ': ' + $_.Line.Trim()) } |
+                    Select-Object -First 60)
           $out += '--- nuget package files (tools and exes) ---'
           $out += @(Get-ChildItem $pkg -Recurse -File -ErrorAction SilentlyContinue |
                     Where-Object { $_.FullName -match '\\tools\\' -or $_.Name -like '*.exe' } |
