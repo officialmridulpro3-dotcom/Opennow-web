@@ -125,6 +125,9 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <!-- An unpackaged desktop app must not be marked as an app container. -->
+      <AppContainer>false</AppContainer>
+      <AdditionalOptions>%(AdditionalOptions) /APPCONTAINER:NO</AdditionalOptions>
       <AdditionalDependencies>
         d3d10_1.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;windowsapp.lib;crypt32.lib;winhttp.lib;shell32.lib;ole32.lib;%(AdditionalDependencies)
       </AdditionalDependencies>
@@ -317,7 +320,7 @@
       <GeneratedFilesDir>$(IntDir)Generated Files\</GeneratedFilesDir>
     </PropertyGroup>
     <Message Importance="high"
-             Text="OpenNOW: XamlLanguage=$(XamlLanguage) CppWinRTProjectLanguage=$(CppWinRTProjectLanguage) GeneratedFilesDir=$(GeneratedFilesDir) CppWinRTPath=$(CppWinRTPath)" />
+             Text="OpenNOW: XamlLanguage=$(XamlLanguage) CppWinRTProjectLanguage=$(CppWinRTProjectLanguage) GeneratedFilesDir=$(GeneratedFilesDir) CppWinRTPath=$(CppWinRTPath) AppContainer=$(AppContainer) AppContainerApplication=$(AppContainerApplication) WindowsAppContainer=$(WindowsAppContainer)" />
   </Target>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

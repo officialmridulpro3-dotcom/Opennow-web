@@ -247,8 +247,16 @@ jobs:
           Start-Sleep -Seconds 4
 
           $out += "hasExited=$($process.HasExited)"
+          $code = 0
+          try { $code = $process.ExitCode } catch { $code = -1 }
+          $out += ("exitCode=0x{0:X8}" -f [uint32]$code)
           if ($process.HasExited) {
-            $out += "exitCode=0x{0:X8}" -f [uint32]$process.ExitCode
+            $out += '--- Application Error events in the last 10 minutes ---'
+            $events = @(Get-WinEvent -FilterHashtable @{ LogName = 'Application'; ProviderName = 'Application Error'; StartTime = (Get-Date).AddMinutes(-10) } -ErrorAction SilentlyContinue)
+            if ($events.Count -eq 0) { $out += '(none)' }
+            foreach ($event in $events) {
+              $out += ($event.TimeCreated.ToString('s') + '  ' + ($event.Message -replace "`n", ' | '))
+            }
           } else {
             $process.Refresh()
             $out += "mainWindowHandle=$($process.MainWindowHandle)"

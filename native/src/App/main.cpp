@@ -74,10 +74,20 @@ int __stdcall wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
         winrt::init_apartment(winrt::apartment_type::single_threaded);
         WriteLog(L"apartment initialised");
 
+        WriteLog(L"calling Application::Start");
+
         // Qualified: at global scope "Microsoft" is also the classic COM WRL
         // namespace that windows.h declares.
         winrt::Microsoft::UI::Xaml::Application::Start([](auto&&) {
-            winrt::make<winrt::OpenNOW::implementation::App>();
+            WriteLog(L"start callback entered");
+            try {
+                winrt::make<winrt::OpenNOW::implementation::App>();
+                WriteLog(L"application instance created");
+            }
+            catch (winrt::hresult_error const& error) {
+                WriteLog(L"make failed: " + std::wstring(error.message().c_str()));
+                throw;
+            }
         });
         WriteLog(L"application exited cleanly");
 
