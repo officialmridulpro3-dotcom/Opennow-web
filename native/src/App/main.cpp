@@ -12,6 +12,7 @@
 
 #include "App.h"
 
+#include <cstring>
 #include <chrono>
 #include <fstream>
 #include <string>
@@ -31,7 +32,7 @@ namespace
 
     void WriteLog(std::wstring const& message)
     {
-        std::ofstream log(StartupLogPath(), std::ios::app);
+        std::wofstream log(StartupLogPath(), std::ios::app);
         if (!log) {
             return;
         }
@@ -73,7 +74,9 @@ int __stdcall wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
         winrt::init_apartment(winrt::apartment_type::single_threaded);
         WriteLog(L"apartment initialised");
 
-        Microsoft::UI::Xaml::Application::Start([](auto&&) {
+        // Qualified: at global scope "Microsoft" is also the classic COM WRL
+        // namespace that windows.h declares.
+        winrt::Microsoft::UI::Xaml::Application::Start([](auto&&) {
             winrt::make<winrt::OpenNOW::implementation::App>();
         });
         WriteLog(L"application exited cleanly");
