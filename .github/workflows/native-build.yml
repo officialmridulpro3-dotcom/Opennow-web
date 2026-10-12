@@ -200,6 +200,44 @@ jobs:
             exit $code
           }
 
+      # The XAML runtime loads every .xbf through the resource system, so in an
+      # unpackaged build each one must be embedded in the app's .pri. Verify
+      # what the config references, what the sizes are, and what actually made
+      # it in.
+      - name: Verify the app's PRI
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          $release = (Resolve-Path 'native\build\x64\Release').Path
+          $intDir  = (Resolve-Path 'native\obj\OpenNOW.App\x64\Release').Path
+          $out = @()
+
+          $out += '--- xaml resources in the build output ---'
+          $out += @(Get-ChildItem $release -Recurse -File -Include *.xbf, *.pri -ErrorAction SilentlyContinue |
+                    ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.FullName.Substring($release.Length + 1) })
+
+          $out += '--- embed directory ---'
+          $out += @(Get-ChildItem (Join-Path $intDir 'embed') -Recurse -File -ErrorAction SilentlyContinue |
+                    ForEach-Object { '{0,10}  {1}' -f $_.Length, $_.Name })
+
+          $out += '--- priconfig.xml ---'
+          $out += @(Get-Content (Join-Path $intDir 'priconfig.xml') -ErrorAction SilentlyContinue)
+
+          $makepri = Join-Path $env:USERPROFILE '.nuget\packages\microsoft.windows.sdk.buildtools\10.0.22621.756\bin\10.0.22621.0\x86\makepri.exe'
+          if (-not (Test-Path $makepri)) {
+            $makepri = @(Get-ChildItem (Join-Path $env:USERPROFILE '.nuget\packages\microsoft.windows.sdk.buildtools') -Recurse -Filter makepri.exe -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
+          }
+          $out += ("makepri: $makepri")
+          & $makepri Dump -IndexFile (Join-Path $release 'OpenNOW.App.pri') -OutputFile 'pri-dump.xml' -Overwrite 2>&1 | ForEach-Object { $out += \$_ }
+          if (Test-Path 'pri-dump.xml') {
+            $out += '--- resources actually in OpenNOW.App.pri ---'
+            $out += @(Select-String -Path pri-dump.xml -Pattern 'x:Name="|EmbeddedData' -ErrorAction SilentlyContinue |
+                      ForEach-Object { \($_.Line.Trim()) } | Select-Object -First 100)
+          }
+
+          (@($out) -join "`n") | Out-File -FilePath pri-verify.txt -Encoding utf8
+          Get-Content pri-verify.txt
+
       - name: List build output
         shell: pwsh
         run: Get-ChildItem -Recurse native\build\x64\${{ inputs.configuration || 'Release' }} -File | Select-Object -ExpandProperty FullName
@@ -407,6 +445,7 @@ jobs:
           Publish-File 'portable-files.txt' 'portable-files.txt'
           Publish-File 'smoke.txt'        'smoke.txt'
           Publish-File 'screenshot.png'   'screenshot.png'
+          Publish-File 'pri-verify.txt'   'pri-verify.txt'
 
           try {
             git config user.name  'ci' | Out-Null
